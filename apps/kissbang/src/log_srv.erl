@@ -6,15 +6,17 @@
 %%% @end
 %%% Created : 28 May 2012 by  <dehun@localhost>
 %%%-------------------------------------------------------------------
--module(auth_srv).
+-module(log_srv).
 
 -behaviour(gen_server).
 
--include_lib("stdlib/include/qlc.hrl").
-
 %% API
 -export([start_link/0]).
--export([auth/2, register/2, drop_all_users/0]).
+-export([debug/2, debug/1,
+         trace/2, trace/1,
+         info/2, info/1,
+         warn/2, warn/1,
+         error/2, error/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,18 +26,34 @@
 
 -record(state, {}).
 
-
 %%%===================================================================
 %%% API
 %%%===================================================================
-auth(Login, Pass) ->
-    gen_server:call(?SERVER, {auth, Login, Pass}).
+debug(Msg) ->
+    debug(Msg, []).
+debug(Format, Args) ->
+    gen_server:call(?SERVER, {log, debug, Format, args}).
 
-register(Login, Pass) ->
-    gen_server:call(?SERVER, {register, Login, Pass}).
+trace(Msg) ->
+    trace(Msg, []).
+trace(Format, Args) ->
+    gen_server:call(?SERVER, {log, trace, Format, Args}).
 
-drop_all_users() ->
-    gen_server:call(?SERVER, {drop_all_users}).
+info(Msg) ->
+    info(Msg, []).
+info(format, args) ->
+    gen_server:call(?SERVER, {log, info, Format, Args}).
+
+warn(Msg) ->
+    warn(Msg, []).
+warn(Format, Args) ->
+    gen_server:call(?SERVER, {log, warn, Format, Args}).
+
+error(Msg) ->
+    error(Msg, []).
+error(Format, Args) ->
+    gen_server:call(?SERVER, {log, error, Format, Args}).
+
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -63,7 +81,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    init_db(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -80,15 +97,6 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({auth, Login, Pass}, _From, State) ->
-    Reply = inner_auth(Login, Pass),
-    {reply, Reply, State};
-handle_call({register, Login, Pass}, _From, State) ->
-    Reply = inner_register(Login, Pass),
-    {reply, Reply, State};
-handle_call({drop_all_users}, _From, State) ->
-    Reply = inner_drop_all_users(),
-    {reply, Reply, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -147,65 +155,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--record(authinfo, {guid, login, password}).
-
-init_db() ->
-    mnesia:create_schema([node() | nodes()]),
-    mnesia:start(),
-    Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, authinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            ok;
-        {aborted, {already_exists, _}} ->
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
-
-inner_register(Login, Password) ->
-    log_srv:trace("registering user ~p with password ~p", [Login, Password]),
-    Trans = fun() ->
-                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
-                                      X#authinfo.login == Login])),
-                    case Existance of
-                        [] ->
-                            AuthInfo = #authinfo{guid = element(2, guid_srv:create()),
-                                                 login = Login,
-                                                 password = Password},
-                            mnesia:write(AuthInfo),
-                            ok;
-                        [_] ->
-                            already_exists
-                    end
-            end,
-    {atomic, Result} = mnesia:transaction(Trans),
-    Result.
-    
-inner_auth(Login, Password) ->
-    Trans = fun() ->
-                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
-                                    X#authinfo.login == Login])),
-                    case Existance of
-                        [] ->
-                            {unauthorized};
-                        [AuthRec] ->
-                            case AuthRec#authinfo.password of
-                                Password ->
-                                    {ok, AuthRec#authinfo.guid};
-                                _ ->
-                                    {unauthorized}
-                                end
-                    end
-            end,
-    {atomic, Result} = mnesia:transaction(Trans),
-    Result.
-
-inner_drop_all_users() ->
-    Trans = fun() ->
-                    [mnesia:delete({authinfo, Key}) || Key <- mnesia:all_keys(authinfo)],
-                    ok
-            end,
-    {atomic, ok} = mnesia:transaction(Trans),
-    ok.
-    

@@ -5,7 +5,10 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  sasl,
+                  mnesia,
+                  crypto
                  ]},
   {mod, { kissbang_app, []}},
   {env, []}
