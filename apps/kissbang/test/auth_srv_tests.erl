@@ -5,18 +5,20 @@
 %%==================================================
 %% Testing setup
 %%==================================================
-setup() ->
-    auth_srv:start_link().
-
 auth_test_() ->
-    {setup,fun setup/0,
-     {inorder, [fun should_drop_all/0,
-     fun should_register/0,
-     fun should_try_to_register_existant/0,
-     fun should_try_to_auth_non_existant/0,
-     fun should_auth_with_existant/0,
-     fun should_auth_with_existant_but_invalid_password/0
-    ]}}.
+    {setup, fun setup/0,
+     {inorder, [
+                fun should_drop_all/0,
+                fun should_register/0,
+                fun should_try_to_register_existant/0,
+                fun should_try_to_auth_non_existant/0,
+                fun should_auth_with_existant/0,
+                fun should_auth_with_existant_but_invalid_password/0
+               ]}}.
+
+setup() ->
+    guid_srv:start_link(),
+    auth_srv:start_link().
 
 %%==================================================
 %% Testing functions
@@ -28,25 +30,24 @@ should_drop_all() ->
     ?assert(ok == prepare_for_testing()).
 
 should_register() ->
-    ?_assert(ok == prepare_for_testing()),
-    ?_assert(ok == auth_srv:register("test_bot", "qwerty")).
+    ?assert(ok == prepare_for_testing()),
+    ?assert(ok == auth_srv:register("test_bot", "qwerty")).
     
 should_try_to_register_existant() ->
-    ?_assert(ok == prepare_for_testing()),
-    ?_assert(ok == auth_srv:register("test_bot", "qwerty")),
-    ?_assert(already_exists = auth_srv:register("test_bot", "mazafaka")).
+    ?assert(ok == prepare_for_testing()),
+    ?assert(ok == auth_srv:register("test_bot", "qwerty")),
+    ?assert(already_exists == auth_srv:register("test_bot", "mazafaka")).
 
 should_try_to_auth_non_existant() ->
-    ?_assert(ok == prepare_for_testing()),
-    ?_assert(no_such_user == auth_srv:auth("unknown_user", "abrakadabra")).
+    ?assert(ok == prepare_for_testing()),
+    ?assert(no_such_user == auth_srv:auth("unknown_user", "abrakadabra")).
 
 should_auth_with_existant() ->
-    ?_assert(ok == prepare_for_testing()),
-    ?_assert(ok == auth_srv:register("test_bot", "qwerty")),
-    ?_assert({ok, Guid} = auth_srv:auth("test_bot", "qwerty")).
+    ?assert(ok == prepare_for_testing()),
+    ?assert(ok == auth_srv:register("test_bot", "qwerty")),
+    ?assertMatch({ok, _Guid},  auth_srv:auth("test_bot", "qwerty")).
 
 should_auth_with_existant_but_invalid_password() ->
-    ?_assert(ok == prepare_for_testing()),
-    ?_assert(ok == auth_srv:register("test_bot", "password1")),
-    ?_assert(invalid_password == auth_srv:auth("password2")).
-
+    ?assert(ok == prepare_for_testing()),
+    ?assert(ok == auth_srv:register("test_bot", "password1")),
+    ?assert(invalid_password == auth_srv:auth("test_bot", "password2")).
