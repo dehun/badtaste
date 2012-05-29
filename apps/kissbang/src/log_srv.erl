@@ -32,27 +32,27 @@
 debug(Msg) ->
     debug(Msg, []).
 debug(Format, Args) ->
-    gen_server:call(?SERVER, {log, debug, Format, args}).
+    gen_server:cast(?SERVER, {log, debug, Format, Args}).
 
 trace(Msg) ->
     trace(Msg, []).
 trace(Format, Args) ->
-    gen_server:call(?SERVER, {log, trace, Format, Args}).
+    gen_server:cast(?SERVER, {log, trace, Format, Args}).
 
 info(Msg) ->
     info(Msg, []).
-info(format, args) ->
-    gen_server:call(?SERVER, {log, info, Format, Args}).
+info(Format, Args) ->
+    gen_server:cast(?SERVER, {log, info, Format, Args}).
 
 warn(Msg) ->
     warn(Msg, []).
 warn(Format, Args) ->
-    gen_server:call(?SERVER, {log, warn, Format, Args}).
+    gen_server:cast(?SERVER, {log, warn, Format, Args}).
 
 error(Msg) ->
     error(Msg, []).
 error(Format, Args) ->
-    gen_server:call(?SERVER, {log, error, Format, Args}).
+    gen_server:cast(?SERVER, {log, error, Format, Args}).
 
 
 %%--------------------------------------------------------------------

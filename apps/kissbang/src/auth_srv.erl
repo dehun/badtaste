@@ -12,6 +12,7 @@
 
 -include_lib("stdlib/include/qlc.hrl").
 
+
 %% API
 -export([start_link/0]).
 -export([auth/2, register/2, drop_all_users/0]).
@@ -150,14 +151,17 @@ code_change(_OldVsn, State, _Extra) ->
 -record(authinfo, {guid, login, password}).
 
 init_db() ->
+    io:format("[authsrv] initializing database"),
     mnesia:create_schema([node() | nodes()]),
     mnesia:start(),
     Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 
                                             {attributes, record_info(fields, authinfo)}]),
     case Result of
         {atomic, ok} ->
+            timer:sleep(1000),
             ok;
         {aborted, {already_exists, _}} ->
+            timer:sleep(1000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -188,13 +192,13 @@ inner_auth(Login, Password) ->
                                     X#authinfo.login == Login])),
                     case Existance of
                         [] ->
-                            {unauthorized};
+                            no_such_user;
                         [AuthRec] ->
                             case AuthRec#authinfo.password of
                                 Password ->
                                     {ok, AuthRec#authinfo.guid};
                                 _ ->
-                                    {unauthorized}
+                                    invalid_password
                                 end
                     end
             end,
