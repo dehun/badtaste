@@ -4,19 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 28 May 2012 by  <dehun@localhost>
+%%% Created : 30 May 2012 by  <dehun@localhost>
 %%%-------------------------------------------------------------------
--module(log_srv).
+-module(proxy_srv).
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([debug/2, debug/1,
-         trace/2, trace/1,
-         info/2, info/1,
-         warn/2, warn/1,
-         error/2, error/1]).
+-export([register_origin/2, get_origin/1, route_messages/2, drop_all/0, drop_origin/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -29,31 +25,6 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-debug(Msg) ->
-    debug(Msg, []).
-debug(Format, Args) ->
-    gen_server:cast(?SERVER, {log, debug, Format, Args}).
-
-trace(Msg) ->
-    trace(Msg, []).
-trace(Format, Args) ->
-    gen_server:cast(?SERVER, {log, trace, Format, Args}).
-
-info(Msg) ->
-    info(Msg, []).
-info(Format, Args) ->
-    gen_server:cast(?SERVER, {log, info, Format, Args}).
-
-warn(Msg) ->
-    warn(Msg, []).
-warn(Format, Args) ->
-    gen_server:cast(?SERVER, {log, warn, Format, Args}).
-
-error(Msg) ->
-    error(Msg, []).
-error(Format, Args) ->
-    gen_server:cast(?SERVER, {log, error, Format, Args}).
-
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -111,9 +82,6 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({log, Level, Format, Args}, State) ->
-    io:format(Format, Args),
-    {noreply, State};
 handle_cast(_Msg, State) ->
     {noreply, State}.
 

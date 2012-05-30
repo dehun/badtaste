@@ -51,3 +51,9 @@ should_auth_with_existant_but_invalid_password() ->
     ?assert(ok == prepare_for_testing()),
     ?assert(ok == auth_srv:register("test_bot", "password1")),
     ?assert(invalid_password == auth_srv:auth("test_bot", "password2")).
+
+should_multiply_register_and_auth() ->
+    ?assert(ok == prepare_for_testing()),
+    Users = [{Name, Pass} || Name <- lists:seq(1, 1000), Pass <- lists:seq(1, 1000)],
+    [?assert(ok == auth_srv:register(element(1, User), element(2, User))) || User <- Users],
+    [?assert(ok == auth_srv:auth(element(1, User), element(2, User))) || User <- Users].

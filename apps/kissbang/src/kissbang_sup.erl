@@ -27,5 +27,6 @@ init([]) ->
     {ok, { {one_for_one, 5, 10}, [?CHILD(auth_sup, supervisor),
                                  ?CHILD(guid_sup, supervisor),
                                  ?CHILD(gateway_sup, supervisor),
-                                 ?CHILD(log_sup, supervisor)]}}.
+                                 ?CHILD(log_sup, supervisor),
+                                 ?CHILD(proxy_sup, supervisor)]}}.
 
