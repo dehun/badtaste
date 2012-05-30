@@ -234,7 +234,7 @@ init_db() ->
 
 inner_register_origin(Guid, Origin) ->
     Trans = fun() ->
-                    Existance = mnesia:read(user_origin, Guid, write),
+                    Existance = mnesia:read({user_origin, Guid}),
                     NewOrigin = #user_origin{guid = Guid, origin = Origin},
                     case Existance of
                         [] ->
@@ -266,7 +266,7 @@ inner_drop_all() ->
 
 inner_get_origin(Guid) ->
     Trans = fun() ->
-                    Existance = mnesia:read(user_origin, Guid),
+                    Existance = mnesia:read({user_origin, Guid}),
                     case Existance of 
                         [] ->
                             unknown_origin;
@@ -279,7 +279,7 @@ inner_get_origin(Guid) ->
 
 inner_drop_origin(Guid) ->
     Trans = fun() ->
-                    Existance = mnesia:read(user_origin, Guid, write),
+                    Existance = mnesia:read({user_origin, Guid}),
                     case Existance of
                         [] ->
                             unknown_origin;
@@ -295,7 +295,7 @@ inner_drop_origin(Guid) ->
             ok;
         Other ->
             Other
-        end.
+    end.
 
 inner_route_messages(Guid, Messages) ->
     OriginGetResult = inner_get_origin(Guid),
