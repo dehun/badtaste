@@ -30,25 +30,25 @@ setup() ->
 should_debug() ->
     log_srv:debug("test debug message").
 should_debug_format() ->
-    log_srv:debug("test debug message with format ~s", "[i am format]").
+    log_srv:debug("test debug message with format ~w", ["[i am format]"]).
 
 should_trace() ->
     log_srv:trace("test trace message").
 should_trace_format() ->
-    log_srv:trace("test trace message with format ~s", "[i am format]").
+    log_srv:trace("test trace message with format ~w", ["[i am format]"]).
 
 should_info() ->
     log_srv:info("test info message").
 should_info_format() ->
-    log_srv:trace("test info message with format ~s", "[i am format]").
+    log_srv:trace("test info message with format ~w", ["[i am format]"]).
 
 should_warn() ->
     log_srv:warn("test warn message").
 should_warn_format() ->
-    log_srv:trace("test warn message with format ~s", "[i am format]").
+    log_srv:trace("test warn message with format ~w", ["[i am format]"]).
 
 should_error() ->
     log_srv:error("test error message").
 should_error_format() ->
-    log_srv:trace("test error message with format ~s", "[i am format]").
+    log_srv:trace("test error message with format ~w", ["[i am format]"]).
 

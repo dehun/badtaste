@@ -12,7 +12,7 @@
 
 %% API
 -export([start_link/0]).
-%%-export().
+-export([disconnect_origin/1, route_messages/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -25,6 +25,13 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+disconnect_origin(Origin) ->
+    %% TODO : implement me
+    ok.
+
+route_messages(Origin, Messages) ->
+    %% TODO : implement me
+    ok.
 
 %%--------------------------------------------------------------------
 %% @doc

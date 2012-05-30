@@ -1,6 +1,6 @@
 -module(proxy_srv_tests).
 -include_lib("eunit/include/eunit.hrl").
--include("origin.hrl").
+-include("../src/origin.hrl").
 -compile(export_all).
 
 %%==================================================
@@ -11,7 +11,7 @@ proxy_srv_tests_() ->
      {inorder, [
                 fun should_register_origin/0,
                 fun should_get_origin/0
-               ]}.
+               ]}}.
 
 foreach_setup() ->
     mock_patch(),
@@ -26,20 +26,24 @@ mock_patch() ->
 %% Testing functions
 %%==================================================
 should_register_origin() ->
-    ?assertMatch({ok, Guid},  get_test_guid()),
+    {ok, Guid} =  get_test_guid(),
     ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())).
 
 should_get_origin() ->
-    ?assertMatch({ok, Guid}, get_test_guid()),
+    {ok, Guid} = get_test_guid(),
     ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
     ?assertEqual({ok, get_test_origin()}, auth_srv:get_origin(Guid)).
 
+should_get_non_existant_origin() ->
+    {ok, Guid} = get_test_guid(),
+    ?assert(unknown_origin == proxy_srv:get_origin(Guid)).
+
 should_route_to_origin() ->
-    ?assertMatch({ok, Guid}, get_test_guid()),
-    ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
+    {ok, Guid} = get_test_guid(),
+    ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())).
 
 should_drop_origin() ->
-    ?assertMatch({ok, Guid}, get_test_guid()),
+    {ok, Guid} = get_test_guid(),
     ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
     ?assert(ok == proxy_srv:drop_origin(Guid)),
     ?assert(unknown = proxy_srv:get_origin(Guid)).
@@ -54,4 +58,4 @@ get_test_guid() ->
 
 
 get_test_origin() ->
-    #origin(node = node(), sock = dumb_socket).
+    #origin{node = node(), sock = dumb_socket}.
