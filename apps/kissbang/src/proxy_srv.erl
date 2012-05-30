@@ -243,12 +243,12 @@ inner_register_origin(Guid, Origin) ->
                         [OldOrigin] ->
                             mnesia:delete(OldOrigin),
                             mnesia:write(NewOrigin),
-                            {ok, dirty, OldOrigin#user_origin.origin}
+                            {ok, {dirty, OldOrigin#user_origin.origin}}
                     end
             end,
     
-    {atomic, {ok, Result}} = mnesia:transaction(Trans),
-    case Result of
+    {atomic, {ok, Pureness}} = mnesia:transaction(Trans),
+    case Pureness of
         pure ->
             ok;
         {dirty, OldOrigin} ->
@@ -258,7 +258,8 @@ inner_register_origin(Guid, Origin) ->
 
 inner_drop_all() ->
     Trans = fun() ->
-                    [mnesia:delete({user_origin, Key}) || Key <- mnesia:all_keys(user_origin)],
+                    lists:foreach(fun(Guid) -> inner_drop_origin(Guid) end,
+                                  mnesia:all_keys(user_origin)),
                     ok
             end,
     {atomic, ok} = mnesia:transaction(Trans),
