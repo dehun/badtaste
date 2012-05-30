@@ -2,24 +2,33 @@
 -include_lib("eunit/include/eunit.hrl").
 -include("../src/origin.hrl").
 -compile(export_all).
+-import(meck).
 
 %%==================================================
 %% Testing setup
 %%==================================================
-proxy_srv_tests_() ->
-    {foreach, fun foreach_setup/0, 
+proxy_srv_test_() ->
+    {setup, fun setup/0, 
      {inorder, [
                 fun should_register_origin/0,
-                fun should_get_origin/0
+                fun should_get_origin/0,
+                fun should_get_non_existant_origin/0,
+                fun should_route_to_origin/0,
+                fun should_drop_origin/0
                ]}}.
 
-foreach_setup() ->
+setup() ->
     mock_patch(),
+    guid_srv:start_link(),
     auth_srv:start_link(),
     proxy_srv:start_link(),
     proxy_srv:drop_all().
 
 mock_patch() ->
+    %% patching for gateway server
+    meck:new(gateway_srv),
+    meck:expect(gateway_srv, disconnect_origin, fun(Origin) -> ok end),
+    meck:expect(gateway_srv, route_messages, fun(Origin, Messages) -> ok end),
     ok.
 
 %%==================================================
@@ -32,7 +41,7 @@ should_register_origin() ->
 should_get_origin() ->
     {ok, Guid} = get_test_guid(),
     ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
-    ?assertEqual({ok, get_test_origin()}, auth_srv:get_origin(Guid)).
+    ?assertEqual({ok, get_test_origin()}, proxy_srv:get_origin(Guid)).
 
 should_get_non_existant_origin() ->
     {ok, Guid} = get_test_guid(),

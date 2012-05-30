@@ -43,7 +43,7 @@
 %% @end
 %%--------------------------------------------------------------------
 register_origin(Guid, Origin) ->
-    gen_server:call(?SERVER, {reigster_origin, Guid, Origin}).
+    gen_server:call(?SERVER, {register_origin, Guid, Origin}).
 
 
 %%--------------------------------------------------------------------
@@ -288,10 +288,10 @@ inner_drop_origin(Guid) ->
                             {ok, UserOrigin#user_origin.origin}
                         end
             end,
-    {atomic, Result} = mnesia:activity(Trans),
+    {atomic, Result} = mnesia:transaction(Trans),
     case Result of
         {ok, Origin} ->
-            gateway_str:disconnect_origin(Origin),
+            gateway_srv:disconnect_origin(Origin),
             ok;
         Other ->
             Other
