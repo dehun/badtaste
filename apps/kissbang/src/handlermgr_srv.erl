@@ -2,19 +2,17 @@
 %%% @author  <dehun@localhost>
 %%% @copyright (C) 2012, 
 %%% @doc
-%%%
+%%% 
 %%% @end
-%%% Created : 28 May 2012 by  <dehun@localhost>
+%%% Created : 31 May 2012 by  <dehun@localhost>
 %%%-------------------------------------------------------------------
--module(gateway_srv).
--include("origin.hrl").
+-module(handlermgr_srv).
+
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([disconnect_origin/1, 
-         route_messages/2,
-         handle_origin_message/2]).
+
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,40 +22,14 @@
 
 -record(state, {}).
 
-
 %%%===================================================================
 %%% API
 %%%===================================================================
-%%--------------------------------------------------------------------
-%% @doc
-%% disconnects origin from a socket
-%% @spec
-%% disconnect_origin(Origin)
-%% @end
-%%--------------------------------------------------------------------
-disconnect_origin(Origin) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {disconnect_origin, Origin}),
-    ok.
+handle(Message) ->
+    gen_server:cast(?SERVER, {handle_message, Message}).
 
-%%--------------------------------------------------------------------
-%% @doc
-%% routes messages to origin from a services
-%% @spec
-%% @end
-%%--------------------------------------------------------------------
-route_messages(Origin, Messages) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {route_messages, Origin, Messages}),
-    ok.
-
-%%--------------------------------------------------------------------
-%% @doc
-%% handles message which come from origin
-%% @spec
-%% handle_origin_message(Origin, Message)
-%% @end
-%%--------------------------------------------------------------------
-handle_origin_message(Origin, Message) ->
-    gen_server:cast(?SERVER, {handle_origin_message, Origin, Message}).
+register_handler(HandlerFun) ->
+    gen_server:call(?SERVER, {register_handler, HandlerFun}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -85,7 +57,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    sock_sattelite_srv:spawn_link(), 
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -116,14 +87,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({disconnect_origin, Origin}, State) ->
-    sock_sattelite_srv:disconnect_origin(Origin),
-    {noreply, State};
-handle_cast({route_messages, Origin, Messages}, State) ->
-    sock_sattelite_srv:route_messages(Origin, Messages),
-    {noreply, State};
-handle_cast({handle_origin_message, Origin, Message}, State) ->
-    handlemgr_srv:handle_origin_message(Origin, Message),
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------

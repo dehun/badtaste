@@ -12,7 +12,7 @@
 
 -behaviour(gen_server).
 -include("origin.hrl").
--record(user_origin, {guid, origin}).
+-record(user_origin, {guid, origin, authenticated}).
 
 %% API
 -export([start_link/0]).
@@ -155,9 +155,6 @@ handle_call({get_origin, Guid}, _From, State) ->
 handle_call({route_messages, Guid, Messages}, _From, State) ->
     Reply = inner_route_messages(Guid, Messages),
     {reply, Reply, State}.
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -172,8 +169,6 @@ handle_call({route_messages, Guid, Messages}, _From, State) ->
 handle_cast({route_messages, Guid, Messages}, State) ->
     inner_route_messages(Guid, Messages),
     {noreply, State}.
-%% handle_cast(_Msg, State) ->
-%%     {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -307,4 +302,3 @@ inner_route_messages(Guid, Messages) ->
         {ok, Origin} ->
             gateway_srv:route_messages(Origin, Messages)
     end.
-                    

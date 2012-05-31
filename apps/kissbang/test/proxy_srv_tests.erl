@@ -74,7 +74,7 @@ get_next_test_guid() ->
     guid_srv:create().
 
 get_test_origin() ->
-    #origin{node = node(), sock = dumb_socket}.
+    #origin{node = node(), client_process = dumb_process}.
 
 get_another_test_origin() ->
-    #origin{node = another_node, sock = another_dumb_socket}.
+    #origin{node = another_node, client_process = another_dumb_process}.

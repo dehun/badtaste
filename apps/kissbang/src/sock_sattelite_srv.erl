@@ -4,17 +4,19 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 28 May 2012 by  <dehun@localhost>
+%%% Created : 31 May 2012 by  <dehun@localhost>
 %%%-------------------------------------------------------------------
--module(gateway_srv).
--include("origin.hrl").
+-module(sock_sattelite_srv).
+
 -behaviour(gen_server).
 
+-include("origin.hrl").
 %% API
 -export([start_link/0]).
--export([disconnect_origin/1, 
+-export([on_new_connection/1,
+         disconnect_origin/1,
          route_messages/2,
-         handle_origin_message/2]).
+         lost_origin/1).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,40 +26,21 @@
 
 -record(state, {}).
 
-
 %%%===================================================================
 %%% API
 %%%===================================================================
-%%--------------------------------------------------------------------
-%% @doc
-%% disconnects origin from a socket
-%% @spec
-%% disconnect_origin(Origin)
-%% @end
-%%--------------------------------------------------------------------
+on_new_connection(ClientSock) ->
+    gen_tcp:controlling_process(),
+    gen_server:cast(?SERVER, {on_new_connection, ClientSock}).
+
 disconnect_origin(Origin) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {disconnect_origin, Origin}),
-    ok.
+    gen_server:cast(?SERVER, {disconnect_origin, Origin}).
 
-%%--------------------------------------------------------------------
-%% @doc
-%% routes messages to origin from a services
-%% @spec
-%% @end
-%%--------------------------------------------------------------------
 route_messages(Origin, Messages) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {route_messages, Origin, Messages}),
-    ok.
+    gen_server:cast(?SERVER, {route_messages, Origin, Messages}).
 
-%%--------------------------------------------------------------------
-%% @doc
-%% handles message which come from origin
-%% @spec
-%% handle_origin_message(Origin, Message)
-%% @end
-%%--------------------------------------------------------------------
-handle_origin_message(Origin, Message) ->
-    gen_server:cast(?SERVER, {handle_origin_message, Origin, Message}).
+lost_origin(Origin) ->
+    gen_server:cast(?SERVER, {lost_origin, Origin}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -85,7 +68,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    sock_sattelite_srv:spawn_link(), 
+    tcp_listener:start_link(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -116,15 +99,17 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_cast({on_new_connection, ClientSock}, State) ->
+    spawn_client_process(ClientSock),
+    {noreply, State};
 handle_cast({disconnect_origin, Origin}, State) ->
-    sock_sattelite_srv:disconnect_origin(Origin),
+    client_sock_process:stop(Origin),
+    {noreply, State};
+handle_cast({lost_origin, Origin}, State) ->
+    proxy_srv:drop_origin(Origin),
     {noreply, State};
 handle_cast({route_messages, Origin, Messages}, State) ->
-    sock_sattelite_srv:route_messages(Origin, Messages),
-    {noreply, State};
-handle_cast({handle_origin_message, Origin, Message}, State) ->
-    handlemgr_srv:handle_origin_message(Origin, Message),
-    {noreply, State}.
+    client_sock_process:send_messages(Origin, Messages).
 
 %%--------------------------------------------------------------------
 %% @private
@@ -167,3 +152,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+spawn_client_process(ClientSock) ->
+    {ok, Origin} = client_sock_process:start(ClientSock).
+ 
