@@ -55,8 +55,8 @@ should_route_to_origin() ->
 should_drop_origin() ->
     {ok, Guid} = get_next_test_guid(),
     ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
-%    ?assert(ok == proxy_srv:drop_origin(Guid)),
-    ?assert(unknown_origin = proxy_srv:get_origin(Guid)).
+    ?assert(ok == proxy_srv:drop_origin(Guid)),
+    ?assert(unknown_origin == proxy_srv:get_origin(Guid)).
 
 should_drop_nonexistant_origin() ->
     {ok, Guid} = get_next_test_guid(),

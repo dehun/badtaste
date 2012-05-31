@@ -167,7 +167,7 @@ init_db() ->
         end.
 
 inner_register(Login, Password) ->
-    log_srv:trace("registering user ~p with password ~p", [Login, Password]),
+    log_srv:info("registering user ~p with password ~p", [Login, Password]),
     Trans = fun() ->
                     Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
                                       X#authinfo.login == Login])),

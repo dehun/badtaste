@@ -220,7 +220,7 @@ init_db() ->
     mnesia:create_schema([node() | nodes()]),
     mnesia:start(),
     Result = mnesia:create_table(user_origin, [{ram_copies, [node() | nodes()]},
-                                            {attributes, record_info(fields, user_origin)}]),
+                                               {attributes, record_info(fields, user_origin)}]),
     case Result of 
         {atomic, ok} ->
             mnesia:wait_for_tables([user_origin], 5000),
@@ -241,7 +241,7 @@ inner_register_origin(Guid, Origin) ->
                             mnesia:write(NewOrigin),
                             {ok, pure};
                         [OldOrigin] ->
-                            mnesia:delete(OldOrigin),
+                            mnesia:delete({user_origin, Guid}),
                             mnesia:write(NewOrigin),
                             {ok, {dirty, OldOrigin#user_origin.origin}}
                     end
@@ -280,22 +280,23 @@ inner_get_origin(Guid) ->
 
 inner_drop_origin(Guid) ->
     Trans = fun() ->
-                    Existance = mnesia:read({user_origin, Guid}),
+                    Existance = mnesia:read(user_origin, Guid),
                     case Existance of
                         [] ->
                             unknown_origin;
                         [UserOrigin] ->
-                            mnesia:delete(UserOrigin),
+                            mnesia:delete({user_origin, Guid}),
                             {ok, UserOrigin#user_origin.origin}
                         end
             end,
+    
     {atomic, Result} = mnesia:transaction(Trans),
     case Result of
         {ok, Origin} ->
             gateway_srv:disconnect_origin(Origin),
             ok;
-        Other ->
-            Other
+        unknown_origin ->
+            unknown_origin
     end.
 
 inner_route_messages(Guid, Messages) ->

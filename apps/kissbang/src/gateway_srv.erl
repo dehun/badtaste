@@ -27,10 +27,12 @@
 %%%===================================================================
 disconnect_origin(Origin) ->
     %% TODO : implement me
+    erlang:error(implement_me),
     ok.
 
 route_messages(Origin, Messages) ->
     %% TODO : implement me
+    erlang:error(implement_me),
     ok.
 
 %%--------------------------------------------------------------------
