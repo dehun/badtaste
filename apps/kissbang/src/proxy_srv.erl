@@ -11,7 +11,10 @@
 -module(proxy_srv).
 
 -behaviour(gen_server).
+
+-include_lib("stdlib/include/qlc.hrl").
 -include("origin.hrl").
+
 -record(user_origin, {guid, origin, authenticated}).
 
 %% API
@@ -59,13 +62,13 @@ drop_all() ->
 
 %%--------------------------------------------------------------------
 %% @doc
-%% drops origin of user. gateway calls this function when client disconnects from origin
+%% drops origin of user. gateway calls this function when origin disconnects
 %% @spec
-%% drop_origin(Guid) ->  ok | unknown_origin
+%% drop_origin(Origin) ->  ok | unknown_origin
 %% @end
 %%--------------------------------------------------------------------
-drop_origin(Guid) ->
-    gen_server:call(?SERVER, {drop_origin, Guid}).
+drop_origin(Origin) ->
+    gen_server:call(?SERVER, {drop_origin, Origin}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -146,8 +149,8 @@ handle_call({register_origin, Guid, Origin}, _From, State) ->
 handle_call({drop_all}, _From, State) ->
     Reply = inner_drop_all(),
     {reply, Reply, State};
-handle_call({drop_origin, Guid}, _From, State) ->
-    Reply = inner_drop_origin(Guid),
+handle_call({drop_origin, Origin}, _From, State) ->
+    Reply = inner_drop_origin(Origin),
     {reply, Reply, State};
 handle_call({get_origin, Guid}, _From, State) ->
     Reply = inner_get_origin(Guid),
@@ -273,9 +276,10 @@ inner_get_origin(Guid) ->
     {atomic, Result} = mnesia:transaction(Trans),
     Result.
 
-inner_drop_origin(Guid) ->
+inner_drop_origin(Origin) ->
     Trans = fun() ->
-                    Existance = mnesia:read(user_origin, Guid),
+                    Existance = qlc:e(qlc:q(X || X <- mnesia:table(user_origin),
+                                                 X#user_origin.origin == Origin)),
                     case Existance of
                         [] ->
                             unknown_origin;

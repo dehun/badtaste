@@ -13,7 +13,7 @@
 %% API
 -export([start_link/0]).
 -export([disconnect_origin/1, 
-         route_messages/2,
+         route_message/2,
          handle_origin_message/2]).
 
 %% gen_server callbacks
@@ -41,12 +41,12 @@ disconnect_origin(Origin) ->
 
 %%--------------------------------------------------------------------
 %% @doc
-%% routes messages to origin from a services
+%% routes message to origin from a services
 %% @spec
 %% @end
 %%--------------------------------------------------------------------
-route_messages(Origin, Messages) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {route_messages, Origin, Messages}),
+route_message(Origin, Message) ->
+    gen_server:cast(Origin#origin.node, ?SERVER, {route_message, Origin, Messages}),
     ok.
 
 %%--------------------------------------------------------------------
@@ -85,7 +85,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    sock_sattelite_srv:spawn_link(), 
+    client_acceptor:spawn_link(), 
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -117,10 +117,10 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({disconnect_origin, Origin}, State) ->
-    sock_sattelite_srv:disconnect_origin(Origin),
+    origin_controller:disconnect(Origin),
     {noreply, State};
-handle_cast({route_messages, Origin, Messages}, State) ->
-    sock_sattelite_srv:route_messages(Origin, Messages),
+handle_cast({route_message, Origin, Message}, State) ->
+    origin_controller:route_message(Origin, Messages),
     {noreply, State};
 handle_cast({handle_origin_message, Origin, Message}, State) ->
     handlemgr_srv:handle_origin_message(Origin, Message),
