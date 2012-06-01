@@ -1,0 +1,73 @@
+<protocol name="kissbang">
+  <!-- authorization -->
+  <message name="authorize">
+    <field name="name" type="string"/>
+    <field name="password" type="string"/>
+  </message>
+
+  <message name="authorized">
+  </message>
+
+  <message name="authorization_failed">
+    <file name="reason" type="string"/>
+  </message>
+
+  <!-- chat -->
+  <message name="send_chat_message_to_room">
+    <field name="message" type="string"/>
+  </message>
+
+  <message name="on_got_chat_message">
+    <field name="sender_guid" type="string"/>
+    <field name="message" type="string"/>
+  </message>
+
+  <!-- mail -->
+  <message name="sent_mail">
+    <field name="receiver_guid" type="string"/>
+    <field name="title" type="string"/>
+    <field name="body" type="string"/>
+  </message>
+
+  <message name="check_mailbox">
+  </message>
+
+  <message name="on_got_mailbox">
+    
+  </message>
+
+  <message name="read_mail">
+    
+  </message>
+
+  <!-- rooms -->
+  <message name="find_random_room">
+  </message>
+
+  <message name="on_we_joined_room">
+    <field name="room_guid" type="string"/>
+  </message>
+
+  <message name="on_room_starts">
+  </message>
+
+  <!-- bottle game -->
+  <message name="prepare_to_swing_bottle">
+  </message>
+
+  <message name="swing_bottle">
+  </message>
+
+  <message name="on_bottle_choice">
+    <field name="chosen_guid" type="string"/>
+  </message>
+
+  <message name="kiss"/>
+
+  <message name="on_kissed"/>
+
+  <message name="refuse_to_kiss"/>
+
+  <message name="on_kiss_refused"/>
+    
+</protocol>

@@ -283,7 +283,7 @@ inner_drop_origin(Origin) ->
                         [] ->
                             unknown_origin;
                         [UserOrigin] ->
-%                            mnesia:delete({user_origin, UserOrigin#user_origin.guid}),
+                            mnesia:delete({user_origin, UserOrigin#user_origin.guid}),
                             {ok, UserOrigin#user_origin.origin}
                         end
             end,
