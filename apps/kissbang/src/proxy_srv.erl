@@ -278,13 +278,12 @@ inner_get_origin(Guid) ->
 
 inner_drop_origin(Origin) ->
     Trans = fun() ->
-                    Existance = qlc:e(qlc:q(X || X <- mnesia:table(user_origin),
-                                                 X#user_origin.origin == Origin)),
+                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(user_origin), X#user_origin.origin == Origin])),  
                     case Existance of
                         [] ->
                             unknown_origin;
                         [UserOrigin] ->
-                            mnesia:delete({user_origin, Guid}),
+%                            mnesia:delete({user_origin, UserOrigin#user_origin.guid}),
                             {ok, UserOrigin#user_origin.origin}
                         end
             end,

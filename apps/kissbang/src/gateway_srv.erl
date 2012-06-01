@@ -46,7 +46,7 @@ disconnect_origin(Origin) ->
 %% @end
 %%--------------------------------------------------------------------
 route_message(Origin, Message) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {route_message, Origin, Messages}),
+    gen_server:cast(Origin#origin.node, ?SERVER, {route_message, Origin, Message}),
     ok.
 
 %%--------------------------------------------------------------------
@@ -120,7 +120,7 @@ handle_cast({disconnect_origin, Origin}, State) ->
     origin_controller:disconnect(Origin),
     {noreply, State};
 handle_cast({route_message, Origin, Message}, State) ->
-    origin_controller:route_message(Origin, Messages),
+    origin_controller:route_message(Origin, Message),
     {noreply, State};
 handle_cast({handle_origin_message, Origin, Message}, State) ->
     handlemgr_srv:handle_origin_message(Origin, Message),

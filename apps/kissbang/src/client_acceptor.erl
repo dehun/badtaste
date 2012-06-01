@@ -1,13 +1,13 @@
 -module(client_acceptor).
 
--export([start_link/1]).
+-export([start_link/1, accept_loop/1]).
 
 start_link(Port) ->
     ListenSocket = gen_tcp:listen(Port, []),
     spawn_link(client_acceptor, accept_loop, [ListenSocket]).
 
-accept_loop(ListenSocket) ->
-    {ok, ClientSock} = gen_tcp:accept(ListenSocket),
+accept_loop(ListenSock) ->
+    {ok, ClientSock} = gen_tcp:accept(ListenSock),
     log_srv:debug("got new connection"),
     spawn_client_sock_processes(ClientSock),
     accept_loop(ListenSock).
