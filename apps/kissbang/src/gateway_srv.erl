@@ -21,6 +21,7 @@
          terminate/2, code_change/3]).
 
 -define(SERVER, ?MODULE). 
+-define(PORT, 8080).
 
 -record(state, {}).
 
@@ -85,7 +86,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    client_acceptor:spawn_link(), 
+    client_acceptor:start_link(?PORT), 
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------

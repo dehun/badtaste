@@ -3,7 +3,7 @@
 -export([start_link/1, accept_loop/1]).
 
 start_link(Port) ->
-    ListenSocket = gen_tcp:listen(Port, []),
+    {ok, ListenSocket} = gen_tcp:listen(Port, []),
     spawn_link(client_acceptor, accept_loop, [ListenSocket]).
 
 accept_loop(ListenSock) ->
