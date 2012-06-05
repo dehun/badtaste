@@ -151,6 +151,7 @@ code_change(_OldVsn, State, _Extra) ->
 -record(authinfo, {guid, login, password}).
 
 init_db() ->
+    mnesia:stop(),
     mnesia:create_schema([node() | nodes()]),
     mnesia:start(),
     Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 

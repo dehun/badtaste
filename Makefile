@@ -2,11 +2,17 @@ make:
 	make compile
 
 compile:
-	./rebar compile eunit
+	./rebar compile
 
 test:
-	make eunit
+	./rebar compile eunit
+
+clean:
+	./rebar clean
 
 run:
-	erl -pa apps/kissbang/ebin -boot start_sasl -s kissbang	
+	erl -pa apps/kissbang/ebin -boot start_sasl -s kissbang
+
+generate:
+	./rebar -v generate	
 ###	make run

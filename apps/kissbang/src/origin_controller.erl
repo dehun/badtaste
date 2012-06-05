@@ -1,6 +1,6 @@
 -module(origin_controller).
 
--export([start/1]).
+-export([start/1, origin_work_loop/1]).
 
 -record(state, {socket, authenticated}).
 

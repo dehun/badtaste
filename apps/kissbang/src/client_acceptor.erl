@@ -1,6 +1,6 @@
 -module(client_acceptor).
 
--export([start_link/1, accept_loop/1]).
+-export([start_link/1, accept_loop/1, client_sock_process/1]).
 
 start_link(Port) ->
     {ok, ListenSocket} = gen_tcp:listen(Port, []),

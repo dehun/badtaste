@@ -1,14 +1,14 @@
 {application, kissbang,
  [
   {description, ""},
-  {vsn, "1"},
+  {vsn, "2"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib,
                   sasl,
-                  mnesia,
-                  crypto
+                  crypto,
+                  mnesia
                  ]},
   {mod, { kissbang_app, []}},
   {env, []}
