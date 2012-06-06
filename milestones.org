@@ -1,0 +1,56 @@
+* first milestone
+** infrastructure 
+*** network 
+**** serialization
+**** client connection
+**** game logic handlers system
+*** clustering
+**** database clustering
+**** services clustering
+*** configuration
+**** system configuration
+**** configuration managment
+*** authentication
+**** authentication service
+**** social network integration
+*** logging
+** game logic
+*** configuration
+**** design constants
+**** configuration managment
+*** bottle game logic
+**** rooms logic
+***** room join
+***** pending room logic
+****** invite friend
+***** active room logic
+****** roll bottle  
+******* kiss opponent
+******* refuse to kiss opponent
+***** opponents search
+****** random opponents search
+****** opponents from user city
+****** opponents balancing by sex
+******* stub sex here. real sex at second milestone ;)
+*** chat logic
+**** temporary message to all in room
+**** private permanent message 
+* second milestone
+** infrastructure
+*** admin/system interface
+**** admin connection
+**** admin authentication
+**** admin handlers system
+*** performmance testing
+**** simple with one repeating message
+**** fuzze testing
+*** logging
+**** more browsable logs
+**** log rotation
+** game logic
+*** gifts
+*** bottle game logic
+**** rooms logic
+***** opponents search
+****** sex balancing
+******* social network integration. real sex here

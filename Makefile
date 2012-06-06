@@ -15,4 +15,7 @@ run:
 
 generate:
 	./rebar -v generate	
+
+protocol:
+	ads
 ###	make run
