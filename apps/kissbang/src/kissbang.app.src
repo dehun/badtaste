@@ -10,6 +10,6 @@
                   crypto,
                   mnesia
                  ]},
-  {mod, { kissbang_app, []}},
-  {env, []}
+  {mod, {kissbang_app, []}},
+  {env, [{gateway_ports, [8080, 8081]}]}
  ]}.

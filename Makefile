@@ -17,5 +17,5 @@ generate:
 	./rebar -v generate	
 
 protocol:
-	ads
+	ad
 ###	make run

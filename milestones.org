@@ -1,56 +1,90 @@
-* first milestone
-** infrastructure 
-*** network 
-**** serialization
-**** client connection
-**** game logic handlers system
-*** clustering
-**** database clustering
-**** services clustering
-*** configuration
-**** system configuration
-**** configuration managment
-*** authentication
-**** authentication service
-**** social network integration
-*** logging
-** game logic
-*** configuration
-**** design constants
-**** configuration managment
-*** bottle game logic
-**** rooms logic
-***** room join
-***** pending room logic
-****** invite friend
-***** active room logic
-****** roll bottle  
-******* kiss opponent
+* first milestone - 23 days
+** infrastructure - 12 days
+*** network - 5 days
+**** serialization - 2 days
+**** client connection - 1 day
+**** game logic handlers system - 2 days
+*** clustering - 2 days
+**** database clustering - 1 day
+**** services clustering - 1 day
+*** configuration - 2 days
+**** system configuration - 1 day
+**** configuration managment - 1 day
+*** authentication - 2 days
+**** authentication service - 1 days
+**** social network integration - 1 days
+*** logging - 1 day
+** game logic - 11 days
+*** configuration - 3 days
+**** design constants - 2 days
+**** configuration managment - 1 day
+*** bottle game logic - 6 days
+**** rooms logic - 6 days
+***** room join - 2 day
+****** opponents search
+******* random opponents search
+******* opponents balancing by sex - 2 day
+******** stub sex here. real sex at second milestone ;)
+***** pending room logic - 1 day
+****** waiting for enought participants  - 1 day
+***** active room logic - 3 days
+****** roll bottle  - 3 days
+******* kiss opponent 
 ******* refuse to kiss opponent
-***** opponents search
-****** random opponents search
-****** opponents from user city
-****** opponents balancing by sex
-******* stub sex here. real sex at second milestone ;)
-*** chat logic
-**** temporary message to all in room
-**** private permanent message 
-* second milestone
-** infrastructure
-*** admin/system interface
-**** admin connection
-**** admin authentication
-**** admin handlers system
-*** performmance testing
+*** chat logic - 1 day
+**** temporary message to all in room - 1 day
+* second milestone - 22 days
+** infrastructure - 8 days
+*** admin/system interface - 3 days
+**** admin connection - 1 day
+**** admin authentication - 1 day
+**** admin handlers system - 1 day
+*** performance testing - 3 days
 **** simple with one repeating message
 **** fuzze testing
-*** logging
+*** logging - 2 days
 **** more browsable logs
 **** log rotation
-** game logic
-*** gifts
-*** bottle game logic
+** game logic - 14 days
+*** gifts - 3 days
+**** gift sending - 1 day
+***** show to all users in room
+***** gift buying
+**** gift receiving - 2 days
+***** broadcast gift receive to all in room
+***** gifts log
+*** bottle game logic - 2 days
 **** rooms logic
-***** opponents search
+***** opponents search - 2 days
 ****** sex balancing
 ******* social network integration. real sex here
+*** mail - 2 days
+**** sending private permanent mail to a user
+**** receiving mail
+*** bank - 3 days
+**** user money managment - 1.5 day
+***** transactions
+**** gold buying - 1.5 day
+***** social network integration
+*** chat - 2 days
+**** only for stars - 2 days
+***** star status buy - 1 day
+***** limitation checking - 1 day
+* third milestone - 13 days
+** infrastructure - 8 days
+*** admin module
+**** server side bindings - 2 days
+*** ban system - 2 days
+*** abuse system - 4 days
+** game - 5 days
+*** stats system - 1 day
+**** buys stats - 1 day
+*** ratings - 2 days
+**** kiss rating across friends - 1 day
+**** global rating - 1 day
+*** bonuses - 1 day
+**** x3 bonus - 1 day
+**** x2 bonus - 1 day
+*** bottle game - 1 day
+**** rooms logic 
+***** private rooms 
