@@ -14,7 +14,7 @@
 
 
 %% API
--export([start_link/0]).
+-export([start_link/0, setup_db/0]).
 -export([auth/2, register/2, drop_all_users/0]).
 
 %% gen_server callbacks
@@ -64,7 +64,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    init_db(),
+%    setup_db(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -150,10 +150,10 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 -record(authinfo, {guid, login, password}).
 
-init_db() ->
-    mnesia:stop(),
-    mnesia:create_schema([node() | nodes()]),
-    mnesia:start(),
+setup_db() ->
+%    mnesia:stop(),
+%    mnesia:create_schema([node() | nodes()]),
+%    mnesia:start(),
     Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 
                                             {attributes, record_info(fields, authinfo)}]),
     case Result of

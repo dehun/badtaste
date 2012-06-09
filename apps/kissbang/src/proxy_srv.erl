@@ -18,7 +18,7 @@
 -record(user_origin, {guid, origin, authenticated}).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, setup_db/0]).
 -export([register_origin/2, 
          get_origin/1,
          route_messages/2,
@@ -126,7 +126,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    init_db(),
+%%    setup_db(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -214,8 +214,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-init_db() ->
-    mnesia:create_schema([node() | nodes()]),
+setup_db() ->
     mnesia:start(),
     Result = mnesia:create_table(user_origin, [{ram_copies, [node() | nodes()]},
                                                {attributes, record_info(fields, user_origin)}]),
