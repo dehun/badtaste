@@ -18,7 +18,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 
 <xsl:template match="field[@type='list']" mode="serialize">
-        fields.append("\"<xsl:value-of select="@name"/>\" :" + "[" + ",".join([str(field) for field in self.<xsl:value-of select="@name"/>]) + "]")
+        fields.append("\"<xsl:value-of select="@name"/>\" :" + "[" + ",".join(["\"%s\"" % field for field in self.<xsl:value-of select="@name"/>]) + "]")
 </xsl:template>
 
 <xsl:template match="field[@type='message']" mode="serialize">
@@ -30,8 +30,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 </xsl:template>
 
 <!-- field deserialization -->
-<xsl:template match="field" mode="deserialize">
-  <xsl:value-of select="@name"/> = loadedJson["<xsl:value-of select="@name"/>"]
+<xsl:template match="field[@type='int']" mode="deserialize">
+  <xsl:value-of select="@name"/> = int(loadedJson["<xsl:value-of select="@name"/>"])
+</xsl:template>
+
+<xsl:template match="field[@type='float']" mode="deserialize">
+  <xsl:value-of select="@name"/> = float(loadedJson["<xsl:value-of select="@name"/>"])
+</xsl:template>
+
+<xsl:template match="field[@type='string']" mode="deserialize">
+  <xsl:value-of select="@name"/> = str(loadedJson["<xsl:value-of select="@name"/>"])
 </xsl:template>
 
 <xsl:template match="field[@type='message']" mode="deserialize">
