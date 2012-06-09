@@ -33,7 +33,7 @@
   </message>
 
   <message name="on_got_mailbox">
-    
+    <field name="messages_ids" type="list" of="string"/>
   </message>
 
   <message name="read_mail">
@@ -52,7 +52,7 @@
   </message>
 
   <!-- bottle game -->
-  <message name="prepare_to_swing_bottle">
+  <message name="ask_to_swing_bottle">
   </message>
 
   <message name="swing_bottle">
