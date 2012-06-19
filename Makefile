@@ -17,5 +17,5 @@ generate:
 	./rebar -v generate	
 
 protocol:
-	ad
+	cd ./common/protocol && make
 ###	make run
