@@ -11,7 +11,8 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, setup_db/0]).
+-export([handle_message/2, register_handler/2]).
 
 
 %% gen_server callbacks
@@ -21,15 +22,16 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
+-record(handler_info, {message_name, handler_fun}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-handle(Message) ->
-    gen_server:cast(?SERVER, {handle_message, Message}).
+handle_message(Guid, Message) ->
+    gen_server:cast(?SERVER, {handle_message, Guid, Message}).
 
-register_handler(HandlerFun) ->
-    gen_server:call(?SERVER, {register_handler, HandlerFun}).
+register_handler(MessageName, HandlerFun) ->
+    gen_server:cast(?SERVER, {register_handler, MessageName, HandlerFun}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -40,6 +42,22 @@ register_handler(HandlerFun) ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+setup_db() ->
+    mnesia:start(),
+    Result = mnesia:create_table(user_origin, [{ram_copies, [node() | nodes()]},
+                                               {attributes, record_info(fields, handler_info)}]),
+    case Result of
+        {atomic, ok} ->
+            mnesia:wait_for_tables([handler_info], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([handler_info], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+    end.
+    
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -87,6 +105,11 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_cast({handle_message, Guid, Message}, State) ->
+    inner_handle_message(Guid, Message),
+    {noreply, State};
+handle_cast({register_handler, MessageName, HandlerFun}, State) ->
+    inner_register_handler(MessageName, HandlerFun);
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
@@ -131,3 +154,24 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_handle_message(Guid, Message) ->
+    Trans = fun() ->
+                    mnesia:read(handler_info, element(1, Message))
+            end,
+    Existance = mnesia:activity(async_dirty, Trans),
+    case Existance of
+        [] ->
+            ok;
+        [HandlerInfo] ->
+            spawn(fun () -> 
+                          apply(HandlerInfo#handler_info.handler_fun, [Guid, Message])
+                  end)
+    end.
+
+inner_register_handler(MessageName, HandlerFun) ->
+    Trans = fun() ->
+                    mnesia:write(#handler_info{message_name = MessageName,
+                                              handler_fun = HandlerFun})
+            end,
+    mnesia:activity(async_dirty, Trans).
+                    

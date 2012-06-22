@@ -30,7 +30,7 @@ origin_work_loop(State) ->
             NewState = on_got_packet(Packet, State),
             origin_work_loop(NewState);
         {disconnected} ->   
-%            proxy_srv:drop_origin();
+            proxy_srv:drop_origin(get_my_origin()),
             State;
         {disconnect} ->
             gen_tcp:close(State#state.socket),
@@ -48,13 +48,14 @@ on_got_packet(Packet, State) ->
     end.
 
 on_got_authorized_message(Message, State) ->
-    gateway_srv:handle_origin_message(Message),
+    gateway_srv:handle_origin_message(get_my_origin(), Message),
     State.
 
-on_got_unauthorized_message(Message, State) when is_record(Message, authenticate)->
+on_got_unauthorized_message(Message, State) when is_record(Message, authenticate) ->
     Result = auth_srv:auth(Message#authenticate.login, Message#authenticate.password),
     case Result of 
         {ok, Guid} ->
+            proxy_srv:register_origin(Guid, get_my_origin()),
             send_message(get_my_origin(), #authenticated{guid = Guid}),
             State#state{authenticated = true};
         FailReason ->

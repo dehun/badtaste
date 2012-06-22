@@ -18,6 +18,7 @@ auth_test_() ->
 
 setup() ->
     guid_srv:start_link(),
+    auth_srv:setup_db(),
     auth_srv:start_link().
 
 %%==================================================

@@ -15,7 +15,7 @@
 -include_lib("stdlib/include/qlc.hrl").
 -include("origin.hrl").
 
--record(user_origin, {guid, origin, authenticated}).
+-record(user_origin, {guid, origin}).
 
 %% API
 -export([start_link/0, setup_db/0]).
@@ -24,6 +24,7 @@
          route_messages/2,
          drop_all/0,
          drop_origin/1,
+         drop_guid/1,
          async_route_messages/2]).
 
 %% gen_server callbacks
@@ -59,6 +60,15 @@ register_origin(Guid, Origin) ->
 drop_all() ->
     gen_server:call(?SERVER, {drop_all}).
 
+%%--------------------------------------------------------------------
+%% @doc
+%% drops origin by guid
+%% @spec
+%% drop_guid(Guid) -> ok
+%% @end
+%%--------------------------------------------------------------------
+drop_guid(Guid) ->
+    gen_server:call(?SERVER, {drop_guid, Guid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -148,6 +158,9 @@ handle_call({register_origin, Guid, Origin}, _From, State) ->
     {reply, Reply, State};
 handle_call({drop_all}, _From, State) ->
     Reply = inner_drop_all(),
+    {reply, Reply, State};
+handle_call({drop_guid, Guid}, _From, State) ->
+    Reply = inner_drop_guid(Guid),
     {reply, Reply, State};
 handle_call({drop_origin, Origin}, _From, State) ->
     Reply = inner_drop_origin(Origin),
@@ -244,7 +257,7 @@ inner_register_origin(Guid, Origin) ->
                     end
             end,
     
-    {atomic, {ok, Pureness}} = mnesia:transaction(Trans),
+    {ok, Pureness} = mnesia:activity(sync_dirty, Trans),
     case Pureness of
         pure ->
             ok;
@@ -255,12 +268,12 @@ inner_register_origin(Guid, Origin) ->
 
 inner_drop_all() ->
     Trans = fun() ->
-                    lists:foreach(fun(Guid) -> inner_drop_origin(Guid) end,
+                    lists:foreach(fun(Guid) -> ok = inner_drop_guid(Guid) end,
                                   mnesia:all_keys(user_origin)),
                     ok
             end,
-    {atomic, ok} = mnesia:transaction(Trans),
-    ok.
+    ok = mnesia:activity(sync_dirty, Trans).
+
 
 inner_get_origin(Guid) ->
     Trans = fun() ->
@@ -272,8 +285,16 @@ inner_get_origin(Guid) ->
                             {ok, UserOrigin#user_origin.origin}
                     end
             end,
-    {atomic, Result} = mnesia:transaction(Trans),
-    Result.
+    mnesia:activity(sync_dirty, Trans).
+
+inner_drop_guid(Guid) ->
+    Result = inner_get_origin(Guid),
+    case Result of 
+        {ok, Origin} ->
+            inner_drop_origin(Origin);
+        Error ->
+            Error
+        end.
 
 inner_drop_origin(Origin) ->
     Trans = fun() ->
@@ -287,7 +308,7 @@ inner_drop_origin(Origin) ->
                         end
             end,
     
-    {atomic, Result} = mnesia:transaction(Trans),
+    Result = mnesia:activity(sync_dirty, Trans),
     case Result of
         {ok, Origin} ->
             gateway_srv:disconnect_origin(Origin),
