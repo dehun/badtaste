@@ -22,7 +22,7 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(handler_info, {message_name, handler_fun}).
+-record(handler_reaction, {message_name, handler_fun}).
 
 %%%===================================================================
 %%% API
@@ -45,14 +45,14 @@ start_link() ->
 
 setup_db() ->
     mnesia:start(),
-    Result = mnesia:create_table(user_origin, [{ram_copies, [node() | nodes()]},
-                                               {attributes, record_info(fields, handler_info)}]),
-    case Result of
+    Result = mnesia:create_table(handler_reaction, [{ram_copies, [node() | nodes()]},
+                                                    {attributes, record_info(fields, handler_reaction)}]),
+    case Result of 
         {atomic, ok} ->
-            mnesia:wait_for_tables([handler_info], 5000),
+            mnesia:wait_for_tables([handler_reaction], 5000),
             ok;
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([handler_info], 5000),
+            mnesia:wait_for_tables([handler_reaction], 5000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -109,8 +109,7 @@ handle_cast({handle_message, Guid, Message}, State) ->
     inner_handle_message(Guid, Message),
     {noreply, State};
 handle_cast({register_handler, MessageName, HandlerFun}, State) ->
-    inner_register_handler(MessageName, HandlerFun);
-handle_cast(_Msg, State) ->
+    inner_register_handler(MessageName, HandlerFun),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -156,21 +155,21 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_handle_message(Guid, Message) ->
     Trans = fun() ->
-                    mnesia:read(handler_info, element(1, Message))
+                    mnesia:read(handler_reaction, element(1, Message))
             end,
     Existance = mnesia:activity(async_dirty, Trans),
     case Existance of
         [] ->
             ok;
-        [HandlerInfo] ->
+        [HandlerReaction] ->
             spawn(fun () -> 
-                          apply(HandlerInfo#handler_info.handler_fun, [Guid, Message])
+                          apply(HandlerReaction#handler_reaction.handler_fun, [Guid, Message])
                   end)
     end.
 
 inner_register_handler(MessageName, HandlerFun) ->
     Trans = fun() ->
-                    mnesia:write(#handler_info{message_name = MessageName,
+                    mnesia:write(#handler_reaction{message_name = MessageName,
                                               handler_fun = HandlerFun})
             end,
     mnesia:activity(async_dirty, Trans).

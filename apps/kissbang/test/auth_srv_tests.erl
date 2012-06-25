@@ -8,15 +8,16 @@
 auth_test_() ->
     {setup, fun setup/0,
      {inorder, [
-                fun should_drop_all/0,
-                fun should_register/0,
-                fun should_try_to_register_existant/0,
-                fun should_try_to_auth_non_existant/0,
-                fun should_auth_with_existant/0,
-                fun should_auth_with_existant_but_invalid_password/0
+                {"should_drop_all", fun should_drop_all/0},
+                {"should_register", fun should_register/0},
+                {"should_try_to_register_existant", fun should_try_to_register_existant/0},
+                {"should_try_to_auth_non_existant", fun should_try_to_auth_non_existant/0},
+                {"should_auth_with_existant", fun should_auth_with_existant/0},
+                {"should_auth_with_existant_but_invalid_password", fun should_auth_with_existant_but_invalid_password/0}
                ]}}.
 
 setup() ->
+    mnesia:change_table_copy_type(schema, node(), disc_copies),
     guid_srv:start_link(),
     auth_srv:setup_db(),
     auth_srv:start_link().

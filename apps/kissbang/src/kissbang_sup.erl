@@ -28,5 +28,6 @@ init([]) ->
                                  ?CHILD(guid_sup, supervisor),
                                  ?CHILD(gateway_sup, supervisor),
                                  ?CHILD(log_sup, supervisor),
+                                 ?CHILD(handlermgr_sup, supervisor),
                                  ?CHILD(proxy_sup, supervisor)]}}.
 

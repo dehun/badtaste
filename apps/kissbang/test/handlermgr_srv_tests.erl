@@ -17,7 +17,7 @@ hanglermgr_srv_test_() ->
                ]}}.
 
 setup() ->
-    handlermgr_srv:setup_db(),
+    ok = handlermgr_srv:setup_db(),
     handlermgr_srv:start_link().
 
 
@@ -35,10 +35,10 @@ should_handle_registered_message() ->
     handlermgr_srv:handle_message("randomguid", {somemessage, rand1, rand2}).
 
 should_handle_unregistered_message() ->
-    handlemgr_srv:handle_message("randomguid", {random_message, rand1}).
+    handlermgr_srv:handle_message("unknown", {unregistered, rand1, rand2, rand3}).
 
 should_handle_registered_message_with_invalid_handler() ->
-    handlemgr_srv:register_handler("invalidhandler", fun() -> X = 0, 0/X end),
-    handlemgr_srv:handle_message("randomguid", {invalidhandler, ok}).
+    handlermgr_srv:register_handler("invalidmessage", fun() -> X = 0, X/X end),
+    handlermgr_srv:handle_message("unknown", {invalidmessage, rand3}).
 
 

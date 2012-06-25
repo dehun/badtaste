@@ -8,8 +8,9 @@
 guid_srv_test_() ->
     {setup, fun setup/0,
      [
-      fun should_create_guid/0,
-      fun should_create_multiply_guids/0
+      {"should_create_guid", fun should_create_guid/0},
+      {"should_create_multiply_guids", fun should_create_multiply_guids/0},
+      {"should_test_guid_uniquness", fun should_test_guid_uniquness/0}
      ]}.
 
 setup() ->
@@ -25,3 +26,10 @@ should_create_multiply_guids() ->
     lists:foreach(fun (X) -> 
                           ?assertMatch({ok, _Guid}, guid_srv:create()) 
                   end, lists:seq(0, 10000)).
+
+should_test_guid_uniquness() ->
+    Guids = lists:map(fun (_) -> 
+                              {ok, Guid} = guid_srv:create(),
+                              Guid 
+                      end, lists:seq(0, 10000)),
+    ?assert(length(Guids) == sets:size(sets:from_list(Guids))).

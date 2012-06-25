@@ -30,8 +30,7 @@ origin_work_loop(State) ->
             NewState = on_got_packet(Packet, State),
             origin_work_loop(NewState);
         {disconnected} ->   
-            proxy_srv:drop_origin(get_my_origin()),
-            State;
+            proxy_srv:drop_origin(get_my_origin());
         {disconnect} ->
             gen_tcp:close(State#state.socket),
             State
@@ -39,7 +38,6 @@ origin_work_loop(State) ->
 
 on_got_packet(Packet, State) ->
     Msg = kissbang_json_messaging:deserialize_message(Packet),
-    io:format("~ngot message ~p~n", [Msg]),
     case State#state.authenticated of
         true ->
             on_got_authorized_message(Msg, State);
