@@ -58,9 +58,6 @@ should_drop_all() ->
     lists:foreach(fun(Guid) -> ?assert(ok == proxy_srv:register_origin(Guid, get_random_origin())) end, Guids),
     lists:foreach(fun(Guid) -> ?assert(ok == proxy_srv:drop_guid(Guid)) end, Guids).
 
-    
-
-
 should_get_non_existant_origin() ->
     {ok, Guid} = get_next_test_guid(),
     ?assert(unknown_origin == proxy_srv:get_origin(Guid)).

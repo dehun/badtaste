@@ -2,7 +2,14 @@ from protogen.messaging.types import pgMessage, pgInteger, pgFloat, pgString, pg
 
 protocolName = "kissbang"
 
-#global
+# service messages
+class PingMessage(pgMessage):
+    data = pgString()
+
+class PongMessage(pgMessage):
+    data = pgString()
+
+# global
 class ProtocolMissmatch(pgMessage):
     pass
 
@@ -34,6 +41,9 @@ class FindNextRoom(pgMessage):
 
 
 class OnRoomFound(pgMessage):
+    pass
+
+class OnAlreadyInThisRoom(pgMessage):
     pass
 
 # bottle game

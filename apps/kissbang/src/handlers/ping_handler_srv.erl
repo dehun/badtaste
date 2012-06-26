@@ -1,19 +1,18 @@
 %%%-------------------------------------------------------------------
-%%% @author  <dehun@localhost>
+%%% @author  <>
 %%% @copyright (C) 2012, 
 %%% @doc
-%%% 
+%%%
 %%% @end
-%%% Created : 31 May 2012 by  <dehun@localhost>
+%%% Created : 26 Jun 2012 by  <>
 %%%-------------------------------------------------------------------
--module(handlermgr_srv).
-
+-module(ping_handler_srv).
+-include("../kissbang_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, setup_db/0]).
--export([handle_message/2, register_handler/2]).
-
+-export([start_link/0]).
+-export([handle_ping/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -22,16 +21,10 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(handler_reaction, {message_name, handler_fun}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-handle_message(Guid, Message) ->
-    gen_server:cast(?SERVER, {handle_message, Guid, Message}).
-
-register_handler(MessageName, HandlerFun) ->
-    gen_server:cast(?SERVER, {register_handler, MessageName, HandlerFun}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -42,22 +35,6 @@ register_handler(MessageName, HandlerFun) ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
-
-setup_db() ->
-    mnesia:start(),
-    Result = mnesia:create_table(handler_reaction, [{ram_copies, [node() | nodes()]},
-                                                    {attributes, record_info(fields, handler_reaction)}]),
-    case Result of 
-        {atomic, ok} ->
-            mnesia:wait_for_tables([handler_reaction], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([handler_reaction], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-    end.
-    
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -75,6 +52,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(ping_message, fun handle_ping/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -105,11 +83,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_message, Guid, Message}, State) ->
-    inner_handle_message(Guid, Message),
-    {noreply, State};
-handle_cast({register_handler, MessageName, HandlerFun}, State) ->
-    inner_register_handler(MessageName, HandlerFun),
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -153,24 +127,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_message(Guid, Message) ->
-    Trans = fun() ->
-                    mnesia:read(handler_reaction, element(1, Message))
-            end,
-    Existance = mnesia:activity(async_dirty, Trans),
-    case Existance of
-        [] ->
-            exit(unknown_message);
-        [HandlerReaction] ->
-            spawn(fun () -> 
-                          apply(HandlerReaction#handler_reaction.handler_fun, [Guid, Message])
-                  end)
-    end.
+handle_ping(Guid, Message) when is_record(Message, ping_message) ->
+    proxy_srv:route_messages(Guid, [#pong_message{data=Message#ping_message.data}]).
 
-inner_register_handler(MessageName, HandlerFun) ->
-    Trans = fun() ->
-                    mnesia:write(#handler_reaction{message_name = MessageName,
-                                              handler_fun = HandlerFun})
-            end,
-    mnesia:activity(async_dirty, Trans).
-                    

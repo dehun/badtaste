@@ -1,12 +1,12 @@
 %%%-------------------------------------------------------------------
-%%% @author  <dehun@localhost>
+%%% @author  <>
 %%% @copyright (C) 2012, 
 %%% @doc
 %%%
 %%% @end
-%%% Created : 31 May 2012 by  <dehun@localhost>
+%%% Created : 26 Jun 2012 by  <>
 %%%-------------------------------------------------------------------
--module(handlermgr_sup).
+-module(handlers_sup).
 
 -behaviour(supervisor).
 
@@ -60,13 +60,13 @@ init([]) ->
     Shutdown = 2000,
     Type = worker,
 
-    HandlerMgr = {'handlermgr_srv', {'handlermgr_srv', start_link, []},
-              Restart, Shutdown, Type, ['handlermgr_srv']},
-    HandlersSup = {'handlers_sup', {'handlers_sup', start_link, []},
-                   Restart, Shutdown, supervisor, ['handlers_sup']},
+    Handlers = [{HandlerName, {HandlerName, start_link, []},
+                Restart, Shutdown, Type, [HandlerName]} || HandlerName <- get_all_handlers()],
 
-    {ok, {SupFlags, [HandlerMgr, HandlersSup]}}.
+    {ok, {SupFlags, Handlers}}.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+get_all_handlers() ->
+    ['ping_handler_srv'].
