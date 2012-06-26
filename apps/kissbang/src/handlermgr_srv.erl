@@ -163,11 +163,14 @@ inner_handle_message(Guid, Message) ->
             exit(unknown_message);
         [HandlerReaction] ->
             spawn(fun () -> 
+                          log_srv:debug("handling message ~p for ~p~n", [element(1, Message), Guid]),
                           apply(HandlerReaction#handler_reaction.handler_fun, [Guid, Message])
-                  end)
+                  end),
+            ok
     end.
 
 inner_register_handler(MessageName, HandlerFun) ->
+    log_srv:debug("registering handler for ~p", [MessageName]),
     Trans = fun() ->
                     mnesia:write(#handler_reaction{message_name = MessageName,
                                               handler_fun = HandlerFun})

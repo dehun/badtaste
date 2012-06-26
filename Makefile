@@ -14,6 +14,8 @@ run:
 	erl -pa apps/kissbang/ebin -boot start_sasl -s kissbang
 
 generate:
+	rm -rf ./rel/dbgnode/
+	make compile
 	./rebar -v generate	
 
 protocol:

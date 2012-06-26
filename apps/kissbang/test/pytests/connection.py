@@ -5,8 +5,9 @@ from threading import Thread
 
 class ClientProtocol(Int32StringReceiver):
     def stringReceived(self, message):
-        for subscriber in self.factory.subscribers:
-            subscriber.on_got_message(message)
+        print message
+#        for subscriber in self.factory.subscribers:
+#            subscriber.on_got_message(message)
 
     def connectionLost(self, reason):
         print "[!!!] lost connection cos of " 

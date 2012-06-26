@@ -243,6 +243,7 @@ setup_db() ->
     end.
 
 inner_register_origin(Guid, Origin) ->
+    log_srv:debug("registering guid ~p on origin ~p", [Guid, Origin]),
     Trans = fun() ->
                     Existance = mnesia:read({user_origin, Guid}),
                     NewOrigin = #user_origin{guid = Guid, origin = Origin},
@@ -321,7 +322,7 @@ inner_route_messages(Guid, Messages) ->
     OriginGetResult = inner_get_origin(Guid),
     case OriginGetResult of
         unknown_origin ->
-            unknown_origin;
+            exit(unknown_origin);
         {ok, Origin} ->
-            gateway_srv:route_messages(Origin, Messages)
+            gateway_srv:route_message(Origin, Messages)
     end.

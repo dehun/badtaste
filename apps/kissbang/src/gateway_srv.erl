@@ -124,7 +124,7 @@ handle_cast({route_message, Origin, Message}, State) ->
     origin_controller:send_message(Origin, Message),
     {noreply, State};
 handle_cast({handle_origin_message, Origin, Message}, State) ->
-    handlemgr_srv:handle_origin_message(Origin, Message),
+    handlermgr_srv:handle_message(Origin, Message),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
