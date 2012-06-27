@@ -46,7 +46,7 @@ disconnect_origin(Origin) ->
 %% @end
 %%--------------------------------------------------------------------
 route_message(Origin, Message) ->
-    gen_server:cast(Origin#origin.node, ?SERVER, {route_message, Origin, Message}),
+    gen_server:cast(?SERVER, {route_message, Origin, Message}),
     ok.
 
 %%--------------------------------------------------------------------

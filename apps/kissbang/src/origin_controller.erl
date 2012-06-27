@@ -39,14 +39,14 @@ origin_work_loop(State) ->
 on_got_packet(Packet, State) ->
     Msg = kissbang_json_messaging:deserialize_message(Packet),
     case State#state.authenticated of
-        true ->
+        {true, _Guid} ->
             on_got_authorized_message(Msg, State);
         false ->
             on_got_unauthorized_message(Msg, State)
     end.
 
 on_got_authorized_message(Message, State) ->
-    gateway_srv:handle_origin_message(get_my_origin(), Message),
+    gateway_srv:handle_origin_message(element(2, State#state.authenticated), Message),
     State.
 
 on_got_unauthorized_message(Message, State) when is_record(Message, authenticate) ->
@@ -55,7 +55,7 @@ on_got_unauthorized_message(Message, State) when is_record(Message, authenticate
         {ok, Guid} ->
             proxy_srv:register_origin(Guid, get_my_origin()),
             send_message(get_my_origin(), #authenticated{guid = Guid}),
-            State#state{authenticated = true};
+            State#state{authenticated = {true, Guid}};
         FailReason ->
             send_message(get_my_origin(), #authentication_failed{reason=atom_to_list(FailReason)}),
             disconnect(get_my_origin()),

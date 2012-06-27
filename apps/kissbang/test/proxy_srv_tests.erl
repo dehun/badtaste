@@ -1,6 +1,7 @@
 -module(proxy_srv_tests).
 -include_lib("eunit/include/eunit.hrl").
 -include("../src/origin.hrl").
+-include("../src/kissbang_messaging.hrl").
 -compile(export_all).
 -import(meck).
 
@@ -16,6 +17,7 @@ proxy_srv_test_() ->
                 {"should_drop_all", fun should_drop_all/0},
                 {"should_get_non_existant_origin", fun should_get_non_existant_origin/0},
                 {"should_route_to_origin", fun should_route_to_origin/0},
+                {"should_route_to_unregistered_origin", fun should_route_to_unregistered_origin/0},
                 {"should_drop_origin", fun should_drop_origin/0},
                 {"should_drop_nonexistant_origin", fun should_drop_nonexistant_origin/0},
                 {"should_reregister_origin", fun should_reregister_origin/0},
@@ -37,7 +39,7 @@ mock_patch() ->
     %% patching for gateway server
     meck:new(gateway_srv),
     meck:expect(gateway_srv, disconnect_origin, fun(Origin) -> ok end),
-    meck:expect(gateway_srv, route_messages, fun(Origin, Messages) -> ok end),
+    meck:expect(gateway_srv, route_message, fun(Origin, Message) -> ok end),
     ok.
 
 %%==================================================
@@ -64,7 +66,12 @@ should_get_non_existant_origin() ->
 
 should_route_to_origin() ->
     {ok, Guid} = get_next_test_guid(),
-    ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())).
+    ?assert(ok == proxy_srv:register_origin(Guid, get_test_origin())),
+    ?assert(ok == proxy_srv:route_messages(Guid, [#ping_message{data="lolwhat"}, #pong_message{data="somewhere"}])).
+
+should_route_to_unregistered_origin() ->
+    {ok, Guid} = get_next_test_guid(),
+    ?assert(unknown_origin == proxy_srv:route_messages(Guid, [#ping_message{data="lolwhat"}])).
 
 should_drop_origin() ->
     {ok, Guid} = get_next_test_guid(),

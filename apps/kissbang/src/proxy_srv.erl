@@ -322,7 +322,9 @@ inner_route_messages(Guid, Messages) ->
     OriginGetResult = inner_get_origin(Guid),
     case OriginGetResult of
         unknown_origin ->
-            exit(unknown_origin);
+            unknown_origin;
         {ok, Origin} ->
-            gateway_srv:route_message(Origin, Messages)
+            lists:foreach(fun (Message) -> gateway_srv:route_message(Origin, Message) end, 
+                          Messages),
+            ok
     end.
