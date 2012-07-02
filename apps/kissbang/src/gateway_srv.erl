@@ -53,7 +53,7 @@ route_message(Origin, Message) ->
 %% @doc
 %% handles message which come from origin
 %% @spec
-%% handle_origin_message(Origin, Message)
+%% handle_message(Origin, Message)
 %% @end
 %%--------------------------------------------------------------------
 handle_message(Guid, Message) ->

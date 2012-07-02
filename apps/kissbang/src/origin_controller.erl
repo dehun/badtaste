@@ -46,7 +46,7 @@ on_got_packet(Packet, State) ->
     end.
 
 on_got_authorized_message(Message, State) ->
-    gateway_srv:handle_origin_message(element(2, State#state.authenticated), Message),
+    gateway_srv:handle_message(element(2, State#state.authenticated), Message),
     State.
 
 on_got_unauthorized_message(Message, State) when is_record(Message, authenticate) ->
