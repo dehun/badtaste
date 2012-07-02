@@ -14,7 +14,7 @@
 -export([start_link/0]).
 -export([disconnect_origin/1, 
          route_message/2,
-         handle_origin_message/2]).
+         handle_message/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -56,8 +56,8 @@ route_message(Origin, Message) ->
 %% handle_origin_message(Origin, Message)
 %% @end
 %%--------------------------------------------------------------------
-handle_origin_message(Origin, Message) ->
-    gen_server:cast(?SERVER, {handle_origin_message, Origin, Message}).
+handle_message(Guid, Message) ->
+    gen_server:cast(?SERVER, {handle_message, Guid, Message}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -123,8 +123,8 @@ handle_cast({disconnect_origin, Origin}, State) ->
 handle_cast({route_message, Origin, Message}, State) ->
     origin_controller:send_message(Origin, Message),
     {noreply, State};
-handle_cast({handle_origin_message, Origin, Message}, State) ->
-    handlermgr_srv:handle_message(Origin, Message),
+handle_cast({handle_message, Guid, Message}, State) ->
+    handlermgr_srv:handle_message(Guid, Message),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

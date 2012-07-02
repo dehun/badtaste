@@ -1,7 +1,7 @@
 {application, kissbang,
  [
   {description, ""},
-  {vsn, "2"},
+  {vsn, "3"},
   {registered, []},
   {applications, [
                   kernel,
