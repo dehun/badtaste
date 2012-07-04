@@ -89,7 +89,7 @@ init([Owner]) ->
 %%                   {stop, Reason, NewState}
 %% @end
 %%--------------------------------------------------------------------
-pending({leave_room, UserGuid}) ->
+pending({leave_room, UserGuid}, State) ->
     NewUsers = sets:del_element(UserGuid, State#pending_state.users),
     NewState = State#pending_state{users = NewUsers},
     case sets:size(NewUsers) of

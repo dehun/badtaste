@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([spawn_room/1, get_room/1, join_room/1, leave_room/1]).
+-export([spawn_room/1, get_room/1, join_room/2, leave_room/1]).
 -export([start_link/0, setup_db/0]).
 
 %% gen_server callbacks
@@ -78,21 +78,6 @@ leave_room(UserGuid) ->
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-create_in_ram_table(TableName) ->
-    mnesia:start(),
-    Result = mnesia:create_table(TableName, [{ram_copies, [node() | nodes()]},
-                                             {attributes, record_info(fields, TableName)}]),
-    case Result of 
-        {atomic, ok} ->
-            mnesia:wait_for_tables([TableName], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([TableName], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-    end.    
-
 %%--------------------------------------------------------------------
 %% @doc
 %%
@@ -101,8 +86,22 @@ create_in_ram_table(TableName) ->
 %% @end
 %%--------------------------------------------------------------------
 setup_db() ->
-    create_in_ram_table(user_room),
-    create_in_ram_table(room).
+    mnesia:start(),
+    Result = mnesia:create_table(room, [{ram_copies, [node() | nodes()]},
+                                             {attributes, record_info(fields, room)}]),
+    Result = mnesia:create_table(user_room, [{ram_copies, [node() | nodes()]},
+                                             {attributes, record_info(fields, user_room)}]),
+    case Result of 
+        {atomic, ok} ->
+            mnesia:wait_for_tables([user_room, room], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([user_room, room], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+    end.    
+
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -142,9 +141,9 @@ handle_call({spawn_room, OwnerGuid}, _From, State) ->
 handle_call({join_room, UserGuid, RoomGuid}, _From, State) ->
     Reply = inner_join_room(UserGuid, RoomGuid),
     {reply, Reply, State};
-handle_call({leave_room, UserGuid}) ->
+handle_call({leave_room, UserGuid}, _From, State) ->
     Reply = inner_leave_room(UserGuid),
-    {reply, Reply, Statee};
+    {reply, Reply, State};
 handle_call({get_room, UserGuid}, _From, State) ->
     Reply = inner_get_room_for(UserGuid),
     {reply, Reply, State}.
@@ -212,7 +211,7 @@ inner_spawn_room(OwnerGuid) ->
                     NewRoom = #room{room_guid = guid_srv:create(),
                                     room_pid = room_srv:start(OwnerGuid)},
                     mnesia:write(NewRoom),
-                    RoomOwnerInfo = #room_user{user_guid = OwnerGuid, 
+                    RoomOwnerInfo = #user_room{user_guid = OwnerGuid, 
                                                room_pid = NewRoom#room.room_pid},
                     mnesia:write(RoomOwnerInfo),
                     ok
@@ -236,19 +235,19 @@ inner_get_room(RoomGuid) ->
                             no_such_room;
                         [Room] ->
                             {ok, Room}
-                    end,
+                    end
             end,
     mnesia:activity(async_dirty, Trans).
 
 inner_leave_room(UserGuid) ->
-    RoomRes = inner_get_room(RoomGuid),
+    RoomRes = inner_get_room_for(UserGuid),
     case RoomRes of
         {ok, Room} ->
             Trans = fun() ->
-                            mnesia:delete(user_room, UserGuid),
+                            mnesia:delete(user_room, UserGuid)
                     end,
             mnesia:activity(async_dirty, Trans),
-            room_srv:leave(Room#room.room_pid, UserGuid),
+            room_srv:leave(Room#room.room_pid, UserGuid);
         Error ->
             Error
     end.
