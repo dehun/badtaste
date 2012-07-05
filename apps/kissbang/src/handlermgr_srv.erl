@@ -160,7 +160,7 @@ inner_handle_message(Guid, Message) ->
     Existance = mnesia:activity(async_dirty, Trans),
     case Existance of
         [] ->
-            exit(unknown_message);
+            unknown_message;
         [HandlerReaction] ->
             spawn(fun () -> 
                           apply(HandlerReaction#handler_reaction.handler_fun, [Guid, Message])

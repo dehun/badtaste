@@ -13,7 +13,7 @@
 
 %% API
 -export([start_link/1, start/1]).
--export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1]).
+-export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1]).
 
 %% gen_fsm callbacks
 -export([init/1, pending/2, pending/3, active/2, active/3, handle_event/3,
@@ -27,6 +27,12 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+get_number_of_users(RoomPid) ->
+    gen_fsm:sync_send_event(RoomPid, {get_number_of_users}).
+
+is_active(RoomPid) ->
+    gen_fsm:sync_send_event(RoomPid, {is_active}).
+
 drop(RoomPid) ->
     gen_fsm:sync_send_event(RoomPid, {drop}).
 
@@ -123,6 +129,10 @@ active(_Event, State) ->
 %%                   {stop, Reason, Reply, NewState}
 %% @end
 %%--------------------------------------------------------------------
+pending({get_number_of_users}, _From, State) ->
+    {reply, sets:size(State#pending_state.users), pending, State};
+pending({is_active}, _From, State) ->
+    {reply, false, pending, State};
 pending({leave_room, UserGuid}, _From, State) ->
     % drop user
     OriginalUsersSize = sets:size(State#pending_state.users),
@@ -148,10 +158,10 @@ pending({are_in_room, Guid}, _From, State) ->
 pending({join, Guid}, _From, State) ->
     case inner_join(Guid, State#pending_state.users) of
         {ok, NewUsers} ->
-            AreReadyToStart = sets:size(State#pending_state.users) >= application:get_env(kissbang, room_limit_to_start),
+            AreReadyToStart = sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start)),
             if
                 AreReadyToStart ->
-                    {reply, ok, active, #active_state{users = State#pending_state.users}};
+                    {reply, ok, active, #active_state{users = NewUsers}};
                 true ->
                     {reply, ok, pending, State#pending_state{users=NewUsers}}
                 end;
@@ -163,8 +173,12 @@ pending(_Event, _From, State) ->
     Reply = invalid_call,
     {reply, Reply, pending, State}.
 
-
-
+active({are_in_room, UserGuid}, _From, State) ->
+    {reply, sets:is_element(UserGuid, State#active_state.users), active, State};
+active({get_number_of_users}, _From, State) ->
+    {reply, sets:size(State#active_state.users), active, State};
+active({is_active}, _From, State) ->
+    {reply, true, active, State};
 active({leave_room, UserGuid}, _From, State) ->
     % drop user
     NewUsers = sets:del_element(UserGuid, State#active_state.users),
@@ -183,7 +197,7 @@ active({leave_room, UserGuid}, _From, State) ->
 active({join, UserGuid}, _From, State) ->
     case inner_join(UserGuid, State#active_state.users) of
         {ok, NewUsers} ->
-            {reply, ok, State#active_state{users = NewUsers}};
+            {reply, ok, active, State#active_state{users = NewUsers}};
         Error ->
             {reply, Error, active, State}
     end;
@@ -287,7 +301,7 @@ inner_join(Guid, Users) ->
             proxy_srv:route_messages(Guid, #on_already_in_this_room{}),
             {error, already_in_this_room};
         true -> %% if this is new user
-            AreMaximumReached = sets:size(Users) == application:get_env(kissbang, room_maximum_users),
+            AreMaximumReached = sets:size(Users) == element(2, application:get_env(kissbang, room_maximum_users)),
             if 
                 AreMaximumReached ->
                     {error, room_already_full};

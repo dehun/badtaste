@@ -10,6 +10,11 @@
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
+test_setup_db() ->
+    mnesia:start(), 
+    mnesia:change_table_copy_type(schema, node(), disc_copies),
+    setup_db().
+
 setup_db() ->
     auth_srv:setup_db(),
     proxy_srv:setup_db(),
