@@ -40,7 +40,7 @@ are_in_room(RoomPid, Guid) ->
     gen_fsm:sync_send_event(RoomPid, {are_in_room, Guid}).
 
 leave(RoomPid, UserGuid) ->
-    gen_fsm:send_event(RoomPid, {leave_room, UserGuid}).
+    gen_fsm:sync_send_event(RoomPid, {leave_room, UserGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -92,15 +92,6 @@ init([Owner]) ->
 %%                   {stop, Reason, NewState}
 %% @end
 %%--------------------------------------------------------------------
-pending({leave_room, UserGuid}, State) ->
-    NewUsers = sets:del_element(UserGuid, State#pending_state.users),
-    NewState = State#pending_state{users = NewUsers},
-    case sets:size(NewUsers) of
-        0 ->
-            {stop, normal, NewState};
-        _Other ->
-            {next_state, pending, NewState}
-    end;
 pending({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#pending_state.users)),
     {next_state, pending, Message};
@@ -108,15 +99,6 @@ pending(_Event, State) ->
     {next_state, pending, State}.
 
 
-active({leave_room, UserGuid}, State) ->
-    NewUsers = sets:del_element(UserGuid, State#active_state.users),
-    NewState = State#active_state{users = NewUsers},
-    case sets:size(NewUsers) of
-        1 ->
-            {stop, normal, NewState};
-        _Other ->
-            {next_state, active, NewState}
-    end;
 active({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#active_state.users)),
     {next_state, active, State};
@@ -141,6 +123,21 @@ active(_Event, State) ->
 %%                   {stop, Reason, Reply, NewState}
 %% @end
 %%--------------------------------------------------------------------
+pending({leave_room, UserGuid}, _From, State) ->
+    % drop user
+    OriginalUsersSize = sets:size(State#pending_state.users),
+    NewUsers = sets:del_element(UserGuid, State#pending_state.users),
+    % form new state
+    NewState = State#pending_state{users = NewUsers},
+    % are somebody droped?
+    case sets:size(NewUsers) of
+        0 -> 
+            {stop, normal, ok, NewState};
+        OriginalUsersSize -> 
+            {reply, nobody_droped, pending, NewState};
+        Other ->
+            {reply, ok, pending, NewState}
+    end;
 pending({drop}, _From, State) ->
     Reply = inner_drop(State#pending_state.users),
     {stop, normal, Reply, State};
@@ -167,6 +164,22 @@ pending(_Event, _From, State) ->
     {reply, Reply, pending, State}.
 
 
+
+active({leave_room, UserGuid}, _From, State) ->
+    % drop user
+    NewUsers = sets:del_element(UserGuid, State#active_state.users),
+    % form state
+    NewState = State#active_state{users = NewUsers},
+    % are somebody droped?
+    OriginalUsersSize = sets:size(State#active_state.users),
+    case sets:size(NewUsers) of
+        1 ->
+            {stop, normal, ok, NewState};
+        OriginalUsersSize ->
+            {reply, nobody_droped, active, NewState};
+        _Other ->
+            {reply, ok, active, NewState}
+    end;
 active({join, UserGuid}, _From, State) ->
     case inner_join(UserGuid, State#active_state.users) of
         {ok, NewUsers} ->
