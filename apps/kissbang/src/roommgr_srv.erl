@@ -142,7 +142,7 @@ init([]) ->
 %%--------------------------------------------------------------------
 handle_call({drop_room, RoomGuid}, _From, State) ->
     Reply = inner_drop_room(RoomGuid),
-    {reply, Replty, State}.
+    {reply, Reply, State};
 handle_call({drop_all}, _From, State) ->
     Reply = inner_drop_all(),
     {reply, Reply, State};
@@ -286,7 +286,7 @@ inner_drop_all() ->
 inner_drop_room(RoomGuid) ->
     Trans = fun() ->
                     Existance = mnesia:read(room, RoomGuid),
-                    case Exitance of
+                    case Existance of
                         [] ->
                             no_such_room;
                         [Room] ->

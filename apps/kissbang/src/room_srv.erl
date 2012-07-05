@@ -159,7 +159,7 @@ pending({join, Guid}, _From, State) ->
                     {reply, ok, pending, State#pending_state{users=NewUsers}}
                 end;
         Error ->
-              {reply, Error, active, State};
+              {reply, Error, active, State}
         end;
     
 pending(_Event, _From, State) ->
@@ -167,14 +167,13 @@ pending(_Event, _From, State) ->
     {reply, Reply, pending, State}.
 
 
-active({join, _Guid}, _From, State) ->
-    case inner_join(Guid, State#active_state.users) of
+active({join, UserGuid}, _From, State) ->
+    case inner_join(UserGuid, State#active_state.users) of
         {ok, NewUsers} ->
             {reply, ok, State#active_state{users = NewUsers}};
         Error ->
-            {reply, Error, active, State};
-    end,
-
+            {reply, Error, active, State}
+    end;
 active(_Event, _From, State) ->
     Reply = invalid_call,
     {reply, Reply, active, State}.
