@@ -1,7 +1,7 @@
 <html>
 <head><title>.eunit/meck.COVER.html</title></head><body bgcolor=white text=black>
 <pre>
-File generated from /mnt/work/dev/home/kissbang/extern/meck/.eunit/meck.erl by COVER 2012-07-02 at 10:49:04
+File generated from /mnt/work/dev/home/kissbang/extern/meck/.eunit/meck.erl by COVER 2012-07-05 at 17:23:46
 
 ****************************************************************************
 
@@ -467,9 +467,9 @@ File generated from /mnt/work/dev/home/kissbang/extern/meck/.eunit/meck.erl by C
     97..|      receive {'DOWN', MonitorRef, _Type, _Object, _Info} -&gt; ok end.
         |  
         |  unload_if_mocked(P, L) when is_atom(P) -&gt;
-    45..|      unload_if_mocked(atom_to_list(P), L);
+    40..|      unload_if_mocked(atom_to_list(P), L);
         |  unload_if_mocked(P, L) when length(P) &gt; 5 -&gt;
-    41..|      case lists:split(length(P) - 5, P) of
+    37..|      case lists:split(length(P) - 5, P) of
         |          {Name, "_meck"} -&gt;
      5..|              Mocked = list_to_existing_atom(Name),
      5..|              try
@@ -479,10 +479,10 @@ File generated from /mnt/work/dev/home/kissbang/extern/meck/.eunit/meck.erl by C
         |              end,
      5..|              [Mocked|L];
         |          _Else -&gt;
-    36..|              L
+    32..|              L
         |      end;
         |  unload_if_mocked(_P, L) -&gt;
-     4..|      L.
+     3..|      L.
         |  
         |  %% --- Mock handling -----------------------------------------------------------
         |  

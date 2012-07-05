@@ -299,7 +299,7 @@ inner_join(Guid, Users) ->
     if 
         AreAlreadyInSet -> %% are user already here?
             proxy_srv:route_messages(Guid, #on_already_in_this_room{}),
-            {error, already_in_this_room};
+            {error, already_in_room};
         true -> %% if this is new user
             AreMaximumReached = sets:size(Users) == element(2, application:get_env(kissbang, room_maximum_users)),
             if 
