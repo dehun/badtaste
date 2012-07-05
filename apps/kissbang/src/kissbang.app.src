@@ -11,5 +11,7 @@
                   mnesia
                  ]},
   {mod, {kissbang_app, []}},
-  {env, [{gateway_ports, [8080, 8081]}]}
+  {env, [{gateway_ports, [8080, 8081]},
+         {room_limit_to_start, 2}
+         {room_maximum_users, 10}]}
  ]}.

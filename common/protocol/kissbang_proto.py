@@ -7,7 +7,7 @@ class PingMessage(pgMessage):
     data = pgString()
 
 class PongMessage(pgMessage):
-    data = pgString()
+    data = pgString():
 
 # global
 class ProtocolMissmatch(pgMessage):

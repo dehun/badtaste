@@ -13,7 +13,7 @@
 
 %% API
 -export([start_link/1, start/1]).
--export([join/2, broadcast_message/3, are_in_room/2, leave/2]).
+-export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1]).
 
 %% gen_fsm callbacks
 -export([init/1, pending/2, pending/3, active/2, active/3, handle_event/3,
@@ -27,6 +27,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+drop(RoomPid) ->
+    gen_fsm:sync_send_event(RoomPid, {drop}).
+
 broadcast_message(RoomPid, Sender, Message) ->
     gen_fsm:send_event(RoomPid, {broadcast_message, Sender, Message}).
 
@@ -37,7 +40,7 @@ are_in_room(RoomPid, Guid) ->
     gen_fsm:sync_send_event(RoomPid, {are_in_room, Guid}).
 
 leave(RoomPid, UserGuid) ->
-    gen_fsm:sync_send_event(RoomPid, {leave_room, UserGuid}).
+    gen_fsm:send_event(RoomPid, {leave_room, UserGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -97,7 +100,7 @@ pending({leave_room, UserGuid}, State) ->
             {stop, normal, NewState};
         _Other ->
             {next_state, pending, NewState}
-        end;
+    end;
 pending({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#pending_state.users)),
     {next_state, pending, Message};
@@ -138,6 +141,9 @@ active(_Event, State) ->
 %%                   {stop, Reason, Reply, NewState}
 %% @end
 %%--------------------------------------------------------------------
+pending({drop}, _From, State) ->
+    Reply = inner_drop(State#pending_state.users),
+    {stop, normal, Reply, State};
 pending({are_in_room, Guid}, _From, State) ->
     Reply = sets:is_element(Guid, State#pending_state.users),
     {reply, Reply, pending, State};
@@ -145,7 +151,7 @@ pending({are_in_room, Guid}, _From, State) ->
 pending({join, Guid}, _From, State) ->
     case inner_join(Guid, State#pending_state.users) of
         {ok, NewUsers} ->
-            AreReadyToStart = sets:size(State#pending_state.users) >= application:get_env(kissbang, room_limit),
+            AreReadyToStart = sets:size(State#pending_state.users) >= application:get_env(kissbang, room_limit_to_start),
             if
                 AreReadyToStart ->
                     {reply, ok, active, #active_state{users = State#pending_state.users}};
@@ -153,7 +159,7 @@ pending({join, Guid}, _From, State) ->
                     {reply, ok, pending, State#pending_state{users=NewUsers}}
                 end;
         Error ->
-            Error
+              {reply, Error, active, State};
         end;
     
 pending(_Event, _From, State) ->
@@ -162,7 +168,13 @@ pending(_Event, _From, State) ->
 
 
 active({join, _Guid}, _From, State) ->
-    {reply, cant_join, active, State};
+    case inner_join(Guid, State#active_state.users) of
+        {ok, NewUsers} ->
+            {reply, ok, State#active_state{users = NewUsers}};
+        Error ->
+            {reply, Error, active, State};
+    end,
+
 active(_Event, _From, State) ->
     Reply = invalid_call,
     {reply, Reply, active, State}.
@@ -263,5 +275,15 @@ inner_join(Guid, Users) ->
             proxy_srv:route_messages(Guid, #on_already_in_this_room{}),
             {error, already_in_this_room};
         true -> %% if this is new user
-            {ok, sets:add_element(Guid, Users)}
+            AreMaximumReached = sets:size(Users) == application:get_env(kissbang, room_maximum_users),
+            if 
+                AreMaximumReached ->
+                    {error, room_already_full};
+                true ->
+                    {ok, sets:add_element(Guid, Users)}
+            end
     end.
+
+inner_drop(Users) ->
+    lists:foreach(fun (UserGuid) -> roommgr_srv:leave_room(UserGuid) end,
+                  sets:to_list(Users)).

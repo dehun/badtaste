@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([spawn_room/1, get_room/1, join_room/2, leave_room/1]).
+-export([spawn_room/1, get_room/1, join_room/2, leave_room/1, drop_room/1, drop_all/0]).
 -export([start_link/0, setup_db/0]).
 
 %% gen_server callbacks
@@ -28,6 +28,11 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+drop_room(RoomGuid) ->
+    gen_server:call(?SERVER, {drop_room, RoomGuid}).
+
+drop_all() ->
+    gen_server:call(?SERVER, {drop_all}).
 %%--------------------------------------------------------------------
 %% @doc
 %% spawns a new room
@@ -135,6 +140,12 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({drop_room, RoomGuid}, _From, State) ->
+    Reply = inner_drop_room(RoomGuid),
+    {reply, Replty, State}.
+handle_call({drop_all}, _From, State) ->
+    Reply = inner_drop_all(),
+    {reply, Reply, State};
 handle_call({spawn_room, OwnerGuid}, _From, State) ->
     Reply = inner_spawn_room(OwnerGuid),
     {reply, Reply, State};
@@ -264,3 +275,29 @@ inner_get_room_for(UserGuid) ->
             end,
     mnesia:activity(async_dirty, Trans).
 
+inner_drop_all() ->
+        Trans = fun() ->
+                    lists:foreach(fun(RoomGuid) -> ok = inner_drop_room(RoomGuid) end,
+                                  mnesia:all_keys(room)),
+                    ok
+            end,
+    ok = mnesia:activity(sync_dirty, Trans).
+
+inner_drop_room(RoomGuid) ->
+    Trans = fun() ->
+                    Existance = mnesia:read(room, RoomGuid),
+                    case Exitance of
+                        [] ->
+                            no_such_room;
+                        [Room] ->
+                            {ok, Room}
+                    end
+            end,
+    RoomRes = mnesia:activity(sync_dirty, Trans),
+    case RoomRes of
+        {ok, Room} ->
+           room_srv:drop(Room#room.room_pid);
+        Error ->
+            Error
+    end.
+    

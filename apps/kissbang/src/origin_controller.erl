@@ -22,7 +22,7 @@ send_message(Origin, Message) ->
     Origin#origin.pid ! {send_message, Message}.
 
 origin_work_loop(State) ->
-    receive 
+    receive
         {send_message, Message} ->
             gen_tcp:send(State#state.socket, list_to_binary(kissbang_json_messaging:serialize_message(Message))),
             origin_work_loop(State);
@@ -34,7 +34,7 @@ origin_work_loop(State) ->
         {disconnect} ->
             gen_tcp:close(State#state.socket),
             State
-        end.
+    end.
 
 on_got_packet(Packet, State) ->
     Msg = kissbang_json_messaging:deserialize_message(Packet),
