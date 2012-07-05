@@ -173,6 +173,9 @@ pending(_Event, _From, State) ->
     Reply = invalid_call,
     {reply, Reply, pending, State}.
 
+
+active({drop}, _From, State) ->
+    {stop, inner_drop(State#active_state.users), active, State};
 active({are_in_room, UserGuid}, _From, State) ->
     {reply, sets:is_element(UserGuid, State#active_state.users), active, State};
 active({get_number_of_users}, _From, State) ->
@@ -311,5 +314,6 @@ inner_join(Guid, Users) ->
     end.
 
 inner_drop(Users) ->
-    lists:foreach(fun (UserGuid) -> roommgr_srv:leave_room(UserGuid) end,
-                  sets:to_list(Users)).
+    lists:foreach(fun (UserGuid) -> ok = roommgr_srv:leave_room(UserGuid) end,
+                  sets:to_list(Users)),
+    ok.
