@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([spawn_room/1, get_room/1, join_room/2, leave_room/1, drop_room/1, drop_all/0]).
+-export([spawn_room/1, get_room/1, get_room_for/1, join_room/2, leave_room/1, async_leave_room/1, drop_room/1, drop_all/0]).
 -export([start_link/0, setup_db/0]).
 
 %% gen_server callbacks
@@ -22,8 +22,7 @@
 
 -record(state, {}).
 -record(user_room, {user_guid, room_pid}).
--record(room, {room_guid, room_pid}).
-
+-include("room.hrl").
 
 %%%===================================================================
 %%% API
@@ -47,11 +46,14 @@ spawn_room(OwnerGuid) ->
 %% @doc
 %% gets room by user guid. implementation of user -> room mapping
 %% @spec
-%% get_room(UserGuid) -> {ok, RoomPid} | no_such_room
+%% get_room_for(UserGuid) -> {ok, RoomGuid} | no_such_room
 %% @end
 %%--------------------------------------------------------------------
-get_room(UserGuid) ->
-    gen_server:call(?SERVER, {get_room, UserGuid}).
+get_room_for(UserGuid) ->
+    gen_server:call(?SERVER, {get_room_for, UserGuid}).
+
+get_room(RoomGuid) ->
+    gen_server:call(?SERVER, {get_room, RoomGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -60,7 +62,7 @@ get_room(UserGuid) ->
 %% join_room(UserGuid, RoomGuid) -> ok | no_such_room
 %% @end
 %%--------------------------------------------------------------------
-join_room(UserGuid, RoomGuid) ->
+join_room(RoomGuid, UserGuid) ->
     gen_server:call(?SERVER, {join_room, UserGuid, RoomGuid}).
 
 %%--------------------------------------------------------------------
@@ -72,6 +74,8 @@ join_room(UserGuid, RoomGuid) ->
 %%--------------------------------------------------------------------
 leave_room(UserGuid) ->
     gen_server:call(?SERVER, {leave_room, UserGuid}).
+async_leave_room(UserGuid) ->
+    gen_server:cast(?SERVER, {leave_room, UserGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -92,20 +96,21 @@ start_link() ->
 %%--------------------------------------------------------------------
 setup_db() ->
     mnesia:start(),
-    Result = mnesia:create_table(room, [{ram_copies, [node() | nodes()]},
+    mnesia:create_table(room, [{ram_copies, [node() | nodes()]},
                                              {attributes, record_info(fields, room)}]),
-    Result = mnesia:create_table(user_room, [{ram_copies, [node() | nodes()]},
+    mnesia:create_table(user_room, [{ram_copies, [node() | nodes()]},
                                              {attributes, record_info(fields, user_room)}]),
-    case Result of 
-        {atomic, ok} ->
-            mnesia:wait_for_tables([user_room, room], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([user_room, room], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-    end.    
+    ok = mnesia:wait_for_tables([user_room, room], 5000).
+    %% case Result of 
+    %%     {atomic, ok} ->
+            
+    %%         ok;
+    %%     {aborted, {already_exists, _}} ->
+    %%         mnesia:wait_for_tables([user_room, room], 5000),
+    %%         ok;
+    %%     {aborted, Reason} ->
+    %%         erlang:error(Reason)
+    %% end.    
 
 
 %%%===================================================================
@@ -155,9 +160,13 @@ handle_call({join_room, UserGuid, RoomGuid}, _From, State) ->
 handle_call({leave_room, UserGuid}, _From, State) ->
     Reply = inner_leave_room(UserGuid),
     {reply, Reply, State};
-handle_call({get_room, UserGuid}, _From, State) ->
+handle_call({get_room_for, UserGuid}, _From, State) ->
     Reply = inner_get_room_for(UserGuid),
+    {reply, Reply, State};
+handle_call({get_room, RoomGuid}, _From, State) ->
+    Reply = inner_get_room(RoomGuid),
     {reply, Reply, State}.
+
 %% handle_call(_Request, _From, State) ->
 %%     Reply = ok,
 %%     {reply, Reply, State}.
@@ -172,8 +181,11 @@ handle_call({get_room, UserGuid}, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({leave_room, UserGuid}, State) ->
+    inner_leave_room(UserGuid),
     {noreply, State}.
+%handle_cast(_Msg, State) ->
+%    {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -219,15 +231,17 @@ code_change(_OldVsn, State, _Extra) ->
 inner_spawn_room(OwnerGuid) ->
     inner_leave_room(OwnerGuid), % leave previous room
     Trans = fun() ->
-                    NewRoom = #room{room_guid = guid_srv:create(),
-                                    room_pid = room_srv:start(OwnerGuid)},
+                    {ok, RoomGuid} = guid_srv:create(),
+                    {ok, RoomPid} = room_srv:start(OwnerGuid),
+                    NewRoom = #room{room_guid = RoomGuid,
+                                    room_pid = RoomPid},
                     mnesia:write(NewRoom),
                     RoomOwnerInfo = #user_room{user_guid = OwnerGuid, 
                                                room_pid = NewRoom#room.room_pid},
                     mnesia:write(RoomOwnerInfo),
-                    ok
+                    {ok, NewRoom#room.room_guid}
             end,
-    ok = mnesia:activity(async_dirty, Trans).
+    {ok, _RoomGuid} = mnesia:activity(async_dirty, Trans).
 
 inner_join_room(UserGuid, RoomGuid) ->
     RoomRes = inner_get_room(RoomGuid),
@@ -270,7 +284,7 @@ inner_get_room_for(UserGuid) ->
                         [] ->
                             no_such_room;
                         [UserRoom] ->
-                            UserRoom#user_room.room_pid
+                            UserRoom
                     end
             end,
     mnesia:activity(async_dirty, Trans).

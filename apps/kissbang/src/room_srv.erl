@@ -314,6 +314,6 @@ inner_join(Guid, Users) ->
     end.
 
 inner_drop(Users) ->
-    lists:foreach(fun (UserGuid) -> ok = roommgr_srv:leave_room(UserGuid) end,
+    lists:foreach(fun (UserGuid) -> ok = roommgr_srv:async_leave_room(UserGuid) end,
                   sets:to_list(Users)),
     ok.
