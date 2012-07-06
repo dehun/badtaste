@@ -16,7 +16,7 @@ roommgr_srv_test_() ->
                 {"should_spawn_room", fun should_spawn_room/0},
                 {"should_spawn_multiply_rooms", fun should_spawn_multiply_rooms/0},
                 {"should_get_room_by_room_guid", fun should_get_room_by_room_guid/0},
-                {"should_get_room_by_user_guid", fun should_get_room_by_owner_guid/0},
+                {"should_get_room_by_owner_guid", fun should_get_room_by_owner_guid/0},
                 {"should_join_room", fun should_join_room/0},
                 {"should_get_room_by_user_guid", fun should_get_room_by_user_guid/0}
                 %% {"should_join_room", fun should_join_room/0},
@@ -39,7 +39,6 @@ mock_patch() ->
     meck:new(proxy_srv),
     meck:expect(proxy_srv, route_messages, fun(_UserGuid, _Messages) -> ok end).
 
-
 foreach() ->
     roommgr_srv:drop_all().
     
@@ -59,8 +58,8 @@ should_get_room_by_owner_guid() ->
     OwnerGuid = random_guid(),
     {ok, RoomGuid} = roommgr_srv:spawn_room(OwnerGuid),
     {ok, Room} = roommgr_srv:get_room_for(OwnerGuid),
-    ?assertMatch({ok, RoomGuid}, Room#room.room_guid),
-    ?assert(roommgr_srv:are_in_room(Room#room.room_pid, OwnerGuid)).
+    ?assertMatch(RoomGuid, Room#room.room_guid),
+    ?assert(room_srv:are_in_room(Room#room.room_pid, OwnerGuid)).
 
 should_join_room() ->
     {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),

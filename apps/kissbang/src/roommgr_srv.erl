@@ -12,6 +12,7 @@
 
 %% API
 -export([spawn_room/1, get_room/1, get_room_for/1, join_room/2, leave_room/1, async_leave_room/1, drop_room/1, drop_all/0]).
+%-export([on_user_joined/1, on_user_leave/1, on_new_room_spawned/1]).
 -export([start_link/0, setup_db/0]).
 
 %% gen_server callbacks
@@ -21,7 +22,7 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(user_room, {user_guid, room_pid}).
+-record(user_room, {user_guid, room_guid}).
 -include("room.hrl").
 
 %%%===================================================================
@@ -237,7 +238,7 @@ inner_spawn_room(OwnerGuid) ->
                                     room_pid = RoomPid},
                     mnesia:write(NewRoom),
                     RoomOwnerInfo = #user_room{user_guid = OwnerGuid, 
-                                               room_pid = NewRoom#room.room_pid},
+                                               room_guid = NewRoom#room.room_guid},
                     mnesia:write(RoomOwnerInfo),
                     {ok, NewRoom#room.room_guid}
             end,
@@ -259,6 +260,7 @@ inner_get_room(RoomGuid) ->
                         [] ->
                             no_such_room;
                         [Room] ->
+                            check_room_heart(Room),
                             {ok, Room}
                     end
             end,
@@ -269,10 +271,12 @@ inner_leave_room(UserGuid) ->
     case RoomRes of
         {ok, Room} ->
             Trans = fun() ->
-                            mnesia:delete(user_room, UserGuid)
+                            mnesia:delete({user_room, UserGuid})
                     end,
             mnesia:activity(async_dirty, Trans),
-            room_srv:leave(Room#room.room_pid, UserGuid);
+            LeaveResult = room_srv:leave(Room#room.room_pid, UserGuid),
+            check_room_heart(Room),
+            LeaveResult;
         Error ->
             Error
     end.
@@ -284,7 +288,13 @@ inner_get_room_for(UserGuid) ->
                         [] ->
                             no_such_room;
                         [UserRoom] ->
-                            UserRoom
+                            [Room] = mnesia:read(room, UserRoom#user_room.room_guid),
+                            case check_room_heart(Room) of
+                                ok ->
+                                    {ok, Room};
+                                dead ->
+                                    no_such_room
+                            end
                     end
             end,
     mnesia:activity(async_dirty, Trans).
@@ -298,20 +308,44 @@ inner_drop_all() ->
     ok = mnesia:activity(sync_dirty, Trans).
 
 inner_drop_room(RoomGuid) ->
-    Trans = fun() ->
-                    Existance = mnesia:read(room, RoomGuid),
-                    case Existance of
-                        [] ->
-                            no_such_room;
-                        [Room] ->
-                            {ok, Room}
-                    end
-            end,
-    RoomRes = mnesia:activity(sync_dirty, Trans),
+    RoomRes =  inner_get_room(RoomGuid),
     case RoomRes of
         {ok, Room} ->
-           room_srv:drop(Room#room.room_pid);
+            spawn(fun() -> room_srv:drop(Room#room.room_pid) end),
+            ok;
         Error ->
             Error
     end.
+
+
+
+
+    %% Trans = fun() ->
+    %%                 Existance = mnesia:read(room, RoomGuid),
+    %%                 case Existance of
+    %%                     [] ->
+    %%                         no_such_room;
+    %%                     [Room] ->
+    %%                         mnesia:delete({room, RoomGuid}),
+    %%                         {ok, Room}
+    %%                 end
+    %%         end,
+    %% RoomRes = mnesia:activity(sync_dirty, Trans),
+    %% case RoomRes of
+    %%     {ok, Room} ->
+    %%         spawn(fun() -> room_srv:drop(Room#room.room_pid) end),
+    %%         ok;
+    %%     Error ->
+    %%         Error
+    %% end.
     
+check_room_heart(Room) ->
+    IsRoomAlive = is_process_alive(Room#room.room_pid),
+    case IsRoomAlive of
+        true ->
+            ok;
+        false ->
+            DelTrans = fun() -> mnesia:delete({room, Room#room.room_guid}) end,
+            mnesia:activity(async_dirty, DelTrans),
+            dead
+    end.
