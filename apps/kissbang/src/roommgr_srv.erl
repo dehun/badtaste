@@ -248,7 +248,16 @@ inner_join_room(UserGuid, RoomGuid) ->
     RoomRes = inner_get_room(RoomGuid),
     case RoomRes of
         {ok, Room} ->
-            room_srv:join(Room#room.room_pid, UserGuid);
+            case room_srv:join(Room#room.room_pid, UserGuid) of
+                ok ->
+                    Trans = fun() -> 
+                                    mnesia:write(#user_room{user_guid = UserGuid,
+                                                            room_guid = Room#room.room_guid}) 
+                            end,
+                    mnesia:activity(async_dirty, Trans);
+                Error ->
+                    Error
+            end;
         Error ->
             Error
     end.
@@ -288,11 +297,16 @@ inner_get_room_for(UserGuid) ->
                         [] ->
                             no_such_room;
                         [UserRoom] ->
-                            [Room] = mnesia:read(room, UserRoom#user_room.room_guid),
-                            case check_room_heart(Room) of
-                                ok ->
-                                    {ok, Room};
-                                dead ->
+                            RoomRes = mnesia:read(room, UserRoom#user_room.room_guid),
+                            case RoomRes of 
+                                [Room] ->
+                                    case check_room_heart(Room) of
+                                        ok ->
+                                            {ok, Room};
+                                        dead ->
+                                            no_such_room
+                                    end;
+                                [] ->
                                     no_such_room
                             end
                     end

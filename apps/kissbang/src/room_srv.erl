@@ -175,7 +175,7 @@ pending(_Event, _From, State) ->
 
 
 active({drop}, _From, State) ->
-    {stop, inner_drop(State#active_state.users), active, State};
+    {stop, normal, inner_drop(State#active_state.users), State};
 active({are_in_room, UserGuid}, _From, State) ->
     {reply, sets:is_element(UserGuid, State#active_state.users), active, State};
 active({get_number_of_users}, _From, State) ->
