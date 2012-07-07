@@ -18,7 +18,8 @@ roommgr_srv_test_() ->
                 {"should_get_room_by_room_guid", fun should_get_room_by_room_guid/0},
                 {"should_get_room_by_owner_guid", fun should_get_room_by_owner_guid/0},
                 {"should_join_room", fun should_join_room/0},
-                {"should_get_room_by_user_guid", fun should_get_room_by_user_guid/0}
+                {"should_get_room_by_user_guid", fun should_get_room_by_user_guid/0},
+                {"should_leave_room", fun should_leave_room/0}
       ]}}.
 
 setup() ->
@@ -74,6 +75,12 @@ should_get_room_by_user_guid() ->
     {ok, Room} = roommgr_srv:get_room_for(UserGuid),
     ?assertMatch(RoomGuid, Room#room.room_guid).
     
+
+should_leave_room() ->
+    {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),
+    UserGuid = random_guid(),
+    ?assertMatch(ok, roommgr_srv:join_room(RoomGuid, UserGuid)),
+    ?assertMatch(ok, roommgr_srv:leave_room(UserGuid)).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
