@@ -10,7 +10,7 @@
 %% Testing setup
 %%==================================================
 roommgr_srv_test_() ->
-    {setup, fun setup/0,
+    {setup, fun setup/0, fun teardown/1,
      {foreach, fun foreach/0, 
       [
                 {"should_spawn_room", fun should_spawn_room/0},
@@ -19,13 +19,6 @@ roommgr_srv_test_() ->
                 {"should_get_room_by_owner_guid", fun should_get_room_by_owner_guid/0},
                 {"should_join_room", fun should_join_room/0},
                 {"should_get_room_by_user_guid", fun should_get_room_by_user_guid/0}
-                %% {"should_join_room", fun should_join_room/0},
-                %% {"should_multiply_join_room", fun should_multiply_join_room/0},
-                %% {"should_join_room_to_active", fun should_join_room_to_active/0},
-                %% {"should_touch_join_limit", fun should_touch_join_limit/0},
-                %% {"should_press_join_limit", fun should_press_join_limit/0},
-                %% {"should_left_room_on_pending", fun should_left_room_on_pending/0},
-                %% {"should_left_room_to_death", fun should_left_room_to_death/0},
       ]}}.
 
 setup() ->
@@ -38,6 +31,12 @@ setup() ->
 mock_patch() ->
     meck:new(proxy_srv),
     meck:expect(proxy_srv, route_messages, fun(_UserGuid, _Messages) -> ok end).
+
+teardown(_) ->
+    mock_unpatch().
+
+mock_unpatch() ->
+    meck:unload(proxy_srv).
 
 foreach() ->
     roommgr_srv:drop_all().
