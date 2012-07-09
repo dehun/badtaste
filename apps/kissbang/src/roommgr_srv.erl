@@ -60,7 +60,7 @@ get_room(RoomGuid) ->
 %% @doc
 %% joins user to the room
 %% @spec
-%% join_room(UserGuid, RoomGuid) -> ok | no_such_room
+%% join_room(RoomGuid, UserGuid) -> ok | no_such_room
 %% @end
 %%--------------------------------------------------------------------
 join_room(RoomGuid, UserGuid) ->
