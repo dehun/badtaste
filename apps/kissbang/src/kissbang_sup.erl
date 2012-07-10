@@ -30,5 +30,7 @@ init([]) ->
                                  ?CHILD(roommgr_sup, supervisor),
                                  ?CHILD(log_sup, supervisor),
                                  ?CHILD(handlermgr_sup, supervisor),
+                                 ?CHILD(roomqueue_sup, supervisor),
+                                 ?CHILD(roomfullifier_sup, supervisor),
                                  ?CHILD(proxy_sup, supervisor)]}}.
 
