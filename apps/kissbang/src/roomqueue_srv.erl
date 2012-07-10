@@ -30,6 +30,7 @@ join(QueuePid, Guid) ->
     gen_server:cast(QueuePid, {join, Guid}).
 
 tick(QueuePid) ->
+    reinit_ticker(),
     gen_server:cast(QueuePid, {tick}).
 %%--------------------------------------------------------------------
 %% @doc
@@ -58,7 +59,7 @@ start_link() ->
 %%--------------------------------------------------------------------
 init([]) ->
     %% set timer
-    {ok, _TRef} = timer:apply_after(1000, roomqueue_srv, tick, [self()]),
+    reinit_ticker(),
     %% init state
     {ok, #state{rooms = [],
                 full_rooms = [],
@@ -93,11 +94,10 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({tick}, State) ->
-    sets:fold(fun (UserGuid, _) -> 
-                      gen_server:cast(self(), {push_user, UserGuid}),
-                      ok
-              end, ok, State#state.pending_users),
-    {noreply, State#state{pending_users = set:new()}};
+    lists:foreach(fun (UserGuid) -> 
+                      gen_server:cast(self(), {push_user, UserGuid})
+              end, State#state.pending_users),
+    {noreply, State#state{pending_users = []}};
 handle_cast({push_user, UserGuid}, State) ->
     NewState = inner_push_user(UserGuid, State),
     {noreply, NewState};
@@ -154,7 +154,9 @@ inner_push_user(UserGuid, State) -> %% NewState
         no_free_room ->
             NewRoom = inner_spawn_room_for(UserGuid),
             State#state{rooms = [NewRoom], 
-                        full_rooms = State#state.rooms}
+                        full_rooms = State#state.rooms};
+        Error ->
+            Error
     end.
 
 inner_find_room_for(UserGuid, State) -> %% {ok, NewRooms} | no_free_room
@@ -172,7 +174,7 @@ inner_find_room_for(UserGuid, [RoomGuid | RestRooms], NewRooms, FullRooms, _Alre
         {error, already_in_room} ->
             inner_find_room_for(UserGuid, [], NewRooms ++ RestRooms, FullRooms, true);
         ok ->
-            inner_find_room_for(UserGuid, [],  RestRooms ++ NewRooms, FullRooms, true)
+            inner_find_room_for(UserGuid, [],  RestRooms ++ [RoomGuid | NewRooms], FullRooms, true)
     end;
 inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
     if 
@@ -185,3 +187,6 @@ inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
 inner_spawn_room_for(UserGuid) ->
     {ok, RoomGuid} = roommgr_srv:spawn_room(UserGuid),
     RoomGuid.
+
+reinit_ticker() ->
+        {ok, _TRef} = timer:apply_after(5000, roomqueue_srv, tick, [self()]).

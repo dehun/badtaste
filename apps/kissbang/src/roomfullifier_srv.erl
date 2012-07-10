@@ -53,7 +53,8 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{main_queue = roomqueue_sup:start_child()}}.
+    {ok, MainQueuePid} = roomqueue_sup:start_queue(),
+    {ok, #state{main_queue = MainQueuePid}}.
 
 %%--------------------------------------------------------------------
 %% @private

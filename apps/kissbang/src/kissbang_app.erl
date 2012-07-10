@@ -4,7 +4,7 @@
 
 %% Application callbacks
 -export([start/2, stop/1, start/0, 
-         setup_db/0,
+         setup_db/0, test_setup_db/0,
          replicate_db_from/1]).
 
 %% ===================================================================
