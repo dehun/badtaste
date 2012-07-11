@@ -7,7 +7,7 @@ class PingMessage(pgMessage):
     data = pgString()
 
 class PongMessage(pgMessage):
-    data = pgString():
+    data = pgString()
 
 # global
 class ProtocolMissmatch(pgMessage):
@@ -27,20 +27,28 @@ class AuthenticationFailed(pgMessage):
     reason = pgString()
 
 # chat
-class SendChatMessage(pgMessage):
+class SendChatMessageToRoom(pgMessage):
     message = pgString()
 
-
-class OnGotChatMessage(pgMessage):
+class OnGotChatMessageFromRoom(pgMessage):
     senderGuid = pgString()
     message = pgString()
 
 # rooms
-class FindNextRoom(pgMessage):
+class JoinMainRoomQueue(pgMessage):
+    pass
+
+class OnJoinedToMainRoomQueue(pgMessage):
+    pass
+
+class OnJoinedToRoom(pgMessage):
+    pass
+
+class OnRoomStarted(pgMessage):
     pass
 
 
-class OnRoomFound(pgMessage):
+class OnRoomIsFull(pgMessage):
     pass
 
 class OnAlreadyInThisRoom(pgMessage):

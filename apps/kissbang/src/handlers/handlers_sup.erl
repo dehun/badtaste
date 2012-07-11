@@ -69,4 +69,14 @@ init([]) ->
 %%% Internal functions
 %%%===================================================================
 get_all_handlers() ->
-    ['ping_handler_srv'].
+    lists:flatten(['ping_handler_srv',
+                  get_room_handlers(),
+                  get_chat_handlers()]).
+
+
+get_room_handlers() ->
+    ['join_main_roomqueue_handler_srv'].
+
+get_chat_handlers() ->
+    ['send_chat_message_to_room_handler_srv'].
+

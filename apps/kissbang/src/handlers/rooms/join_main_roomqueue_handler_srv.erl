@@ -4,39 +4,30 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created :  9 Jul 2012 by  <>
+%%% Created : 10 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(roomqueue_srv).
--include("kissbang_messaging.hrl").
+-module(join_main_roomqueue_handler_srv).
+-include("../../kissbang_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([join/2, tick/1, tick_full/1]).
+-export([handle_join_main_roomqueue/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
-%%-define(SERVER, ?MODULE). 
+-define(SERVER, ?MODULE). 
 
--record(state, {rooms, full_rooms, pending_users}).
-%%-record(roominfo, {room_guid}).
+-record(state, {}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-join(QueuePid, Guid) ->
-    gen_server:cast(QueuePid, {join, Guid}).
 
-tick(QueuePid) ->
-    reinit_ticker(),
-    gen_server:cast(QueuePid, {tick}).
-
-tick_full(QueuePid) ->
-    reinit_full_ticker(),
-    gen_server:cast(QueuePid, {tick_full}).
-%%--------------------------------------------------------------------
+%%--------------------------------------
+%%------------------------------
 %% @doc
 %% Starts the server
 %%
@@ -44,7 +35,7 @@ tick_full(QueuePid) ->
 %% @end
 %%--------------------------------------------------------------------
 start_link() ->
-    gen_server:start_link(?MODULE, [], []).
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -62,13 +53,8 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    %% set timer
-    reinit_ticker(),
-    reinit_full_ticker(),
-    %% init state
-    {ok, #state{rooms = [],
-                full_rooms = [],
-                pending_users = []}}.
+    handlers_utils:register_handler(join_main_room_queue, fun handle_join_main_roomqueue/2),
+    {ok, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -98,20 +84,6 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({tick_full}, State) ->
-    {noreply, State#state{rooms = State#state.rooms ++ State#state.full_rooms,
-                          full_rooms = []}};
-handle_cast({tick}, State) ->
-    lists:foreach(fun (UserGuid) -> 
-                      gen_server:cast(self(), {push_user, UserGuid})
-              end, State#state.pending_users),
-    {noreply, State#state{pending_users = []}};
-handle_cast({push_user, UserGuid}, State) ->
-    NewState = inner_push_user(UserGuid, State),
-    {noreply, NewState};
-handle_cast({join, UserGuid}, State) ->
-    proxy_srv:async_route_messages(UserGuid, [#on_joined_to_main_room_queue{}]),
-    {noreply, State#state{pending_users = [UserGuid | State#state.pending_users]}};
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
@@ -156,49 +128,5 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_push_user(UserGuid, State) -> %% NewState
-    case inner_find_room_for(UserGuid, State) of
-        {ok, NewRooms} ->
-            State#state{rooms = NewRooms};
-        no_free_room ->
-            NewRoom = inner_spawn_room_for(UserGuid),
-            State#state{rooms = [NewRoom], 
-                        full_rooms = State#state.rooms};
-        Error ->
-            Error
-    end.
-
-inner_find_room_for(UserGuid, State) -> %% {ok, NewRooms} | no_free_room
-    {NewRooms, FullRooms} = inner_find_room_for(UserGuid, State#state.rooms, [], [], false),
-    State#state{full_rooms = State#state.full_rooms ++ FullRooms,
-                rooms = NewRooms}.
-
-
-inner_find_room_for(UserGuid, [RoomGuid | RestRooms], NewRooms, FullRooms, _AlreadyJoined) ->
-    case roommgr_srv:join_room(RoomGuid, UserGuid) of
-        no_such_room ->
-            inner_find_room_for(UserGuid, RestRooms, NewRooms, FullRooms, false);
-        {error, room_already_full} ->
-            inner_find_room_for(UserGuid, RestRooms, NewRooms, [RoomGuid | FullRooms], false);
-        {error, already_in_room} ->
-            inner_find_room_for(UserGuid, [], RestRooms ++ [RoomGuid | NewRooms], FullRooms, true);
-        ok ->
-            inner_find_room_for(UserGuid, [],  RestRooms ++ [RoomGuid | NewRooms], FullRooms, true)
-    end;
-inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
-    if 
-        AlreadyJoined ->
-            {NewRooms, FullRooms};
-        true ->
-            {[inner_spawn_room_for(UserGuid) |  NewRooms], FullRooms}
-    end.
-
-inner_spawn_room_for(UserGuid) ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(UserGuid),
-    RoomGuid.
-
-reinit_ticker() ->
-    {ok, _} = timer:apply_after(5000, roomqueue_srv, tick, [self()]).
-
-reinit_full_ticker() ->
-    {ok, _} = timer:apply_after(15000, roomqueue_srv, tick_full, [self()]).
+handle_join_main_roomqueue(UserGuid, _Message) ->
+    roomfullifier_srv:join_main_queue(UserGuid).

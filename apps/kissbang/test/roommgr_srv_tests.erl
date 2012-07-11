@@ -31,7 +31,8 @@ setup() ->
 
 mock_patch() ->
     meck:new(proxy_srv),
-    meck:expect(proxy_srv, route_messages, fun(_UserGuid, _Messages) -> ok end).
+    meck:expect(proxy_srv, route_messages, fun(_UserGuid, _Messages) -> ok end),
+    meck:expect(proxy_srv, async_route_messages, fun(_UserGuid, _Messages) -> ok end).
 
 teardown(_) ->
     mock_unpatch().
