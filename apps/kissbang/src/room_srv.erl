@@ -81,6 +81,7 @@ start(OwnerGuid) ->
 %%--------------------------------------------------------------------
 init([Owner]) ->
     Users = sets:from_list([Owner]),
+    proxy_srv:async_route_messages(Owner, [#on_joined_to_room{}]),
     {ok, pending, #pending_state{users=Users}}.
 
 %%--------------------------------------------------------------------

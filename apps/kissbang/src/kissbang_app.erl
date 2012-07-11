@@ -18,7 +18,6 @@ test_setup_db() ->
 setup_db() ->
     auth_srv:setup_db(),
     proxy_srv:setup_db(),
-    handlermgr_srv:setup_db(),
     roommgr_srv:setup_db(),
     ok.
     

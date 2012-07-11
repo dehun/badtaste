@@ -30,11 +30,9 @@ join(QueuePid, Guid) ->
     gen_server:cast(QueuePid, {join, Guid}).
 
 tick(QueuePid) ->
-    reinit_ticker(),
     gen_server:cast(QueuePid, {tick}).
 
 tick_full(QueuePid) ->
-    reinit_full_ticker(),
     gen_server:cast(QueuePid, {tick_full}).
 %%--------------------------------------------------------------------
 %% @doc
@@ -99,11 +97,14 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({tick_full}, State) ->
+    reinit_full_ticker(),
     {noreply, State#state{rooms = State#state.rooms ++ State#state.full_rooms,
                           full_rooms = []}};
 handle_cast({tick}, State) ->
+    reinit_ticker(),
     lists:foreach(fun (UserGuid) -> 
-                      gen_server:cast(self(), {push_user, UserGuid})
+                          log_srv:debug("pushing user ~p to room ~n", [UserGuid]),
+                          gen_server:cast(self(), {push_user, UserGuid})
               end, State#state.pending_users),
     {noreply, State#state{pending_users = []}};
 handle_cast({push_user, UserGuid}, State) ->
@@ -198,7 +199,7 @@ inner_spawn_room_for(UserGuid) ->
     RoomGuid.
 
 reinit_ticker() ->
-    {ok, _} = timer:apply_after(5000, roomqueue_srv, tick, [self()]).
+    {ok, _} = timer:apply_after(1000, roomqueue_srv, tick, [self()]).
 
 reinit_full_ticker() ->
     {ok, _} = timer:apply_after(15000, roomqueue_srv, tick_full, [self()]).

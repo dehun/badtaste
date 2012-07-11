@@ -12,7 +12,7 @@
 
 %% API
 -export([start_link/0]).
--export([join_main_queue/1]).
+-export([join_main_queue/1, get_main_queue/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -27,6 +27,9 @@
 %%%===================================================================
 join_main_queue(UserGuid) ->
     gen_server:cast(?SERVER, {join_main_queue, UserGuid}).
+
+get_main_queue() ->
+    gen_server:call(?SERVER, {get_main_queue}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -70,6 +73,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({get_main_queue}, _From, State) ->
+    Reply = {ok, State#state.main_queue},
+    {reply, Reply, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.

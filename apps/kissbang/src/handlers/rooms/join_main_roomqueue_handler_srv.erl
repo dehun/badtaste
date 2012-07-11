@@ -53,7 +53,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handlers_utils:register_handler(join_main_room_queue, fun handle_join_main_roomqueue/2),
+    handler_utils:register_handler(join_main_room_queue, fun handle_join_main_roomqueue/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
