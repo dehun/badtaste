@@ -43,6 +43,7 @@ class OnJoinedToMainRoomQueue(pgMessage):
 
 class OnJoinedToRoom(pgMessage):
     users = pgList(pgString()) # user guids
+    state = pgString()
 
 class GetRoomState(pgMessage):
     pass

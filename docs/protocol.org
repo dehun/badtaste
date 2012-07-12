@@ -1,0 +1,22 @@
+* connect
+** authentication successfull
+   -> Authenticate(login="dehun", password="123")
+   <- Authenticated(guid = "123871523816kajsbhdqw")
+** authentication failed
+   -> Authenticate(login="wrong_name", password="wrongpass")
+* rooms
+** join to a random room
+   -> JoinMainRoomQueue()
+   <- OnJoinedToMainRoomQueue()
+   <- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
+** on room dead(all users leaved room)
+   <- OnRoomDeath()
+** on somebody joined to room when you are in this room
+   <- OnRoomUserListChanged(users = [guid1, guid2, guid3])
+** on room came to active state(game begin)
+   <- OnRoomStateChaned(state = "active")
+* chat
+** send chat message to room where you are 
+   -> SendChatMessageToRoom(message = "some message text body")
+** getting chat message from room where you are
+   <- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
