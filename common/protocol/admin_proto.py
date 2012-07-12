@@ -1,6 +1,6 @@
 from protogen.messaging.types import pgMessage, pgInteger, pgFloat, pgString, pgList
 
-protocolName = "kissbang"
+protocolName = "admin"
 
 # user register
 class TouchUserInfo(pgMessage):
