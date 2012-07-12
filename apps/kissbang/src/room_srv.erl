@@ -81,7 +81,7 @@ start(OwnerGuid) ->
 %%--------------------------------------------------------------------
 init([Owner]) ->
     Users = sets:from_list([Owner]),
-    proxy_srv:async_route_messages(Owner, [#on_joined_to_room{users = [Owner]}]),
+    proxy_srv:async_route_messages(Owner, [#on_joined_to_room{users = [Owner], state="pending"}]),
     {ok, pending, #pending_state{users=Users}}.
 
 %%--------------------------------------------------------------------
@@ -160,7 +160,7 @@ pending({are_in_room, Guid}, _From, State) ->
     {reply, Reply, pending, State};
 
 pending({join, Guid}, _From, State) ->
-    case inner_join(Guid, State#pending_state.users) of
+    case inner_join(Guid, State#pending_state.users, "pending") of
         {ok, NewUsers} ->
             AreReadyToStart = sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start)),
             if
@@ -208,7 +208,7 @@ active({leave_room, UserGuid}, _From, State) ->
             {reply, ok, active, NewState}
     end;
 active({join, UserGuid}, _From, State) ->
-    case inner_join(UserGuid, State#active_state.users) of
+    case inner_join(UserGuid, State#active_state.users, "active") of
         {ok, NewUsers} ->
             {reply, ok, active, State#active_state{users = NewUsers}};
         Error ->
@@ -313,7 +313,7 @@ inner_broadcast_message(Sender, Message, [User | RestUsers]) ->
 inner_broadcast_message(_Sender, _Message, []) ->
     ok.
 
-inner_join(Guid, Users) ->
+inner_join(Guid, Users, StateName) ->
     AreAlreadyInSet = sets:is_element(Guid, Users),
     if 
         AreAlreadyInSet -> %% are user already here?
@@ -327,7 +327,7 @@ inner_join(Guid, Users) ->
                     {error, room_already_full};
                 true ->
                     inner_broadcast_message(Guid, #on_room_user_list_changed{users = sets:to_list(Users)}, sets:to_list(Users)),
-                    proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(Users)}]),
+                    proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(Users), state = StateName}]),
                     {ok, sets:add_element(Guid, Users)}
             end
     end.
