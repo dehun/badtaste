@@ -292,6 +292,7 @@ inner_drop_guid(Guid) ->
     Result = inner_get_origin(Guid),
     case Result of 
         {ok, Origin} ->
+            inner_disconnect_user(Guid),
             inner_drop_origin(Origin);
         Error ->
             Error
@@ -328,3 +329,6 @@ inner_route_messages(Guid, Messages) ->
                           Messages),
             ok
     end.
+
+inner_disconnect_user(UserGuid) ->
+    roommgr_srv:async_leave_room(UserGuid).

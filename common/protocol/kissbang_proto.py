@@ -42,16 +42,24 @@ class OnJoinedToMainRoomQueue(pgMessage):
     pass
 
 class OnJoinedToRoom(pgMessage):
+    users = pgList(pgString()) # user guids
+
+class GetRoomState(pgMessage):
     pass
 
-class OnRoomStarted(pgMessage):
-    pass
+class OnRoomStateChanged(pgMessage):
+    state = pgString()
 
+class OnRoomUserListChanged(pgMessage):
+    users = pgList(pgString()) # userGuids
 
 class OnRoomIsFull(pgMessage):
     pass
 
 class OnAlreadyInThisRoom(pgMessage):
+    pass
+
+class OnRoomDeath(pgMessage):
     pass
 
 # bottle game

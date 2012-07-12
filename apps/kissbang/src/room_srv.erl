@@ -81,7 +81,7 @@ start(OwnerGuid) ->
 %%--------------------------------------------------------------------
 init([Owner]) ->
     Users = sets:from_list([Owner]),
-    proxy_srv:async_route_messages(Owner, [#on_joined_to_room{}]),
+    proxy_srv:async_route_messages(Owner, [#on_joined_to_room{users = [Owner]}]),
     {ok, pending, #pending_state{users=Users}}.
 
 %%--------------------------------------------------------------------
@@ -143,10 +143,13 @@ pending({leave_room, UserGuid}, _From, State) ->
     % are somebody droped?
     case sets:size(NewUsers) of
         0 -> 
+            inner_broadcast_message(#on_room_death{}, sets:to_list(NewUsers)),
             {stop, normal, ok, NewState};
         OriginalUsersSize -> 
             {reply, nobody_droped, pending, NewState};
-        Other ->
+        _Other ->
+            inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
+                                    sets:to_list(NewUsers)),
             {reply, ok, pending, NewState}
     end;
 pending({drop}, _From, State) ->
@@ -162,6 +165,7 @@ pending({join, Guid}, _From, State) ->
             AreReadyToStart = sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start)),
             if
                 AreReadyToStart ->
+                    inner_broadcast_message(#on_room_state_changed{state = "active"}, sets:to_list(NewUsers)),
                     {reply, ok, active, #active_state{users = NewUsers}};
                 true ->
                     {reply, ok, pending, State#pending_state{users=NewUsers}}
@@ -192,10 +196,15 @@ active({leave_room, UserGuid}, _From, State) ->
     OriginalUsersSize = sets:size(State#active_state.users),
     case sets:size(NewUsers) of
         1 ->
+            inner_broadcast_message(#on_room_death{}, sets:to_list(NewUsers)),
+            inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
+                                    sets:to_list(NewUsers)),
             {stop, normal, ok, NewState};
         OriginalUsersSize ->
             {reply, nobody_droped, active, NewState};
         _Other ->
+            inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
+                                    sets:to_list(NewUsers)),
             {reply, ok, active, NewState}
     end;
 active({join, UserGuid}, _From, State) ->
@@ -290,10 +299,16 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_broadcast_message(Message, [User | RestUsers]) ->
+    proxy_srv:async_route_messages(User, [Message]),
+    inner_broadcast_message(Message, RestUsers);
+inner_broadcast_message(_Message, []) ->
+    ok.
+
 inner_broadcast_message(Sender, Message, [User | RestUsers]) when User =:= Sender -> %% don't broadcast to self
     inner_broadcast_message(Sender, Message, RestUsers);
 inner_broadcast_message(Sender, Message, [User | RestUsers]) -> 
-    proxy_srv:route_messages(User, [Message]),
+    proxy_srv:async_route_messages(User, [Message]),
     inner_broadcast_message(Sender, Message, RestUsers);
 inner_broadcast_message(_Sender, _Message, []) ->
     ok.
@@ -311,7 +326,8 @@ inner_join(Guid, Users) ->
                     proxy_srv:async_route_messages(Guid, [#on_room_is_full{}]),
                     {error, room_already_full};
                 true ->
-                    proxy_srv:async_route_messages(Guid, [#on_joined_to_room{}]),
+                    inner_broadcast_message(Guid, #on_room_user_list_changed{users = sets:to_list(Users)}, sets:to_list(Users)),
+                    proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(Users)}]),
                     {ok, sets:add_element(Guid, Users)}
             end
     end.
