@@ -70,9 +70,13 @@ init([]) ->
 %%%===================================================================
 get_all_handlers() ->
     lists:flatten(['ping_handler_srv',
-                  get_room_handlers(),
-                  get_chat_handlers()]).
+                   get_admin_handlers(),
+                   get_room_handlers(),
+                   get_chat_handlers()]).
 
+
+get_admin_handlers() ->
+    ['touch_user_info_handler_srv'].
 
 get_room_handlers() ->
     ['join_main_roomqueue_handler_srv'].
