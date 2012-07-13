@@ -2,7 +2,7 @@ from protogen.messaging.types import pgMessage, pgInteger, pgFloat, pgString, pg
 
 protocolName = "admin"
 
-# user register
+# user registration (touch and update info)
 class TouchUserInfo(pgMessage):
     userId = pgString()
     firstName = pgString()
@@ -12,3 +12,16 @@ class TouchUserInfo(pgMessage):
     smallAvatarUrl = pgString()
     mediumAvatarUrl = pgString()
     bigAvatarUrl = pgString()
+
+class TouchUserInfoResult(pgMessage):
+    result = pgString() # ok | error
+
+
+# money
+class BuyGold(pgMessage):
+    amount = pgInteger()
+
+class BuyGoldResult(pgMessage):
+    result = pgString() # ok | error
+
+# 
