@@ -3,7 +3,7 @@ from protogen.messaging.types import pgMessage, pgInteger, pgFloat, pgString, pg
 protocolName = "admin"
 
 # user registration (touch and update info)
-class TouchUserInfo(pgMessage):
+class UserInfo(pgMessage):
     userId = pgString()
     firstName = pgString()
     lastName = pgString()
@@ -13,6 +13,10 @@ class TouchUserInfo(pgMessage):
     mediumAvatarUrl = pgString()
     bigAvatarUrl = pgString()
 
+
+class TouchUserInfo(pgMessage):
+    userInfo = pgMessage()
+    
 class TouchUserInfoResult(pgMessage):
     result = pgString() # ok | error
 

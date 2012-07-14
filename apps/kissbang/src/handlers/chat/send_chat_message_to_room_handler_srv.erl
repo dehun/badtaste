@@ -4,15 +4,16 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 10 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(touch_user_info_handler_srv).
--include("../../admin_messaging.hrl").
--behaviour(gen_server).
+-module(send_chat_message_to_room_handler_srv).
 
+-behaviour(gen_server).
+-include("../../kissbang_messaging.hrl").
+-include("../../room.hrl").
 %% API
 -export([start_link/0]).
--export([handle_touch_user_info/2]).
+-export([handle_send_chat_message_to_room/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -52,7 +53,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(touch_user_info, fun handle_touch_user_info/2),
+    handler_utils:register_handler(send_chat_message_to_room, fun handle_send_chat_message_to_room/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -127,7 +128,13 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(Guid, Message) when Guid =:= admin->
-    UserInfo = Message#touch_user_info.user_info,
-    auth_srv:register(UserInfo#user_info.user_id, ""),
-    #touch_user_info_result{result = "ok"}.
+handle_send_chat_message_to_room(UserGuid, Message) ->
+    case roommgr_srv:get_room_for(UserGuid) of
+        {ok, Room} ->
+            room_srv:broadcast_message(Room#room.room_pid, UserGuid, 
+                                       #on_got_chat_message_from_room{sender_guid = UserGuid,
+                                                                     message = Message#send_chat_message_to_room.message});
+        Error ->
+            Error
+    end.
+    

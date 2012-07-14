@@ -53,7 +53,7 @@ start_link() ->
 %%--------------------------------------------------------------------
 init([]) ->
     Loop = fun (Req) -> ?MODULE:http_loop(Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{port, element(2, applicaton:get_env(kissbang, admin_web_port))},
+    {ok, _Http} = mochiweb_http:start_link([{port, element(2, application:get_env(kissbang, admin_web_port))},
                                             {loop, Loop}]),
     {ok, #state{}}.
 
@@ -145,7 +145,7 @@ http_loop(Req) ->
 
 handle_json(JsonData) ->
     %% deserialize message
-    Msg = admin_json_messaging:deserialize_message(JsonData),
+    Msg = admin_json_messaging:deserialize_message(binary_to_list(JsonData)),
     %% form callback
     Self = self(),
     Callback = fun(JsonResponse)  ->
