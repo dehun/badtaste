@@ -136,8 +136,8 @@ http_loop(Req) ->
             Body = Req:recv_body(),
             {ok, JsonResponse} = handle_json(Body),
             Req:respond({200, 
-                        [{"Content-Type", "text/plain"}]},
-                        JsonResponse);
+                        [{"Content-Type", "text/plain"}],
+                        JsonResponse});
         _Other ->
             Req:respond({200, [{"Content-Type", "text/plain"}], "error : wrong hole"})
     end.
@@ -145,7 +145,8 @@ http_loop(Req) ->
 
 handle_json(JsonData) ->
     %% deserialize message
-    Msg = admin_json_messaging:deserialize_message(binary_to_list(JsonData)),
+    log_srv:debug("handling ~p json data", [JsonData]),
+    Msg = admin_json_messaging:deserialize_message(JsonData),
     %% form callback
     Self = self(),
     Callback = fun(JsonResponse)  ->
