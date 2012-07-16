@@ -38,7 +38,7 @@ foreach() ->
 mock_patch() ->
     %% patching for gateway server
     meck:new(gateway_srv),
-    meck:expect(gateway_srv, disconnect_origin, fun(Origin) -> ok end),
+    meck:expect(gateway_srv, disconnect_origin, fun(_Origin) -> ok end),
     meck:expect(gateway_srv, route_message, fun(Origin, Message) -> ok end).
 
 %%==================================================

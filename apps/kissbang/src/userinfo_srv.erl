@@ -4,15 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 16 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(touch_user_info_handler_srv).
--include("../../admin_messaging.hrl").
+-module(userinfo_srv).
+-include("admin_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
--export([handle_touch_user_info/2]).
+-export([start_link/0, setup_db/0]).
+-export([get_user_info/1, update_user_info/2, async_update_user_info/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -21,11 +21,19 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
+-record(byuserinfo, {user_guid, user_info}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
+get_user_info(UserGuid) ->
+    gen_server:call(?SERVER, {get_user_info, UserGuid}).
 
+update_user_info(UserGuid, UserInfo) ->
+    gen_server:call(?SERVER, {update_user_info, UserGuid, UserInfo}).
+
+async_update_user_info(UserGuid, UserInfo) ->
+    gen_server:cast(?SERVER, {update_user_info, UserGuid, UserInfo}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -35,6 +43,20 @@
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+setup_db() ->
+    Result = mnesia:create_table(byuserinfo, [{disc_copies, [node() | nodes()]}, 
+                                              {attributes, record_info(fields, byuserinfo)}]),
+    case Result of
+        {atomic, ok} ->
+            mnesia:wait_for_tables([byuserinfo], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([byuserinfo], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+        end.
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -52,7 +74,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(touch_user_info, fun handle_touch_user_info/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -69,9 +90,15 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({update_user_info, UserGuid, UserInfo}, _From, State) ->
+    Reply = inner_update_user_info(UserGuid, UserInfo),
+    {reply, Reply, State};
+handle_call({get_user_info, UserGuid}, _From, State) ->
+    Reply = inner_get_user_info(UserGuid),
     {reply, Reply, State}.
+%% handle_call(_Request, _From, State) ->
+%%     Reply = ok,
+%%     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -83,8 +110,11 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({update_user_info, UserGuid, UserInfo}, State) ->
+    inner_update_user_info(UserGuid, UserInfo),
     {noreply, State}.
+%% handle_cast(_Msg, State) ->
+%%     {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -127,8 +157,22 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(Guid, Message) when Guid =:= admin->
-    UserInfo = Message#touch_user_info.user_info,
-    auth_srv:register(UserInfo#user_info.user_id, ""),
-    userinfo_srv:update_user_info(Guid, UserInfo),
-    #touch_user_info_result{result = "ok"}.
+inner_get_user_info(UserGuid) ->
+    Trans = fun() ->
+                    Existance = mnesia:read({byuserinfo, UserGuid}),
+                    case Existance of 
+                        [] ->
+                            no_info_for_user;
+                        [UserInfo] ->
+                            {ok, UserInfo#byuserinfo.user_info}
+                    end
+            end,
+    mnesia:activity(sync_dirty, Trans).
+
+inner_update_user_info(UserGuid, UserInfo) ->
+    Trans = fun() ->
+                    ByUserInfo = #byuserinfo{user_guid = UserGuid,
+                                             user_info = UserInfo},
+                    mnesia:write(ByUserInfo)
+            end,
+    mnesia:activity(sync_dirty, Trans).

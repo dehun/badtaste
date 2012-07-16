@@ -19,6 +19,7 @@ setup_db() ->
     auth_srv:setup_db(),
     proxy_srv:setup_db(),
     roommgr_srv:setup_db(),
+    userinfo_srv:setup_db(),
     ok.
     
 replicate_db_from(NodeName) ->
