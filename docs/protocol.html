@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-07-12 13:46:33 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-07-16 12:32:48 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -112,6 +112,11 @@ lang="en" xml:lang="en">
 <li><a href="#sec-3-2">3.2 getting chat message from room where you are </a></li>
 </ul>
 </li>
+<li><a href="#sec-4">4 web admin interface </a>
+<ul>
+<li><a href="#sec-4-1">4.1 registration/updating info </a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -212,11 +217,30 @@ lang="en" xml:lang="en">
 <p>   &lt;- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> web admin interface </h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> registration/updating info </h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", firstName = "yuriy", lastName = "netesov", profileUrl = "url", isMan = "true", 
+   smallAvatarUrl = "someurl", mediumAvatarUrl = "someotherurl", bigAvatarUrl = "anotherUrl")))
+   &lt;- TouchUserInfoResult(result = "ok")
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-07-12 13:46:33 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-07-16 12:32:48 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

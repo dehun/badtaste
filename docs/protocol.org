@@ -20,3 +20,8 @@
    -> SendChatMessageToRoom(message = "some message text body")
 ** getting chat message from room where you are
    <- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+* web admin interface
+** registration/updating info
+   -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", firstName = "yuriy", lastName = "netesov", profileUrl = "url", isMan = "true", 
+   smallAvatarUrl = "someurl", mediumAvatarUrl = "someotherurl", bigAvatarUrl = "anotherUrl")))
+   <- TouchUserInfoResult(result = "ok")
