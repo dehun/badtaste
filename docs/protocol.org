@@ -25,3 +25,8 @@
    -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", firstName = "yuriy", lastName = "netesov", profileUrl = "url", isMan = "true", 
    smallAvatarUrl = "someurl", mediumAvatarUrl = "someotherurl", bigAvatarUrl = "anotherUrl")))
    <- TouchUserInfoResult(result = "ok")
+* user info
+** get user info
+   -> GetUserInfo(targetUserGuid = "someGuid")
+   <- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
+   smallAvatarUrl = "another_url", mediumAvatarUrl = "yep_another_url", bigAvatarUrl = "urrrl")
