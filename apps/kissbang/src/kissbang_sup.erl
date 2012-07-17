@@ -29,6 +29,7 @@ init([]) ->
                                  ?CHILD(gateway_sup, supervisor),
                                  ?CHILD(roommgr_sup, supervisor),
                                  ?CHILD(log_sup, supervisor),
+                                 ?CHILD(sex_sup, supervisor),
                                  ?CHILD(webgate_sup, supervisor),
                                  ?CHILD(handlermgr_sup, supervisor),
                                  ?CHILD(roomqueue_sup, supervisor),
