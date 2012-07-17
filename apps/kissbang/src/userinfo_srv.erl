@@ -176,4 +176,5 @@ inner_update_user_info(UserGuid, UserInfo) ->
                     mnesia:write(ByUserInfo),
                     ok
             end,
-    mnesia:activity(sync_dirty, Trans).
+    mnesia:activity(sync_dirty, Trans),
+    sex_srv:set_sex(UserGuid, UserInfo#user_info.is_man).
