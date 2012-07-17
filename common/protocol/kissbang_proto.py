@@ -13,6 +13,23 @@ class PongMessage(pgMessage):
 class ProtocolMissmatch(pgMessage):
     pass
 
+
+# user info
+class GetUserInfo(pgMessage):
+    targetUserGuid = pgString()
+
+class OnGotUserInfo(pgMessage):
+    infoOwnerGuid = pgString()
+    userId = pgString()
+    firstName = pgString()
+    lastName = pgString()
+    profileUrl = pgString()
+    isMan = pgString()
+    smallAvatarUrl = pgString()
+    mediumAvatarUrl = pgString()
+    bigAvatarUrl = pgString()
+
+
 # authentication
 class Authenticate(pgMessage):
     login = pgString()
