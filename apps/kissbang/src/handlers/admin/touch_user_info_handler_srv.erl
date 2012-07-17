@@ -127,8 +127,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(Guid, Message) when Guid =:= admin->
+handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin->
     UserInfo = Message#touch_user_info.user_info,
-    auth_srv:register(UserInfo#user_info.user_id, ""),
-    userinfo_srv:update_user_info(Guid, UserInfo),
+    {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
+    ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
     #touch_user_info_result{result = "ok"}.

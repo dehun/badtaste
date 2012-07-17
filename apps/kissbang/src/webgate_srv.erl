@@ -154,8 +154,8 @@ handle_json(JsonData) ->
                end,
     handlermgr_srv:handle_message_and_callback(admin, Msg, Callback),
     receive
-        {request_processed, JsonResponse} ->
-            {ok, JsonResponse}
+        {request_processed, JsonMessage} ->
+            {ok, admin_json_messaging:serialize_message(JsonMessage)}
     after 60000 ->
             {ok, '{"error" : "timed out"}'}
     end.

@@ -173,6 +173,7 @@ inner_update_user_info(UserGuid, UserInfo) ->
     Trans = fun() ->
                     ByUserInfo = #byuserinfo{user_guid = UserGuid,
                                              user_info = UserInfo},
-                    mnesia:write(ByUserInfo)
+                    mnesia:write(ByUserInfo),
+                    ok
             end,
     mnesia:activity(sync_dirty, Trans).
