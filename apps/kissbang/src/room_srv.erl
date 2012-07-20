@@ -160,6 +160,7 @@ pending({are_in_room, Guid}, _From, State) ->
     {reply, Reply, pending, State};
 
 pending({join, Guid}, _From, State) ->
+    % join it to room
     case inner_join(Guid, State#pending_state.users, "pending") of
         {ok, NewUsers} ->
             AreReadyToStart = sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start)),
@@ -209,12 +210,22 @@ active({leave_room, UserGuid}, _From, State) ->
             {reply, ok, active, NewState}
     end;
 active({join, UserGuid}, _From, State) ->
+    % get user parity
     NewUserMaleParity = calculate_male_parity([UserGuid]),
-    case inner_join(UserGuid, State#active_state.users, "active") of
-        {ok, NewUsers} ->
-            {reply, ok, active, State#active_state{users = NewUsers, male_parity = State#active_state.male_parity + NewUserMaleParity}};
-        Error ->
-            {reply, Error, active, State}
+    % check is it ok to join with such parity
+    NewMaleParitySumm = State#active_state.male_parity + NewUserMaleParity,
+    IsParityOverflow = abs(NewMaleParitySumm) > 1,
+    if
+        IsParityOverflow -> % male parity overflow happened
+            male_parity_overflow;
+        true -> % all right with parity. join it to room
+
+            case inner_join(UserGuid, State#active_state.users, "active") of
+                {ok, NewUsers} ->
+                    {reply, ok, active, State#active_state{users = NewUsers, male_parity = NewMaleParitySumm}};
+                Error ->
+                    {reply, Error, active, State}
+            end
     end;
 active(_Event, _From, State) ->
     Reply = invalid_call,
@@ -347,7 +358,7 @@ calculate_male_parity(Users) ->
                             {ok, female} ->
                                 Acc - 1;
                             unknown ->
-                                Acc + 1
+                                Acc + 0
                         end
                 end, 0, Users).
     
