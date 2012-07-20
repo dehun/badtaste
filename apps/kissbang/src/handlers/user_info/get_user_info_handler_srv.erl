@@ -134,12 +134,12 @@ handle_get_user_info(Guid, Message) ->
     {ok, UserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
     ReplyMessage = #on_got_user_info{info_owner_guid = TargetUserGuid,
                                      user_id = UserInfo#user_info.user_id,
-                                     first_name = UserInfo#user_info.first_name,
-                                     last_name = UserInfo#user_info.last_name,
+                                     name = UserInfo#user_info.first_name,
                                      profile_url = UserInfo#user_info.profile_url,
                                      is_man = UserInfo#user_info.is_man,
-                                     small_avatar_url = UserInfo#user_info.small_avatar_url,
-                                     medium_avatar_url = UserInfo#user_info.medium_avatar_url,
-                                     big_avatar_url = UserInfo#user_info.big_avatar_url},
+                                     picture_url = UserInfo#user_info.medium_avatar_url,
+                                     is_online = "false",
+                                     coins = 0,
+                                     kisses = 0},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
     

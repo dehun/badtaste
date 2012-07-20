@@ -9,6 +9,7 @@ class UserInfo(pgMessage):
     lastName = pgString()
     profileUrl = pgString()
     isMan = pgString()
+    birthDate = pgString()
     smallAvatarUrl = pgString()
     mediumAvatarUrl = pgString()
     bigAvatarUrl = pgString()

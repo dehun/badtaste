@@ -21,13 +21,14 @@ class GetUserInfo(pgMessage):
 class OnGotUserInfo(pgMessage):
     infoOwnerGuid = pgString()
     userId = pgString()
-    firstName = pgString()
-    lastName = pgString()
+    name = pgString()
     profileUrl = pgString()
+    birthDate = pgString()
     isMan = pgString()
-    smallAvatarUrl = pgString()
-    mediumAvatarUrl = pgString()
-    bigAvatarUrl = pgString()
+    pictureUrl = pgString()
+    isOnline = pgInteger()
+    coins = pgInteger()
+    kisses = pgInteger()
 
 
 # authentication
