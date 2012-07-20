@@ -181,6 +181,8 @@ inner_find_room_for(UserGuid, [RoomGuid | RestRooms], NewRooms, FullRooms, _Alre
             inner_find_room_for(UserGuid, RestRooms, NewRooms, FullRooms, false);
         {error, room_already_full} ->
             inner_find_room_for(UserGuid, RestRooms, NewRooms, [RoomGuid | FullRooms], false);
+        {error, male_parity_overflow} ->
+            inner_find_room_for(UserGuid, RestRooms, [RoomGuid | NewRooms], FullRooms, false);
         {error, already_in_room} ->
             inner_find_room_for(UserGuid, [], RestRooms ++ [RoomGuid | NewRooms], FullRooms, true);
         ok ->
