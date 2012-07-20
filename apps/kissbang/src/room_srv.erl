@@ -22,7 +22,7 @@
 -define(SERVER, ?MODULE).
 
 -record(pending_state, {users}).
--record(active_state, {users}).
+-record(active_state, {users, male_parity}).
 
 %%%===================================================================
 %%% API
@@ -166,7 +166,8 @@ pending({join, Guid}, _From, State) ->
             if
                 AreReadyToStart ->
                     inner_broadcast_message(#on_room_state_changed{state = "active"}, sets:to_list(NewUsers)),
-                    {reply, ok, active, #active_state{users = NewUsers}};
+                    {reply, ok, active, #active_state{users = NewUsers, 
+                                                      male_parity = calculate_male_parity(sets:to_list(NewUsers))}};
                 true ->
                     {reply, ok, pending, State#pending_state{users=NewUsers}}
                 end;
@@ -208,9 +209,10 @@ active({leave_room, UserGuid}, _From, State) ->
             {reply, ok, active, NewState}
     end;
 active({join, UserGuid}, _From, State) ->
+    NewUserMaleParity = calculate_male_parity([UserGuid]),
     case inner_join(UserGuid, State#active_state.users, "active") of
         {ok, NewUsers} ->
-            {reply, ok, active, State#active_state{users = NewUsers}};
+            {reply, ok, active, State#active_state{users = NewUsers, male_parity = State#active_state.male_parity + NewUserMaleParity}};
         Error ->
             {reply, Error, active, State}
     end;
@@ -336,3 +338,16 @@ inner_drop(Users) ->
     lists:foreach(fun (UserGuid) -> ok = roommgr_srv:async_leave_room(UserGuid) end,
                   sets:to_list(Users)),
     ok.
+
+calculate_male_parity(Users) ->
+    lists:foldl(fun(User, Acc) ->
+                        case sex_srv:get_sex(User) of
+                            {ok, male} ->
+                                Acc + 1;
+                            {ok, female} ->
+                                Acc - 1;
+                            unknown ->
+                                Acc + 1
+                        end
+                end, 0, Users).
+    

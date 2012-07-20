@@ -160,7 +160,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_get_sex(UserGuid) ->
     Trans = fun() ->
-                    Existance = mnesia:read(sex, UserGuid),
+                    Existance = mnesia:read({sex, UserGuid}),
                     case Existance of
                         [Sex] ->
                             if

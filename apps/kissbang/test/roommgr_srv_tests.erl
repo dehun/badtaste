@@ -27,6 +27,8 @@ setup() ->
     application:load(kissbang),
     guid_srv:start_link(),
     roommgr_srv:start_link(),
+    sex_srv:start_link(),
+    sex_srv:setup_db(),
     roommgr_srv:setup_db().
 
 mock_patch() ->
