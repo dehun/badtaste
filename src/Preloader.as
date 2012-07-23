@@ -15,6 +15,9 @@ import flash.utils.getDefinitionByName;
  */
 public class Preloader extends MovieClip
 {
+	private var bg:Background = new Background();
+	private var logo:Logo = new Logo();
+
 	public function Preloader()
 	{
 		if (stage)
@@ -30,6 +33,8 @@ public class Preloader extends MovieClip
 
 	private function showLoader():void
 	{
+		addChild(bg);
+
 	}
 
 	private function ioError(e:IOErrorEvent):void
@@ -47,7 +52,7 @@ public class Preloader extends MovieClip
 		if (currentFrame == totalFrames)
 		{
 			stop();
-			loadingFinished();
+			//loadingFinished();
 		}
 	}
 

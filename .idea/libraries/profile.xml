@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="profile">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/profile.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
