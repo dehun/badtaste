@@ -29,6 +29,7 @@ class OnGotUserInfo(pgMessage):
     isOnline = pgInteger()
     coins = pgInteger()
     kisses = pgInteger()
+    city = pgString()
 
 
 # authentication

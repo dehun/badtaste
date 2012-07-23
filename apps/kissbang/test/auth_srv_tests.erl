@@ -13,7 +13,9 @@ auth_test_() ->
                 {"should_try_to_register_existant", fun should_try_to_register_existant/0},
                 {"should_try_to_auth_non_existant", fun should_try_to_auth_non_existant/0},
                 {"should_auth_with_existant", fun should_auth_with_existant/0},
-                {"should_auth_with_existant_but_invalid_password", fun should_auth_with_existant_but_invalid_password/0}
+                {"should_auth_with_existant_but_invalid_password", fun should_auth_with_existant_but_invalid_password/0},
+                {"should_check_is_registered_for_existant", fun should_check_is_registered_for_existant/0},
+                {"should_check_is_registered_for_non_existant", fun should_check_is_registered_for_non_existant/0}
                ]}}.
 
 setup() ->
@@ -59,3 +61,13 @@ should_multiply_register_and_auth() ->
     Users = [{Name, Pass} || Name <- lists:seq(1, 1000), Pass <- lists:seq(1, 1000)],
     [?assert(ok == auth_srv:register(element(1, User), element(2, User))) || User <- Users],
     [?assert(ok == auth_srv:auth(element(1, User), element(2, User))) || User <- Users].
+
+should_check_is_registered_for_existant() ->
+    ?assert(ok == prepare_for_testing()),
+    UserLogin = "dehun",
+    ?assert(ok == auth_srv:register(UserLogin, "123")),
+    ?assertMatch({true, _UserGuid}, auth_srv:is_registered(UserLogin)).
+
+should_check_is_registered_for_non_existant() ->
+    ?assert(ok == prepare_for_testing()),
+    ?assertMatch({false, no_such_user}, auth_srv:is_registered("non_existant_user_login")).

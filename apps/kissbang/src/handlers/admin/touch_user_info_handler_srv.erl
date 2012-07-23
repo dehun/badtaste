@@ -127,8 +127,19 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin->
+handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
     UserInfo = Message#touch_user_info.user_info,
-    {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
-    ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
-    #touch_user_info_result{result = "ok"}.
+    UserId = UserInfo#user_info.user_id,
+    UserExistance = auth_srv:is_registered(UserId, ""),
+    case UserExistance of
+        {true, UserGuid} -> %% if user already registered sync only part of social net data
+            OldUserInfo = userinfo_srv:get_user_info(UserGuid),
+            NewUserInfo = OldUserInfo#user_info{birth_date = UserInfo#user_info.birth_date,
+                                               city = UserInfo#user_info.city},
+            ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo),
+            #touch_user_info_result{result = "ok"};
+        _NoExists -> %% if user is not registered yet - sync all data from social net
+            {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
+            ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
+            #touch_user_info_result{result = "ok"}
+    end.

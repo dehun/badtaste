@@ -1,0 +1,20 @@
+Analysis includes data from imported files
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
+ "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]
+Analysis includes data from imported files
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/cover_test_module.coverdata"]
+WARNING: Deleting data for module cover_test_module imported from
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/cover_test_module.coverdata"]
+Analysis includes data from imported files
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/cover_test_module.coverdata",
+ "/mnt/work/dev/home/kissbang/extern/meck/.eunit/cover_test_module_meck_original.coverdata"]
+WARNING: Deleting data for module meck_test_module imported from
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
+ "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]
+Analysis includes data from imported files
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata"]
+WARNING: Deleting data for module meck_test_module imported from
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata"]
+Analysis includes data from imported files
+["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
+ "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]

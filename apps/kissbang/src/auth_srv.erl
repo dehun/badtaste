@@ -15,7 +15,7 @@
 
 %% API
 -export([start_link/0, setup_db/0]).
--export([auth/2, register/2, drop_all_users/0]).
+-export([auth/2, register/2, drop_all_users/0, is_registered/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -29,6 +29,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+is_registered(Login) ->
+    gen_server:call(?SERVER, {is_registered, Login}).
+
 auth(Login, Pass) ->
     gen_server:call(?SERVER, {auth, Login, Pass}).
 
@@ -81,6 +84,10 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+
+handle_call({is_registered, Login}, _From, State) ->
+    Reply = inner_is_registered(Login),
+    {reply, Reply, State};
 handle_call({auth, Login, Pass}, _From, State) ->
     Reply = inner_auth(Login, Pass),
     {reply, Reply, State};
@@ -213,3 +220,15 @@ inner_drop_all_users() ->
     {atomic, ok} = mnesia:transaction(Trans),
     ok.
     
+inner_is_registered(Login) ->
+    Trans = fun() ->
+                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
+                                                  X#authinfo.login =:= Login])),
+                    case Existance of
+                        [] ->
+                            {false, no_such_user};
+                        [UserInfo] ->
+                            {true, UserInfo#authinfo.guid}
+                        end
+            end,
+    mnesia:activity(sync_dirty, Trans).

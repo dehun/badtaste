@@ -139,6 +139,7 @@ handle_get_user_info(Guid, Message) ->
                                      is_man = UserInfo#user_info.is_man,
                                      picture_url = UserInfo#user_info.medium_avatar_url,
                                      is_online = "false",
+                                     city = UserInfo#user_info.city,
                                      coins = 0,
                                      kisses = 0},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
