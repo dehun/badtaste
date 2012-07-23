@@ -78,6 +78,7 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
+					controller.sendMessageToRoom("Some Message!")
 				break;
 			case 52:
 				break;
