@@ -4,16 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 23 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(touch_user_info_handler_srv).
--include("../../admin_messaging.hrl").
--include("../../kissbang_messaging.hrl").
+-module(avatar_srv).
+-include("admin_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([handle_touch_user_info/2]).
+-export([set_avatar/3]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -26,7 +25,8 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-
+set_avatar(UserGuid, ImageFormat, ImageDataBase64) ->
+    gen_server:cast(?SERVER, set_avatar, UserGuid, ImageFormat, ImageDataBase64).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -53,8 +53,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(touch_user_info, fun handle_touch_user_info/2),
-    handler_utils:register_handler(touch_user_info_by_user, fun handle_touch_user_info/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -85,8 +83,11 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({set_avatar, UserGuid, ImageFormat, ImageDataBase64}, State) ->
+    inner_set_avatar(UserGuid, ImageFormat, ImageDataBase64),
     {noreply, State}.
+%% handle_cast(_Msg, State) ->
+%%     {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -129,31 +130,29 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
-    UserInfo = Message#touch_user_info.user_info,
-    UserId = UserInfo#user_info.user_id,
-    UserExistance = auth_srv:is_registered(UserId, ""),
-    case UserExistance of
-        {true, UserGuid} -> %% if user already registered sync only part of social net data
-            {ok, OldUserInfo} = userinfo_srv:get_user_info(UserGuid),
-            NewUserInfo = OldUserInfo#user_info{birth_date = UserInfo#user_info.birth_date,
-                                               city = UserInfo#user_info.city},
-            ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo),
-            #touch_user_info_result{result = "ok"};
-        _NoExists -> %% if user is not registered yet - sync all data from social net
-            {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
-            ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
-            #touch_user_info_result{result = "ok"}
-    end;
-handle_touch_user_info(CallerGuid, Message) ->
-    {ok, OldUserInfo} = userinfo_srv:get_user_info(CallerGuid),
-    NewUserInfo = #user_info{user_id = OldUserInfo#user_info.user_id,
-                             name = Message#touch_user_info_by_user.name,
-                             profile_url = OldUserInfo#user_info.profile_url,
-                             is_man = OldUserInfo#user_info.is_man,
-                             birth_date = OldUserInfo#user_info.birth_date,
-                             city = OldUserInfo#user_info.city,
-                             avatar_url = OldUserInfo#user_info.avatar_url
-                            },
-    userinfo_srv:update_user_info(CallerGuid, NewUserInfo),
-    proxy_srv:async_route_messages(CallerGuid, [#touch_user_info_by_user_result{result = "ok"}]).
+inner_set_avatar(UserGuid, ImageFormat, ImageDataBase64) ->
+    spawn_link(fun() ->
+                       %% check input data
+                       ok = check_format(ImageFormat),
+                       %% decode image
+                       ImageData = base64:decode(ImageDataBase64),
+                       %% write data to file
+                       AvatarGuid = UserGuid,
+                       {ok, FileDevice} = file:open(get_out_avatar_path(AvatarGuid, ImageFormat), write),
+                       ok = file:write(FileDevice, ImageData),
+                       %% update avatar url in userinfo
+                       OldUserInfo = userinfo_srv:get_user_info(UserGuid),
+                       NewUserInfo = OldUserInfo#user_info{avatar_url = get_avatar_url(AvatarGuid, ImageFormat)},
+                       userinfo_srv:update_user_info(UserGuid, NewUserInfo)
+               end),
+        ok.
+    
+check_format(ImageFormat) ->
+    %% TODO : implement me
+    ok.
+
+get_out_avatar_path(AvatarGuid, ImageFormat) ->
+    element(2, application:get_env(kissbang, avatar_base_path)) ++ AvatarGuid ++ "." ++ ImageFormat.
+
+get_avatar_url(AvatarGuid, ImageFormat) ->
+    element(2, application:get_env(kissbang, avatar_base_url)) ++ AvatarGuid ++ "." ++ ImageFormat.

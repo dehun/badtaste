@@ -4,16 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 23 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(touch_user_info_handler_srv).
+-module(upload_new_user_avatar_srv).
 -include("../../admin_messaging.hrl").
--include("../../kissbang_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([handle_touch_user_info/2]).
+-export([handle_upload_new_user_avatar/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -53,8 +52,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(touch_user_info, fun handle_touch_user_info/2),
-    handler_utils:register_handler(touch_user_info_by_user, fun handle_touch_user_info/2),
+    handler_utils:register_handler(upload_new_user_avatar, fun handle_upload_new_user_avatar/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -129,31 +127,15 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
-    UserInfo = Message#touch_user_info.user_info,
-    UserId = UserInfo#user_info.user_id,
-    UserExistance = auth_srv:is_registered(UserId, ""),
-    case UserExistance of
-        {true, UserGuid} -> %% if user already registered sync only part of social net data
-            {ok, OldUserInfo} = userinfo_srv:get_user_info(UserGuid),
-            NewUserInfo = OldUserInfo#user_info{birth_date = UserInfo#user_info.birth_date,
-                                               city = UserInfo#user_info.city},
-            ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo),
-            #touch_user_info_result{result = "ok"};
-        _NoExists -> %% if user is not registered yet - sync all data from social net
-            {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
-            ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
-            #touch_user_info_result{result = "ok"}
-    end;
-handle_touch_user_info(CallerGuid, Message) ->
-    {ok, OldUserInfo} = userinfo_srv:get_user_info(CallerGuid),
-    NewUserInfo = #user_info{user_id = OldUserInfo#user_info.user_id,
-                             name = Message#touch_user_info_by_user.name,
-                             profile_url = OldUserInfo#user_info.profile_url,
-                             is_man = OldUserInfo#user_info.is_man,
-                             birth_date = OldUserInfo#user_info.birth_date,
-                             city = OldUserInfo#user_info.city,
-                             avatar_url = OldUserInfo#user_info.avatar_url
-                            },
-    userinfo_srv:update_user_info(CallerGuid, NewUserInfo),
-    proxy_srv:async_route_messages(CallerGuid, [#touch_user_info_by_user_result{result = "ok"}]).
+check_avatar_message(Message) ->
+    ok.
+
+handle_upload_new_user_avatar(CallerGuid, Message) when CallerGuid =:= admin ->
+    %% check avatar message
+    ok = check_avatar_message(Message),
+    %% send to user info srv
+    avatar_srv:set_avatar(Message#upload_new_user_avatar.user_guid,
+                             Message#upload_new_user_avatar.image_format_name,
+                             Message#upload_new_user_avatar.image_data_base64),
+    #upload_new_user_avatar_result{result = "ok"}.
+    

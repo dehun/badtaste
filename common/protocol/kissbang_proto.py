@@ -31,6 +31,15 @@ class OnGotUserInfo(pgMessage):
     kisses = pgInteger()
     city = pgString()
 
+class TouchUserInfoByUser(pgMessage):
+    name = pgString()
+
+class TouchUserInfoByUserResult(pgMessage):
+    result = pgString()
+
+class OnUserInfoChanged(pgMessage):
+    userGuid = pgString()
+
 
 # authentication
 class Authenticate(pgMessage):

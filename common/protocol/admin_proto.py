@@ -5,16 +5,12 @@ protocolName = "admin"
 # user registration (touch and update info)
 class UserInfo(pgMessage):
     userId = pgString()
-    firstName = pgString()
-    lastName = pgString()
+    name = pgString()
     profileUrl = pgString()
     isMan = pgString()
     birthDate = pgString()
     city = pgString()
-    smallAvatarUrl = pgString()
-    mediumAvatarUrl = pgString()
-    bigAvatarUrl = pgString()
-
+    avatarUrl = pgString()
 
 class TouchUserInfo(pgMessage):
     userInfo = pgMessage()
@@ -22,6 +18,14 @@ class TouchUserInfo(pgMessage):
 class TouchUserInfoResult(pgMessage):
     result = pgString() # ok | error
 
+
+class UploadNewUserAvatar(pgMessage):
+    userGuid = pgString()
+    imageFormatName = pgString()
+    imageDataBase64 = pgString()
+
+class UploadNewUserAvatarResult(pgMessage):
+    result = pgString()
 
 # money
 class BuyGold(pgMessage):

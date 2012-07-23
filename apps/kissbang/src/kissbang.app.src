@@ -14,5 +14,8 @@
   {env, [{gateway_ports, [8080, 8081, 5222]},
          {admin_web_port, 5223},
          {room_limit_to_start, 2},
+         {avatar_base_path, "./"},
+         {avatar_base_url, "http://lolcahost:8000/"},
+         {room_limit_to_start, 2},
          {room_maximum_users, 10}]}
  ]}.
