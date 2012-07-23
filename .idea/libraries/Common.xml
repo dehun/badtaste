@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Common" type="flex">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/swc" />
+      <root url="file://$PROJECT_DIR$/lib/org" />
+      <root url="file://$PROJECT_DIR$/lib/com" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/swc" recursive="false" />
+  </library>
+</component>
