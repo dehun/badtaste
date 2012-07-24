@@ -26,7 +26,7 @@
 %%% API
 %%%===================================================================
 set_avatar(UserGuid, ImageFormat, ImageDataBase64) ->
-    gen_server:cast(?SERVER, set_avatar, UserGuid, ImageFormat, ImageDataBase64).
+    gen_server:cast(?SERVER, {set_avatar, UserGuid, ImageFormat, ImageDataBase64}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
