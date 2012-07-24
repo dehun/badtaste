@@ -174,7 +174,7 @@ inner_update_user_info(UserGuid, UserInfo) ->
                     ByUserInfo = #byuserinfo{user_guid = UserGuid,
                                              user_info = UserInfo},
                     mnesia:write(ByUserInfo),
+                    sex_srv:set_sex(UserGuid, UserInfo#user_info.is_man),
                     ok
             end,
-    mnesia:activity(sync_dirty, Trans),
-    sex_srv:set_sex(UserGuid, UserInfo#user_info.is_man).
+    mnesia:activity(sync_dirty, Trans).

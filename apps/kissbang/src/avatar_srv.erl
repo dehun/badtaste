@@ -141,9 +141,9 @@ inner_set_avatar(UserGuid, ImageFormat, ImageDataBase64) ->
                        {ok, FileDevice} = file:open(get_out_avatar_path(AvatarGuid, ImageFormat), write),
                        ok = file:write(FileDevice, ImageData),
                        %% update avatar url in userinfo
-                       OldUserInfo = userinfo_srv:get_user_info(UserGuid),
+                       {ok, OldUserInfo} = userinfo_srv:get_user_info(UserGuid),
                        NewUserInfo = OldUserInfo#user_info{avatar_url = get_avatar_url(AvatarGuid, ImageFormat)},
-                       userinfo_srv:update_user_info(UserGuid, NewUserInfo)
+                       ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo)
                end),
         ok.
     
