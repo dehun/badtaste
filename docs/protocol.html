@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-07-24 10:16:29 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-07-24 11:48:07 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -92,36 +92,42 @@ lang="en" xml:lang="en">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 connect </a>
+<li><a href="#sec-1">1 common info </a>
 <ul>
-<li><a href="#sec-1-1">1.1 authentication successfull </a></li>
-<li><a href="#sec-1-2">1.2 authentication failed </a></li>
+<li><a href="#sec-1-1">1.1 socket port </a></li>
+<li><a href="#sec-1-2">1.2 admin web port </a></li>
 </ul>
 </li>
-<li><a href="#sec-2">2 rooms </a>
+<li><a href="#sec-2">2 connect </a>
 <ul>
-<li><a href="#sec-2-1">2.1 join to a random room </a></li>
-<li><a href="#sec-2-2">2.2 on room dead(all users leaved room) </a></li>
-<li><a href="#sec-2-3">2.3 on somebody joined to room when you are in this room </a></li>
-<li><a href="#sec-2-4">2.4 on room came to active state(game begin) </a></li>
+<li><a href="#sec-2-1">2.1 authentication successfull </a></li>
+<li><a href="#sec-2-2">2.2 authentication failed </a></li>
 </ul>
 </li>
-<li><a href="#sec-3">3 chat </a>
+<li><a href="#sec-3">3 rooms </a>
 <ul>
-<li><a href="#sec-3-1">3.1 send chat message to room where you are </a></li>
-<li><a href="#sec-3-2">3.2 getting chat message from room where you are </a></li>
+<li><a href="#sec-3-1">3.1 join to a random room </a></li>
+<li><a href="#sec-3-2">3.2 on room dead(all users leaved room) </a></li>
+<li><a href="#sec-3-3">3.3 on somebody joined to room when you are in this room </a></li>
+<li><a href="#sec-3-4">3.4 on room came to active state(game begin) </a></li>
 </ul>
 </li>
-<li><a href="#sec-4">4 web admin interface </a>
+<li><a href="#sec-4">4 chat </a>
 <ul>
-<li><a href="#sec-4-1">4.1 registration/updating info </a></li>
+<li><a href="#sec-4-1">4.1 send chat message to room where you are </a></li>
+<li><a href="#sec-4-2">4.2 getting chat message from room where you are </a></li>
 </ul>
 </li>
-<li><a href="#sec-5">5 user info </a>
+<li><a href="#sec-5">5 web admin interface </a>
 <ul>
-<li><a href="#sec-5-1">5.1 get user info </a></li>
-<li><a href="#sec-5-2">5.2 upload avatar (by http) </a></li>
-<li><a href="#sec-5-3">5.3 update user info from game </a></li>
+<li><a href="#sec-5-1">5.1 registration/updating info </a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 user info </a>
+<ul>
+<li><a href="#sec-6-1">6.1 get user info </a></li>
+<li><a href="#sec-6-2">6.2 upload avatar (by http) </a></li>
+<li><a href="#sec-6-3">6.3 update user info from game </a></li>
 </ul>
 </li>
 </ul>
@@ -129,15 +135,41 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> connect </h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> common info </h2>
 <div class="outline-text-2" id="text-1">
 
 
 </div>
 
 <div id="outline-container-1-1" class="outline-3">
-<h3 id="sec-1-1"><span class="section-number-3">1.1</span> authentication successfull </h3>
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> socket port </h3>
 <div class="outline-text-3" id="text-1-1">
+
+<p>   8080
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> admin web port </h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   5223
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> connect </h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> authentication successfull </h3>
+<div class="outline-text-3" id="text-2-1">
 
 <p>   -&gt; Authenticate(login="dehun", password="123")
    &lt;- Authenticated(guid = "123871523816kajsbhdqw")
@@ -145,9 +177,9 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-1-2" class="outline-3">
-<h3 id="sec-1-2"><span class="section-number-3">1.2</span> authentication failed </h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> authentication failed </h3>
+<div class="outline-text-3" id="text-2-2">
 
 <p>   -&gt; Authenticate(login="wrong<sub>name</sub>", password="wrongpass")
 </p></div>
@@ -155,16 +187,16 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> rooms </h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> rooms </h2>
+<div class="outline-text-2" id="text-3">
 
 
 </div>
 
-<div id="outline-container-2-1" class="outline-3">
-<h3 id="sec-2-1"><span class="section-number-3">2.1</span> join to a random room </h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> join to a random room </h3>
+<div class="outline-text-3" id="text-3-1">
 
 <p>   -&gt; JoinMainRoomQueue()
    &lt;- OnJoinedToMainRoomQueue()
@@ -173,27 +205,27 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-2-2" class="outline-3">
-<h3 id="sec-2-2"><span class="section-number-3">2.2</span> on room dead(all users leaved room) </h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> on room dead(all users leaved room) </h3>
+<div class="outline-text-3" id="text-3-2">
 
 <p>   &lt;- OnRoomDeath()
 </p></div>
 
 </div>
 
-<div id="outline-container-2-3" class="outline-3">
-<h3 id="sec-2-3"><span class="section-number-3">2.3</span> on somebody joined to room when you are in this room </h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> on somebody joined to room when you are in this room </h3>
+<div class="outline-text-3" id="text-3-3">
 
 <p>   &lt;- OnRoomUserListChanged(users = [guid1, guid2, guid3])
 </p></div>
 
 </div>
 
-<div id="outline-container-2-4" class="outline-3">
-<h3 id="sec-2-4"><span class="section-number-3">2.4</span> on room came to active state(game begin) </h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> on room came to active state(game begin) </h3>
+<div class="outline-text-3" id="text-3-4">
 
 <p>   &lt;- OnRoomStateChaned(state = "active")
 </p></div>
@@ -201,25 +233,25 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> chat </h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> chat </h2>
+<div class="outline-text-2" id="text-4">
 
 
 </div>
 
-<div id="outline-container-3-1" class="outline-3">
-<h3 id="sec-3-1"><span class="section-number-3">3.1</span> send chat message to room where you are </h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> send chat message to room where you are </h3>
+<div class="outline-text-3" id="text-4-1">
 
 <p>   -&gt; SendChatMessageToRoom(message = "some message text body")
 </p></div>
 
 </div>
 
-<div id="outline-container-3-2" class="outline-3">
-<h3 id="sec-3-2"><span class="section-number-3">3.2</span> getting chat message from room where you are </h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> getting chat message from room where you are </h3>
+<div class="outline-text-3" id="text-4-2">
 
 <p>   &lt;- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
 </p></div>
@@ -227,16 +259,16 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> web admin interface </h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> web admin interface </h2>
+<div class="outline-text-2" id="text-5">
 
 
 </div>
 
-<div id="outline-container-4-1" class="outline-3">
-<h3 id="sec-4-1"><span class="section-number-3">4.1</span> registration/updating info </h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> registration/updating info </h3>
+<div class="outline-text-3" id="text-5-1">
 
 <p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "<a href="http://vk.com/kcpc">http://vk.com/kcpc</a>", isMan = "true", 
    birthDate="1989.05.31", city="kiev",  avatarUrl = "<img src="http://radikal.ru/img/someimage.jpg"  alt="http://radikal.ru/img/someimage.jpg" />")))
@@ -246,16 +278,16 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-5" class="outline-2">
-<h2 id="sec-5"><span class="section-number-2">5</span> user info </h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> user info </h2>
+<div class="outline-text-2" id="text-6">
 
 
 </div>
 
-<div id="outline-container-5-1" class="outline-3">
-<h3 id="sec-5-1"><span class="section-number-3">5.1</span> get user info </h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> get user info </h3>
+<div class="outline-text-3" id="text-6-1">
 
 <p>   -&gt; GetUserInfo(targetUserGuid = "someGuid")
    &lt;- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
@@ -264,9 +296,9 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-5-2" class="outline-3">
-<h3 id="sec-5-2"><span class="section-number-3">5.2</span> upload avatar (by http) </h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> upload avatar (by http) </h3>
+<div class="outline-text-3" id="text-6-2">
 
 <p>   -&gt; UploadNewUserAvatar(userGuid = "someguid", imageFormatName = "png", imageDataBase64 = "image<sub>data</sub><sub>encoded</sub><sub>into</sub><sub>base64</sub><sub>string</sub>")
    &lt;- UploadNewUserAvatarResult(result = "ok")
@@ -274,9 +306,9 @@ lang="en" xml:lang="en">
 
 </div>
 
-<div id="outline-container-5-3" class="outline-3">
-<h3 id="sec-5-3"><span class="section-number-3">5.3</span> update user info from game </h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> update user info from game </h3>
+<div class="outline-text-3" id="text-6-3">
 
 <p>   -&gt; TouchUserInfoByUser(name = "dehunter")
    &lt;- TouchUserInfoByUserResult(result = "ok")
@@ -286,7 +318,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-07-24 10:16:29 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-07-24 11:48:07 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
