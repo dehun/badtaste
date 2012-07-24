@@ -64,7 +64,7 @@ package ru.evast.integration.inner.MM
 			MailruCall.exec('mailru.app.friends.invite');
 		}
 		public function PostToWall(msg:String, pictureUrl:String):void {
-			MailruCall.exec('mailru.common.stream.post', MailruStub , { title: APP_TITLE, text:msg} );
+			MailruCall.exec('mailru.common.stream.post', MailruStub , { title: APP_TITLE, text:msg /*, img_url:pictureUrl */} );
 		}
 		
 		public function ShowPayment(count:int, mainName:String, code:int, additional:Object = null):void {
@@ -196,6 +196,9 @@ package ru.evast.integration.inner.MM
 				curProf.PicSmall = a.pic_small;
 				curProf.PicMedium = a.pic;
 				curProf.PicBig = a.pic_big;
+				curProf.BirthDate = a.birthday;
+				curProf.Country = a.location.country.name;
+				curProf.City = a.location.city.name;
 				
 				ret.push(curProf);
 			}
@@ -207,7 +210,7 @@ package ru.evast.integration.inner.MM
 			
 		}
 		
-		private function mailruReadyHandler() : void {
+		private function mailruReadyHandler(unused:Object) : void {
 			trace('Mail.ru API ready');
 		}
 		

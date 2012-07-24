@@ -28,21 +28,21 @@ package ru.evast.integration.inner.OK
 		{			
 			localFlashVars["authorized"] = "1";				
 			localFlashVars["application_key"] = "CBANJLABABABABABA";		
-			localFlashVars["auth_sig"] = "c629963d382cc155a852a2b8580416d4";					
+			localFlashVars["auth_sig"] = "d33e8ceaec83a8bc51867532b5de656f";					
 			localFlashVars["api_server"] = "http://api.odnoklassniki.ru//";				
 			localFlashVars["apiconnection"] = "695296_1326967140888";		
-			localFlashVars["session_key"] = "6d241Aadr86b87Viu4.25CZDu72a3a2EP8b19hXBOa12cbUeIa7d09aAr83";			
+			localFlashVars["session_key"] = "895be76dr18e9h3fQ1c1dZcetdaa9XahJ4640BcFv0926cbEP7796hUfwb";			
 			localFlashVars["logged_user_id"] = "576494768";		
 			localFlashVars["sig"] = "947aeac0e6064e22d9e6867624875773"; 						
-			localFlashVars["session_secret_key"] = "3a3242cc57e875c64b126bda590a41f8";		
+			localFlashVars["session_secret_key"] = "b60fe43fccf43eb7d2daad701db27178";		
 			localFlashVars["refplace"] = "friend_invitation"; 			
 			localFlashVars["referer"] = "91745172587";
 		}
 		
 		/*
-			http://monopoly.static.evast.ru/OK/monopoly.html?authorized=1&api_server=http%3A%2F%2Fapi.odnoklassniki.ru%2F&ip_geo_location=RU%2C13%2CChelyabinsk&apiconnection=695296_1338887952382&
-			first_start=0&session_secret_key=3a3242cc57e875c64b126bda590a41f8&clientLog=0&refplace=catalog&application_key=CBANJLABABABABABA&auth_sig=c629963d382cc155a852a2b8580416d4&
-			session_key=6d241Aadr86b87Viu4.25CZDu72a3a2EP8b19hXBOa12cbUeIa7d09aAr83&logged_user_id=576494768&web_server=www.odnoklassniki.ru&sig=93c99595ebabda9d6b99bb2c7fe648a9
+			http://monopoly.static.evast.ru/OK/monopoly.html?application_key=CBANJLABABABABABA&authorized=1&auth_sig=d33e8ceaec83a8bc51867532b5de656f&api_server=http%3A%2F%2Fapi.odnoklassniki.ru%2F&
+				apiconnection=695296_1342151515544&web_server=www.odnoklassniki.ru&first_start=0&logged_user_id=576494768&session_key=895be76dr18e9h3fQ1c1dZcetdaa9XahJ4640BcFv0926cbEP7796hUfwb&
+				sig=2f61e0ae1e4a02634a16c6d1424cba00&clientLog=0&session_secret_key=b60fe43fccf43eb7d2daad701db27178
 		 */
 		
 		public function init(params:Object, local:Boolean):void {
@@ -58,6 +58,18 @@ package ru.evast.integration.inner.OK
 		public function InviteFriends(msg:String):void {
 			ForticomAPI.showInvite(msg);
 		}
+		/*	TODO: Протестировать этот метод для постинга от Алекса Волкова
+			  public function streamPublish(obj : StreamPublishObj) : void {
+			   MonsterDebugger.trace(this, obj);
+			   streamPublishObj = obj;
+			   var media : Array = [{src:obj.img_url, type:"image"}];
+			   _attach = JSON.stringify({caption:obj.message, media:media});
+			   _action_links = JSON.stringify([{"text":"Получить приз","href":obj.post_id}]);
+			   _signature = getSigStream(obj.title, _attach, _action_links);
+			   ForticomAPI.addEventListener(ApiCallbackEvent.CALL_BACK, apiCallback);
+			   ForticomAPI.showConfirmation("stream.publish", obj.confirmMessage, _signature);
+			  }
+		  */
 		public function PostToWall(msg:String, pictureUrl:String):void {
 			
 			SignUtil.applicationKey = flashVars["application_key"];
@@ -148,7 +160,7 @@ package ru.evast.integration.inner.OK
 		}
 		
 		public function GetProfiles(uids:String, callback:Function):void {
-			RestLib.CallMethod( { method: "users.getInfo", uids: uids, fields:"uid,first_name,last_name,url_profile,gender,pic_1,pic_2,pic_3" }, 
+			RestLib.CallMethod( { method: "users.getInfo", uids: uids, fields:"uid,first_name,last_name,url_profile,gender,pic_1,pic_2,pic_3,birthday,location" }, 
 					function(input:Object):void { 	  
 						callback.call( null, TransformProfiles(input) ); 	
 					});
@@ -207,6 +219,7 @@ package ru.evast.integration.inner.OK
 		
 		
 		private function TransformProfiles(input:Object):Array {
+			//if ( input == null ) return [];
 			if ( IntegrationCfg.allowDefault && input.error_code != null ) return [ SocialDefaults.GetDefaultProfileRu(Me()) ];//TODO: Избавиться от этого
 			
 			var ret:Array = new Array();
@@ -227,6 +240,9 @@ package ru.evast.integration.inner.OK
 				curProf.PicSmall = a.pic_1;
 				curProf.PicMedium = a.pic_2;
 				curProf.PicBig = a.pic_3;
+				curProf.BirthDate = a.birthday;
+				curProf.City = a.location.city;
+				curProf.Country = a.location.country;
 				
 				ret.push(curProf);
 			}
@@ -337,7 +353,6 @@ internal class RestLibOK
 		delete activeRequest[evt.currentTarget as URLLoader];
 		
 		var result:Object = JSON.parse(rs.uLoader.data);
-		
 		rs.callback(result);
 	}
 	

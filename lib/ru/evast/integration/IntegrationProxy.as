@@ -148,6 +148,8 @@ package ru.evast.integration
 			
 			for each ( var s:String in arUids ) {
 				if ( s == "" || s == "0" ) continue;
+				if ( socialProfileList[s] === -1 ) continue; //Значит профиль битый
+				
 				SocProf = socialProfileList[s] as SocialProfileVO;
 				if ( SocProf != null ) {
 					vInfo.push(SocProf);
@@ -212,7 +214,11 @@ package ru.evast.integration
 				
 				for each( var i:String in arNewUids ) {
 					SocProf = socialProfileList[i];
-					if ( SocProf == null && Capabilities.isDebugger == false ) 	continue; //Если пришли не все профили. В случае дебажного плеера даём ошибке произойти
+					//if ( SocProf == null /*&& Capabilities.isDebugger == false */) 	continue; //Если пришли не все профили. В случае дебажного плеера даём ошибке произойти
+					if ( SocProf == null ) {
+						socialProfileList[i] = -1;	//Значит профиль битый
+						continue;
+					}
 					rs.vInfo.push(SocProf);
 				}
 				

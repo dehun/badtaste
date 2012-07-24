@@ -30,8 +30,7 @@ package ru.evast.integration.inner.Mamba
 			localFlashVars["sid"] = "7816bf47388dd5c2ff3b5e44b6968d20";
 			localFlashVars["auth_key"] = "87a6cf07bd301274cc1cb590ad728ef6";		
 			//localFlashVars["fav_id"] = "";
-			localFlashVars["partner_url"] = "http://mamba.ru/";			
-			
+			localFlashVars["partner_url"] = "http://mamba.ru/";		
 		}
 		
 		public function init(params:Object, local:Boolean):void 
@@ -165,6 +164,10 @@ package ru.evast.integration.inner.Mamba
 					curProf.PicMedium = a.info.medium_photo_url;
 					curProf.PicBig = a.info.medium_photo_url;
 				}
+				
+				curProf.City = a.location.city;
+				curProf.Country = a.location.country;
+				curProf.BirthDate = a.info.age;
 				
 				ret.push(curProf);
 			}

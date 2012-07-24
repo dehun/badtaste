@@ -12,6 +12,9 @@ import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.ui.Keyboard;
 
+import ru.evast.integration.IntegrationProxy;
+import ru.evast.integration.core.SocialNetworkTypes;
+
 [Frame(factoryClass="Preloader")]
 [SWF(width="760", height="760", backgroundColor="0xFFFFFF")]
 
@@ -46,6 +49,9 @@ public class Kiss extends Sprite
 		Cc.width = 750;
 		
 		if(Config.DEV_MODE) createTestConsole();
+
+		IntegrationProxy.init(parent.loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);
+		IntegrationProxy.balanceUpdateFunction = function():void{};
 	}
 
 	private function createTestConsole():void
@@ -78,7 +84,7 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
-					controller.sendMessageToRoom("Some Message!")
+
 				break;
 			case 52:
 				break;

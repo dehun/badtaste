@@ -37,7 +37,19 @@ package ru.evast.integration.inner.VK
 		
 		public function VKInnerAdapter() 
 		{
-			_localFlashVars["api_id"] = "2755129";				
+			_localFlashVars["api_id"] = "2816093";				
+			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
+			_localFlashVars["auth_key"] = "17d9ba2df08968d0685724bc0db1e82d";					
+			_localFlashVars["api_server"] = "http://api.odnoklassniki.ru//";				
+			_localFlashVars["is_app_user"] = "1";		
+			_localFlashVars["referrer"] = "profile";			
+			_localFlashVars["secret"] = "0dcdabb371";		
+			_localFlashVars["sid"] = "881aef65c9edc663ded90d83d27d1e460a28a49dae4f67587a4494dc295508"; 						
+			_localFlashVars["user_id"] = "6129079";		
+			_localFlashVars["viewer_id"] = "6129079"; 		
+			_localFlashVars["api_result"] = "";
+			
+			/*_localFlashVars["api_id"] = "2755129";				
 			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
 			_localFlashVars["auth_key"] = "799028cf787103bb7a9cb283b871faa8";					
 			_localFlashVars["api_server"] = "http://api.odnoklassniki.ru//";				
@@ -47,7 +59,8 @@ package ru.evast.integration.inner.VK
 			_localFlashVars["sid"] = "e741bda34440758ff19e7ea7d48eb4f07e6e94b1fb9316f231d3c243ab4c97"; 						
 			_localFlashVars["user_id"] = "9150273";		
 			_localFlashVars["viewer_id"] = "9150273"; 		
-			_localFlashVars["api_result"] = "";// '<?xml version="1.0" encoding="utf-8" ?><response><balance>1000</balance></response>';
+			_localFlashVars["api_result"] = "";*/
+			// '<?xml version="1.0" encoding="utf-8" ?><response><balance>1000</balance></response>';
 		}
 		/*http://monopoly.static.evast.ru/VK/monopoly.html?api_url=http://api.vk.com/api.php&api_id=2755129&api_settings=8199&viewer_id=9150273&viewer_type=2&
 			 * sid=e741bda34440758ff19e7ea7d48eb4f07e6e94b1fb9316f231d3c243ab4c97&
@@ -125,16 +138,16 @@ package ru.evast.integration.inner.VK
 								function( o:Object ):void { callback.call( null, o ); }, 
 								onApiError );
 			} else
-				_apiLib.api("friends.get", { fields:"uid,first_name,last_name,sex,photo,photo_medium,photo_big" }, 
-								function( o:Object ):void { callback.call( null, TransformProfiles( o ) ); }, 
+				_apiLib.api("friends.get", { fields:"uid,first_name,last_name,sex,photo,photo_medium,photo_big,bdate,city,country" }, 
+								function( o:Object ):void { callback.call( null, ( o ) ); }, 
 								onApiError );
 		}
 		
 		public function GetProfiles(uids:String, callback:Function):void {
 			_apiLib.api("getProfiles", 
-						{ fields:"uid,first_name,last_name,sex,photo,photo_medium,photo_big", uids:uids }, 
+						{ fields:"uid,first_name,last_name,sex,photo,photo_medium,photo_big,bdate,city,country", uids:uids }, 
 						function(input:Object):void 
-									{ callback.call( null, TransformProfiles(input)); }, 
+									{ TransformProfiles(input, callback); }, 
 						onApiError );
 		}
 		
@@ -184,10 +197,11 @@ package ru.evast.integration.inner.VK
 		}		
 		
 		
-		private function TransformProfiles(input:Object):Array{
+		private function TransformProfiles(input:Object, callback:Function):void{
 			var ret:Array = new Array();
 			
 			var curProf:SocialProfileVO;
+			var cityIds:String= "";
 			
 			for each( var a:Object in input) {
 				curProf = new SocialProfileVO();
@@ -200,11 +214,29 @@ package ru.evast.integration.inner.VK
 				curProf.PicSmall = a.photo;
 				curProf.PicMedium = a.photo_medium;
 				curProf.PicBig = a.photo_big;
+				curProf.BirthDate = a.bdate;
+				curProf.City = a.city;
+				if (cityIds == "" )
+					cityIds += a.city;
+				else 
+					cityIds += "," + a.city;
 				
+				curProf.Country = a.country;
 				ret.push(curProf);
 			}
 			
-			return ret;
+			_apiLib.api("places.getCityById", { cids:cityIds }, function (result:Object):void 
+			{ 
+				var i:int = 0;
+				for each (var item:Object in result)
+				{
+					ret[i].City = item.name;
+					i++;
+				}
+			callback.call(null, ret ); }, 
+			onApiError);
+			
+			//return ret;	
 		}
 		
 		private function onUserBalanceLoaded(data:int):void {

@@ -233,7 +233,6 @@ internal class RestLibOK
 		delete activeRequest[evt.currentTarget as URLLoader];
 		
 		var result:Object = JSON.parse(rs.uLoader.data);
-		
 		rs.callback(result);
 	}
 	

@@ -21,6 +21,9 @@ package ru.evast.integration.core
 		public var PicSmall:String;
 		public var PicMedium:String;
 		public var PicBig:String;
+		public var BirthDate:String;
+		public var City:String;
+		public var Country:String;
 		
 		public function GotoUserPage():void {
 			if ( IntegrationProxy.socialNetworkType != SocialNetworkTypes.NEXT_GAME ) {
