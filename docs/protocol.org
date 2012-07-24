@@ -22,11 +22,17 @@
    <- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
 * web admin interface
 ** registration/updating info
-   -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", firstName = "yuriy", lastName = "netesov", profileUrl = "url", isMan = "true", 
-   smallAvatarUrl = "someurl", mediumAvatarUrl = "someotherurl", bigAvatarUrl = "anotherUrl")))
+   -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "http://vk.com/kcpc", isMan = "true", 
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "http://radikal.ru/img/someimage.jpg")))
    <- TouchUserInfoResult(result = "ok")
 * user info
 ** get user info
    -> GetUserInfo(targetUserGuid = "someGuid")
    <- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
    smallAvatarUrl = "another_url", mediumAvatarUrl = "yep_another_url", bigAvatarUrl = "urrrl")
+** upload avatar (by http) 
+   -> UploadNewUserAvatar(userGuid = "someguid", imageFormatName = "png", imageDataBase64 = "image_data_encoded_into_base64_string")
+   <- UploadNewUserAvatarResult(result = "ok")
+** update user info from game
+   -> TouchUserInfoByUser(name = "dehunter")
+   <- TouchUserInfoByUserResult(result = "ok")

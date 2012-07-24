@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-07-17 11:34:06 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-07-24 10:16:29 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -120,6 +120,8 @@ lang="en" xml:lang="en">
 <li><a href="#sec-5">5 user info </a>
 <ul>
 <li><a href="#sec-5-1">5.1 get user info </a></li>
+<li><a href="#sec-5-2">5.2 upload avatar (by http) </a></li>
+<li><a href="#sec-5-3">5.3 update user info from game </a></li>
 </ul>
 </li>
 </ul>
@@ -236,8 +238,8 @@ lang="en" xml:lang="en">
 <h3 id="sec-4-1"><span class="section-number-3">4.1</span> registration/updating info </h3>
 <div class="outline-text-3" id="text-4-1">
 
-<p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", firstName = "yuriy", lastName = "netesov", profileUrl = "url", isMan = "true", 
-   smallAvatarUrl = "someurl", mediumAvatarUrl = "someotherurl", bigAvatarUrl = "anotherUrl")))
+<p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "<a href="http://vk.com/kcpc">http://vk.com/kcpc</a>", isMan = "true", 
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "<img src="http://radikal.ru/img/someimage.jpg"  alt="http://radikal.ru/img/someimage.jpg" />")))
    &lt;- TouchUserInfoResult(result = "ok")
 </p></div>
 </div>
@@ -259,12 +261,32 @@ lang="en" xml:lang="en">
    &lt;- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
    smallAvatarUrl = "another<sub>url</sub>", mediumAvatarUrl = "yep<sub>another</sub><sub>url</sub>", bigAvatarUrl = "urrrl")
 </p></div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> upload avatar (by http) </h3>
+<div class="outline-text-3" id="text-5-2">
+
+<p>   -&gt; UploadNewUserAvatar(userGuid = "someguid", imageFormatName = "png", imageDataBase64 = "image<sub>data</sub><sub>encoded</sub><sub>into</sub><sub>base64</sub><sub>string</sub>")
+   &lt;- UploadNewUserAvatarResult(result = "ok")
+</p></div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> update user info from game </h3>
+<div class="outline-text-3" id="text-5-3">
+
+<p>   -&gt; TouchUserInfoByUser(name = "dehunter")
+   &lt;- TouchUserInfoByUserResult(result = "ok")
+</p></div>
 </div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-07-17 11:34:06 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-07-24 10:16:29 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
