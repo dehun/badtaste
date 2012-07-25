@@ -16,6 +16,9 @@ public class Controller
 	public static const AUTHENTICATE:String = "Authenticate";
 	public static const AUTHENTICATED:String = "Authenticated";
 
+	public static const TOUCH_USER_INFO:String = "TouchUserInfo";
+	public static const TOUCH_USER_INFO_RESULT:String = "TouchUserInfoResult";
+
 	public static const JOIN_TO_MAIN_ROOM_QUEUE:String = "JoinMainRoomQueue";
 	public static const JOINED_TO_MAIN_ROOM_QUEUE:String = "OnJoinedToMainRoomQueue";
 	public static const JOINED_TO_ROOM:String = "OnJoinedToRoom";
@@ -78,6 +81,14 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[SEND_CHAT_MESSAGE_TO_ROOM] = {};
 		requestObject[SEND_CHAT_MESSAGE_TO_ROOM].message = messageText;
+		socket.sendRequest(requestObject);
+	}
+
+	public function touchUserInfo(userInfo:Object):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[TOUCH_USER_INFO] = {};
+		requestObject[TOUCH_USER_INFO].userInfo = userInfo;
 		socket.sendRequest(requestObject);
 	}
 
