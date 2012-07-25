@@ -16,7 +16,6 @@ roommgr_srv_test_() ->
                 {"should_spawn_room", fun should_spawn_room/0},
                 {"should_spawn_multiply_rooms", fun should_spawn_multiply_rooms/0},
                 {"should_get_room_by_room_guid", fun should_get_room_by_room_guid/0},
-                {"should_get_room_by_owner_guid", fun should_get_room_by_owner_guid/0},
                 {"should_join_room", fun should_join_room/0},
                 {"should_get_room_by_user_guid", fun should_get_room_by_user_guid/0},
                 {"should_leave_room", fun should_leave_room/0}
@@ -47,32 +46,25 @@ foreach() ->
     
 
 should_spawn_room() ->
-    ?assertMatch({ok, _RoomGuid}, roommgr_srv:spawn_room(random_guid())).
+    ?assertMatch({ok, _RoomGuid}, roommgr_srv:spawn_room()).
 
 should_spawn_multiply_rooms() ->
     lists:foreach(fun (_) -> should_spawn_room() end, lists:seq(0, 1000)).
 
 should_get_room_by_room_guid() ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),
+    {ok, RoomGuid} = roommgr_srv:spawn_room(),
     {ok, Room} = roommgr_srv:get_room(RoomGuid),
     ?assertMatch(RoomGuid, Room#room.room_guid).
 
-should_get_room_by_owner_guid() ->
-    OwnerGuid = random_guid(),
-    {ok, RoomGuid} = roommgr_srv:spawn_room(OwnerGuid),
-    {ok, Room} = roommgr_srv:get_room_for(OwnerGuid),
-    ?assertMatch(RoomGuid, Room#room.room_guid),
-    ?assert(room_srv:are_in_room(Room#room.room_pid, OwnerGuid)).
-
 should_join_room() ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),
+    {ok, RoomGuid} = roommgr_srv:spawn_room(),
     UserGuid = random_guid(),
     ?assertMatch(ok, roommgr_srv:join_room(RoomGuid, UserGuid)),
     {ok, Room} = roommgr_srv:get_room(RoomGuid),
     ?assert(room_srv:are_in_room(Room#room.room_pid, UserGuid)).
 
 should_get_room_by_user_guid() ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),
+    {ok, RoomGuid} = roommgr_srv:spawn_room(),
     UserGuid = random_guid(),
     ?assertMatch(ok, roommgr_srv:join_room(RoomGuid, UserGuid)),
     {ok, Room} = roommgr_srv:get_room_for(UserGuid),
@@ -80,7 +72,7 @@ should_get_room_by_user_guid() ->
     
 
 should_leave_room() ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(random_guid()),
+    {ok, RoomGuid} = roommgr_srv:spawn_room(),
     UserGuid = random_guid(),
     ?assertMatch(ok, roommgr_srv:join_room(RoomGuid, UserGuid)),
     ?assertMatch(ok, roommgr_srv:leave_room(UserGuid)).

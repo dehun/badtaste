@@ -165,9 +165,9 @@ inner_get_sex(UserGuid) ->
                         [Sex] ->
                             if
                                 Sex#sex.is_male ->
-                                    {ok, male};
+                                    male;
                                 true ->
-                                    {ok, female}
+                                    female
                                 end;
                         [] ->
                             unknown

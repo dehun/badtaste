@@ -197,7 +197,8 @@ inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
     end.
 
 inner_spawn_room_for(UserGuid) ->
-    {ok, RoomGuid} = roommgr_srv:spawn_room(UserGuid),
+    {ok, RoomGuid} = roommgr_srv:spawn_room(),
+    roommgr_srv:join_room(RoomGuid, UserGuid),
     RoomGuid.
 
 reinit_ticker() ->

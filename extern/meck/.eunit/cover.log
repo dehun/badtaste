@@ -24,26 +24,3 @@ Export includes data from imported files
 WARNING: Deleting data for module meck_test_module imported from
 ["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
  "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]
-WARNING: Deleting data for module meck_test_module imported from
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]
-WARNING: remote cover_server received
-{<17663.45.0>,{is_compiled,meck_test_module}}
-Export includes data from imported files
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module_meck_original.coverdata"]
-WARNING: Deleting data for module meck_test_parametrized_module imported from
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module_meck_original.coverdata"]
-Analysis includes data from imported files
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module_meck_original.coverdata"]
-Analysis includes data from imported files
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]
-Analysis includes data from imported files
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_parametrized_module_meck_original.coverdata"]
-Analysis includes data from imported files
-["/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module.coverdata",
- "/mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_test_module_meck_original.coverdata"]

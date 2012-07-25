@@ -12,7 +12,7 @@
 -include("kissbang_messaging.hrl").
 
 %% API
--export([start_link/2, start/2]).
+-export([start_link/0, start/0, start/1, start_link/1]).
 -export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1]).
 
 %% gen_fsm callbacks
@@ -58,11 +58,15 @@ leave(RoomPid, UserGuid) ->
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link(OwnerGuid, Extensions) ->
-    gen_fsm:start_link(?MODULE, [OwnerGuid, Extensions], []).
+start_link() ->
+    start_link([]).
+start_link(Extensions) ->
+    gen_fsm:start_link(?MODULE, [Extensions], []).
 
-start(OwnerGuid, Extensions) ->
-    gen_fsm:start(?MODULE, [OwnerGuid, Extensions], []).
+start() ->
+    start([]).
+start(Extensions) ->
+    gen_fsm:start(?MODULE, [Extensions], []).
 %%%===================================================================
 %%% gen_fsm callbacks
 %%%===================================================================
@@ -80,11 +84,9 @@ start(OwnerGuid, Extensions) ->
 %%                     {stop, StopReason}
 %% @end
 %%--------------------------------------------------------------------
-init([Owner, Extensions]) ->
+init([Extensions]) ->
     % form state
     State = #state{users=sets:new(), extensions = Extensions},
-    % join user
-    spawn_link(fun() -> ok = room_srv:join(self(), Owner) end),
     % link extensions
     lists:foreach(fun(ExtensionPid) -> link(ExtensionPid) end, Extensions),
     % return result
@@ -149,14 +151,19 @@ pending({leave_room, UserGuid}, _From, State) ->
     % are somebody droped?
     case sets:size(NewUsers) of
         0 -> 
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_room_death(Extension) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_room_death(Extension) end, State#state.extensions),
             inner_broadcast_message(#on_room_death{}, sets:to_list(NewUsers)),
-            {stop, normal, ok, NewState};
+            case OriginalUsersSize of
+                0 ->
+                    {reply, nobody_droped, pending, State};
+                _Other ->
+                    {stop, normal, ok, NewState}
+            end;
         OriginalUsersSize -> 
             {reply, nobody_droped, pending, NewState};
         _Other ->
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
             inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
                                     sets:to_list(NewUsers)),
             {reply, ok, pending, NewState}
@@ -176,10 +183,10 @@ pending({join, Guid}, _From, State) ->
             if
                 AreReadyToStart ->
                     inner_broadcast_message(#on_room_state_changed{state = "active"}, sets:to_list(NewUsers)),
-                    ok = merge_extensions_call(fun(Extension) -> room_ext:on_room_became_active(Extension) end, State#state.extensions),
-                    {reply, ok, active, #state{users = NewUsers}};
+                    ok = call_extensions(fun(Extension) -> room_ext:on_room_became_active(Extension) end, State#state.extensions),
+                    {reply, ok, active, State#state{users = NewUsers}};
                 true ->
-                    {reply, ok, pending, State#state{users=NewUsers}}
+                    {reply, ok, pending, State#state{users = NewUsers}}
                 end;
         Error ->
               {reply, Error, active, State}
@@ -207,8 +214,8 @@ active({leave_room, UserGuid}, _From, State) ->
     OriginalUsersSize = sets:size(State#state.users),
     case sets:size(NewUsers) of
         1 ->
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_room_death(Extension) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_room_death(Extension) end, State#state.extensions),
             inner_broadcast_message(#on_room_death{}, sets:to_list(NewUsers)),
             inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
                                     sets:to_list(NewUsers)),
@@ -216,7 +223,7 @@ active({leave_room, UserGuid}, _From, State) ->
         OriginalUsersSize ->
             {reply, nobody_droped, active, NewState};
         _Other ->
-            ok = merge_extensions_call(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
+            ok = call_extensions(fun(Extension) -> room_ext:on_user_leave(Extension, UserGuid) end, State#state.extensions),
             inner_broadcast_message(#on_room_user_list_changed{users = sets:to_list(NewUsers)}, 
                                     sets:to_list(NewUsers)),
             {reply, ok, active, NewState}
@@ -341,7 +348,7 @@ inner_join(Guid, State, StateName) ->
                     proxy_srv:async_route_messages(Guid, [#on_room_is_full{}]),
                     {error, room_already_full};
                 true ->
-                    ExtensionsResult = merge_extensions_call(fun(ExtensionPid) -> room_ext:on_user_join(ExtensionPid, Guid) end, State#state.extensions),
+                    ExtensionsResult = call_extensions(fun(ExtensionPid) -> room_ext:on_user_join(ExtensionPid, Guid) end, State#state.extensions),
                     case ExtensionsResult of
                         ok ->
                             inner_broadcast_message(Guid, #on_room_user_list_changed{users = sets:to_list(Users)}, sets:to_list(Users)),
@@ -359,14 +366,14 @@ inner_drop(Users) ->
     ok.
 
     
-merge_extensions_call(Call, [Extension, RestExtensions]) ->
-    Result = Call(Extension),
-    case Result of 
+call_extensions(Call, [Extension | RestExtensions]) ->
+    CallResult = Call(Extension),
+    case CallResult of 
         ok ->
-            merge_extensions_call(Call, RestExtensions);
+            call_extensions(Call, RestExtensions);
         Error ->
             Error
     end;
-merge_extensions_call(Call, []) ->
+call_extensions(Call, []) ->
     ok.
 

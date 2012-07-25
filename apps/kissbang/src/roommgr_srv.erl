@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([spawn_room/1, get_room/1, get_room_for/1, join_room/2, leave_room/1, async_leave_room/1, drop_room/1, drop_all/0]).
+-export([spawn_room/0, get_room/1, get_room_for/1, join_room/2, leave_room/1, async_leave_room/1, drop_room/1, drop_all/0]).
 %-export([on_user_joined/1, on_user_leave/1, on_new_room_spawned/1]).
 -export([start_link/0, setup_db/0]).
 
@@ -40,8 +40,8 @@ drop_all() ->
 %% spawn_room() -> {ok, RoomGuid} | fail
 %% @end
 %%--------------------------------------------------------------------
-spawn_room(OwnerGuid) ->
-    gen_server:call(?SERVER, {spawn_room, OwnerGuid}).
+spawn_room() ->
+    gen_server:call(?SERVER, {spawn_room}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -152,8 +152,8 @@ handle_call({drop_room, RoomGuid}, _From, State) ->
 handle_call({drop_all}, _From, State) ->
     Reply = inner_drop_all(),
     {reply, Reply, State};
-handle_call({spawn_room, OwnerGuid}, _From, State) ->
-    Reply = inner_spawn_room(OwnerGuid),
+handle_call({spawn_room}, _From, State) ->
+    Reply = inner_spawn_room(),
     {reply, Reply, State};
 handle_call({join_room, UserGuid, RoomGuid}, _From, State) ->
     Reply = inner_join_room(UserGuid, RoomGuid),
@@ -229,20 +229,17 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_spawn_room(OwnerGuid) ->
-    inner_leave_room(OwnerGuid), % leave previous room
+inner_spawn_room() ->
     Trans = fun() ->
                     {ok, RoomGuid} = guid_srv:create(),
-                    {ok, RoomPid} = room_srv:start(OwnerGuid),
+                    {ok, Extension} = kiss_room_ext_srv:start(),
+                    {ok, RoomPid} = room_srv:start([Extension]),
                     NewRoom = #room{room_guid = RoomGuid,
                                     room_pid = RoomPid},
                     mnesia:write(NewRoom),
-                    RoomOwnerInfo = #user_room{user_guid = OwnerGuid, 
-                                               room_guid = NewRoom#room.room_guid},
-                    mnesia:write(RoomOwnerInfo),
                     {ok, NewRoom#room.room_guid}
             end,
-    {ok, _RoomGuid} = mnesia:activity(async_dirty, Trans).
+    {ok, _RoomGuid} = mnesia:activity(sync_dirty, Trans).
 
 inner_join_room(UserGuid, RoomGuid) ->
     RoomRes = inner_get_room(RoomGuid),
@@ -254,7 +251,7 @@ inner_join_room(UserGuid, RoomGuid) ->
                                     mnesia:write(#user_room{user_guid = UserGuid,
                                                             room_guid = Room#room.room_guid}) 
                             end,
-                    mnesia:activity(async_dirty, Trans);
+                    mnesia:activity(sync_dirty, Trans);
                 Error ->
                     Error
             end;

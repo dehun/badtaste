@@ -11,7 +11,7 @@
 -behaviour(gen_fsm).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, start/0]).
 %% gen_fsm callbacks
 -export([init/1, pending/2, pending/3, active/2, active/3, handle_event/3,
          handle_sync_event/4, handle_info/3, terminate/3, code_change/4]).
@@ -32,7 +32,11 @@
 %% @end
 %%--------------------------------------------------------------------
 start_link() ->
-    gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], []).
+    gen_fsm:start_link(?MODULE, [], []).
+
+start() ->
+    gen_fsm:start(?MODULE, [], []).
+    
 
 %%%===================================================================
 %%% gen_fsm callbacks
@@ -52,7 +56,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, pending, #state{}}.
+    {ok, pending, #state{users = []}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -97,7 +101,7 @@ pending({on_room_became_active}, _From, State) ->
     {reply, Reply, active, State};
 pending({on_room_death}, _From, State) ->
     Reply = ok,
-    {stop, Reply, State};
+    {stop, normal, Reply, State};
 pending({on_user_join, UserGuid}, _From, State) ->
     {Reply, NewState} = inner_user_join(State, UserGuid),
     {reply, Reply, active, NewState};
@@ -108,7 +112,7 @@ pending({on_user_leave, UserGuid}, _From, State) ->
 
 active({on_room_death}, _From, State) ->
     Reply = ok,
-    {stop, Reply, State};
+    {stop, normal, Reply, State};
 active({on_user_join, UserGuid}, _From, State) ->
     {Reply, NewState} = inner_user_join(State, UserGuid),
     {reply, Reply, active, NewState};
@@ -199,10 +203,10 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %%%===================================================================
 calculate_male_parity(Users) ->
     lists:foldl(fun(User, Acc) ->
-                        case sex_srv:get_sex(User) of
-                            {ok, male} ->
+                        case element(1, User) of
+                            male ->
                                 Acc + 1;
-                            {ok, female} ->
+                            female ->
                                 Acc - 1;
                             unknown ->
                                 Acc + 0
@@ -210,7 +214,17 @@ calculate_male_parity(Users) ->
                 end, 0, Users).
 
 inner_user_join(State, UserGuid) ->
-    ok.
+    NewComerSex = sex_srv:get_sex(UserGuid),
+    NewUsers = [{NewComerSex, UserGuid} | State#state.users],
+    NewMaleParity = calculate_male_parity(NewUsers),
+    AreParityOverflow = abs(NewMaleParity) > application:get_env(kissbang, room_sex_parity),
+    if
+        AreParityOverflow ->
+            {male_parity_overflow, State};
+        true ->
+            {ok, State#state{users = NewUsers}}
+    end.
 
 inner_user_leave(State, UserGuid) ->
-    ok.
+    NewUsers = [User || User <- State#state.users, element(2,User) /= UserGuid],
+    {ok, State#state{users = NewUsers}}.
