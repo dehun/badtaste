@@ -250,7 +250,10 @@ inner_select_swinger(State) ->
 
 inner_swing_bottle(State) ->
     CurrentState = State#state.current_state,
-    NewCurrentState = #kiss_mode_state{kissers = [CurrentState#swing_bottle_mode_state.current_swinger]},
+    CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
+    NewCurrentState = #kiss_mode_state{kissers = [CurrentSwinger, 
+                                                  inner_select_random_user(get_sex_opposite(element(1, CurrentSwinger)), State#state.users)
+                                                  ]},
     State#state{current_state = NewCurrentState}.
 
 
@@ -270,3 +273,11 @@ inner_kiss_action(State, Action, UserGuid) ->
     State#state{current_state = NewCurrentState}.
     
     
+inner_select_random_user(Sex, Users) ->
+    SexUsers = [User || User <- Users, element(1, User) == Sex],
+    lists:nth(random:uniform(length(SexUsers)), SexUsers).
+
+get_sex_opposite(male) ->
+    female;
+get_sex_opposite(female) ->
+    male.
