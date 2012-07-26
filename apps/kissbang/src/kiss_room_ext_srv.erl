@@ -13,14 +13,24 @@
 %% API
 -export([start_link/0, start/0]).
 %% gen_fsm callbacks
--export([init/1, pending/2, pending/3, active/2, active/3, handle_event/3,
+-export([init/1, pending/2, pending/3,
+         %% active/2, active/3,
+         handle_event/3,
          handle_sync_event/4, handle_info/3, terminate/3, code_change/4]).
+-export([swinger_select_mode/2,
+         swing_bottle_mode/2, 
+         kiss_mode/2]). %% modes
 
 
 
 -define(SERVER, ?MODULE).
 
--record(state, {users = []}).
+-record(state, {users = [], 
+                room_pid,
+                current_state}).
+
+-record(swing_bottle_mode_state, {current_swinger}).
+-record(kiss_mode_state, {kissers = []}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -58,47 +68,11 @@ start() ->
 init([]) ->
     {ok, pending, #state{users = []}}.
 
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% There should be one instance of this function for each possible
-%% state name. Whenever a gen_fsm receives an event sent using
-%% gen_fsm:send_event/2, the instance of this function with the same
-%% name as the current state name StateName is called to handle
-%% the event. It is also called if a timeout occurs.
-%%
-%% @spec state_name(Event, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState}
-%% @end
-%%--------------------------------------------------------------------
 pending(_Event, State) ->
     {next_state, pending, State}.
-active(_Event, State) ->
-    {next_state, active, State}.
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% There should be one instance of this function for each possible
-%% state name. Whenever a gen_fsm receives an event sent using
-%% gen_fsm:sync_send_event/[2,3], the instance of this function with
-%% the same name as the current state name StateName is called to
-%% handle the event.
-%%
-%% @spec state_name(Event, From, State) ->
-%%                   {next_state, NextStateName, NextState} |
-%%                   {next_state, NextStateName, NextState, Timeout} |
-%%                   {reply, Reply, NextStateName, NextState} |
-%%                   {reply, Reply, NextStateName, NextState, Timeout} |
-%%                   {stop, Reason, NewState} |
-%%                   {stop, Reason, Reply, NewState}
-%% @end
-%%--------------------------------------------------------------------
 pending({on_room_became_active}, _From, State) ->
     Reply = ok,
-    {reply, Reply, active, State};
+    {reply, Reply, swinger_select_mode, State};
 pending({on_room_death}, _From, State) ->
     Reply = ok,
     {stop, normal, Reply, State};
@@ -110,15 +84,44 @@ pending({on_user_leave, UserGuid}, _From, State) ->
     {reply, Reply, active, NewState}.
 
 
-active({on_room_death}, _From, State) ->
-    Reply = ok,
-    {stop, normal, Reply, State};
-active({on_user_join, UserGuid}, _From, State) ->
-    {Reply, NewState} = inner_user_join(State, UserGuid),
-    {reply, Reply, active, NewState};
-active({on_user_leave, UserGuid}, _From, State) ->
-    {Reply, NewState} = inner_user_leave(State, UserGuid),
-    {reply, Reply, active, NewState}.
+
+swinger_select_mode({select_swinger}, State) ->
+    NewState = State#state{current_state = 
+                               #swing_bottle_mode_state{current_swinger = inner_select_swinger(State)}},
+    {next_state, swing_bottle_mode, NewState, 15000}.
+
+swing_bottle_mode(timeout, State) ->
+    NewState = State#state{current_state = {}},
+    {next_state, select_swinger_mode, NewState};
+swing_bottle_mode({handle_extension_message, {swing_bottle}}, State) ->
+    NewState = inner_swing_bottle(State),
+    {next_state, kiss_mode, NewState, 15000}.
+
+kiss_mode(timeout, State) ->
+    NewState = State#state{current_state = {}},
+    {next_state, select_swinger_mode, NewState};
+kiss_mode({handle_extension_message, {kiss_action, UserGuid, Action}}, State) ->
+    NewState = inner_kiss_action(State, Action, UserGuid),
+    NewCurrentState = NewState#state.current_state,
+    case NewCurrentState#kiss_mode_state.kissers of
+        [] ->
+            {next_state, select_swinger_mode, NewState#state{current_state = unknown}};
+        _Other ->
+            {next_state, kiss_mode, NewState, 15000}
+    end.
+
+%% active({on_room_death}, _From, State) ->
+%%     Reply = ok,
+%%     {stop, normal, Reply, State};
+%% active({on_user_join, UserGuid}, _From, State) ->
+%%     {Reply, NewState} = inner_user_join(State, UserGuid),
+%%     {reply, Reply, active, NewState};
+%% active({on_user_leave, UserGuid}, _From, State) ->
+%%     {Reply, NewState} = inner_user_leave(State, UserGuid),
+%%     {reply, Reply, active, NewState}.
+
+
+
 
 %%--------------------------------------------------------------------
 %% @private
@@ -152,9 +155,18 @@ handle_event(_Event, StateName, State) ->
 %%                   {stop, Reason, Reply, NewState}
 %% @end
 %%--------------------------------------------------------------------
-handle_sync_event(_Event, _From, StateName, State) ->
+handle_sync_event({link_room, RoomPid}, _From, StateName, State) ->
+    {Reply, NewState} = inner_link_room(State, RoomPid),
+    {reply, Reply, StateName, NewState};
+handle_sync_event({on_user_join, UserGuid}, _From, StateName, State) ->
+    {Reply, NewState} = inner_user_join(State, UserGuid),
+    {reply, Reply, StateName, NewState};
+handle_sync_event({on_user_leave, UserGuid}, _From, StateName, State) ->
+    {Reply, NewState} = inner_user_leave(State, UserGuid),
+    {reply, Reply, StateName, NewState};
+handle_sync_event({on_room_death}, _From, StateName, State) ->
     Reply = ok,
-    {reply, Reply, StateName, State}.
+    {stop, normal ,Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -201,6 +213,9 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_link_room(State, RoomPid) ->
+    {ok, State#state{room_pid = RoomPid}}.
+
 calculate_male_parity(Users) ->
     lists:foldl(fun(User, Acc) ->
                         case element(1, User) of
@@ -228,3 +243,30 @@ inner_user_join(State, UserGuid) ->
 inner_user_leave(State, UserGuid) ->
     NewUsers = [User || User <- State#state.users, element(2,User) /= UserGuid],
     {ok, State#state{users = NewUsers}}.
+
+
+inner_select_swinger(State) ->
+    lists:last(State#state.users). %% TODO : implement me
+
+inner_swing_bottle(State) ->
+    CurrentState = State#state.current_state,
+    NewCurrentState = #kiss_mode_state{kissers = [CurrentState#swing_bottle_mode_state.current_swinger]},
+    State#state{current_state = NewCurrentState}.
+
+
+inner_kiss_action(State, Action, UserGuid) ->
+    % take an action (kiss, refuse to kiss) 
+    case Action of
+        kiss ->
+            ok; % TODO : implement me
+        refuse ->
+            ok
+    end,
+    % form new status
+    CurrentState = State#state.current_state,
+    NewKissers = [User || User <- CurrentState#kiss_mode_state.kissers, 
+                          element(2, User) /= UserGuid],
+    NewCurrentState = CurrentState#kiss_mode_state{kissers = NewKissers},
+    State#state{current_state = NewCurrentState}.
+    
+    

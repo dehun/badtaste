@@ -88,7 +88,7 @@ init([Extensions]) ->
     % form state
     State = #state{users=sets:new(), extensions = Extensions},
     % link extensions
-    lists:foreach(fun(ExtensionPid) -> link(ExtensionPid) end, Extensions),
+    lists:foreach(fun(ExtensionPid) -> room_ext:link_room(ExtensionPid, self()) end, Extensions),
     % return result
     {ok, pending, State}.
 
