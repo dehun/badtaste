@@ -11,6 +11,9 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 
+import ru.evast.integration.IntegrationProxy;
+import ru.evast.integration.core.SocialNetworkTypes;
+
 [Frame(factoryClass="Preloader")]
 [SWF(width="760", height="760", backgroundColor="0xFFFFFF")]
 
@@ -43,7 +46,11 @@ public class Kiss extends Sprite
 		Cc.startOnStage(this.stage);
 		Cc.height = 750;
 		Cc.width = 750;
-		
+
+		//IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);	// Для релиза
+		IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.VKONTAKTE); //Для локальной работы
+		trace(IntegrationProxy.adapter.GetProfiles(IntegrationProxy.adapter.Me(), onGetProfiles));
+
 		if(Config.DEV_MODE) createTestConsole();
 	}
 
@@ -55,13 +62,25 @@ public class Kiss extends Sprite
 		Cc.log("Press '0' button to establish socket connection;");
 		Cc.log("Press '1' button to authenticate;");
 		Cc.log("Press '2' to send message to room;");
-//		Cc.log("Press '3' button to establish socket connection;")
+		Cc.log("Press '3' to touchUserInfo;");
 //		Cc.log("Press '4' button to establish socket connection;")
 //		Cc.log("Press '5' button to establish socket connection;")
 //		Cc.log("Press '6' button to establish socket connection;")
 //		Cc.log("Press '7' button to establish socket connection;")
 //		Cc.log("Press '8' button to establish socket connection;")
 //		Cc.log("Press '9' button to establish socket connection;")
+
+
+	}
+
+	private function onGetProfiles(res:Object):void
+	{
+		trace(res);
+	}
+
+	private function onGetFriends(res:Object):void
+	{
+		//trace(res);
 	}
 
 	private function onKeyDown(e:KeyboardEvent):void
@@ -69,7 +88,7 @@ public class Kiss extends Sprite
 		switch(e.keyCode)
 		{
 			case 48:
-					controller.authenticate("dehun", "123");
+					controller.authenticate("dehun", "");
 				break;
 			case 49:
 					controller.joinToMainRoomQueue();
@@ -78,16 +97,7 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
-				controller.touchUserInfo({ "UserInfo" : {
-					"userId" : "dehun",
-					"firstName" : "yuriy",
-					"lastName" : "netesov",
-					"profileUrl" : "http://vk.com/kcpc",
-					"isMan" : "true",
-					"smallAvatarUrl" : "netu",
-					"mediumAvatarUrl" : "netu",
-					"bigAvatarUrl" : "netu"
-				}});
+				controller.touchUserInfo('{"userInfo" : { "UserInfo" : {"userId" : "dehun","name" : "netesov","profileUrl" : "http://vk.com/kcpc","isMan" : "true","birthDate" : "1989-05-31","city" : "kiev","avatarUrl" : "http://netu.net/netu.jpg"}}}');
 				break;
 			case 52:
 				break;

@@ -84,12 +84,9 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	public function touchUserInfo(userInfo:Object):void
+	public function touchUserInfo(userInfo:String):void
 	{
-		var requestObject:Object = new Object();
-		requestObject[TOUCH_USER_INFO] = {};
-		requestObject[TOUCH_USER_INFO].userInfo = userInfo;
-		socket.sendRequest(requestObject);
+		ServerConnector.call(TOUCH_USER_INFO, userInfo);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------

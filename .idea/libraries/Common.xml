@@ -1,8 +1,7 @@
 <component name="libraryTable">
   <library name="Common" type="flex">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/lib/org" />
-      <root url="file://$PROJECT_DIR$/src/ru" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
