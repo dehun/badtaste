@@ -326,13 +326,8 @@ inner_broadcast_message(Message, [User | RestUsers]) ->
 inner_broadcast_message(_Message, []) ->
     ok.
 
-inner_broadcast_message(Sender, Message, [User | RestUsers]) when User =:= Sender -> %% don't broadcast to self
-    inner_broadcast_message(Sender, Message, RestUsers);
-inner_broadcast_message(Sender, Message, [User | RestUsers]) -> 
-    proxy_srv:async_route_messages(User, [Message]),
-    inner_broadcast_message(Sender, Message, RestUsers);
-inner_broadcast_message(_Sender, _Message, []) ->
-    ok.
+inner_broadcast_message(_Sender, Message, Users) ->
+    inner_broadcast_message(Message, Users).
 
 inner_join(Guid, State, StateName) ->
     Users = State#state.users,

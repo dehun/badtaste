@@ -29,8 +29,9 @@
                 room_pid,
                 current_state}).
 
+-record(swinger_select_mode, {last_swinger}).
 -record(swing_bottle_mode_state, {current_swinger}).
--record(kiss_mode_state, {kissers = []}).
+-record(kiss_mode_state, {kissers = [], last_swinger}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -72,7 +73,8 @@ pending(_Event, State) ->
     {next_state, pending, State}.
 pending({on_room_became_active}, _From, State) ->
     Reply = ok,
-    {reply, Reply, swinger_select_mode, State};
+    NewCurrentState = #swinger_select_mode{last_swinger = inner_select_random_user(male, State#state.users)},
+    {reply, Reply, swinger_select_mode, State#state{current_state = NewCurrentState}};
 pending({on_room_death}, _From, State) ->
     Reply = ok,
     {stop, normal, Reply, State};
@@ -164,7 +166,7 @@ handle_sync_event({on_user_join, UserGuid}, _From, StateName, State) ->
 handle_sync_event({on_user_leave, UserGuid}, _From, StateName, State) ->
     {Reply, NewState} = inner_user_leave(State, UserGuid),
     {reply, Reply, StateName, NewState};
-handle_sync_event({on_room_death}, _From, StateName, State) ->
+handle_sync_event({on_room_death}, _From, _StateName, State) ->
     Reply = ok,
     {stop, normal ,Reply, State}.
 
@@ -246,14 +248,15 @@ inner_user_leave(State, UserGuid) ->
 
 
 inner_select_swinger(State) ->
-    lists:last(State#state.users). %% TODO : implement me
+    OppositeSex = get_sex_opposite(element(1, State#swinger_select_mode.last_swinger)),
+    inner_select_random_user(OppositeSex, State#swinger_select_mode.last_swinger).
 
 inner_swing_bottle(State) ->
     CurrentState = State#state.current_state,
     CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
     NewCurrentState = #kiss_mode_state{kissers = [CurrentSwinger, 
                                                   inner_select_random_user(get_sex_opposite(element(1, CurrentSwinger)), State#state.users)
-                                                  ]},
+                                                  ], last_swinger = CurrentSwinger},
     State#state{current_state = NewCurrentState}.
 
 
