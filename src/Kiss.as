@@ -3,6 +3,7 @@ package
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.User;
 import com.exponentum.apps.flirt.view.View;
 import com.junkbyte.console.Cc;
 import com.junkbyte.console.ConsoleConfig;
@@ -13,6 +14,7 @@ import flash.events.KeyboardEvent;
 
 import ru.evast.integration.IntegrationProxy;
 import ru.evast.integration.core.SocialNetworkTypes;
+import ru.evast.integration.core.SocialProfileVO;
 
 [Frame(factoryClass="Preloader")]
 [SWF(width="760", height="760", backgroundColor="0xFFFFFF")]
@@ -36,7 +38,7 @@ public class Kiss extends Sprite
 
 	private function init():void
 	{
-		trace("Application started!");
+		
 
 		model = new Model();
 		controller = new Controller(model);
@@ -47,22 +49,31 @@ public class Kiss extends Sprite
 		Cc.height = 750;
 		Cc.width = 750;
 
-		//IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);	// Для релиза
-		IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.VKONTAKTE); //Для локальной работы
-		trace(IntegrationProxy.adapter.GetProfiles(IntegrationProxy.adapter.Me(), onGetProfiles));
+		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		Cc.log("Application started!");
+		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
-		if(Config.DEV_MODE) createTestConsole();
+		initSocialIntegration();
+	}
+
+	private function initSocialIntegration():void
+	{
+		if(Config.DEV_MODE)
+			IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.VKONTAKTE); //Для локальной работы
+		else
+		 IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);	// Для релиза
+
+		IntegrationProxy.adapter.GetProfiles(IntegrationProxy.adapter.Me(), onGetProfiles);
 	}
 
 	private function createTestConsole():void
 	{
-		
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		
 		Cc.log("Press '0' button to establish socket connection;");
 		Cc.log("Press '1' button to authenticate;");
 		Cc.log("Press '2' to send message to room;");
-		Cc.log("Press '3' to touchUserInfo;");
+//		Cc.log("Press '3' to touchUserInfo;");
 //		Cc.log("Press '4' button to establish socket connection;")
 //		Cc.log("Press '5' button to establish socket connection;")
 //		Cc.log("Press '6' button to establish socket connection;")
@@ -75,12 +86,15 @@ public class Kiss extends Sprite
 
 	private function onGetProfiles(res:Object):void
 	{
-		trace(res);
+		Cc.log("%%%%%%%%%% Social network response %%%%%%%%%%%");
+		Cc.log(res);
+
+		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
 	}
 
 	private function onGetFriends(res:Object):void
 	{
-		//trace(res);
+		trace(res);
 	}
 
 	private function onKeyDown(e:KeyboardEvent):void
@@ -97,7 +111,7 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
-				controller.touchUserInfo('{"userInfo" : { "UserInfo" : {"userId" : "dehun","name" : "netesov","profileUrl" : "http://vk.com/kcpc","isMan" : "true","birthDate" : "1989-05-31","city" : "kiev","avatarUrl" : "http://netu.net/netu.jpg"}}}');
+					controller.touchUserInfo('{"userInfo" : { "UserInfo" : {"userId" : "dehun","name" : "netesov","profileUrl" : "http://vk.com/kcpc","isMan" : "true","birthDate" : "1989-05-31","city" : "kiev","avatarUrl" : "http://netu.net/netu.jpg"}}}');
 				break;
 			case 52:
 				break;
