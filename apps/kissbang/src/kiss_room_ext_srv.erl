@@ -29,7 +29,7 @@
                 room_pid,
                 current_state}).
 
--record(swinger_select_mode, {last_swinger}).
+-record(swinger_select_mode_state, {last_swinger}).
 -record(swing_bottle_mode_state, {current_swinger}).
 -record(kiss_mode_state, {kissers = [], last_swinger}).
 
@@ -73,8 +73,8 @@ pending(_Event, State) ->
     {next_state, pending, State}.
 pending({on_room_became_active}, _From, State) ->
     Reply = ok,
-    NewCurrentState = #swinger_select_mode{last_swinger = inner_select_random_user(male, State#state.users)},
-    {reply, Reply, swinger_select_mode, State#state{current_state = NewCurrentState}};
+    NewCurrentState = #swinger_select_mode_state{last_swinger = inner_select_random_user(male, State#state.users)},
+    {reply, Reply, swinger_select_mode, State#state{current_state = NewCurrentState}, 0};
 pending({on_room_death}, _From, State) ->
     Reply = ok,
     {stop, normal, Reply, State};
@@ -87,27 +87,34 @@ pending({on_user_leave, UserGuid}, _From, State) ->
 
 
 
-swinger_select_mode({select_swinger}, State) ->
+swinger_select_mode(timeout, State) ->
+    NewSwinger = inner_select_swinger(State),
     NewState = State#state{current_state = 
-                               #swing_bottle_mode_state{current_swinger = inner_select_swinger(State)}},
+                               #swing_bottle_mode_state{current_swinger = NewSwinger}},
     {next_state, swing_bottle_mode, NewState, 15000}.
 
 swing_bottle_mode(timeout, State) ->
-    NewState = State#state{current_state = {}},
-    {next_state, select_swinger_mode, NewState};
+    CurrentState = State#state.current_state,
+    CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
+    NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = CurrentSwinger}},
+    {next_state, swinger_select_mode, NewState, 0};
 swing_bottle_mode({handle_extension_message, {swing_bottle}}, State) ->
     NewState = inner_swing_bottle(State),
     {next_state, kiss_mode, NewState, 15000}.
 
 kiss_mode(timeout, State) ->
-    NewState = State#state{current_state = {}},
-    {next_state, select_swinger_mode, NewState};
+    CurrentState = State#state.current_state,
+    LastSwinger = CurrentState#kiss_mode_state.last_swinger,
+    NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}},
+    {next_state, swinger_select_mode, NewState, 0};
 kiss_mode({handle_extension_message, {kiss_action, UserGuid, Action}}, State) ->
     NewState = inner_kiss_action(State, Action, UserGuid),
     NewCurrentState = NewState#state.current_state,
     case NewCurrentState#kiss_mode_state.kissers of
         [] ->
-            {next_state, select_swinger_mode, NewState#state{current_state = unknown}};
+            LastSwinger = NewCurrentState#swing_bottle_mode_state.current_swinger,
+            {next_state, swinger_select_mode, 
+             NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
         _Other ->
             {next_state, kiss_mode, NewState, 15000}
     end.
@@ -248,8 +255,8 @@ inner_user_leave(State, UserGuid) ->
 
 
 inner_select_swinger(State) ->
-    OppositeSex = get_sex_opposite(element(1, State#swinger_select_mode.last_swinger)),
-    inner_select_random_user(OppositeSex, State#swinger_select_mode.last_swinger).
+    OppositeSex = get_sex_opposite(element(1, State#swinger_select_mode_state.last_swinger)),
+    inner_select_random_user(OppositeSex, State#swinger_select_mode_state.last_swinger).
 
 inner_swing_bottle(State) ->
     CurrentState = State#state.current_state,
