@@ -130,22 +130,28 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
+    log_srv:debug("touching user info from social network"),
     UserInfo = Message#touch_user_info.user_info,
     UserId = UserInfo#user_info.user_id,
-    UserExistance = auth_srv:is_registered(UserId, ""),
+    UserExistance = auth_srv:is_registered(UserId),
     case UserExistance of
         {true, UserGuid} -> %% if user already registered sync only part of social net data
+	    log_srv:debug("updating existant user info"),
             {ok, OldUserInfo} = userinfo_srv:get_user_info(UserGuid),
             NewUserInfo = OldUserInfo#user_info{birth_date = UserInfo#user_info.birth_date,
                                                city = UserInfo#user_info.city},
             ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo),
             #touch_user_info_result{result = "ok"};
         _NoExists -> %% if user is not registered yet - sync all data from social net
-            {ok, NewUserGuid} = auth_srv:register(UserInfo#user_info.user_id, ""),
-            ok = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
+	    log_srv:debug("social net : registering new user"),
+            ok = auth_srv:register(UserInfo#user_info.user_id, ""),
+	    {ok, NewUserGuid} = auth_srv:auth(UserInfo#user_info.user_id, ""),
+            TouchResult = userinfo_srv:update_user_info(NewUserGuid, UserInfo),
+            io:format("TouchResult = ~p", [TouchResult]),
             #touch_user_info_result{result = "ok"}
     end;
 handle_touch_user_info(CallerGuid, Message) ->
+    log_srv:debug("touching user info by user"),
     {ok, OldUserInfo} = userinfo_srv:get_user_info(CallerGuid),
     NewUserInfo = #user_info{user_id = OldUserInfo#user_info.user_id,
                              name = Message#touch_user_info_by_user.name,
