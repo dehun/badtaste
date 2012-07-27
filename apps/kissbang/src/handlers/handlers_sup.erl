@@ -73,7 +73,9 @@ get_all_handlers() ->
                    get_admin_handlers(),
                    get_room_handlers(),
                    get_user_info_handlers(),
+                   get_kiss_game_handlers(),
                    get_chat_handlers()]).
+    
 
 
 get_user_info_handlers() ->
@@ -88,3 +90,6 @@ get_room_handlers() ->
 get_chat_handlers() ->
     ['send_chat_message_to_room_handler_srv'].
 
+get_kiss_game_handlers() ->
+    ['kiss_handler_srv',
+     'refuse_to_kiss_handler_srv'].

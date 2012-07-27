@@ -96,9 +96,12 @@ class OnNewBottleSwinger(pgMessage):
     swingerGuid = pgString()
 
 
-class OnBottleStoped(pgMessage):
+class SwingBottle(pgMessage):
+    pass
+
+class OnBottleSwinged(pgMessage):
     swingerGuid = pgString()
-    pointedGuid = pgString()
+    victimGuid = pgString()
 
 
 class OnKiss(pgMessage):
@@ -112,10 +115,9 @@ class OnRefuseToKiss(pgMessage):
 
 
 class Kiss(pgMessage):
-    victimGuid = pgString()
-
+    pass
 
 class RefuseToKiss(pgMessage):
-    victimGuid = pgString()
+    pass
 
 

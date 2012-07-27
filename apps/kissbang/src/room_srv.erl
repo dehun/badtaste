@@ -13,7 +13,8 @@
 
 %% API
 -export([start_link/0, start/0, start/1, start_link/1]).
--export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1]).
+-export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1,
+         send_message_to_extensions/2]).
 
 %% gen_fsm callbacks
 -export([init/1, pending/2, pending/3, active/2, active/3, handle_event/3,
@@ -28,6 +29,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+send_message_to_extensions(RoomPid, Message) ->
+    gen_fsm:send_all_state_event(RoomPid, {send_message_to_extensions, Message}).
+
 get_number_of_users(RoomPid) ->
     gen_fsm:sync_send_event(RoomPid, {get_number_of_users}).
 
@@ -252,6 +256,10 @@ active(_Event, _From, State) ->
 %%                   {stop, Reason, NewState}
 %% @end
 %%--------------------------------------------------------------------
+handle_event({send_message_to_extensions, Message}, StateName, State) ->
+    lists:foreach(fun(ExtensionPid) -> room_ext:handle_extension_message(ExtensionPid, Message) end,
+                  State#state.extensions),
+    {next_state, StateName, State}; 
 handle_event(_Event, StateName, State) ->
     {next_state, StateName, State}.
 
@@ -369,6 +377,6 @@ call_extensions(Call, [Extension | RestExtensions]) ->
         Error ->
             Error
     end;
-call_extensions(Call, []) ->
+call_extensions(_Call, []) ->
     ok.
 
