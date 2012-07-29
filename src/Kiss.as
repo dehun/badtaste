@@ -1,6 +1,7 @@
 package
 {
 import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.controller.net.ServerConfig;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.User;
@@ -11,6 +12,7 @@ import com.junkbyte.console.ConsoleConfig;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
+import flash.system.Security;
 
 import ru.evast.integration.IntegrationProxy;
 import ru.evast.integration.core.SocialNetworkTypes;
@@ -34,12 +36,13 @@ public class Kiss extends Sprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		init();
+
+		Security.allowDomain("*");
+		Security.allowInsecureDomain("*");
 	}
 
 	private function init():void
 	{
-		
-
 		model = new Model();
 		controller = new Controller(model);
 		view = new View(model, controller);
@@ -50,7 +53,7 @@ public class Kiss extends Sprite
 		Cc.width = 750;
 
 		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-		Cc.log("Application started!");
+		Cc.log("               Application started!");
 		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
 		initSocialIntegration();
@@ -64,17 +67,43 @@ public class Kiss extends Sprite
 		 IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);	// Для релиза
 
 		IntegrationProxy.adapter.GetProfiles(IntegrationProxy.adapter.Me(), onGetProfiles);
+
+	}
+
+	private function onGetProfiles(res:Object):void
+	{
+		Cc.log("--------------- Social network response ---------------");
+		Cc.log(res);
+		Cc.log("--------------- Social network response ---------------");
+		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
+
+		controller.touchUserInfo('{"userInfo" : { "UserInfo" : ' +
+				'{"userId" : "' + model.owner.id + '",' +
+				'"name" : "' + model.owner.name + '",' +
+				'"profileUrl" : "' + model.owner.profileLink + '",' +
+				'"isMan" : "' + model.owner.sex + '",' +
+				'"birthDate" : "' + model.owner.birthDate + '",' +
+				'"city" : "' + model.owner.city + '",' +
+				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
+
+		createTestConsole();
+	}
+
+	private function onGetFriends(res:Object):void
+	{
+		trace(res);
 	}
 
 	private function createTestConsole():void
 	{
+
 		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		
-		Cc.log("Press '0' button to establish socket connection;");
-		Cc.log("Press '1' button to authenticate;");
-		Cc.log("Press '2' to send message to room;");
-//		Cc.log("Press '3' to touchUserInfo;");
-//		Cc.log("Press '4' button to establish socket connection;")
+
+		Cc.log("Press '0' Authenticate();");
+		Cc.log("Press '1' JoinMainRoomQueue();");
+		Cc.log("Press '2' SendChatMessageToRoom();");
+		Cc.log("Press '3' GetUserInfo();");
+		Cc.log("Press '4' TouchUserInfoByUser();")
 //		Cc.log("Press '5' button to establish socket connection;")
 //		Cc.log("Press '6' button to establish socket connection;")
 //		Cc.log("Press '7' button to establish socket connection;")
@@ -84,25 +113,12 @@ public class Kiss extends Sprite
 
 	}
 
-	private function onGetProfiles(res:Object):void
-	{
-		Cc.log("%%%%%%%%%% Social network response %%%%%%%%%%%");
-		Cc.log(res);
-
-		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
-	}
-
-	private function onGetFriends(res:Object):void
-	{
-		trace(res);
-	}
-
 	private function onKeyDown(e:KeyboardEvent):void
 	{
 		switch(e.keyCode)
 		{
 			case 48:
-					controller.authenticate("dehun", "");
+					controller.authenticate(model.owner.id, "");
 				break;
 			case 49:
 					controller.joinToMainRoomQueue();
@@ -111,9 +127,10 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
-					controller.touchUserInfo('{"userInfo" : { "UserInfo" : {"userId" : "dehun","name" : "netesov","profileUrl" : "http://vk.com/kcpc","isMan" : "true","birthDate" : "1989-05-31","city" : "kiev","avatarUrl" : "http://netu.net/netu.jpg"}}}');
+					controller.getUserInfo(model.owner.guid);
 				break;
 			case 52:
+				controller.touchUserInfoByUser({name:"newName"});
 				break;
 			case 53:
 				break;

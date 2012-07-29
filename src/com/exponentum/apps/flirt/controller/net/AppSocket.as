@@ -17,6 +17,7 @@ import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.Socket;
+import flash.system.Security;
 
 public class AppSocket extends Socket
 {
@@ -26,6 +27,9 @@ public class AppSocket extends Socket
 	{
 		super();
 		configureListeners();
+
+		Security.loadPolicyFile("http://" + ServerConfig.SERVER + "/crossdomain.xml");
+
 		super.connect(server, port);
 	}
 

@@ -12,25 +12,24 @@ import ru.evast.integration.core.SocialProfileVO;
 
 public class User
 {
-	private var guid:String = "";
-	private var name:String = "";
-	private var city:String = "";
-	private var photoBig:String = "";
-	private var photoMedium:String = "";
-	private var photoSmall:String = "";
-	private var profileLink:String = "";
-	private var birthDate:String = "";
-	private var age:int = 0;
-	private var zodiac:String = "d";
-	private var sex:int = 0; //Sex.MALE || Sex.Female
-	private var isOnline:Boolean = false; //Sex.MALE || Sex.Female
+	public var guid:String = "";
+	public var id:String = "";
+	public var name:String = "";
+	public var city:String = "";
+	public var photoLink:String = "";
+	public var profileLink:String = "";
+	public var birthDate:String = "";
+	public var age:int = 0;
+	public var zodiac:String = "d";
+	public var sex:int = 0; //Sex.MALE || Sex.Female
+	public var isOnline:Boolean = false; //Sex.MALE || Sex.Female
 
-	private var coins:int = 0;
-	private var kisses:int = 0;
-	private var averageMark:Number = 0;
-	private var sympathies:Array = [];
-	private var likes:Array = [];
-	private var liked:Array = [];
+	public var coins:int = 0;
+	public var kisses:int = 0;
+	public var averageMark:Number = 0;
+	public var sympathies:Array = [];
+	public var likes:Array = [];
+	public var liked:Array = [];
 
 	public function User()
 	{
@@ -39,11 +38,10 @@ public class User
 
 	public function updateSocialInfo(data:SocialProfileVO):void
 	{
+		id = data.Uid;
 		name = data.FirstName + " " + data.LastName;
 		city = data.City;
-		photoBig = data.PicBig;
-		photoMedium = data.PicMedium;
-		photoSmall = data.PicSmall;
+		photoLink = data.PicMedium;
 		profileLink = data.UrlProfile;
 		birthDate = data.BirthDate;
 		sex = int(data.isMan);
