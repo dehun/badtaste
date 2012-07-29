@@ -75,10 +75,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Kiss.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Kiss.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Kiss.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="0" selection-start="875" selection-end="875" vertical-scroll-proportion="0.26548672">
+            <state line="135" column="22" selection-start="3726" selection-end="3726" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -104,10 +104,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Config.as" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Config.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="45" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0">
+            <state line="11" column="41" selection-start="259" selection-end="263" vertical-scroll-proportion="0.11061947">
               <folding />
             </state>
           </provider>
@@ -164,8 +164,8 @@
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/AppSocket.as" />
-        <option value="$PROJECT_DIR$/src/Kiss.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as" />
+        <option value="$PROJECT_DIR$/src/Kiss.as" />
       </list>
     </option>
   </component>
@@ -742,14 +742,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="45" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConnector.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="39" selection-start="1021" selection-end="1021" vertical-scroll-proportion="0.0">
+        <state line="310" column="39" selection-start="8632" selection-end="8632" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -763,16 +758,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConnector.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="310" column="39" selection-start="8632" selection-end="8632" vertical-scroll-proportion="0.0">
+        <state line="33" column="39" selection-start="1021" selection-end="1021" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Kiss.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="0" selection-start="875" selection-end="875" vertical-scroll-proportion="0.26548672">
+        <state line="135" column="22" selection-start="3726" selection-end="3726" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="41" selection-start="259" selection-end="263" vertical-scroll-proportion="0.11061947">
           <folding />
         </state>
       </provider>

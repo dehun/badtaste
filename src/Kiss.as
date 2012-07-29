@@ -36,9 +36,6 @@ public class Kiss extends Sprite
 	{
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		init();
-
-		Security.allowDomain("*");
-		Security.allowInsecureDomain("*");
 	}
 
 	private function init():void
@@ -103,14 +100,10 @@ public class Kiss extends Sprite
 		Cc.log("Press '1' JoinMainRoomQueue();");
 		Cc.log("Press '2' SendChatMessageToRoom();");
 		Cc.log("Press '3' GetUserInfo();");
-		Cc.log("Press '4' TouchUserInfoByUser();")
-//		Cc.log("Press '5' button to establish socket connection;")
-//		Cc.log("Press '6' button to establish socket connection;")
-//		Cc.log("Press '7' button to establish socket connection;")
-//		Cc.log("Press '8' button to establish socket connection;")
-//		Cc.log("Press '9' button to establish socket connection;")
-
-
+		Cc.log("Press '4' TouchUserInfoByUser();");
+		Cc.log("Press '5' ToSwingBottle();");
+		Cc.log("Press '6' ToKiss();");
+		Cc.log("Press '7' ToRefuseToKiss();");
 	}
 
 	private function onKeyDown(e:KeyboardEvent):void
@@ -130,19 +123,17 @@ public class Kiss extends Sprite
 					controller.getUserInfo(model.owner.guid);
 				break;
 			case 52:
-				controller.touchUserInfoByUser({name:"newName"});
+					controller.touchUserInfoByUser({name:"newName"});
 				break;
 			case 53:
+					controller.swingBottle();
 				break;
 			case 54:
+					controller.kiss();
 				break;
 			case 55:
+					controller.refuseToKiss();
 				break;
-			case 56:
-				break;
-			case 57:
-				break;
-
 		}
 	}
 }
