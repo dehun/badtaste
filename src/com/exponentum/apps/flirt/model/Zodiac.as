@@ -19,6 +19,8 @@ public class Zodiac
 	public static const LIBRA:String = "libra";
 	public static const AQUARIUS:String = "aquarius";
 	public static const CANCER:String = "cancer";
+	public static const SCORPIO:String = "scorpio";
+	public static const PISCES:String = "pisces";
 
 
 	public function Zodiac()

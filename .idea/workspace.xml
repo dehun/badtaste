@@ -78,7 +78,7 @@
       <file leaf-file-name="Kiss.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Kiss.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="135" column="22" selection-start="3726" selection-end="3726" vertical-scroll-proportion="0.0">
+            <state line="60" column="24" selection-start="1621" selection-end="1621" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -104,11 +104,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Config.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Config.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="41" selection-start="259" selection-end="263" vertical-scroll-proportion="0.11061947">
+            <state line="11" column="46" selection-start="264" selection-end="264" vertical-scroll-proportion="0.0">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Zodiac.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Zodiac.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="47" selection-start="792" selection-end="792" vertical-scroll-proportion="0.48672566">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -116,7 +127,7 @@
       <file leaf-file-name="ServerConfig.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="60" selection-start="120" selection-end="135" vertical-scroll-proportion="0.0">
+            <state line="5" column="46" selection-start="178" selection-end="178" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -125,7 +136,7 @@
       <file leaf-file-name="Controller.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="310" column="39" selection-start="8632" selection-end="8632" vertical-scroll-proportion="0.0">
+            <state line="42" column="42" selection-start="1934" selection-end="1952" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -150,7 +161,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/rest/api/DataProvider.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/VKInnerAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/MM/MMInnerAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/outer/MM/MMOuterAdapter.as" />
@@ -161,11 +171,12 @@
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Sex.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/User.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/AppSocket.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as" />
         <option value="$PROJECT_DIR$/src/Kiss.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Zodiac.as" />
       </list>
     </option>
   </component>
@@ -463,6 +474,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backgrounds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -487,11 +530,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/lib/ru" />
       <recent name="$PROJECT_DIR$/lib/swc" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
   <component name="RunManager" selected="Flex.Kiss.swf">
@@ -608,7 +651,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -622,7 +665,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24918832" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20373377" sideWeight="0.39772728" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20373377" sideWeight="0.39772728" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -683,11 +726,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/docs/protocol.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0062402496" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/outer/OK/OKOuterAdapter.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="145" column="28" selection-start="3763" selection-end="3763" vertical-scroll-proportion="-1.7433628" />
@@ -723,28 +761,9 @@
         <state line="44" column="8" selection-start="1112" selection-end="1112" vertical-scroll-proportion="0.7345133" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="60" selection-start="120" selection-end="135" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="1.9332298">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="4" column="4" selection-start="64" selection-end="64" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="310" column="39" selection-start="8632" selection-end="8632" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -765,17 +784,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="46" selection-start="178" selection-end="178" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="42" selection-start="1934" selection-end="1952" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Kiss.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="135" column="22" selection-start="3726" selection-end="3726" vertical-scroll-proportion="0.0">
+        <state line="60" column="24" selection-start="1621" selection-end="1621" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="41" selection-start="259" selection-end="263" vertical-scroll-proportion="0.11061947">
+        <state line="11" column="46" selection-start="264" selection-end="264" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="1.9332298">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Zodiac.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="47" selection-start="792" selection-end="792" vertical-scroll-proportion="0.48672566">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

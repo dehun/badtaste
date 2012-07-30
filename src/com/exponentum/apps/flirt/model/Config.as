@@ -9,6 +9,6 @@ package com.exponentum.apps.flirt.model
 {
 public class Config
 {
-	public static var DEV_MODE:Boolean = true;
+	public static var DEV_MODE:Boolean = false;
 }
 }
