@@ -113,7 +113,7 @@ init([Extensions]) ->
 %%--------------------------------------------------------------------
 pending({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#state.users)),
-    {next_state, pending, Message};
+    {next_state, pending, State};
 pending(_Event, State) ->
     {next_state, pending, State}.
 
