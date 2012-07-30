@@ -193,7 +193,7 @@ pending({join, Guid}, _From, State) ->
                     {reply, ok, pending, State#state{users = NewUsers}}
                 end;
         Error ->
-              {reply, Error, active, State}
+              {reply, Error, pending, State}
         end;
     
 pending(_Event, _From, State) ->

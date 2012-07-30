@@ -241,6 +241,7 @@ calculate_male_parity(Users) ->
                 end, 0, Users).
 
 inner_user_join(State, UserGuid) ->
+    log_srv:debug("on user joined game~n"),
     NewComerSex = sex_srv:get_sex(UserGuid),
     NewUsers = [{NewComerSex, UserGuid} | State#state.users],
     NewMaleParity = calculate_male_parity(NewUsers),
