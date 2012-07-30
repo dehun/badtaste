@@ -139,7 +139,10 @@ http_loop(Req) ->
                         [{"Content-Type", "text/plain"}],
                         JsonResponse});
         _Other ->
-            Req:respond({200, [{"Content-Type", "text/plain"}], "error : wrong hole"})
+            CrossdomainXml = "<cross-domain-policy>
+    <allow-access-from domain=\"*\" />
+</cross-domain-policy>",
+            Req:respond({200, [{"Content-Type", "text/plain"}], CrossdomainXml})
     end.
 
 
