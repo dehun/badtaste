@@ -258,10 +258,11 @@ inner_user_leave(State, UserGuid) ->
     {ok, State#state{users = NewUsers}}.
 
 
-inner_select_swinger(State) ->
+inner_select_swingersd(State) ->
     CurrentState = State#state.current_state,
-    OppositeSex = get_sex_opposite(element(1, CurrentState#swinger_select_mode_state.last_swinger)),
-    inner_select_random_user(OppositeSex, State#swinger_select_mode_state.last_swinger).
+    LastWinger = CurrentState#swinger_select_mode_state.last_swinger,
+    OppositeSex = get_sex_opposite(element(1, LastSwinger)),
+    inner_select_random_user(OppositeSex, State#state.users).
 
 inner_swing_bottle(State, SwingPretenderGuid) ->
     CurrentState = State#state.current_state,
