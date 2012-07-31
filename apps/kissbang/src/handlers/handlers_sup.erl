@@ -92,4 +92,5 @@ get_chat_handlers() ->
 
 get_kiss_game_handlers() ->
     ['kiss_handler_srv',
-     'refuse_to_kiss_handler_srv'].
+     'refuse_to_kiss_handler_srv',
+     'swingbottle_handler_srv'].
