@@ -13,7 +13,7 @@
 
 %% API
 -export([start_link/0, start/0, start/1, start_link/1]).
--export([join/2, broadcast_message/3, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1,
+-export([join/2, broadcast_message/3, broadcast_message/2, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1,
          send_message_to_extensions/2]).
 
 %% gen_fsm callbacks
@@ -29,6 +29,8 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+
 send_message_to_extensions(RoomPid, Message) ->
     gen_fsm:send_all_state_event(RoomPid, {send_message_to_extensions, Message}).
 
@@ -41,6 +43,8 @@ is_active(RoomPid) ->
 drop(RoomPid) ->
     gen_fsm:sync_send_event(RoomPid, {drop}).
 
+broadcast_message(RoomPid, Message) ->
+    broadcast_message(RoomPid, unknown, Message).
 broadcast_message(RoomPid, Sender, Message) ->
     gen_fsm:send_event(RoomPid, {broadcast_message, Sender, Message}).
 
