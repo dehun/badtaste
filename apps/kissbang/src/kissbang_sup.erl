@@ -30,6 +30,7 @@ init([]) ->
                                  ?CHILD(roommgr_sup, supervisor),
                                  ?CHILD(log_sup, supervisor),
                                  ?CHILD(sex_sup, supervisor),
+                                 ?CHILD(bank_sup, supervisor),
                                  ?CHILD(avatar_sup, supervisor),
                                  ?CHILD(webgate_sup, supervisor),
                                  ?CHILD(handlermgr_sup, supervisor),

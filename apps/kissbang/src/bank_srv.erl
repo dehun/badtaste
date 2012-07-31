@@ -1,21 +1,17 @@
 %%%-------------------------------------------------------------------
-%%% @author  <dehun@localhost>
+%%% @author  <>
 %%% @copyright (C) 2012, 
 %%% @doc
 %%%
 %%% @end
-%%% Created : 28 May 2012 by  <dehun@localhost>
+%%% Created : 30 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(auth_srv).
+-module(bank_srv).
 
 -behaviour(gen_server).
 
--include_lib("stdlib/include/qlc.hrl").
-
-
 %% API
--export([start_link/0, setup_db/0]).
--export([auth/2, register/2, drop_all_users/0, is_registered/1]).
+-export([start_link/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,23 +20,14 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
-
+-record(bank_balance, {user_guid, gold}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-is_registered(Login) ->
-    gen_server:call(?SERVER, {is_registered, Login}).
-
-auth(Login, Pass) ->
-    gen_server:call(?SERVER, {auth, Login, Pass}).
-
-register(Login, Pass) ->
-    gen_server:call(?SERVER, {register, Login, Pass}).
-
-drop_all_users() ->
-    gen_server:call(?SERVER, {drop_all_users}).
-
+-export([withdraw/2, withdraw/3,
+         deposit/2, deposit/3,
+         check/1, check/2]).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -51,6 +38,28 @@ drop_all_users() ->
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
+
+withdraw(UserGuid, Gold) ->
+    NoopSync = fun(_Result) -> ok end,
+    withdraw(UserGuid, Gold, NoopSync).
+
+withdraw(UserGuid, Gold, TransSync) ->
+    gen_server:call(?SERVER, {withdraw, UserGuid, Gold, TransSync}).
+
+deposit(UserGuid, Gold)  ->
+    NoopSync = fun(_Result) -> ok end,
+    deposit(UserGuid, Gold, NoopSync).
+
+deposit(UserGuid, Gold, TransSync) ->
+    gen_server:call(?SERVER, {deposit, UserGuid, Gold, TransSync}).
+
+check(UserGuid) ->
+    NoopSync = fun(_Result) -> ok end,
+    check(UserGuid, NoopSync).
+
+check(UserGuid, TranSync) ->
+    gen_server:call(?SERVER, {check, UserGuid, TranSync}).
+    
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -67,7 +76,6 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-%    setup_db(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -84,21 +92,14 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-
-handle_call({is_registered, Login}, _From, State) ->
-    Reply = inner_is_registered(Login),
+handle_call({withdraw, UserGuid, Gold, TransSync}, _From, State) ->
+    Reply = inner_withdraw(UserGuid, Gold, TransSync),
     {reply, Reply, State};
-handle_call({auth, Login, Pass}, _From, State) ->
-    Reply = inner_auth(Login, Pass),
+handle_call({deposit, UserGuid, Gold, TransSync}, _From, State) ->
+    Reply = inner_deposit(UserGuid, Gold, TransSync),
     {reply, Reply, State};
-handle_call({register, Login, Pass}, _From, State) ->
-    Reply = inner_register(Login, Pass),
-    {reply, Reply, State};
-handle_call({drop_all_users}, _From, State) ->
-    Reply = inner_drop_all_users(),
-    {reply, Reply, State};
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({check, UserGuid, TransSync}, _From, State) ->
+    Reply = inner_check(UserGuid, TransSync),
     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
@@ -155,80 +156,56 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--record(authinfo, {guid, login, password}).
-
-setup_db() ->
-%    mnesia:stop(),
-%    mnesia:create_schema([node() | nodes()]),
-%    mnesia:start(),
-    Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, authinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([authinfo], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([authinfo], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
-
-inner_register(Login, Password) ->
-    log_srv:info("registering user ~p with password ~p", [Login, Password]),
-    Trans = fun() ->
-                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
-                                      X#authinfo.login == Login])),
-                    case Existance of
-                        [] ->
-                            AuthInfo = #authinfo{guid = element(2, guid_srv:create()),
-                                                 login = Login,
-                                                 password = Password},
-                            mnesia:write(AuthInfo),
-                            ok;
-                        [_] ->
-                            already_exists
-                    end
-            end,
-    {atomic, Result} = mnesia:transaction(Trans),
-    Result.
-    
-inner_auth(Login, Password) ->
-    Trans = fun() ->
-                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
-                                    X#authinfo.login == Login])),
-                    case Existance of
-                        [] ->
-                            no_such_user;
-                        [AuthRec] ->
-                            case AuthRec#authinfo.password of
-                                Password ->
-                                    {ok, AuthRec#authinfo.guid};
-                                _ ->
-                                    invalid_password
-                                end
-                    end
-            end,
-    {atomic, Result} = mnesia:transaction(Trans),
+inner_deposit(UserGuid, Gold, TransSync) ->
+    Trans = dtranse:transefun(fun() -> 
+                                      inner_touch_user(UserGuid),
+                                      [OldBalance] = mnesia:read({bank_balance, UserGuid}),
+                                      NewGold = OldBalance#bank_balance.gold + Gold,
+                                      NewBalance = #bank_balance{gold = NewGold},
+                                      mnesia:write(NewBalance),
+                                      {commit}
+                              end, TransSync),
+    {atomic, Result} = mnesia:activity(transaction, Trans),
     Result.
 
-inner_drop_all_users() ->
-    Trans = fun() ->
-                    [mnesia:delete({authinfo, Key}) || Key <- mnesia:all_keys(authinfo)],
-                    ok
-            end,
-    {atomic, ok} = mnesia:transaction(Trans),
-    ok.
-    
-inner_is_registered(Login) ->
-    Trans = fun() ->
-                    Existance = qlc:e(qlc:q([X || X <- mnesia:table(authinfo),
-                                                  X#authinfo.login =:= Login])),
-                    case Existance of
-                        [] ->
-                            {false, no_such_user};
-                        [UserInfo] ->
-                            {true, UserInfo#authinfo.guid}
-                        end
-            end,
-    mnesia:activity(sync_dirty, Trans).
+inner_withdraw(UserGuid, Gold, TransSync) ->
+    Trans = dtranse:transefun(fun() -> 
+                                      inner_touch_user(UserGuid),
+                                      [OldBalance] = mnesia:read({bank_balance, UserGuid}),
+                                      AreEnoughtMoney = OldBalance#bank_balance.gold >= Gold,
+                                      if
+                                          AreEnoughtMoney ->
+                                              NewGold = OldBalance#bank_balance.gold - Gold,
+                                              NewBalance = OldBalance#bank_balance{gold =  NewGold},
+                                              mnesia:write(NewBalance),
+                                              {commit};
+                                          true ->
+                                              {rollback}
+                                      end
+                              end, TransSync),
+    {atomic, Result} = mnesia:activity(transaction, Trans),
+    Result.
+
+inner_check(UserGuid, TransSync) ->
+    Trans = dtranse:transefun(fun() ->
+                                      inner_touch_user(UserGuid),
+                                      [Balance] = mnesia:read({bank_balance, UserGuid}),
+                                      {commit, Balance#bank_balance.gold}
+                              end, TransSync),
+    {atomic, Result} = mnesia:activity(transaction, Trans),
+    Result.
+
+
+inner_touch_user(UserGuid) ->
+    Existance = mnesia:read({bank_balance, UserGuid}),
+    case Existance of
+        [] ->
+            NewBalance = #bank_balance{user_guid = UserGuid,
+                                       gold = 0},
+            mnesia:write(NewBalance),
+            ok;
+        _Exist ->
+            ok
+    end.
+
+
