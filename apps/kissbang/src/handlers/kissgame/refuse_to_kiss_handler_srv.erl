@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(refuse_to_kiss_handler_srv).
 -include("../../kissbang_messaging.hrl").
+-include("../../room.hrl").
 -behaviour(gen_server).
 
 %% API
@@ -128,5 +129,5 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_refuse_to_kiss(UserGuid, _Message) ->
-    {ok, RoomPid} = roommgr_srv:get_room_for(UserGuid),
-    room_srv:send_message_to_extensions(RoomPid, {kiss_action, UserGuid, refuse}).
+    {ok, Room} = roommgr_srv:get_room_for(UserGuid),
+    room_srv:send_message_to_extensions(Room#room.room_pid, {kiss_action, UserGuid, refuse}).

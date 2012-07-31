@@ -160,6 +160,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 inner_handle_message_and_callback(Guid, Message, Callback) ->
+    log_srv:debug("handling message ~p from ~p", [Message, Guid]),
     case inner_get_reaction_for(Message) of
         {ok, HandlerReaction} ->
             spawn(fun () -> 

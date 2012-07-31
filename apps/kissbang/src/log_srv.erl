@@ -112,7 +112,7 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({log, Level, Format, Args}, State) ->
-    io:format(Format, Args),
+    io:format(Format ++ "~n", Args),
     {noreply, State};
 handle_cast(_Msg, State) ->
     {noreply, State}.

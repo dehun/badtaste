@@ -13,6 +13,7 @@
 %% API
 -export([start_link/0]).
 -export([handle_swing_bottle/2]).
+-include("../../room.hrl").
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -128,6 +129,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_swing_bottle(UserGuid, Message) ->
-    {ok, RoomPid} = roommgr_srv:get_room_for(UserGuid),
-    room_srv:send_message_to_extensions(RoomPid, {swing_bottle, UserGuid}).
+    {ok, Room} = roommgr_srv:get_room_for(UserGuid),
+    log_srv:debug("user [~w] is trying to swing bottle in room ~w", [UserGuid, Room#room.room_guid]),
+    room_srv:send_message_to_extensions(Room#room.room_pid, {swing_bottle, UserGuid}).
 

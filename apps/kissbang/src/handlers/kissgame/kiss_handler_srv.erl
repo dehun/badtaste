@@ -9,6 +9,7 @@
 -module(kiss_handler_srv).
 
 -behaviour(gen_server).
+-include("../../room.hrl").
 
 %% API
 -export([start_link/0]).
@@ -128,5 +129,5 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_kiss(UserGuid, _Message) ->
-    {ok, RoomPid} = roommgr_srv:get_room_for(UserGuid),
-    room_srv:send_message_to_extensions(RoomPid, {kiss_action, UserGuid, kiss}).
+    {ok, Room} = roommgr_srv:get_room_for(UserGuid),
+    room_srv:send_message_to_extensions(Room#room.room_pid, {kiss_action, UserGuid, kiss}).
