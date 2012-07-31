@@ -27,9 +27,25 @@ public class Zodiac
 	{
 	}
 
-	public static function getZodiacByUTCDate(UTCDate:int):String
+	public static function getByDate(strDate:String):String
 	{
-		return "";
+		var date:int = strDate.split(".")[0];
+		var month:int = strDate.split(".")[1];
+
+		if (month == 1 && date >=20 || month == 2 && date <=18) return AQUARIUS;
+		if (month == 2 && date >=19 || month == 3 && date <=20) return PISCES;
+		if (month == 3 && date >=21 || month == 4 && date <=19) return ARIES;
+		if (month == 4 && date >=20 || month == 5 && date <=20) return TAURUS;
+		if (month == 5 && date >=21 || month == 6 && date <=21) return GEMINI;
+		if (month == 6 && date >=22 || month == 7 && date <=22) return CANCER;
+		if (month == 7 && date >=23 || month == 8 && date <=22) return LEO;
+		if (month == 8 && date >=23 || month == 9 && date <=22) return VIRGO;
+		if (month == 9 && date >=23 || month == 10 && date <=22) return LIBRA;
+		if (month == 10 && date >=23 || month == 11 && date <=21) return SCORPIO;
+		if (month == 11 && date >=22 || month == 12 && date <=21) return SAGITTARIUS;
+		if (month == 12 && date >=22 || month == 1 && date <=19) return CAPRICORN;
+
+		return null;
 	}
 }
 }

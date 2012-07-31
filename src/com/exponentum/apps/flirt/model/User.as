@@ -18,9 +18,9 @@ public class User
 	public var city:String = "";
 	public var photoLink:String = "";
 	public var profileLink:String = "";
-	public var birthDate:String = "";
+	private var _birthDate:String = "";
 	public var age:int = 0;
-	public var zodiac:String = "d";
+	public var zodiac:String = "";
 	public var sex:int = 0; //Sex.MALE || Sex.Female
 	public var isOnline:Boolean = false; //Sex.MALE || Sex.Female
 
@@ -45,6 +45,17 @@ public class User
 		profileLink = data.UrlProfile;
 		birthDate = data.BirthDate;
 		sex = int(data.isMan);
+	}
+
+	public function set birthDate(value:String):void
+	{
+		_birthDate = value;
+		zodiac = Zodiac.getByDate(value);
+	}
+
+	public function get birthDate():String
+	{
+		return _birthDate;
 	}
 }
 }

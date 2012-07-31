@@ -8,6 +8,7 @@ import com.exponentum.apps.flirt.model.User;
 import com.exponentum.apps.flirt.view.View;
 import com.junkbyte.console.Cc;
 import com.junkbyte.console.ConsoleConfig;
+import com.junkbyte.console.view.MainPanel;
 
 import flash.display.Sprite;
 import flash.events.Event;
@@ -43,9 +44,10 @@ public class Kiss extends Sprite
 		model = new Model();
 		controller = new Controller(model);
 		view = new View(model, controller);
+		addChild(view);
 
 		var cc:ConsoleConfig = new ConsoleConfig();
-		Cc.startOnStage(this.stage);
+		Cc.startOnStage(this.stage, "~");
 		Cc.height = 750;
 		Cc.width = 750;
 
@@ -82,6 +84,8 @@ public class Kiss extends Sprite
 				'"birthDate" : "' + model.owner.birthDate + '",' +
 				'"city" : "' + model.owner.city + '",' +
 				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
+
+		view.showProfile();
 
 		createTestConsole();
 	}

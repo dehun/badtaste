@@ -99,11 +99,8 @@ public class Preloader extends MovieClip
 		removeEventListener(Event.ENTER_FRAME, checkFrame);
 		loaderInfo.removeEventListener(ProgressEvent.PROGRESS, progress);
 		loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
-
-		TweenMax.to(this, 1, {alpha:0, onComplete:function ():void{
-			var mainClass:Class = getDefinitionByName("Kiss") as Class;
-			addChild(new mainClass() as DisplayObject);
-		}});
+		var mainClass:Class = getDefinitionByName("Kiss") as Class;
+		addChild(new mainClass() as DisplayObject);
 	}
 }
 }
