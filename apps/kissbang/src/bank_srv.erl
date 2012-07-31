@@ -11,7 +11,9 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
+-export([start_link/0,
+         setup_db/0]).
+
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -35,6 +37,22 @@
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
+setup_db() ->
+    Result = mnesia:create_table(bank_balance, [{disc_copies, [node() | nodes()]}, 
+                                            {attributes, record_info(fields, bank_balance)}]),
+    case Result of
+        {atomic, ok} ->
+            mnesia:wait_for_tables([bank_balance], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([bank_balance], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+        end.
+
+
+
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
