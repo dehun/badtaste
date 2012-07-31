@@ -259,7 +259,8 @@ inner_user_leave(State, UserGuid) ->
 
 
 inner_select_swinger(State) ->
-    OppositeSex = get_sex_opposite(element(1, State#swinger_select_mode_state.last_swinger)),
+    CurrentState = State#state.current_state,
+    OppositeSex = get_sex_opposite(element(1, CurrentState#swinger_select_mode_state.last_swinger)),
     inner_select_random_user(OppositeSex, State#swinger_select_mode_state.last_swinger).
 
 inner_swing_bottle(State, SwingPretenderGuid) ->
