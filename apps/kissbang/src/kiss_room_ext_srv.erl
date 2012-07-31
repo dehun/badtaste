@@ -260,7 +260,7 @@ inner_user_leave(State, UserGuid) ->
 
 inner_select_swingersd(State) ->
     CurrentState = State#state.current_state,
-    LastWinger = CurrentState#swinger_select_mode_state.last_swinger,
+    LastSwinger = CurrentState#swinger_select_mode_state.last_swinger,
     OppositeSex = get_sex_opposite(element(1, LastSwinger)),
     inner_select_random_user(OppositeSex, State#state.users).
 
