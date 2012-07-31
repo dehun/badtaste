@@ -258,7 +258,7 @@ inner_user_leave(State, UserGuid) ->
     {ok, State#state{users = NewUsers}}.
 
 
-inner_select_swingersd(State) ->
+inner_select_swinger(State) ->
     CurrentState = State#state.current_state,
     LastSwinger = CurrentState#swinger_select_mode_state.last_swinger,
     OppositeSex = get_sex_opposite(element(1, LastSwinger)),
