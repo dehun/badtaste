@@ -7,7 +7,7 @@ class UserInfo(pgMessage):
     userId = pgString()
     name = pgString()
     profileUrl = pgString()
-    isMan = pgString()
+    isMan = pgInteger()
     birthDate = pgString()
     city = pgString()
     avatarUrl = pgString()

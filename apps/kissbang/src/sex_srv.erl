@@ -31,6 +31,8 @@ get_sex(UserGuid) ->
 
 set_sex(UserGuid, IsMale) when is_list(IsMale) ->
     set_sex(UserGuid, list_to_atom(IsMale));
+set_sex(UserGuid, IsMale) when is_integer(IsMale) ->
+    set_sex(UserGuid, IsMale /= 0);
 set_sex(UserGuid, IsMale) when is_atom(IsMale) ->
     gen_server:call(?SERVER, {set_sex, UserGuid, IsMale}).
 
