@@ -118,12 +118,14 @@ kiss_mode(timeout, State) ->
 kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) ->
     NewState = inner_kiss_action(State, Action, KisserGuid),
     NewCurrentState = NewState#state.current_state,
-    AreAllKissed = lists:all(fun(Kisser) -> element(1, Kisser) end, [NewCurrentState#kiss_mode_state.kisser, NewCurrentState#kiss_mode_state.victim]),
+    AreAllKissed = lists:all(fun(Kisser) -> element(1, Kisser) end, 
+                             [NewCurrentState#kiss_mode_state.kisser, NewCurrentState#kiss_mode_state.victim]),
     if
         AreAllKissed   ->
             LastSwinger = NewCurrentState#swing_bottle_mode_state.current_swinger,
             {next_state, swinger_select_mode, 
-             NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
+             NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0},
+            {next_state, swinger_select_mode, NewState};
         true ->
             {next_state, kiss_mode, NewState, 60000}
     end.
