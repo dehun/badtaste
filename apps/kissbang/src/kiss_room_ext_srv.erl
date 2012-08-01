@@ -293,6 +293,7 @@ inner_swing_bottle(State, SwingPretenderGuid) ->
 
 
 inner_kiss_action(State, Action, KisserPretenderGuid) ->
+    log_srv:debug("User ~p is trying to do kiss action ~p", [KisserPretenderGuid, Action]),
     CurrentState = State#state.current_state,
     Kisser = CurrentState#kiss_mode_state.kisser,
     Victim = CurrentState#kiss_mode_state.victim,
@@ -300,21 +301,27 @@ inner_kiss_action(State, Action, KisserPretenderGuid) ->
     VictimGuid = element(1, element(1, Victim)),
     case KisserPretenderGuid of
         KisserGuid ->
+            log_srv:debug("User ~p is kisser", [KisserGuid]),
             NewVictim = kiss_action(Kisser, Victim, Action, State),
             NewCurrentState = CurrentState#kiss_mode_state{victim = NewVictim};
         VictimGuid ->
+            log_srv:debug("User ~p is victim", [VictimGuid]),
             NewKisser = kiss_action(Victim, Kisser, Action, State),
             NewCurrentState = CurrentState#kiss_mode_state{kisser = NewKisser};
         _Other ->
+            log_srv:debug("User ~p is trying to kiss out of order", [KisserPretenderGuid]),
             NewCurrentState = State#state.current_state
     end,
     State = State#state{current_state = NewCurrentState}.
 
 kiss_action(Kisser, Victim, Action, State) ->
+    log_srv:debug("User ~p is goint to perfom kiss action on ~p, action = ~p", [Kisser, Victim, Action]),
     case element(1, Victim) of
         true -> % are already kissed
+            log_srv:debug("User ~p are already kissed", [Victim]),
             Victim;
         false ->
+            log_srv:debug("User ~p is perfoming kiss action on ~p, action = ~p", [Kisser, Victim, Action]),
             KisserGuid = element(1, element(1, Kisser)),
             VictimGuid = element(1, element(1, Victim)),
             case Action of
