@@ -28,6 +28,10 @@ public class Profile extends CasaSprite
 	private var tasksButton:SimpleButton = new TasksButton();
 	private var ratingsButton:SimpleButton = new RatingsButton();
 	private var zodiacSign:ZodiacSign = new ZodiacSign();
+	private var shelf:Shelf = new Shelf();
+
+	private var profileDetails:ProfileDetails = new ProfileDetails();
+
 	private var _user:User;
 
 	public function Profile(user:User)
@@ -54,8 +58,25 @@ public class Profile extends CasaSprite
 		zodiacSign.y = 195;
 		addChild(zodiacSign);
 		zodiacSign.gotoAndStop(_user.zodiac);
+
+		shelf.x = 60;
+		shelf.y = 455;
+		addChild(shelf);
+
+		createProfileDetails();
 	}
 
+	private function createProfileDetails():void
+	{
+		profileDetails.x = 312;
+		profileDetails.y = 133;
+		addChild(profileDetails);
+
+		profileDetails.sexIndicator.gotoAndStop(_user.sex);
+		profileDetails.nameText.text = _user.name;
+		profileDetails.ageText.text = _user.birthDate;
+		profileDetails.cityText.text = _user.city;
+	}
 
 
 	public function setBackground(bgId:int):void

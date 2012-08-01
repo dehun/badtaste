@@ -75,6 +75,7 @@ public class AppSocket extends Socket
 		{
 			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
 		}
+		response = "";
 	}
 
 	private function closeHandler(event:Event):void
