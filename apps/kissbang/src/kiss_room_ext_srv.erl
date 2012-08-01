@@ -94,7 +94,7 @@ swinger_select_mode(timeout, State) ->
                                #on_new_bottle_swinger{swinger_guid = element(2, NewSwinger)}),
     NewState = State#state{current_state = 
                                #swing_bottle_mode_state{current_swinger = NewSwinger}},
-    {next_state, swing_bottle_mode, NewState, 15000}.
+    {next_state, swing_bottle_mode, NewState, 60000}.
 
 swing_bottle_mode(timeout, State) ->
     CurrentState = State#state.current_state,
@@ -105,9 +105,9 @@ swing_bottle_mode({handle_extension_message, {swing_bottle, SwingPretenderGuid}}
     {Res, NewState} = inner_swing_bottle(State, SwingPretenderGuid),
     case Res of 
         ok ->
-            {next_state, kiss_mode, NewState, 15000};
+            {next_state, kiss_mode, NewState, 60000};
         fail ->
-            {next_state, swing_bottle_mode, NewState, 15000}
+            {next_state, swing_bottle_mode, NewState, 60000}
     end.
 
 kiss_mode(timeout, State) ->
@@ -124,7 +124,7 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
             {next_state, swinger_select_mode, 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
         _Other ->
-            {next_state, kiss_mode, NewState, 15000}
+            {next_state, kiss_mode, NewState, 60000}
     end.
 
 %% active({on_room_death}, _From, State) ->
@@ -274,7 +274,7 @@ inner_swing_bottle(State, SwingPretenderGuid) ->
     CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
     case element(2, CurrentSwinger) of
         SwingPretenderGuid ->
-            log_srv:debug("user ~w is swinging bottle ", [SwingPretenderGuid]),
+            log_srv:debug("user ~p is swinging bottle ", [SwingPretenderGuid]),
             Victim = inner_select_random_user(get_sex_opposite(element(1, CurrentSwinger)), 
                                               State#state.users),
             NewCurrentState = #kiss_mode_state{kissers = [CurrentSwinger, 
@@ -285,7 +285,7 @@ inner_swing_bottle(State, SwingPretenderGuid) ->
                                                           victim_guid = element(2, Victim)}),
             {ok, State#state{current_state = NewCurrentState}};
         _Other ->
-            log_srv:debug("user ~w is tryed to swing bottle non in order", [SwingPretenderGuid]),
+            log_srv:debug("user ~p is tryed to swing bottle non in order", [SwingPretenderGuid]),
             {fail, State}
     end.
             
