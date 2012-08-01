@@ -297,8 +297,8 @@ inner_kiss_action(State, Action, KisserPretenderGuid) ->
     CurrentState = State#state.current_state,
     Kisser = CurrentState#kiss_mode_state.kisser,
     Victim = CurrentState#kiss_mode_state.victim,
-    KisserGuid = element(2, element(1, Kisser)),
-    VictimGuid = element(2, element(1, Victim)),
+    KisserGuid = element(2, element(2, Kisser)),
+    VictimGuid = element(2, element(2, Victim)),
     case KisserPretenderGuid of
         KisserGuid ->
             log_srv:debug("User ~p is kisser", [KisserGuid]),
@@ -322,8 +322,8 @@ kiss_action(Kisser, Victim, Action, State) ->
             Victim;
         false ->
             log_srv:debug("User ~p is perfoming kiss action on ~p, action = ~p", [Kisser, Victim, Action]),
-            KisserGuid = element(2, element(1, Kisser)),
-            VictimGuid = element(2, element(1, Victim)),
+            KisserGuid = element(2, element(2, Kisser)),
+            VictimGuid = element(2, element(2, Victim)),
             case Action of
                 kiss ->
                     room_srv:broadcase_message(State#state.room_pid,
