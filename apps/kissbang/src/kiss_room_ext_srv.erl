@@ -32,7 +32,7 @@
 
 -record(swinger_select_mode_state, {last_swinger}).
 -record(swing_bottle_mode_state, {current_swinger}).
--record(kiss_mode_state, {kissers = [], last_swinger}).
+-record(kiss_mode_state, {kisser, victim, last_swinger}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -118,12 +118,13 @@ kiss_mode(timeout, State) ->
 kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) ->
     NewState = inner_kiss_action(State, Action, KisserGuid),
     NewCurrentState = NewState#state.current_state,
-    case NewCurrentState#kiss_mode_state.kissers of
-        [] ->
+    AreAllKissed = lists:all(fun(Kisser) -> element(1, Kisser) end, [NewCurrentState#kiss_mode_state.kisser, NewCurrentState#kiss_mode_state.victim]),
+    if
+        AreAllKissed   ->
             LastSwinger = NewCurrentState#swing_bottle_mode_state.current_swinger,
             {next_state, swinger_select_mode, 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
-        _Other ->
+        true ->
             {next_state, kiss_mode, NewState, 60000}
     end.
 
@@ -277,9 +278,9 @@ inner_swing_bottle(State, SwingPretenderGuid) ->
             log_srv:debug("user ~p is swinging bottle ", [SwingPretenderGuid]),
             Victim = inner_select_random_user(get_sex_opposite(element(1, CurrentSwinger)), 
                                               State#state.users),
-            NewCurrentState = #kiss_mode_state{kissers = [CurrentSwinger, 
-                                                          Victim
-                                                         ], last_swinger = CurrentSwinger},
+            NewCurrentState = #kiss_mode_state{kisser = {false, CurrentSwinger}, 
+                                               victim = {false, Victim},
+                                               last_swinger = CurrentSwinger},
             room_srv:broadcast_message(State#state.room_pid,
                                        #on_bottle_swinged{swinger_guid = element(2, CurrentSwinger),
                                                           victim_guid = element(2, Victim)}),
@@ -291,33 +292,43 @@ inner_swing_bottle(State, SwingPretenderGuid) ->
             
 
 
-inner_kiss_action(State, Action, KisserGuid) ->
-    AreInList = lists:keysearch(KisserGuid, 2, State#state.users),
-    case AreInList of
+inner_kiss_action(State, Action, KisserPretenderGuid) ->
+    CurrentState = State#state.current_state,
+    Kisser = CurrentState#kiss_mode_state.kisser,
+    Victim = CurrentState#kiss_mode_state.victim,
+    KisserGuid = element(1, element(1, Kisser)),
+    VictimGuid = element(1, element(1, Victim)),
+    case KisserPretenderGuid of
+        KisserGuid ->
+            NewVictim = kiss_action(Kisser, Victim, Action, State),
+            NewCurrentState = CurrentState#kiss_mode_state{victim = NewVictim};
+        VictimGuid ->
+            NewKisser = kiss_action(Victim, Kisser, Action, State),
+            NewCurrentState = CurrentState#kiss_mode_state{kisser = NewKisser};
+        _Other ->
+            NewCurrentState = State#state.current_state
+    end,
+    State = State#state{current_state = NewCurrentState}.
+
+kiss_action(Kisser, Victim, Action, State) ->
+    case element(1, Victim) of
+        true -> % are already kissed
+            Victim;
         false ->
-            State;
-        _InList ->
-            CurrentState = State#state.current_state,
-            NewKissers = [User || User <- CurrentState#kiss_mode_state.kissers, 
-                                  element(2, User) /= KisserGuid],
+            KisserGuid = element(1, element(1, Kisser)),
+            VictimGuid = element(1, element(1, Victim)),
             case Action of
                 kiss ->
-                    KissedGuid = element(2, lists:last(NewKissers)),
-                    room_srv:broadcast_message(State#state.room_pid, #on_kiss{kisser_guid = KisserGuid,
-                                                                              kissed_guid = KissedGuid}),
-                    ok;
+                    room_srv:broadcase_message(State#state.room_pid,
+                                               #on_kiss{kisser_guid = KisserGuid, 
+                                                        kissed_guid = VictimGuid});
                 refuse ->
-                    RefusedGuid = element(2, lists:last(NewKissers)),
-                    room_srv:broadcast_message(State#state.room_pid, #on_refuse_to_kiss{refuser_guid = KisserGuid,
-                                                                                        refused_guid = RefusedGuid}),
-                    ok
+                    room_srv:broadcase_message(State#state.room_pid,
+                                               #on_refuse_to_kiss{refuser_guid = KisserGuid, 
+                                                                  refused_guid = VictimGuid})
             end,
-                                                % form new status
-
-            NewCurrentState = CurrentState#kiss_mode_state{kissers = NewKissers},
-            State#state{current_state = NewCurrentState}
+            setelement(1, Victim, true)
     end.
-    
     
 inner_select_random_user(Sex, Users) ->
     SexUsers = [User || User <- Users, element(1, User) == Sex],
