@@ -326,11 +326,11 @@ kiss_action(Kisser, Victim, Action, State) ->
             VictimGuid = element(2, element(2, Victim)),
             case Action of
                 kiss ->
-                    room_srv:broadcase_message(State#state.room_pid,
+                    room_srv:broadcast_message(State#state.room_pid,
                                                #on_kiss{kisser_guid = KisserGuid, 
                                                         kissed_guid = VictimGuid});
                 refuse ->
-                    room_srv:broadcase_message(State#state.room_pid,
+                    room_srv:broadcast_message(State#state.room_pid,
                                                #on_refuse_to_kiss{refuser_guid = KisserGuid, 
                                                                   refused_guid = VictimGuid})
             end,
