@@ -130,6 +130,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 handle_swing_bottle(UserGuid, Message) ->
     {ok, Room} = roommgr_srv:get_room_for(UserGuid),
-    log_srv:debug("user [~w] is trying to swing bottle in room ~w", [UserGuid, Room#room.room_guid]),
+    log_srv:debug("user [~p] is trying to swing bottle in room ~p", [UserGuid, Room#room.room_guid]),
     room_srv:send_message_to_extensions(Room#room.room_pid, {swing_bottle, UserGuid}).
 

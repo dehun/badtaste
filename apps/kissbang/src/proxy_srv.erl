@@ -306,6 +306,8 @@ inner_drop_origin(Origin) ->
                             unknown_origin;
                         [UserOrigin] ->
                             mnesia:delete({user_origin, UserOrigin#user_origin.guid}),
+                            log_srv:debug("disconnecting ~p user from origin ~p", [UserOrigin#user_origin.guid, Origin]),
+                            inner_disconnect_user(UserOrigin#user_origin.guid),
                             {ok, UserOrigin#user_origin.origin}
                         end
             end,
@@ -313,6 +315,7 @@ inner_drop_origin(Origin) ->
     Result = mnesia:activity(sync_dirty, Trans),
     case Result of
         {ok, Origin} ->
+
             gateway_srv:disconnect_origin(Origin),
             ok;
         unknown_origin ->
@@ -332,3 +335,4 @@ inner_route_messages(Guid, Messages) ->
 
 inner_disconnect_user(UserGuid) ->
     roommgr_srv:async_leave_room(UserGuid).
+
