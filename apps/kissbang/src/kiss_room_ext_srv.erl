@@ -312,7 +312,7 @@ inner_kiss_action(State, Action, KisserPretenderGuid) ->
             log_srv:debug("User ~p is trying to kiss out of order", [KisserPretenderGuid]),
             NewCurrentState = State#state.current_state
     end,
-    State = State#state{current_state = NewCurrentState}.
+    State#state{current_state = NewCurrentState}.
 
 kiss_action(Kisser, Victim, Action, State) ->
     log_srv:debug("User ~p is goint to perfom kiss action on ~p, action = ~p", [Kisser, Victim, Action]),
