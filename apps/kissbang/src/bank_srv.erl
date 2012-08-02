@@ -9,6 +9,7 @@
 -module(bank_srv).
 
 -behaviour(gen_server).
+-include("kissbang_messaging.hrl").
 
 %% API
 -export([start_link/0,
@@ -181,9 +182,11 @@ inner_deposit(UserGuid, Gold, TransSync) ->
                                       NewGold = OldBalance#bank_balance.gold + Gold,
                                       NewBalance = OldBalance#bank_balance{gold = NewGold},
                                       mnesia:write(NewBalance),
-                                      {commit, ok}
+                                      {commit, {ok, NewGold}}
                               end, TransSync),
-     mnesia:activity(transaction, Trans).
+    Result = mnesia:activity(transaction, Trans),
+    proxy_srv:route_messages(UserGuid, [#on_bank_balance_changed{new_gold = element(2, Result)}]),
+    Result.
 
 inner_withdraw(UserGuid, Gold, TransSync) ->
     Trans = dtranse:transefun(fun() -> 
@@ -195,12 +198,20 @@ inner_withdraw(UserGuid, Gold, TransSync) ->
                                               NewGold = OldBalance#bank_balance.gold - Gold,
                                               NewBalance = OldBalance#bank_balance{gold =  NewGold},
                                               mnesia:write(NewBalance),
-                                              {commit, ok};
+                                              {commit, {ok, NewGold}};
                                           true ->
                                               {rollback, not_enought_money}
                                       end
                               end, TransSync),
-    mnesia:activity(transaction, Trans).
+    Result = mnesia:activity(transaction, Trans),
+    %% notify user
+    case Result of 
+        {ok, NewGold} ->
+            proxy_srv:route_messages(UserGuid, [#on_bank_balance_changed{new_gold = NewGold}]),
+            Result;
+        Error ->
+            Error
+        end.
 
 inner_check(UserGuid, TransSync) ->
     Trans = dtranse:transefun(fun() ->
@@ -208,7 +219,9 @@ inner_check(UserGuid, TransSync) ->
                                       [Balance] = mnesia:read({bank_balance, UserGuid}),
                                       {commit, Balance#bank_balance.gold}
                               end, TransSync),
-    mnesia:activity(transaction, Trans).
+    Result = mnesia:activity(transaction, Trans),
+    proxy_srv:route_messages(UserGuid, [#on_bank_balance_checked{gold = Result}]),
+    Result.
 
 
 inner_touch_user(UserGuid) ->

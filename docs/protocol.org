@@ -41,3 +41,14 @@
 ** update user info from game
    -> TouchUserInfoByUser(name = "dehunter")
    <- TouchUserInfoByUserResult(result = "ok")
+* time
+** get current time
+   -> GetCurrentTime()
+   <- OnGotCurrentTime(time = 1234567) // time is a unixtime (number of seconds since...)
+
+* bank
+** check bank balance
+   -> CheckBankBalance()
+   <- OnBankBalanceChecked(gold = 123)
+** when some action change bank balance(for example user have bought something, or got some money)
+   <- OnBankBalanceChanged(newGold = 123)

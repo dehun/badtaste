@@ -74,6 +74,8 @@ get_all_handlers() ->
                    get_room_handlers(),
                    get_user_info_handlers(),
                    get_kiss_game_handlers(),
+                   get_time_handlers(),
+                   get_bank_handlers(),
                    get_chat_handlers()]).
     
 
@@ -94,3 +96,9 @@ get_kiss_game_handlers() ->
     ['kiss_handler_srv',
      'refuse_to_kiss_handler_srv',
      'swingbottle_handler_srv'].
+
+get_time_handlers() ->
+    ['get_current_time_handler_srv'].
+
+get_bank_handlers() ->
+    ['check_bank_balance_handler_srv'].

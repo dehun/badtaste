@@ -14,6 +14,23 @@ class ProtocolMissmatch(pgMessage):
     pass
 
 
+# bank
+class CheckBankBalance(pgMessage):
+    pass
+
+class OnBankBalanceChecked(pgMessage):
+    gold = pgInteger()
+
+class OnBankBalanceChanged(pgMessage):
+    newGold = pgInteger()
+
+# time
+class GetCurrentTime(pgMessage):
+    pass
+
+class OnGotCurrentTime(pgMessage):
+    time = pgInteger() # number of secconds passed from 1900...
+
 # user info
 class GetUserInfo(pgMessage):
     targetUserGuid = pgString()
