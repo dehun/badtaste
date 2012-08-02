@@ -179,12 +179,11 @@ inner_deposit(UserGuid, Gold, TransSync) ->
                                       inner_touch_user(UserGuid),
                                       [OldBalance] = mnesia:read({bank_balance, UserGuid}),
                                       NewGold = OldBalance#bank_balance.gold + Gold,
-                                      NewBalance = #bank_balance{gold = NewGold},
+                                      NewBalance = OldBalance#bank_balance{gold = NewGold},
                                       mnesia:write(NewBalance),
-                                      {commit}
+                                      {commit, ok}
                               end, TransSync),
-    {atomic, Result} = mnesia:activity(transaction, Trans),
-    Result.
+     mnesia:activity(transaction, Trans).
 
 inner_withdraw(UserGuid, Gold, TransSync) ->
     Trans = dtranse:transefun(fun() -> 
@@ -196,13 +195,12 @@ inner_withdraw(UserGuid, Gold, TransSync) ->
                                               NewGold = OldBalance#bank_balance.gold - Gold,
                                               NewBalance = OldBalance#bank_balance{gold =  NewGold},
                                               mnesia:write(NewBalance),
-                                              {commit};
+                                              {commit, ok};
                                           true ->
-                                              {rollback}
+                                              {rollback, not_enought_money}
                                       end
                               end, TransSync),
-    {atomic, Result} = mnesia:activity(transaction, Trans),
-    Result.
+    mnesia:activity(transaction, Trans).
 
 inner_check(UserGuid, TransSync) ->
     Trans = dtranse:transefun(fun() ->
@@ -210,8 +208,7 @@ inner_check(UserGuid, TransSync) ->
                                       [Balance] = mnesia:read({bank_balance, UserGuid}),
                                       {commit, Balance#bank_balance.gold}
                               end, TransSync),
-    {atomic, Result} = mnesia:activity(transaction, Trans),
-    Result.
+    mnesia:activity(transaction, Trans).
 
 
 inner_touch_user(UserGuid) ->

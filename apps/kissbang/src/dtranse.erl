@@ -68,7 +68,7 @@ transefun(Fun, TransSync) ->
     fun() ->
             Result = Fun(),
             TransSync(element(1, Result)),
-            Result
+            element(2, Result)
     end.
 
 async_dtranse(Functions) ->
