@@ -131,4 +131,3 @@ code_change(_OldVsn, State, _Extra) ->
 handle_join_main_roomqueue(UserGuid, _Message) ->
     roomfullifier_srv:join_main_queue(UserGuid),
     proxy_srv:async_route_messages(UserGuid, [#on_joined_to_main_room_queue{}]).
-

@@ -111,7 +111,6 @@ handle_cast({push_user, UserGuid}, State) ->
     NewState = inner_push_user(UserGuid, State),
     {noreply, NewState};
 handle_cast({join, UserGuid}, State) ->
-    proxy_srv:async_route_messages(UserGuid, [#on_joined_to_main_room_queue{}]),
     {noreply, State#state{pending_users = [UserGuid | State#state.pending_users]}};
 handle_cast(_Msg, State) ->
     {noreply, State}.
