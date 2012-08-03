@@ -10,6 +10,10 @@
 ** authentication failed
    -> Authenticate(login="wrong_name", password="wrongpass")
 * rooms
+** join to tagged room queue (game in your city)
+   -> JoinTaggedRoomQueue(tag = "kiev")
+   <- OnJoinedToTaggedRoomQueue(tag = "kiev")
+   <- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
 ** join to a random room
    -> JoinMainRoomQueue()
    <- OnJoinedToMainRoomQueue()
