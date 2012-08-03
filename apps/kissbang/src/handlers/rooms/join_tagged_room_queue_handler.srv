@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(join_main_roomqueue_handler_srv).
+-module(join_tagged_roomqueue_handler_srv).
 -include("../../kissbang_messaging.hrl").
 -behaviour(gen_server).
 
