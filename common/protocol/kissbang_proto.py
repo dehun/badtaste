@@ -32,6 +32,9 @@ class OnGotCurrentTime(pgMessage):
     time = pgInteger() # number of secconds passed from 1900...
 
 # user info
+class GetFriendInfo(pgMessage):
+    targetUserGuid = pgString()
+
 class GetUserInfo(pgMessage):
     targetUserGuid = pgString()
 

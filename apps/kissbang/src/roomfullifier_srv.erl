@@ -11,8 +11,8 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
--export([join_main_queue/1, get_main_queue/0]).
+-export([start_link/0, setup_db/0]).
+-export([join_main_queue/1, join_tagged_queue/2, get_main_queue/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -21,12 +21,16 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {main_queue}).
+-record(tagged_queue, {tag, queue}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
 join_main_queue(UserGuid) ->
     gen_server:cast(?SERVER, {join_main_queue, UserGuid}).
+
+join_tagged_queue(UserGuid, Tag) ->
+    gen_server:cast(?SERVER, {join_tagged_queue, UserGuid, Tag}).
 
 get_main_queue() ->
     gen_server:call(?SERVER, {get_main_queue}).
@@ -55,6 +59,21 @@ start_link() ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
+setup_db() ->
+    Result = mnesia:create_table(tagged_queue, [{ram_copies, [node() | nodes()]}, 
+                                            {attributes, record_info(fields, tagged_queue)}]),
+    case Result of
+        {atomic, ok} ->
+            mnesia:wait_for_tables([tagged_queue], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([tagged_queue], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+        end.
+
+
 init([]) ->
     {ok, MainQueuePid} = roomqueue_sup:start_queue(),
     {ok, #state{main_queue = MainQueuePid}}.
@@ -90,6 +109,10 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+
+handle_cast({join_tagged_queue, UserGuid, Tag}, State) ->
+    inner_join_tagged_queue(UserGuid, Tag),
+    {noreply, State};
 handle_cast({join_main_queue, UserGuid}, State) ->
     roomqueue_srv:join(State#state.main_queue, UserGuid),
     {noreply, State}.
@@ -138,3 +161,25 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_join_tagged_queue(UserGuid, Tag) ->
+    Trans = fun() ->
+                    ok = inner_touch_tagged_queue(Tag),
+                    [TaggedQueue] = mnesia:read({tagged_queue, Tag}),
+                    TaggedQueue#tagged_queue.queue
+            end,
+    Queue = mnesia:activity(sync_dirty, Trans),
+    roomqueue_srv:join(Queue, UserGuid).
+
+inner_touch_tagged_queue(Tag) ->
+    Existance = mnesia:read({tagged_queue, Tag}),
+    case Existance of 
+        [] ->
+            Queue = roomqueue_sup:start_queue(),
+            NewTaggedQueue = #tagged_queue{tag = Tag, 
+                                           queue = Queue},
+            mnesia:write(NewTaggedQueue),
+            ok;
+        [_] ->
+            ok
+    end.
+    

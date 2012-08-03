@@ -55,6 +55,7 @@ start_link() ->
 %%--------------------------------------------------------------------
 init([]) ->
     handler_utils:register_handler(get_user_info, fun handle_get_user_info/2),
+    handler_utils:register_handler(get_friend_info, fun handle_get_user_info/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -129,8 +130,13 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_get_user_info(Guid, Message) ->
-    TargetUserGuid = Message#get_user_info.target_user_guid,
+handle_get_user_info(Guid, Message) when is_record(Message, get_user_info) ->
+    get_user_info(Guid, Message#get_user_info.target_user_guid);
+handle_get_user_info(Guid, Message) when is_record(Message, get_friend_info) ->
+    get_user_info(Guid, Message#get_friend_info.target_user_guid).
+
+get_user_info(Guid, TargetUserGuid) ->
+    Money = bank_srv:check(Guid),
     {ok, UserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
     ReplyMessage = #on_got_user_info{info_owner_guid = TargetUserGuid,
                                      user_id = UserInfo#user_info.user_id,
@@ -140,7 +146,7 @@ handle_get_user_info(Guid, Message) ->
                                      picture_url = UserInfo#user_info.avatar_url,
                                      is_online = "false",
                                      city = UserInfo#user_info.city,
-                                     coins = 0,
+                                     coins = Money,
                                      kisses = 0},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
-    
+
