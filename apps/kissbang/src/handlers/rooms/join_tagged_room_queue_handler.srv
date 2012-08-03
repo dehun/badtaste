@@ -12,7 +12,7 @@
 
 %% API
 -export([start_link/0]).
--export([handle_join_main_roomqueue/2]).
+-export([handle_join_tagged_roomqueue/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -53,7 +53,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(join_main_room_queue, fun handle_join_main_roomqueue/2),
+    handler_utils:register_handler(join_tagged_room_queue, fun handle_join_tagged_roomqueue/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -128,7 +128,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_join_main_roomqueue(UserGuid, _Message) ->
-    roomfullifier_srv:join_main_queue(UserGuid),
-    proxy_srv:async_route_messages(UserGuid, [#on_joined_to_main_room_queue{}]).
-
+handle_join_tagged_roomqueue(UserGuid, Message) ->
+    Tag = Message#join_tagged_room_queue.tag,
+    roomfullifier_srv:join_tagged_queue(UserGuid, Tag),
+    proxy_srv:async_route_messages(UserGuid, [#on_joined_to_tagged_room_queue{tag = Tag}]).

@@ -87,7 +87,8 @@ get_admin_handlers() ->
     ['touch_user_info_handler_srv'].
 
 get_room_handlers() ->
-    ['join_main_roomqueue_handler_srv'].
+    ['join_main_roomqueue_handler_srv',
+     'join_tagged_roomqueue_handler_srv'].
 
 get_chat_handlers() ->
     ['send_chat_message_to_room_handler_srv'].

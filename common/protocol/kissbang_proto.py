@@ -82,12 +82,21 @@ class OnGotChatMessageFromRoom(pgMessage):
     senderGuid = pgString()
     message = pgString()
 
-# rooms
+# room queues
 class JoinMainRoomQueue(pgMessage):
     pass
 
 class OnJoinedToMainRoomQueue(pgMessage):
     pass
+
+class JoinTaggedRoomQueue(pgMessage):
+    tag = pgString()
+
+class OnJoinedToTaggedRoomQueue(pgMessage):
+    tag = pgString()
+
+
+# rooms
 
 class OnJoinedToRoom(pgMessage):
     users = pgList(pgString()) # user guids
