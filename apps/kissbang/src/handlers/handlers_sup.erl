@@ -76,6 +76,7 @@ get_all_handlers() ->
                    get_kiss_game_handlers(),
                    get_time_handlers(),
                    get_bank_handlers(),
+                   get_rate_handlers(),
                    get_chat_handlers()]).
     
 
@@ -103,3 +104,8 @@ get_time_handlers() ->
 
 get_bank_handlers() ->
     ['check_bank_balance_handler_srv'].
+
+get_rate_handlers() ->
+    ['get_user_rate_handler_srv',
+     'delete_rate_point_handler_srv',
+     'rate_user_handler_srv'].

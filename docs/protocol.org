@@ -60,3 +60,16 @@
    <- OnBankBalanceChecked(gold = 123)
 ** when some action change bank balance(for example user have bought something, or got some money)
    <- OnBankBalanceChanged(newGold = 123)
+* rates
+** rate user success
+   -> RateUser(targetUserGuid = "someguid", rate = 5)
+   <- OnUserRatedSuccessfully(ratedUserGuid = "someguid")
+** rate user fail
+   -> RateUser(targetUserGuid = "someguid", rate = 5)
+   <- OnUserRateFailed(ratedUserGuid = "someguid", reason = "already_rated") 
+** get user rate
+   -> GetUserRate(targetUserGuid = "someguid")
+   <- OnGotUserRate(userGuid = "someguid", averageRate = 4, lastRaters = [Rater(guid = "some", rate = 2), Rater(guid = "other", rate = 10)])
+** remove user rate
+   -> RemoveUserRate(targetUserGuid = "someguid")
+   <- OnUserRateRemoved(removedRaterGuid = "someguid")

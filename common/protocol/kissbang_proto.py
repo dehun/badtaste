@@ -150,3 +150,34 @@ class RefuseToKiss(pgMessage):
     pass
 
 
+# rates
+class RateUser(pgMessage):
+    targetUserGuid = pgString()
+    rate = pgInteger()
+
+class OnUserRatedSuccessfully(pgMessage):
+    ratedUserGuid = pgString()
+
+class OnUserRateFailed(pgMessage):
+    ratedUserGuid = pgString()
+
+class GetUserRate(pgMessage):
+    targetUserGuid = pgString()
+
+class RatePoint(pgMessage):
+    raterGuid = pgString()
+    rate = pgInteger()
+
+class OnGotUserRate(pgMessage):
+    userGuid = pgString()
+    averateRate = pgFloat()
+    lastRaters = pgList(pgMessage()) # RatePoint
+
+class DeleteRatePoint(pgMessage):
+    raterGuid = pgString()
+
+class OnRatePointDeleted(pgMessage):
+    raterGuid = pgString()
+
+class OnRatePointDeleteFailed(pgMessage):
+    raterGuid = pgString()
