@@ -75,19 +75,50 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Config.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
+      <file leaf-file-name="Profile.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="45" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0">
+            <state line="39" column="37" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Profile.as" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/Profile.as">
+      <file leaf-file-name="BottomPanel.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/BottomPanel.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="50" selection-start="1869" selection-end="1869" vertical-scroll-proportion="0.5132743">
+            <state line="52" column="30" selection-start="1743" selection-end="1743" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#210#272#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FriendStructure.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="0" selection-start="283" selection-end="283" vertical-scroll-proportion="0.24336283">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FriendsList.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="24" selection-start="586" selection-end="586" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#211#247#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TabButton.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabButton.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="42" selection-start="717" selection-end="717" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -103,22 +134,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/OK/OKInnerAdapter.as" />
-        <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/NextGame/NextGameInnerAdapter.as" />
-        <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/Mamba/MambaInnerAdapter.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConnector.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Sex.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Zodiac.as" />
-        <option value="$PROJECT_DIR$/src/Preloader.as" />
-        <option value="$PROJECT_DIR$/src/Kiss.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/User.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/AppSocket.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/Profile.as" />
+        <option value="$PROJECT_DIR$/Kiss.iml" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as" />
+        <option value="$PROJECT_DIR$/src/Kiss.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabBar.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabButton.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as" />
+        <option value="$PROJECT_DIR$/lib/com/exponentum/utils/centerX.as" />
+        <option value="$PROJECT_DIR$/lib/com/exponentum/utils/centerY.as" />
+        <option value="$PROJECT_DIR$/lib/com/exponentum/utils/RoundedPreloader.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/BottomPanel.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as" />
       </list>
     </option>
   </component>
@@ -250,7 +281,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pages" />
+              <option name="myItemId" value="profile" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -293,26 +324,12 @@
               <option name="myItemId" value="flirt" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
+              <option name="myItemId" value="model" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="flirt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controller" />
+              <option name="myItemId" value="friends" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -332,32 +349,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="flirt" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controller" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="net" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="profile.swf" />
-              <option name="myItemType" value="com.intellij.lang.javascript.flex.presentation.FlexTreeStructureProvider$FlexFileNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -376,7 +367,76 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com.exponentum.apps.flirt" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com.exponentum.apps.flirt" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pages.profile" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com.exponentum.apps.flirt" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="Scope">
+        <subPane subId="Default" />
         <subPane>
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
@@ -468,32 +528,44 @@
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
           <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            <PATH_ELEMENT USER_OBJECT="Kiss">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="com/exponentum/apps/flirt">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kiss" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            <PATH_ELEMENT USER_OBJECT="Kiss">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.exponentum.social.apps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="com/exponentum/apps/flirt">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="model">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -502,7 +574,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
@@ -512,7 +584,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="FullScreen" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.searchVisible" value="true" />
@@ -520,11 +592,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/com/exponentum/utils" />
+      <recent name="$PROJECT_DIR$/lib/com/exponentum" />
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/lib" />
-      <recent name="$PROJECT_DIR$/lib/ru" />
-      <recent name="$PROJECT_DIR$/lib/swc" />
     </key>
   </component>
   <component name="RunManager" selected="Flex.Kiss.swf">
@@ -599,7 +671,7 @@
         <option name="BuildArtifacts" enabled="false" />
       </method>
     </configuration>
-    <configuration default="false" name="Kiss.swf" type="FlexRunConfigurationType" factoryName="Flex" browser_family="FIREFOX" debugger_sdk="flex_sdk_4.1.0.16076A (player 10.0)" html_or_swf_file_path="$PROJECT_DIR$/out/production/Kiss/Kiss.swf" launcher_type="Player" main_class_name="" module_name="Kiss" player_path="$USER_HOME$/Tools/AS3.0/SDKs/flex_sdk_4.1.0.16076A/runtimes/player/10.1/mac/Flash Player Debugger.app" run_mode="HtmlOrSwfFile" run_trusted="true" url_to_launch="http://">
+    <configuration default="false" name="Kiss.swf" type="FlexRunConfigurationType" factoryName="Flex" browser_family="FIREFOX" debugger_sdk="Module SDK" html_or_swf_file_path="$PROJECT_DIR$/out/production/Kiss/Kiss.swf" launcher_type="Player" main_class_name="" module_name="Kiss" player_path="$USER_HOME$/Tools/AS3.0/SDKs/flex_sdk_4.1.0.16076A/runtimes/player/10.1/mac/Flash Player Debugger.app" run_mode="HtmlOrSwfFile" run_trusted="true" url_to_launch="http://">
       <RunnerSettings RunnerId="FlexDebugRunner" />
       <ConfigurationWrapper RunnerId="FlexDebugRunner" />
       <method />
@@ -646,6 +718,7 @@
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.60227275" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -654,12 +727,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24918832" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2159091" sideWeight="0.39772728" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22402598" sideWeight="0.39772728" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -716,102 +788,122 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/core/IDataAdapter.as">
+    <entry file="file://$PROJECT_DIR$/src/Preloader.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="17" selection-start="687" selection-end="687" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Tools/AS3.0/SDKs/flex_sdk_4.1.0.16076A/frameworks/libs/player/10.0/playerglobal.swc!/library.swf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3388" column="25" selection-start="141700" selection-end="141700" vertical-scroll-proportion="0.33233082" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="4" selection-start="64" selection-end="64" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="42" selection-start="1934" selection-end="1952" vertical-scroll-proportion="0.7743363" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConnector.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="39" selection-start="1021" selection-end="1021" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Zodiac.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="20" selection-start="1874" selection-end="1874" vertical-scroll-proportion="0.0" />
+        <state line="95" column="0" selection-start="2192" selection-end="2192" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Kiss.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="919" selection-end="919" vertical-scroll-proportion="0.1826484">
+        <state line="18" column="5" selection-start="526" selection-end="560" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+    <entry file="file://$PROJECT_DIR$/lib/org/casalib/layout/Distribution.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="41" selection-start="684" selection-end="684" vertical-scroll-proportion="0.66210043">
+        <state line="83" column="17" selection-start="2845" selection-end="2845" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Preloader.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabBar.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="28" selection-start="2447" selection-end="2447" vertical-scroll-proportion="0.7716895">
+        <state line="27" column="58" selection-start="696" selection-end="696" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#213#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabButton.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="42" selection-start="717" selection-end="717" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/User.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="26" selection-start="1381" selection-end="1381" vertical-scroll-proportion="0.7787611">
+        <state line="39" column="37" selection-start="1386" selection-end="1386" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/AppSocket.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/centerX.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="11" selection-start="1637" selection-end="1637" vertical-scroll-proportion="0.022123894">
+        <state line="0" column="23" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/ToolTip.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="1.8721805">
+        <state line="11" column="31" selection-start="265" selection-end="265" vertical-scroll-proportion="0.39805827">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/TimeManager.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/org/casalib/load/SwfLoad.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/RoundedPreloader.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="57" selection-start="3270" selection-end="3391" vertical-scroll-proportion="0.02255639">
+        <state line="13" column="39" selection-start="443" selection-end="443" vertical-scroll-proportion="0.36407766">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/PictureLoader.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="46" selection-start="178" selection-end="178" vertical-scroll-proportion="0.11061947">
+        <state line="13" column="46" selection-start="424" selection-end="424" vertical-scroll-proportion="0.13452914">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/FPSCounter.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="45" selection-start="263" selection-end="263" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/Profile.as">
+    <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/centerY.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="50" selection-start="1869" selection-end="1869" vertical-scroll-proportion="0.5132743">
+        <state line="0" column="23" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="24" selection-start="586" selection-end="586" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#211#247#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/BottomPanel.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="30" selection-start="1743" selection-end="1743" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#210#272#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="283" selection-end="283" vertical-scroll-proportion="0.24336283">
           <folding />
         </state>
       </provider>
@@ -892,7 +984,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Common</last-edited>
+          <last-edited>as3corelib</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -1,19 +1,15 @@
 package
 {
 import com.exponentum.apps.flirt.controller.Controller;
-import com.exponentum.apps.flirt.controller.net.ServerConfig;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
-import com.exponentum.apps.flirt.model.User;
 import com.exponentum.apps.flirt.view.View;
 import com.junkbyte.console.Cc;
 import com.junkbyte.console.ConsoleConfig;
-import com.junkbyte.console.view.MainPanel;
 
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
-import flash.system.Security;
 
 import ru.evast.integration.IntegrationProxy;
 import ru.evast.integration.core.SocialNetworkTypes;

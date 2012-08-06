@@ -6,7 +6,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" assert-keyword="false" jdk-15="false" project-jdk-name="flex_sdk_4.1.0.16076A (player 10.0)" project-jdk-type="Flex SDK Type">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" assert-keyword="false" jdk-15="false">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

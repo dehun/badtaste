@@ -5,8 +5,9 @@
  * Time: 10:09 PM
  * To change this template use File | Settings | File Templates.
  */
-package com.exponentum.apps.flirt.view.pages
+package com.exponentum.apps.flirt.view.pages.profile
 {
+import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.User;
@@ -14,6 +15,7 @@ import com.exponentum.apps.flirt.model.User;
 import flash.display.DisplayObject;
 import flash.display.SimpleButton;
 import flash.events.Event;
+import flash.events.MouseEvent;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
@@ -23,14 +25,19 @@ public class Profile extends CasaSprite
 {
 	private var bgLoad:SwfLoad;
 	private var background:CasaSprite = new CasaSprite();
-	private var foreground:CasaSprite = new CasaSprite();
+	private var foreground:ForegroundProfile = new ForegroundProfile();
 
 	private var tasksButton:SimpleButton = new TasksButton();
 	private var ratingsButton:SimpleButton = new RatingsButton();
 	private var zodiacSign:ZodiacSign = new ZodiacSign();
 	private var shelf:Shelf = new Shelf();
+	private var achievementsPanel:AchievementsPanel = new AchievementsPanel();
+	private var playButton:PlayButton = new PlayButton();
 
 	private var profileDetails:ProfileDetails = new ProfileDetails();
+	private var profileAvatar:ProfileAvatar = new ProfileAvatar();
+	private var fans:Fans = new Fans();
+	private var bottomPanel:BottomPanel = new BottomPanel();
 
 	private var _user:User;
 
@@ -44,7 +51,12 @@ public class Profile extends CasaSprite
 	private function init():void
 	{
 		addChild(background);
-		setBackground(1);
+		setBackground(2);
+
+		playButton.x = 231;
+		playButton.y = -1;
+		addChild(playButton);
+		playButton.addEventListener(MouseEvent.CLICK, onPlayClick);
 
 		tasksButton.x = -5;
 		tasksButton.y = 176;
@@ -64,6 +76,35 @@ public class Profile extends CasaSprite
 		addChild(shelf);
 
 		createProfileDetails();
+		createAchievementsPanel();
+		createProfileAvatar();
+		createFansBlock();
+		createBottomPanel();
+
+		foreground.x = -10;
+		foreground.y = -10;
+		addChild(foreground);
+	}
+
+	private function createBottomPanel():void
+	{
+		bottomPanel.x = 0;
+		bottomPanel.y = 548;
+		addChild(bottomPanel);
+	}
+
+	private function createProfileAvatar():void
+	{
+		profileAvatar.x = 56;
+		profileAvatar.y = 133;
+		addChild(profileAvatar);
+	}
+
+	private function createAchievementsPanel():void
+	{
+		achievementsPanel.x = 250;
+		achievementsPanel.y = 270;
+		addChild(achievementsPanel);
 	}
 
 	private function createProfileDetails():void
@@ -78,6 +119,12 @@ public class Profile extends CasaSprite
 		profileDetails.cityText.text = _user.city;
 	}
 
+	private function createFansBlock():void
+	{
+		fans.x = 532;
+		fans.y = 113;
+		addChild(fans);
+	}
 
 	public function setBackground(bgId:int):void
 	{
@@ -90,6 +137,14 @@ public class Profile extends CasaSprite
 	{
 		background.removeChildren(true, true);
 		background.addChild(bgLoad.contentAsMovieClip);
+	}
+
+	//----------------------------------------------------------------------------------
+	// Button handlers
+	//----------------------------------------------------------------------------------
+	private function onPlayClick(e:MouseEvent):void
+	{
+		trace("Play click");
 	}
 }
 }

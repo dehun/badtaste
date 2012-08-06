@@ -3,7 +3,7 @@ package com.exponentum.apps.flirt.view
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
 import com.exponentum.apps.flirt.model.Model;
-import com.exponentum.apps.flirt.view.pages.Profile;
+import com.exponentum.apps.flirt.view.pages.profile.Profile;
 
 import flash.display.Sprite;
 import flash.events.MouseEvent;
