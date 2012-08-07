@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-03 15:06:20 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-07 10:38:02 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -141,6 +141,20 @@ lang="en" xml:lang="en">
 <ul>
 <li><a href="#sec-8-1">8.1 check bank balance </a></li>
 <li><a href="#sec-8-2">8.2 when some action change bank balance(for example user have bought something, or got some money) </a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 rates </a>
+<ul>
+<li><a href="#sec-9-1">9.1 rate user success </a></li>
+<li><a href="#sec-9-2">9.2 rate user fail </a></li>
+<li><a href="#sec-9-3">9.3 get user rate </a></li>
+<li><a href="#sec-9-4">9.4 remove user rate </a></li>
+</ul>
+</li>
+<li><a href="#sec-10">10 gifts </a>
+<ul>
+<li><a href="#sec-10-1">10.1 present gift </a></li>
+<li><a href="#sec-10-2">10.2 when gift presented to somebody in room </a></li>
 </ul>
 </li>
 </ul>
@@ -395,11 +409,88 @@ lang="en" xml:lang="en">
 <p>   &lt;- OnBankBalanceChanged(newGold = 123)
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> rates </h2>
+<div class="outline-text-2" id="text-9">
+
+
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> rate user success </h3>
+<div class="outline-text-3" id="text-9-1">
+
+<p>   -&gt; RateUser(targetUserGuid = "someguid", rate = 5)
+   &lt;- OnUserRatedSuccessfully(ratedUserGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-9-2" class="outline-3">
+<h3 id="sec-9-2"><span class="section-number-3">9.2</span> rate user fail </h3>
+<div class="outline-text-3" id="text-9-2">
+
+<p>   -&gt; RateUser(targetUserGuid = "someguid", rate = 5)
+   &lt;- OnUserRateFailed(ratedUserGuid = "someguid", reason = "already<sub>rated</sub>") 
+</p></div>
+
+</div>
+
+<div id="outline-container-9-3" class="outline-3">
+<h3 id="sec-9-3"><span class="section-number-3">9.3</span> get user rate </h3>
+<div class="outline-text-3" id="text-9-3">
+
+<p>   -&gt; GetUserRate(targetUserGuid = "someguid")
+   &lt;- OnGotUserRate(userGuid = "someguid", averageRate = 4, lastRaters = [Rater(guid = "some", rate = 2), Rater(guid = "other", rate = 10)])
+</p></div>
+
+</div>
+
+<div id="outline-container-9-4" class="outline-3">
+<h3 id="sec-9-4"><span class="section-number-3">9.4</span> remove user rate </h3>
+<div class="outline-text-3" id="text-9-4">
+
+<p>   -&gt; RemoveUserRate(targetUserGuid = "someguid")
+   &lt;- OnUserRateRemoved(removedRaterGuid = "someguid")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> gifts </h2>
+<div class="outline-text-2" id="text-10">
+
+
+</div>
+
+<div id="outline-container-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> present gift </h3>
+<div class="outline-text-3" id="text-10-1">
+
+<p>   -&gt; PresentGift(targetUserGuid, GiftGuid)
+   &lt;- OnGotGift(giftSenderGuid, GiftGuid)
+</p></div>
+
+</div>
+
+<div id="outline-container-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> when gift presented to somebody in room </h3>
+<div class="outline-text-3" id="text-10-2">
+
+<p>   -&gt; PresentGift(targetUserGuid, giftGuid)
+   &lt;- OnGotGift(giftSenderGuid, giftGuid)
+   &lt;- OnGiftReceivedInGame(giftSenderGuid, giftReceiverGuid, giftGuid)
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-03 15:06:20 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-07 10:38:02 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
