@@ -95,19 +95,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FriendStructure.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FriendStructure.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="0" selection-start="283" selection-end="283" vertical-scroll-proportion="0.24336283">
+            <state line="11" column="0" selection-start="237" selection-end="237" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FriendsList.as" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="FriendsList.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="24" selection-start="586" selection-end="586" vertical-scroll-proportion="0.0">
+            <state line="60" column="8" selection-start="1465" selection-end="1465" vertical-scroll-proportion="1.8367347">
               <folding>
                 <element signature="e#211#247#0" expanded="true" />
               </folding>
@@ -134,7 +134,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/User.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/AppSocket.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/Profile.as" />
@@ -147,15 +146,18 @@
         <option value="$PROJECT_DIR$/lib/com/exponentum/utils/centerX.as" />
         <option value="$PROJECT_DIR$/lib/com/exponentum/utils/centerY.as" />
         <option value="$PROJECT_DIR$/lib/com/exponentum/utils/RoundedPreloader.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/BottomPanel.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/onLeft.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="x" value="247" />
+    <option name="y" value="83" />
+    <option name="width" value="865" />
+    <option name="height" value="619" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -591,6 +593,9 @@
     <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateActionScriptClassDialog.DESTINATION_PACKAGE_RECENT_KEY">
+      <recent name="com.exponentum.apps.flirt.view.pages.profile" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/lib/com/exponentum/utils" />
@@ -712,8 +717,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="false" />
+    <frame x="247" y="83" width="865" height="619" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -727,7 +732,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24918832" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22402598" sideWeight="0.39772728" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3378213" sideWeight="0.74289775" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -788,13 +793,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Preloader.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="0" selection-start="2192" selection-end="2192" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Kiss.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="5" selection-start="526" selection-end="560" vertical-scroll-proportion="0.0">
@@ -883,15 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="24" selection-start="586" selection-end="586" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#211#247#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/BottomPanel.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="52" column="30" selection-start="1743" selection-end="1743" vertical-scroll-proportion="0.0">
@@ -903,8 +892,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/friends/FriendStructure.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="283" selection-end="283" vertical-scroll-proportion="0.24336283">
+        <state line="11" column="0" selection-start="237" selection-end="237" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/FriendsList.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="8" selection-start="1465" selection-end="1465" vertical-scroll-proportion="1.8367347">
+          <folding>
+            <element signature="e#211#247#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

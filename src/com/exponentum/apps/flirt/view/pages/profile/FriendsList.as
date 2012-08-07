@@ -9,6 +9,9 @@ package com.exponentum.apps.flirt.view.pages.profile
 {
 import com.exponentum.utils.centerX;
 
+import flash.display.SimpleButton;
+import flash.events.MouseEvent;
+
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
 
@@ -18,10 +21,15 @@ public class FriendsList extends CasaSprite
 	private var bg:FriendList = new FriendList();
 	private var container:Distribution = new Distribution();
 
+	//controls
+	private var oneLeft:SimpleButton;
+	private var fastLeft:SimpleButton;
+	private var oneRight:SimpleButton;
+	private var fastRight:SimpleButton;
+
 	public function FriendsList()
 	{
-		addChild(bg);
-
+		initAssets();
 		container.y = 72;
 		addChild(container);
 
@@ -33,5 +41,41 @@ public class FriendsList extends CasaSprite
 		}
 
 	}
+
+	private function initAssets():void
+	{
+		addChild(bg);
+		oneLeft = bg.leftButton;
+		oneRight = bg.rightButton;
+		fastLeft = bg.fLeftButton;
+		fastRight = bg.fRightButton;
+
+		oneLeft.addEventListener(MouseEvent.CLICK, onLeft);
+		oneRight.addEventListener(MouseEvent.CLICK, onRight);
+		fastLeft.addEventListener(MouseEvent.CLICK, onFastLeft);
+		fastRight.addEventListener(MouseEvent.CLICK, onFastRight);
+	}
+
+	private function onLeft(e:MouseEvent):void
+	{
+		
+	}
+
+	private function onRight(e:MouseEvent):void
+	{
+
+	}
+
+	private function onFastLeft(e:MouseEvent):void
+	{
+
+	}
+
+	private function onFastRight(e:MouseEvent):void
+	{
+
+	}
+
+
 }
 }
