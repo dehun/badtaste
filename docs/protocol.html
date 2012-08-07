@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-07 10:40:46 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-07 10:47:41 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -156,6 +156,7 @@ lang="en" xml:lang="en">
 <ul>
 <li><a href="#sec-10-1">10.1 present gift </a></li>
 <li><a href="#sec-10-2">10.2 when gift presented to somebody in room </a></li>
+<li><a href="#sec-10-3">10.3 get gift list </a></li>
 </ul>
 </li>
 </ul>
@@ -482,7 +483,7 @@ lang="en" xml:lang="en">
 <h3 id="sec-10-1"><span class="section-number-3">10.1</span> present gift </h3>
 <div class="outline-text-3" id="text-10-1">
 
-<p>   -&gt; PresentGift(targetUserGuid, GiftGuid)
+<p>    -&gt; PresentGift(targetUserGuid, GiftGuid)
    &lt;- OnGotGift(giftSenderGuid, GiftGuid)
 </p></div>
 
@@ -496,12 +497,22 @@ lang="en" xml:lang="en">
    &lt;- OnGotGift(giftSenderGuid, giftGuid)
    &lt;- OnGiftReceivedInGame(giftSenderGuid, giftReceiverGuid, giftGuid)
 </p></div>
+
+</div>
+
+<div id="outline-container-10-3" class="outline-3">
+<h3 id="sec-10-3"><span class="section-number-3">10.3</span> get gift list </h3>
+<div class="outline-text-3" id="text-10-3">
+
+<p>   -&gt; GetMyGifts()
+   &lt;- OnGotMyGifts(giftsGuids = [])
+</p></div>
 </div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-07 10:40:46 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-07 10:47:41 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
