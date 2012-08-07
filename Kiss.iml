@@ -21,6 +21,7 @@
     <orderEntry type="library" name="profile" level="project" />
     <orderEntry type="library" name="greensock" level="project" />
     <orderEntry type="library" name="Common" level="project" />
+    <orderEntry type="library" name="messageWindow" level="project" />
   </component>
 </module>
 

@@ -58,7 +58,7 @@ public class FriendsList extends CasaSprite
 
 	private function onLeft(e:MouseEvent):void
 	{
-		
+
 	}
 
 	private function onRight(e:MouseEvent):void
