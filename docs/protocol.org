@@ -70,9 +70,12 @@
 ** get user rate
    -> GetUserRate(targetUserGuid = "someguid")
    <- OnGotUserRate(userGuid = "someguid", averageRate = 4, lastRaters = [Rater(guid = "some", rate = 2), Rater(guid = "other", rate = 10)])
-** remove user rate
-   -> RemoveUserRate(targetUserGuid = "someguid")
-   <- OnUserRateRemoved(removedRaterGuid = "someguid")
+** remove user rate succcess
+   -> DeleteRatePoint(raterGuid = "someguid")
+   <- OnRatePointDeleted(raterGuid = "someguid")
+** remove user rate failure
+   -> DeleteRatePoint(raterGuid = "someguid")
+   <- OnRatePointDeleteFailed(raterGuid = "someguid")
 * gifts
 ** present gift
    -> PresentGift(targetUserGuid, GiftGuid)

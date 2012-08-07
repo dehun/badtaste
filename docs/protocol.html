@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-07 10:38:02 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-07 10:40:46 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -148,7 +148,8 @@ lang="en" xml:lang="en">
 <li><a href="#sec-9-1">9.1 rate user success </a></li>
 <li><a href="#sec-9-2">9.2 rate user fail </a></li>
 <li><a href="#sec-9-3">9.3 get user rate </a></li>
-<li><a href="#sec-9-4">9.4 remove user rate </a></li>
+<li><a href="#sec-9-4">9.4 remove user rate succcess </a></li>
+<li><a href="#sec-9-5">9.5 remove user rate failure </a></li>
 </ul>
 </li>
 <li><a href="#sec-10">10 gifts </a>
@@ -450,11 +451,21 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-9-4" class="outline-3">
-<h3 id="sec-9-4"><span class="section-number-3">9.4</span> remove user rate </h3>
+<h3 id="sec-9-4"><span class="section-number-3">9.4</span> remove user rate succcess </h3>
 <div class="outline-text-3" id="text-9-4">
 
-<p>   -&gt; RemoveUserRate(targetUserGuid = "someguid")
-   &lt;- OnUserRateRemoved(removedRaterGuid = "someguid")
+<p>   -&gt; DeleteRatePoint(raterGuid = "someguid")
+   &lt;- OnRatePointDeleted(raterGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-9-5" class="outline-3">
+<h3 id="sec-9-5"><span class="section-number-3">9.5</span> remove user rate failure </h3>
+<div class="outline-text-3" id="text-9-5">
+
+<p>   -&gt; DeleteRatePoint(raterGuid = "someguid")
+   &lt;- OnRatePointDeleteFailed(raterGuid = "someguid")
 </p></div>
 </div>
 
@@ -490,7 +501,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-07 10:38:02 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-07 10:40:46 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
