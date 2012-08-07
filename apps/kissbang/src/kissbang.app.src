@@ -18,5 +18,6 @@
          {avatar_base_url, "http://lolcahost:8000/"},
          {room_sex_parity, 10},
          {room_limit_to_start, 2},
+         {gifts_cfg_path, "cfg/gifts.xml"},
          {room_maximum_users, 10}]}
  ]}.

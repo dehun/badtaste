@@ -9,7 +9,8 @@
 -module(gift_srv).
 
 -behaviour(gen_server).
-
+-include_lib("xmerl/include/xmerl.hrl").
+-include("received_gift.hrl").
 %% API
 -export([start_link/0]).
 
@@ -20,12 +21,14 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {gifts = []}).
+-record(gift, {guid, price}).
 -record(user_gifts, {user_guid, gifts=[]}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
--export([send_gift/2,
+-export([send_gift/3,
+         send_gift/4,
          get_gifts_for/1]).
 %%--------------------------------------------------------------------
 %% @doc
@@ -37,8 +40,11 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-send_gift(ReceiverGuid, GiftGuid) ->
-    gen_server:call(?SERVER, {send_gift, ReceiverGuid, GiftGuid}).
+send_gift(ReceiverGuid, SenderGuid, GiftGuid) ->
+    NoopSync = fun(_Result) -> ok end,
+    send_gift(ReceiverGuid, SenderGuid, GiftGuid, NoopSync).
+send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync) ->
+    gen_server:call(?SERVER, {send_gift, ReceiverGuid, SenderGuid, GiftGuid, TransSync}).
 
 get_gifts_for(UserGuid) ->
     gen_server:call(?SERVER, {get_gifts_for, UserGuid}).
@@ -89,6 +95,12 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({send_gift, ReceiverGuid, SenderGuid, GiftGuid, TransSync}, _From, State) ->
+    Reply = inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State),
+    {reply, Reply, State};
+handle_call({get_gifts_for, UserGuid}, _From, State) ->
+    Reply = inner_get_gifts_for(UserGuid),
+    {reply, Reply, State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -147,12 +159,53 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_send_gift(UserGuid, GiftGuid) ->
-    ok.
+
+load_gift({struct, GiftJson}) ->
+    #gift{guid = proplists:get_value(<<"guid">>, GiftJson),
+          price = proplists:get_value(<<"price">>, GiftJson)}.
 
 load_gifts() ->
-    {ok, giftsPath} = application:get_env(kissbang, gifts_xml_path),
-    [].
+    {ok, GiftsPath} = application:get_env(kissbang, gifts_cfg_path),
+    {ok, GiftsBinaryData} = file:read_file(GiftsPath),
+    {struct, GiftsJson} = mochijson2:decode(GiftsBinaryData),
+    [load_gift(Gift) || Gift <- proplists:get_value(<<'gifts'>>, GiftsJson)].
+
+
 
 load_config() ->
     #state{gifts = load_gifts()}.
+
+
+inner_get_gifts_for(UserGuid) ->
+    Trans = fun() ->
+                    Existance = mnesia:read({user_gifts, UserGuid}),
+                    case Existance of
+                        [UserGifts] ->
+                            UserGifts#user_gifts.gifts;
+                        [] ->
+                            []
+                    end
+            end,
+    mnesia:activity(transaction, Trans).
+
+inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
+    Trans = dtranse:transefun(fun() ->
+                                      %% buy gift
+                                      [Gift] = [Gift || Gift <- State#state.gifts, Gift#gift.guid == GiftGuid],
+                                      {ok, _} = bank_srv:withdraw(SenderGuid, Gift#gift.price),
+                                      %% send it
+                                      Existance = mnesia:read({user_gift, ReceiverGuid}, write),
+                                      case Existance of
+                                          [OldUserGifts] ->
+                                              NewUserGifts = OldUserGifts#user_gifts{gifts = [#received_gift{gift_guid = GiftGuid,
+                                                                                                             sender_guid = SenderGuid} | OldUserGifts#user_gifts.gifts]},
+                                              mnesia:write(NewUserGifts),
+                                              {commit, ok};
+                                          [] ->
+                                              NewUserGifts = #user_gifts{gifts = [#received_gift{gift_guid = GiftGuid,
+                                                                                                 sender_guid = SenderGuid}]},
+                                              mnesia:write(NewUserGifts),
+                                              {commit, ok}
+                                      end
+                              end),
+    mnesia:activity(transaction, Trans).

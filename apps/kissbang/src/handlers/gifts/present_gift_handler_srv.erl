@@ -131,7 +131,7 @@ code_change(_OldVsn, State, _Extra) ->
 handle_present_gift(SenderGuid, Message) ->
     ReceiverGuid = Message#present_gift.target_user_guid,
     GiftGuid = Message#present_gift.gift_guid,
-    case gift_srv:send_gift(ReceiverGuid, GiftGuid) of
+    case gift_srv:send_gift(ReceiverGuid, SenderGuid, GiftGuid) of
         ok ->
             proxy_srv:async_route_messages(ReceiverGuid, [#on_got_gift{gift_sender_guid = SenderGuid,
                                                                        gift_guid = ReceiverGuid}]),
@@ -143,5 +143,6 @@ handle_present_gift(SenderGuid, Message) ->
                                                                        gift_guid = GiftGuid})
                end;
         {fail, Reason} ->
-            proxy_srv:async_route_message()
+            []
+%            proxy_srv:async_route_message()
     end.
