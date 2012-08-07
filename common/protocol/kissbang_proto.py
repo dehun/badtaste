@@ -151,6 +151,7 @@ class RefuseToKiss(pgMessage):
 
 
 # rates
+## rate user
 class RateUser(pgMessage):
     targetUserGuid = pgString()
     rate = pgInteger()
@@ -161,6 +162,7 @@ class OnUserRatedSuccessfully(pgMessage):
 class OnUserRateFailed(pgMessage):
     ratedUserGuid = pgString()
 
+## get user rate
 class GetUserRate(pgMessage):
     targetUserGuid = pgString()
 
@@ -173,6 +175,7 @@ class OnGotUserRate(pgMessage):
     averateRate = pgFloat()
     lastRaters = pgList(pgMessage()) # RatePoint
 
+## rate point delete
 class DeleteRatePoint(pgMessage):
     raterGuid = pgString()
 
@@ -181,3 +184,29 @@ class OnRatePointDeleted(pgMessage):
 
 class OnRatePointDeleteFailed(pgMessage):
     raterGuid = pgString()
+
+# gifts
+## present gift
+class PresentGift(pgMessage):
+    targetUserGuid = pgString()
+    giftGuid = pgString()
+
+class OnGotGift(pgMessage):
+    giftSenderGuid = pgString()
+    giftGuid = pgString()
+
+class OnGiftReceivedInGame(pgMessage):
+    giftSenderGuid = pgString()
+    giftReceiverGuid = pgString()
+    giftGuid = pgString()
+
+## get my gifts
+class SendedGift(pgMessage):
+    senderGuid = pgString()
+    giftGuid = pgString()
+    
+class GetMyGifts(pgMessage):
+    pass
+
+class OnGotMyGifts(pgMessage):
+    gifts = pgList(pgString())

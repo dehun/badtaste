@@ -4,14 +4,16 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 31 Jul 2012 by  <>
+%%% Created :  7 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(gift_srv).
+-module(present_gift_handler_srv).
 
 -behaviour(gen_server).
-
+-include("../../kissbang_messaging.hrl").
+-include("../../room.hrl").
 %% API
 -export([start_link/0]).
+-export([handle_present_gift/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -19,14 +21,12 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {gifts = []}).
--record(user_gifts, {user_guid, gifts=[]}).
+-record(state, {}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
--export([send_gift/2,
-         get_gifts_for/1]).
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -37,11 +37,6 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-send_gift(ReceiverGuid, GiftGuid) ->
-    gen_server:call(?SERVER, {send_gift, ReceiverGuid, GiftGuid}).
-
-get_gifts_for(UserGuid) ->
-    gen_server:call(?SERVER, {get_gifts_for, UserGuid}).
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -57,23 +52,9 @@ get_gifts_for(UserGuid) ->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-setup_db() ->
-    Result = mnesia:create_table(user_gifts, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, user_gifts)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([user_gifts], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([user_gifts], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
-
 init([]) ->
-    State = load_config(),
-    {ok, State}.
+    handler_utils:register_handler(present_gift, fun handle_present_gift/2),
+    {ok, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -147,12 +128,20 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_send_gift(UserGuid, GiftGuid) ->
-    ok.
-
-load_gifts() ->
-    {ok, giftsPath} = application:get_env(kissbang, gifts_xml_path),
-    [].
-
-load_config() ->
-    #state{gifts = load_gifts()}.
+handle_present_gift(SenderGuid, Message) ->
+    ReceiverGuid = Message#present_gift.target_user_guid,
+    GiftGuid = Message#present_gift.gift_guid,
+    case gift_srv:send_gift(ReceiverGuid, GiftGuid) of
+        ok ->
+            proxy_srv:async_route_messages(ReceiverGuid, [#on_got_gift{gift_sender_guid = SenderGuid,
+                                                                       gift_guid = ReceiverGuid}]),
+            case roommgr_srv:get_room_for(ReceiverGuid) of
+               {ok, Room} ->
+                   room_srv:broadcast_message(Room#room.room_pid, ReceiverGuid,
+                                             #on_gift_received_in_game{gift_sender_guid = SenderGuid,
+                                                                       gift_receiver_guid = ReceiverGuid,
+                                                                       gift_guid = GiftGuid})
+               end;
+        {fail, Reason} ->
+            proxy_srv:async_route_message()
+    end.

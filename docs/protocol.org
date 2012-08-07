@@ -78,7 +78,7 @@
    <- OnRatePointDeleteFailed(raterGuid = "someguid")
 * gifts
 ** present gift
-    -> PresentGift(targetUserGuid, GiftGuid)
+   -> PresentGift(targetUserGuid, GiftGuid)
    <- OnGotGift(giftSenderGuid, GiftGuid)
 ** when gift presented to somebody in room
    -> PresentGift(targetUserGuid, giftGuid)
