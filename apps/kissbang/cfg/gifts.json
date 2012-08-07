@@ -1,0 +1,13 @@
+{ "gifts" : [
+    {"guid" : "1",
+     "name" : "first gift",
+     "img" : "http://lolcahost/first_gift.jpg",
+     "price" : "10",
+     "description" : "this is just a first gift"
+    },
+    {"guid" : "2",
+     "name" : "second gift",
+     "img" : "http://lolcahost/second_gift.jpg",
+     "price" : "20",
+     "description" : "yep. this is a second gift"}
+]}
