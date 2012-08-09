@@ -168,8 +168,10 @@ load_gift(Error) ->
     throw(Error).
 
 load_gifts() ->
-    {ok, GiftsPath} = application:get_env(kissbang, gifts_cfg_path),
-    {ok, GiftsBinaryData} = file:read_file(GiftsPath),
+    {ok, GiftsUrl} = application:get_env(kissbang, gifts_cfg_url),
+    {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} =
+        httpc:request(get, {GiftsUrl, []}, [], []),
+    GiftsBinaryData = Body,
     {struct, GiftsJson} = mochijson2:decode(GiftsBinaryData),
     [load_gift(Gift) || Gift <- proplists:get_value(<<"gifts">>, GiftsJson)].
 
