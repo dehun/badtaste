@@ -168,6 +168,7 @@ load_gift(Error) ->
     throw(Error).
 
 load_gifts() ->
+    inets:start(),
     {ok, GiftsUrl} = application:get_env(kissbang, gifts_cfg_url),
     {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} =
         httpc:request(get, {GiftsUrl, []}, [], []),
