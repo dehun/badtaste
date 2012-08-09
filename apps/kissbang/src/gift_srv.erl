@@ -12,7 +12,7 @@
 -include_lib("xmerl/include/xmerl.hrl").
 -include("received_gift.hrl").
 %% API
--export([start_link/0]).
+-export([start_link/0, setup_db/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -161,14 +161,17 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 
 load_gift({struct, GiftJson}) ->
-    #gift{guid = proplists:get_value(<<"guid">>, GiftJson),
-          price = proplists:get_value(<<"price">>, GiftJson)}.
+    log_srv:debug("loading gift"),
+    #gift{guid = binary_to_list(proplists:get_value(<<"guid">>, GiftJson)),
+          price = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, GiftJson)))};
+load_gift(Error) ->
+    throw(Error).
 
 load_gifts() ->
     {ok, GiftsPath} = application:get_env(kissbang, gifts_cfg_path),
     {ok, GiftsBinaryData} = file:read_file(GiftsPath),
     {struct, GiftsJson} = mochijson2:decode(GiftsBinaryData),
-    [load_gift(Gift) || Gift <- proplists:get_value(<<'gifts'>>, GiftsJson)].
+    [load_gift(Gift) || Gift <- proplists:get_value(<<"gifts">>, GiftsJson)].
 
 
 
@@ -207,5 +210,5 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                               mnesia:write(NewUserGifts),
                                               {commit, ok}
                                       end
-                              end),
+                              end, TransSync),
     mnesia:activity(transaction, Trans).

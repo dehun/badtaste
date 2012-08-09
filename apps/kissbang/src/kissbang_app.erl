@@ -20,6 +20,7 @@ setup_db() ->
     proxy_srv:setup_db(),
     roomfullifier_srv:setup_db(),
     bank_srv:setup_db(),
+    gift_srv:setup_db(),
     roommgr_srv:setup_db(),
     userinfo_srv:setup_db(),
     sex_srv:setup_db(),
