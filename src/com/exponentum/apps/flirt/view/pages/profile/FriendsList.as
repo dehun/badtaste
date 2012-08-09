@@ -21,7 +21,8 @@ public class FriendsList extends CasaSprite
 	private var bg:FriendList = new FriendList();
 	private var container:Distribution = new Distribution();
 
-	//controls
+
+	//controls of friendlist
 	private var oneLeft:SimpleButton;
 	private var fastLeft:SimpleButton;
 	private var oneRight:SimpleButton;
