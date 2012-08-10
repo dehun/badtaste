@@ -90,12 +90,18 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({update_user_info, UserGuid, UserInfo}, _From, State) ->
-    Reply = inner_update_user_info(UserGuid, UserInfo),
-    {reply, Reply, State};
-handle_call({get_user_info, UserGuid}, _From, State) ->
-    Reply = inner_get_user_info(UserGuid),
-    {reply, Reply, State}.
+handle_call({update_user_info, UserGuid, UserInfo}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_update_user_info(UserGuid, UserInfo),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
+handle_call({get_user_info, UserGuid}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_get_user_info(UserGuid),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State}.
 %% handle_call(_Request, _From, State) ->
 %%     Reply = ok,
 %%     {reply, Reply, State}.
@@ -111,7 +117,9 @@ handle_call({get_user_info, UserGuid}, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({update_user_info, UserGuid, UserInfo}, State) ->
-    inner_update_user_info(UserGuid, UserInfo),
+    spawn_link(fun() ->
+                       inner_update_user_info(UserGuid, UserInfo)
+               end),
     {noreply, State}.
 %% handle_cast(_Msg, State) ->
 %%     {noreply, State}.

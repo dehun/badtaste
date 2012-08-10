@@ -14,7 +14,7 @@
 -include("kissbang_messaging.hrl").
 
 %% API
--export([start_link/0]).
+-export([start_link/0, setup_db/0]).
 -export([rate_user/3,
          get_user_rate/1,
          delete_rate_point/2]).
@@ -26,6 +26,7 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
+-record(rateinfo, {guid, rates}).
 
 %%%===================================================================
 %%% API
@@ -47,6 +48,21 @@ delete_rate_point(UserGuid, RaterGuid) ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+setup_db() ->
+    Result = mnesia:create_table(rateinfo, [{disc_copies, [node() | nodes()]}, 
+                                            {attributes, record_info(fields, rateinfo)}]),
+    case Result of
+        {atomic, ok} ->
+            mnesia:wait_for_tables([rateinfo], 5000),
+            ok;
+        {aborted, {already_exists, _}} ->
+            mnesia:wait_for_tables([rateinfo], 5000),
+            ok;
+        {aborted, Reason} ->
+            erlang:error(Reason)
+        end.
+
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -80,9 +96,28 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State}.
+handle_call({delete_rate_point, UserGuid, RaterGuid}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_delete_rate_point(UserGuid, RaterGuid),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
+handle_call({get_user_rate, UserGuid}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_get_user_rate(UserGuid),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
+handle_call({rate_user, RaterGuid, TargetUserGuid, Rate}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_rate(RaterGuid, TargetUserGuid, Rate),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State}.
+
+%% handle_call(_Request, _From, State) ->
+%%     Reply = ok,
+%%     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -138,3 +173,39 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_delete_rate_point(UserGuid, RaterGuid) ->
+    ok.
+
+calculate_average_rate(Rates) ->
+    lists:sum([Point#rate_point.rate || Point <- Rates]) / length(Rates).
+
+inner_get_user_rate(UserGuid) ->
+    Trans = fun() ->
+                    Existance = mnesia:read({rateinfo, UserGuid}),
+                    case Existance of
+                        [] ->
+                            {ok, 0, []};
+                        [RateInfo] ->
+                            AveragePoint = calculate_average_rate(RateInfo#rateinfo.rates),
+                            {ok, AveragePoint, RateInfo#rateinfo.rates}
+                    end
+            end,
+    mnesia:activity(async_dirty, Trans).
+
+inner_rate(RaterGuid, TargetUserGuid, Rate) ->
+    Trans = fun() ->
+                    NewRatePoint = #rate_point{rater_guid = RaterGuid,
+                                               rate = Rate},
+                    Existance = mnesia:read({rateinfo, TargetUserGuid}),
+                    case Existance of
+                        [] ->
+                            mnesia:write(#rateinfo{guid = TargetUserGuid,
+                                                   rates = [NewRatePoint]}),
+                            ok;
+                        [OldRateInfo] ->
+                            mnesia:write(OldRateInfo#rateinfo{rates = [NewRatePoint | OldRateInfo#rateinfo.rates]}),
+                            ok
+                        end
+            end,
+    mnesia:activity(async_dirty, Trans).
+

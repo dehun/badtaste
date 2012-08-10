@@ -85,21 +85,30 @@ init([]) ->
 %% @end
 %%--------------------------------------------------------------------
 
-handle_call({is_registered, Login}, _From, State) ->
-    Reply = inner_is_registered(Login),
-    {reply, Reply, State};
-handle_call({auth, Login, Pass}, _From, State) ->
-    Reply = inner_auth(Login, Pass),
-    {reply, Reply, State};
-handle_call({register, Login, Pass}, _From, State) ->
-    Reply = inner_register(Login, Pass),
-    {reply, Reply, State};
+handle_call({is_registered, Login}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_is_registered(Login),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
+handle_call({auth, Login, Pass}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_auth(Login, Pass),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
+handle_call({register, Login, Pass}, From, State) ->
+    spawn_link(fun() ->
+                       Reply = inner_register(Login, Pass),
+                       gen_server:reply(From, Reply)
+               end),
+    {noreply, State};
 handle_call({drop_all_users}, _From, State) ->
     Reply = inner_drop_all_users(),
-    {reply, Reply, State};
-handle_call(_Request, _From, State) ->
-    Reply = ok,
     {reply, Reply, State}.
+%% handle_call(_Request, _From, State) ->
+%%     Reply = ok,
+%%     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -158,9 +167,6 @@ code_change(_OldVsn, State, _Extra) ->
 -record(authinfo, {guid, login, password}).
 
 setup_db() ->
-%    mnesia:stop(),
-%    mnesia:create_schema([node() | nodes()]),
-%    mnesia:start(),
     Result = mnesia:create_table(authinfo, [{disc_copies, [node() | nodes()]}, 
                                             {attributes, record_info(fields, authinfo)}]),
     case Result of

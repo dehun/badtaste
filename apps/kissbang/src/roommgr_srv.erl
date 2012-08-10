@@ -146,31 +146,27 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({drop_room, RoomGuid}, _From, State) ->
-    Reply = inner_drop_room(RoomGuid),
-    {reply, Reply, State};
-handle_call({drop_all}, _From, State) ->
-    Reply = inner_drop_all(),
-    {reply, Reply, State};
-handle_call({spawn_room}, _From, State) ->
-    Reply = inner_spawn_room(),
-    {reply, Reply, State};
-handle_call({join_room, UserGuid, RoomGuid}, _From, State) ->
-    Reply = inner_join_room(UserGuid, RoomGuid),
-    {reply, Reply, State};
-handle_call({leave_room, UserGuid}, _From, State) ->
-    Reply = inner_leave_room(UserGuid),
-    {reply, Reply, State};
-handle_call({get_room_for, UserGuid}, _From, State) ->
-    Reply = inner_get_room_for(UserGuid),
-    {reply, Reply, State};
-handle_call({get_room, RoomGuid}, _From, State) ->
-    Reply = inner_get_room(RoomGuid),
-    {reply, Reply, State}.
-
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
+handle_call({drop_room, RoomGuid}, From, State) ->
+    utils:acall(fun() -> inner_drop_room(RoomGuid) end, From),
+    {noreply, State};
+handle_call({drop_all}, From, State) ->
+    utils:acall(fun() -> inner_drop_all() end, From),
+    {noreply, State};
+handle_call({spawn_room}, From, State) ->
+    utils:acall(fun() -> inner_spawn_room() end, From),
+    {noreply, State};
+handle_call({join_room, UserGuid, RoomGuid}, From, State) ->
+    utils:acall(fun() -> inner_join_room(UserGuid, RoomGuid) end, From),
+    {noreply, State};
+handle_call({leave_room, UserGuid}, From, State) ->
+    utils:acall(fun() -> inner_leave_room(UserGuid) end, From),
+    {noreply, State};
+handle_call({get_room_for, UserGuid}, From, State) ->
+    utils:acall(inner_get_room_for(UserGuid), From),
+    {noreply, State};
+handle_call({get_room, RoomGuid}, From, State) ->
+    utils:acall(fun() ->     Reply = inner_get_room(RoomGuid) end, From),
+    {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
