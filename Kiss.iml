@@ -22,6 +22,11 @@
     <orderEntry type="library" name="greensock" level="project" />
     <orderEntry type="library" name="Common" level="project" />
     <orderEntry type="library" name="messageWindow" level="project" />
+    <orderEntry type="library" name="dailyBonus" level="project" />
+    <orderEntry type="library" name="messageWindow (2)" level="project" />
+    <orderEntry type="library" name="miniProfile" level="project" />
+    <orderEntry type="library" name="prizeTasks" level="project" />
+    <orderEntry type="library" name="ratings" level="project" />
   </component>
 </module>
 

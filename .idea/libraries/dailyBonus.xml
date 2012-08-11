@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dailyBonus">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/dailyBonus.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
