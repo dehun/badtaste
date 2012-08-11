@@ -21,12 +21,9 @@ import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
 
-public class Profile extends CasaSprite
+public class Profile extends BackGroundedPage
 {
-	private var bgLoad:SwfLoad;
-	private var background:CasaSprite = new CasaSprite();
 	private var foreground:ForegroundProfile = new ForegroundProfile();
-
 	private var tasksButton:SimpleButton = new TasksButton();
 	private var ratingsButton:SimpleButton = new RatingsButton();
 	private var zodiacSign:ZodiacSign = new ZodiacSign();
@@ -50,7 +47,6 @@ public class Profile extends CasaSprite
 
 	private function init():void
 	{
-		addChild(background);
 		setBackground(2);
 
 		playButton.x = 231;
@@ -124,19 +120,6 @@ public class Profile extends CasaSprite
 		fans.x = 532;
 		fans.y = 113;
 		addChild(fans);
-	}
-
-	public function setBackground(bgId:int):void
-	{
-		bgLoad = new SwfLoad(Config.RESOURCES_SERVER + "backgrounds/bg" + bgId + ".swf");
-		bgLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
-		bgLoad.start();
-	}
-
-	private function onBgLoaded(e:LoadEvent):void
-	{
-		background.removeChildren(true, true);
-		background.addChild(bgLoad.contentAsMovieClip);
 	}
 
 	//----------------------------------------------------------------------------------

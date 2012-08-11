@@ -51,7 +51,9 @@ public class Kiss extends Sprite
 		Cc.log("               Application started!");
 		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
-		initSocialIntegration();
+		//initSocialIntegration();
+//		view.showProfile();
+		view.showGameField();
 	}
 
 	private function initSocialIntegration():void
@@ -62,7 +64,6 @@ public class Kiss extends Sprite
 		 IntegrationProxy.init(loaderInfo.parameters, SocialNetworkTypes.AUTO_DETECT);	// Для релиза
 
 		IntegrationProxy.adapter.GetProfiles(IntegrationProxy.adapter.Me(), onGetProfiles);
-
 	}
 
 	private function onGetProfiles(res:Object):void

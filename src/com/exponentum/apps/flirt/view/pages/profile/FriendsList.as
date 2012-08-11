@@ -9,6 +9,7 @@ package com.exponentum.apps.flirt.view.pages.profile
 {
 import com.exponentum.utils.centerX;
 
+import flash.display.MovieClip;
 import flash.display.SimpleButton;
 import flash.events.MouseEvent;
 
@@ -23,10 +24,10 @@ public class FriendsList extends CasaSprite
 
 
 	//controls of friendlist
-	private var oneLeft:SimpleButton;
-	private var fastLeft:SimpleButton;
-	private var oneRight:SimpleButton;
-	private var fastRight:SimpleButton;
+	private var oneLeft:MovieClip;
+	private var fastLeft:MovieClip;
+	private var oneRight:MovieClip;
+	private var fastRight:MovieClip;
 
 	public function FriendsList()
 	{
