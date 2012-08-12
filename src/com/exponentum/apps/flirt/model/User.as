@@ -31,6 +31,10 @@ public class User
 	public var likes:Array = [];
 	public var liked:Array = [];
 
+	public var profileAvatarFrame:int = 1;
+	public var profileBackground:int = 1;
+	public var bestFansUID:int = 0;
+
 	public function User()
 	{
 

@@ -51,9 +51,7 @@ public class Kiss extends Sprite
 		Cc.log("               Application started!");
 		Cc.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
-		//initSocialIntegration();
-//		view.showProfile();
-		view.showGameField();
+		initSocialIntegration();
 	}
 
 	private function initSocialIntegration():void

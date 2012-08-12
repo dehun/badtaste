@@ -15,7 +15,8 @@ import org.casalib.display.CasaSprite;
 public class ProfileAvatar extends CasaSprite
 {
 	private var avatarHolder:ProfileAvatarHolder = new ProfileAvatarHolder();
-
+	private var _frame:int = 1;
+	private var _sex:int = 1;
 
 	public function ProfileAvatar()
 	{
@@ -43,6 +44,18 @@ public class ProfileAvatar extends CasaSprite
 	private function onMarkClick(e:MouseEvent):void
 	{
 		trace(" == >", e.currentTarget.name.split("mark")[1]);
+	}
+
+	public function set frame(value:int):void
+	{
+		avatarHolder.backFrame.gotoAndStop(value);
+		_frame = value;
+	}
+
+	public function set sex(value:int):void
+	{
+		avatarHolder.sex.gotoAndStop(value);
+		_sex = value;
 	}
 }
 }

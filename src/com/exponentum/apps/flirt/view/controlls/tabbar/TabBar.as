@@ -23,12 +23,12 @@ public class TabBar extends CasaSprite
 		addChild(tabsDistribution);
 	}
 
-	public function addTab(tab:TabButton, id:String, width:int = 0):void
+	public function addTab(tab:TabButton, label:String, id:String, width:int = 0):void
 	{
 		tabsDistribution.addChildWithDimensions(tab, width);
 		tabsDistribution.position();
 		tabs[id] = tab;
-
+		tab.label = label;
 		tab.addEventListener(TabButton.TAB_SELECTED, onTabSelected);
 	}
 

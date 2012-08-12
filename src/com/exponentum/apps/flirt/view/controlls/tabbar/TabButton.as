@@ -12,8 +12,10 @@ import com.exponentum.apps.flirt.model.Model;
 import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.text.TextField;
 
 import org.casalib.display.CasaSprite;
+import org.osmf.events.FacetValueChangeEvent;
 
 public class TabButton extends CasaSprite
 {
@@ -23,10 +25,14 @@ public class TabButton extends CasaSprite
 	public static const TAB_SELECTED:String = "tabSelected";
 
 	private var _mc:MovieClip;
+	
+	private var _label:String = "";
+	
 	public function TabButton(mc:MovieClip)
 	{
 		_mc = mc;
 		addChild(mc);
+		if(_mc.label) (_mc.label as TextField).mouseEnabled = false;
 
 		enable();
 	}
@@ -76,6 +82,12 @@ public class TabButton extends CasaSprite
 	{
 		disable();
 		dispatchEvent(new Event(TAB_SELECTED));
+	}
+
+	public function set label(value:String):void
+	{
+		_label = value;
+		_mc.label.text = value;
 	}
 }
 }

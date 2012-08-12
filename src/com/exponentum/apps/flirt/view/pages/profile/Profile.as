@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile
 {
+import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
@@ -80,6 +81,7 @@ public class Profile extends BackGroundedPage
 		foreground.x = -10;
 		foreground.y = -10;
 		addChild(foreground);
+		foreground.mouseChildren = foreground.mouseEnabled = false;
 	}
 
 	private function createBottomPanel():void
@@ -93,6 +95,8 @@ public class Profile extends BackGroundedPage
 	{
 		profileAvatar.x = 56;
 		profileAvatar.y = 133;
+		profileAvatar.frame = _user.profileAvatarFrame;
+		profileAvatar.sex = _user.sex;
 		addChild(profileAvatar);
 	}
 

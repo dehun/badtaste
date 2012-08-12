@@ -11,6 +11,8 @@ import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.utils.getDefinitionByName;
 
+import org.osmf.events.FacetValueChangeEvent;
+
 /**
  * ...
  * @author @author Alexandr Glagoliev <alex.glagoliev@gmail.com>
@@ -96,6 +98,14 @@ public class Preloader extends MovieClip
 
 	private function loadingFinished():void
 	{
+		bg.visible = false;
+		logo.visible = false;
+		pbBackground.visible = false;
+		pbBar.visible = false;
+		pbMask.visible = false;
+		preloaderText.visible = false;
+		notationText.visible = false;
+		
 		removeEventListener(Event.ENTER_FRAME, checkFrame);
 		loaderInfo.removeEventListener(ProgressEvent.PROGRESS, progress);
 		loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);

@@ -9,6 +9,8 @@ package com.exponentum.apps.flirt.view.pages.profile
 {
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
+import com.exponentum.apps.flirt.view.pages.profile.messages.MessagesList;
+import com.exponentum.apps.flirt.view.pages.profile.news.NewsList;
 
 import flash.events.Event;
 
@@ -25,16 +27,19 @@ public class BottomPanel extends CasaSprite
 	private var tabBar:TabBar = new TabBar();
 	private var container:CasaSprite = new CasaSprite();
 	private var friendsList:FriendsList = new FriendsList();
+	private var messageList:MessagesList = new MessagesList();
+	private var newsList:NewsList = new NewsList();
 
 	public function BottomPanel()
 	{
 		tabBar.x = 49;
 		addChild(tabBar);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), SOCIAL, 130);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), FRIENDS, 130);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), MESSAGES, 130);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), NEWS, 130);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), ADD_FRIEND, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Топ 100", SOCIAL, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Друзья", FRIENDS, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Сообщения", MESSAGES, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Новости", NEWS, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Добавить", ADD_FRIEND, 130);
+
 		tabBar.addEventListener(SOCIAL, onSocialTabSelected);
 		tabBar.addEventListener(FRIENDS, onFriendsTabSelected);
 		tabBar.addEventListener(MESSAGES, onMessagesTabSelected);
@@ -66,6 +71,9 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(NEWS);
 		clearContainer();
+		container.mouseChildren = true;
+		container.mouseEnabled = true;
+		container.addChild(newsList);
 	}
 
 	private function onSocialTabSelected(e:Event):void
@@ -87,6 +95,9 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(MESSAGES);
 		clearContainer();
+		container.mouseChildren = false;
+		container.mouseEnabled = false;
+		container.addChild(messageList);
 	}
 }
 }
