@@ -30,10 +30,14 @@ public class User
 	public var sympathies:Array = [];
 	public var likes:Array = [];
 	public var liked:Array = [];
+	public var presentIds:Array = [1, 2, 3];
 
 	public var profileAvatarFrame:int = 1;
 	public var profileBackground:int = 1;
 	public var bestFansUID:int = 0;
+	public var gotGifts:int = 2;
+	public var tasksDone:int = 4;
+	public var placeInRating:int = 10;
 
 	public function User()
 	{

@@ -34,11 +34,11 @@ public class BottomPanel extends CasaSprite
 	{
 		tabBar.x = 49;
 		addChild(tabBar);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), "Топ 100", SOCIAL, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Топ 100", SOCIAL, 130, true);
 		tabBar.addTab(new TabButton(new ProfileTabButton()), "Друзья", FRIENDS, 130);
 		tabBar.addTab(new TabButton(new ProfileTabButton()), "Сообщения", MESSAGES, 130);
 		tabBar.addTab(new TabButton(new ProfileTabButton()), "Новости", NEWS, 130);
-		tabBar.addTab(new TabButton(new ProfileTabButton()), "Добавить", ADD_FRIEND, 130);
+		tabBar.addTab(new TabButton(new ProfileTabButton()), "Добавить", ADD_FRIEND, 130, true);
 
 		tabBar.addEventListener(SOCIAL, onSocialTabSelected);
 		tabBar.addEventListener(FRIENDS, onFriendsTabSelected);
@@ -64,30 +64,24 @@ public class BottomPanel extends CasaSprite
 	private function onAddFriendsTabSelected(e:Event):void
 	{
 		trace(ADD_FRIEND);
-		clearContainer();
 	}
 
 	private function onNewsTabSelected(e:Event):void
 	{
 		trace(NEWS);
 		clearContainer();
-		container.mouseChildren = true;
-		container.mouseEnabled = true;
 		container.addChild(newsList);
 	}
 
 	private function onSocialTabSelected(e:Event):void
 	{
 		trace(SOCIAL);
-		clearContainer();
 	}
 
 	private function onFriendsTabSelected(e:Event):void
 	{
 		trace(FRIENDS);
 		clearContainer();
-		container.mouseChildren = false;
-		container.mouseEnabled = false;
 		container.addChild(friendsList);
 	}
 
@@ -95,8 +89,6 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(MESSAGES);
 		clearContainer();
-		container.mouseChildren = false;
-		container.mouseEnabled = false;
 		container.addChild(messageList);
 	}
 }

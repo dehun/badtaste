@@ -12,23 +12,26 @@ import flash.utils.Dictionary;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
+import org.osmf.events.FacetValueChangeEvent;
 
 public class TabBar extends CasaSprite
 {
 	private var tabsDistribution:Distribution = new Distribution();
 	private var tabs:Dictionary = new Dictionary();
+	private var doNotToggle:Boolean = false;
 
 	public function TabBar()
 	{
 		addChild(tabsDistribution);
 	}
 
-	public function addTab(tab:TabButton, label:String, id:String, width:int = 0):void
+	public function addTab(tab:TabButton, label:String, id:String, width:int = 0, doNotToggle:Boolean = false):void
 	{
 		tabsDistribution.addChildWithDimensions(tab, width);
 		tabsDistribution.position();
 		tabs[id] = tab;
 		tab.label = label;
+		tab.toggle = !doNotToggle;
 		tab.addEventListener(TabButton.TAB_SELECTED, onTabSelected);
 	}
 
@@ -38,6 +41,7 @@ public class TabBar extends CasaSprite
 		{
 			if(tabs[id] == e.currentTarget){
 				dispatchEvent(new Event(id));
+				if(!e.currentTarget.toggle) (tabs[id] as TabButton).deselect();
 			}else{
 				(tabs[id] as TabButton).deselect();
 			}

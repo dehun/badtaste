@@ -23,10 +23,11 @@ public class TabButton extends CasaSprite
 	public static const HIGHLIGHTED:String = "highlighted";
 	public static const SELECTED:String = "selected";
 	public static const TAB_SELECTED:String = "tabSelected";
-
+	
 	private var _mc:MovieClip;
 	
 	private var _label:String = "";
+	public var toggle:Boolean = true;
 	
 	public function TabButton(mc:MovieClip)
 	{

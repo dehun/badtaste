@@ -12,6 +12,7 @@ import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.User;
+import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 
 import flash.display.DisplayObject;
 import flash.display.SimpleButton;
@@ -20,7 +21,10 @@ import flash.events.MouseEvent;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
+import org.casalib.layout.Distribution;
+import org.casalib.load.ImageLoad;
 import org.casalib.load.SwfLoad;
+import org.osmf.events.LoaderEvent;
 
 public class Profile extends BackGroundedPage
 {
@@ -37,6 +41,8 @@ public class Profile extends BackGroundedPage
 	private var fans:Fans = new Fans();
 	private var bottomPanel:BottomPanel = new BottomPanel();
 
+	private var presentsContainer:Distribution = new Distribution();
+
 	private var _user:User;
 
 	public function Profile(user:User)
@@ -48,7 +54,7 @@ public class Profile extends BackGroundedPage
 
 	private function init():void
 	{
-		setBackground(2);
+		setBackground(_user.profileBackground);
 
 		playButton.x = 231;
 		playButton.y = -1;
@@ -68,20 +74,43 @@ public class Profile extends BackGroundedPage
 		addChild(zodiacSign);
 		zodiacSign.gotoAndStop(_user.zodiac);
 
-		shelf.x = 60;
-		shelf.y = 455;
-		addChild(shelf);
-
 		createProfileDetails();
 		createAchievementsPanel();
 		createProfileAvatar();
 		createFansBlock();
 		createBottomPanel();
+		createPresents();
 
 		foreground.x = -10;
 		foreground.y = -10;
 		addChild(foreground);
 		foreground.mouseChildren = foreground.mouseEnabled = false;
+	}
+
+	private function createPresents():void
+	{
+		shelf.x = 60;
+		shelf.y = 455;
+		addChild(shelf);
+		
+		if(!contains(presentsContainer)){
+			presentsContainer.x = shelf.x;
+			presentsContainer.y = shelf.y + 25;
+			addChild(presentsContainer);
+		}
+		for (var i:int = 0; i < _user.presentIds.length; i++)
+		{
+			var present:Present = new Present(_user.presentIds[i]);
+			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
+			presentsContainer.addChildWithDimensions(present);
+		}
+	}
+
+	private function onPresentLoaded(e:Event):void
+	{
+		presentsContainer.position();
+		for (var i:int = 0; i < presentsContainer.numChildren; i++)
+			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 	}
 
 	private function createBottomPanel():void
@@ -98,12 +127,22 @@ public class Profile extends BackGroundedPage
 		profileAvatar.frame = _user.profileAvatarFrame;
 		profileAvatar.sex = _user.sex;
 		addChild(profileAvatar);
+
+		var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink);
+		avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
+			profileAvatar.photo = avatarLoad.contentAsBitmap;
+		});
+		avatarLoad.start();
+		
 	}
 
 	private function createAchievementsPanel():void
 	{
 		achievementsPanel.x = 250;
 		achievementsPanel.y = 270;
+		achievementsPanel.giftsText.text = _user.gotGifts.toString();
+		achievementsPanel.medalsText.text = _user.tasksDone.toString();
+		achievementsPanel.ratingText.text = _user.placeInRating.toString();
 		addChild(achievementsPanel);
 	}
 

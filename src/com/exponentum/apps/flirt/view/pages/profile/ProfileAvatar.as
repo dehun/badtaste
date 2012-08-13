@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile
 {
+import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.events.MouseEvent;
 
@@ -17,6 +18,7 @@ public class ProfileAvatar extends CasaSprite
 	private var avatarHolder:ProfileAvatarHolder = new ProfileAvatarHolder();
 	private var _frame:int = 1;
 	private var _sex:int = 1;
+	private var _photo:Bitmap;
 
 	public function ProfileAvatar()
 	{
@@ -56,6 +58,14 @@ public class ProfileAvatar extends CasaSprite
 	{
 		avatarHolder.sex.gotoAndStop(value);
 		_sex = value;
+	}
+
+	public function set photo(value:Bitmap):void
+	{
+		_photo = value;
+		while(avatarHolder.avatarContainer.numChildren) avatarHolder.avatarContainer.removeChildAt(0);
+		avatarHolder.avatarContainer.addChild(_photo);
+		avatarHolder.sex.visible = false;
 	}
 }
 }
