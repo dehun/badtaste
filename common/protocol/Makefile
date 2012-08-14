@@ -11,3 +11,4 @@ erlang_admin:
 
 python_tests:
 	python ./tools/protogen/pgen.py --lang python --format json --output=../../apps/kissbang/test/pytests/ --proto ./kissbang_proto.py
+	python ./tools/protogen/pgen.py --lang python --format json --output=../../apps/kissbang/test/pytests/ --proto ./admin_proto.py
