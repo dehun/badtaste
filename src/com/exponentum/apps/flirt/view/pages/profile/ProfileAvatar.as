@@ -19,6 +19,7 @@ public class ProfileAvatar extends CasaSprite
 	private var _frame:int = 1;
 	private var _sex:int = 1;
 	private var _photo:Bitmap;
+	private var _isVIP:Boolean;
 
 	public function ProfileAvatar()
 	{
@@ -66,6 +67,12 @@ public class ProfileAvatar extends CasaSprite
 		while(avatarHolder.avatarContainer.numChildren) avatarHolder.avatarContainer.removeChildAt(0);
 		avatarHolder.avatarContainer.addChild(_photo);
 		avatarHolder.sex.visible = false;
+	}
+
+	public function set isVIP(value:Boolean):void
+	{
+		_isVIP = value;
+		avatarHolder.crown.visible = _isVIP;
 	}
 }
 }

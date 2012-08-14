@@ -52,15 +52,30 @@ public class Scroll extends CasaSprite
 		downButton.addEventListener(MouseEvent.CLICK, onDownClick);
 		scrubber.addEventListener(MouseEvent.MOUSE_DOWN, onScrubberDown);
 		scrubber.addEventListener(MouseEvent.MOUSE_UP, onScrubberUp);
+		scrubber.addEventListener(MouseEvent.MOUSE_OVER, onScrubberOver);
+		scrubber.addEventListener(MouseEvent.MOUSE_OUT, onScrubberOut);
+		scrubber.gotoAndStop(1);
+	}
+
+	private function onScrubberOut(e:MouseEvent):void
+	{
+		scrubber.gotoAndStop(1);
+	}
+
+	private function onScrubberOver(e:MouseEvent):void
+	{
+		scrubber.gotoAndStop(2);
 	}
 
 	private function onScrubberUp(e:MouseEvent):void
 	{
 		scrubber.stopDrag();
+		scrubber.gotoAndStop(1);
 	}
 
 	private function onScrubberDown(e:MouseEvent):void
 	{
+		scrubber.gotoAndStop(3);
 		scrubber.startDrag(true, new Rectangle(scrollBackground.x, scrollBackground.y + scrubber.height / 2, 0, scrollBackground.height - scrubber.height));
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, onScrubberUp);
 	}

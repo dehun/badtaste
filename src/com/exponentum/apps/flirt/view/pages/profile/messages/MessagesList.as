@@ -25,10 +25,10 @@ public class MessagesList extends CasaSprite
 
 	private function initAssets():void
 	{
-		while(bg.numChildren > 6) bg.removeChildAt(bg.numChildren - 1);
-		
+		while(bg.numChildren > 1) bg.removeChildAt(bg.numChildren - 1);
+
 		bg.addChild(messagesBG);
-		messagesBG.y = 70;
+		messagesBG.y = 63;
 		centerX(messagesBG, bg.width);
 
 		createScroll();
@@ -36,9 +36,9 @@ public class MessagesList extends CasaSprite
 
 	private function createScroll():void
 	{
-		var scr:Scroll = new Scroll(70);
-		scr.x = messagesBG.width + 35;
-		scr.y = messagesBG.y + 40;
+		var scr:Scroll = new Scroll(75);
+		scr.x = messagesBG.width + 40;
+		scr.y = messagesBG.y + 27;
 		addChild(scr);
 	}
 }

@@ -1,5 +1,7 @@
 package com.exponentum.apps.flirt.model
 {
+import com.exponentum.apps.flirt.model.profile.User;
+
 import flash.filters.ColorMatrixFilter;
 
 public class Model

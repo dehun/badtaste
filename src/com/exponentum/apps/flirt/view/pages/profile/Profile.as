@@ -11,7 +11,7 @@ import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
-import com.exponentum.apps.flirt.model.User;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 
 import flash.display.DisplayObject;
@@ -126,6 +126,7 @@ public class Profile extends BackGroundedPage
 		profileAvatar.y = 133;
 		profileAvatar.frame = _user.profileAvatarFrame;
 		profileAvatar.sex = _user.sex;
+		profileAvatar.isVIP = _user.isVIP;
 		addChild(profileAvatar);
 
 		var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink);

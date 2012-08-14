@@ -24,10 +24,10 @@ public class FriendsList extends CasaSprite
 
 
 	//controls of friendlist
-	private var oneLeft:MovieClip;
-	private var fastLeft:MovieClip;
-	private var oneRight:MovieClip;
-	private var fastRight:MovieClip;
+	private var oneLeft:SimpleButton;
+	private var fastLeft:SimpleButton;
+	private var oneRight:SimpleButton;
+	private var fastRight:SimpleButton;
 
 	public function FriendsList()
 	{
