@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 26 Jun 2012 by  <>
+%%% Created : 10 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(handlers_sup).
+-module(vip_sup).
 
 -behaviour(supervisor).
 
@@ -60,59 +60,12 @@ init([]) ->
     Shutdown = 2000,
     Type = worker,
 
-    Handlers = [{HandlerName, {HandlerName, start_link, []},
-                Restart, Shutdown, Type, [HandlerName]} || HandlerName <- get_all_handlers()],
+    ServerName = 'vip_srv',
+    AChild = {ServerName, {ServerName, start_link, []},
+              Restart, Shutdown, Type, [ServerName]},
 
-    {ok, {SupFlags, Handlers}}.
+    {ok, {SupFlags, [AChild]}}.
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-get_all_handlers() ->
-    lists:flatten(['ping_handler_srv',
-                   get_admin_handlers(),
-                   get_room_handlers(),
-                   get_user_info_handlers(),
-                   get_kiss_game_handlers(),
-                   get_time_handlers(),
-                   get_bank_handlers(),
-                   get_rate_handlers(),
-                   get_chat_handlers()]).
-    
-
-
-get_user_info_handlers() ->
-    ['get_user_info_handler_srv'].
-
-get_admin_handlers() ->
-    ['touch_user_info_handler_srv'].
-
-get_room_handlers() ->
-    ['join_main_roomqueue_handler_srv',
-     'join_tagged_roomqueue_handler_srv'].
-
-get_chat_handlers() ->
-    ['send_chat_message_to_room_handler_srv'].
-
-get_kiss_game_handlers() ->
-    ['kiss_handler_srv',
-     'refuse_to_kiss_handler_srv',
-     'swingbottle_handler_srv'].
-
-get_time_handlers() ->
-    ['get_current_time_handler_srv'].
-
-get_bank_handlers() ->
-    ['check_bank_balance_handler_srv'].
-
-get_rate_handlers() ->
-    ['get_user_rate_handler_srv',
-     'delete_rate_point_handler_srv',
-     'rate_user_handler_srv'].
-
-get_gift_handlers() ->
-    ['get_my_gifts_handler_srv',
-     'present_gift_handler_srv'].
-
-get_vip_handlers() ->
-    ['get_vip_points_handler_srv'].

@@ -210,3 +210,12 @@ class GetMyGifts(pgMessage):
 
 class OnGotMyGifts(pgMessage):
     gifts = pgList(pgString())
+
+# vip
+## get vip points
+class GetVipPoints(pgMessage):
+    targetUserGuid = pgString()
+
+class OnGotVipPoints(pgMessage):
+    ownerUserGuid = pgString()
+    points = pgInteger()

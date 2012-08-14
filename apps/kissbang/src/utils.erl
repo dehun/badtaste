@@ -1,6 +1,6 @@
 -module(utils).
 
--export([acall/2]).
+-export([acall/2, unix_time/0]).
 
 acall(Fun, From) ->
     spawn_link(fun() ->
@@ -9,3 +9,6 @@ acall(Fun, From) ->
                end).
 
 
+unix_time() ->
+    {_, CurrentTime, _} = erlang:now(),
+    CurrentTime.

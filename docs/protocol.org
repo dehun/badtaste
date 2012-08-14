@@ -87,3 +87,7 @@
 ** get gift list
    -> GetMyGifts()
    <- OnGotMyGifts(giftsGuids = [])
+* vip
+** get vip points
+   -> GetVipPoints(targetUserGuid = "someguid")
+   <- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)

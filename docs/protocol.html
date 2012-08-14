@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-07 10:47:41 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-14 12:01:45 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -157,6 +157,11 @@ lang="en" xml:lang="en">
 <li><a href="#sec-10-1">10.1 present gift </a></li>
 <li><a href="#sec-10-2">10.2 when gift presented to somebody in room </a></li>
 <li><a href="#sec-10-3">10.3 get gift list </a></li>
+</ul>
+</li>
+<li><a href="#sec-11">11 vip </a>
+<ul>
+<li><a href="#sec-11-1">11.1 get vip points </a></li>
 </ul>
 </li>
 </ul>
@@ -483,7 +488,7 @@ lang="en" xml:lang="en">
 <h3 id="sec-10-1"><span class="section-number-3">10.1</span> present gift </h3>
 <div class="outline-text-3" id="text-10-1">
 
-<p>    -&gt; PresentGift(targetUserGuid, GiftGuid)
+<p>   -&gt; PresentGift(targetUserGuid, GiftGuid)
    &lt;- OnGotGift(giftSenderGuid, GiftGuid)
 </p></div>
 
@@ -508,11 +513,29 @@ lang="en" xml:lang="en">
    &lt;- OnGotMyGifts(giftsGuids = [])
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> vip </h2>
+<div class="outline-text-2" id="text-11">
+
+
+</div>
+
+<div id="outline-container-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> get vip points </h3>
+<div class="outline-text-3" id="text-11-1">
+
+<p>   -&gt; GetVipPoints(targetUserGuid = "someguid")
+   &lt;- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-07 10:47:41 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-14 12:01:45 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

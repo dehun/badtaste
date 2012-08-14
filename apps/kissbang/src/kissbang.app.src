@@ -18,6 +18,8 @@
          {avatar_base_url, "http://lolcahost:8000/"},
          {room_sex_parity, 10},
          {room_limit_to_start, 2},
+         {vip_update_time, 3600},
+         {vip_points_decrease_rate, 50},
          {gifts_cfg_url, "http://178.162.190.208/cfg/gifts.json"},
          {room_maximum_users, 10}]}
  ]}.
