@@ -210,6 +210,12 @@ decrease_points_with_time(OldVipInfo) ->
             decrease_points_with_time(OldVipInfo#vipinfo{points = OldVipInfo#vipinfo.points - DecreaseRate,
                                                          last_update_time = OldVipInfo#vipinfo.last_update_time + UpdateTime});
         true ->
-            OldVipInfo
+            AreBelowZero = OldVipInfo#vipinfo.points < 0,
+            if 
+                AreBelowZero ->
+                    OldVipInfo#vipinfo{points = 0};
+                true ->
+                    OldVipInfo
+            end
     end.
     

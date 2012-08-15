@@ -91,3 +91,24 @@
 ** get vip points
    -> GetVipPoints(targetUserGuid = "someguid")
    <- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+* sympathy
+** get user symphaties
+   -> GetUserSympathies(targetUserGuid = "someguid")
+   <- OnGotUserSympathies(ownerUserGuid = "someguid", sympathies = [Sympathy(kisserGuid = "one", kisses = 10), Sympathy(kisserGuid = "two", kisses = 20)])
+* decore
+** set new decore
+   -> SetDecore(newBackgroundGuid = "10qwe", newFrameGuid = "20asd")
+** get decore
+   -> GetDecoreFor(targetUserGuid = "someguid")
+   <- OnGotDecore(ownerUserGuid = "someguid", backgroundGuid = "10qwe", frameGuid = "20asd")
+* mail
+** send mail
+   -> SendMail(receiverGuid = "someguid", subject = "", body = "")
+**  on got message in game
+    <- OnGotNewMail(senderGuid = "anotherguid", subject="lolwhat", body="wazzap")
+** check mailbox
+   -> CheckMailbox()
+   <- OnGotMailbox(mails = [IncomingMail(mailGuid = "somemailguid", senderGuid = "", subject = "zxap", body = "wa", isRead = "false")])
+** mark message as read
+   -> MarkMailAsRead(targetMailGuid = "somemailguid")
+   <- OnMessageMarkedAsRead(markedMailGuid = "somemailguid")

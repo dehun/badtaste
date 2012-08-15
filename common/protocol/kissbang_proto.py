@@ -219,3 +219,64 @@ class GetVipPoints(pgMessage):
 class OnGotVipPoints(pgMessage):
     ownerUserGuid = pgString()
     points = pgInteger()
+
+# sympathy
+## get user sympathies
+class GetUserSympathies(pgMessage):
+    targetUserGuid = pgString()
+
+class Sympathy(pgMessage):
+    kisserGuid = pgString()
+    kisses = pgInteger()
+
+class OnGotUserSympathies(pgMessage):
+    ownerUserGuid = pgString()
+    sympathies = pgList(pgMessage())
+
+#decore
+class SetDecore(pgMessage):
+    newBackgroundGuid = pgString()
+    newFrameGuid = pgString()
+
+class GetDecoreFor(pgMessage):
+    targetUserGuid = pgString()
+
+class OnGotDecore(pgMessage):
+    ownerUserGuid = pgString()
+    backgroundGuid = pgString()
+    frameGuid = pgString()
+
+# mail
+## send mail
+class SendMail(pgMessage):
+    receiverGuid = pgString()
+    subject = pgString()
+    body = pgString()
+
+class OnGotNewMail(pgMessage):
+    senderGuid = pgString()
+    subject = pgString()
+    body = pgString()
+
+## read mail
+### mailbox
+class CheckMailbox(pgMessage):
+    pass
+
+class IncomingMail(pgMessage):
+    mailGuid = pgString()
+    senderGuid = pgString()
+    subject = pgString()
+    body = pgString()
+    isRead = pgString()
+
+class OnGotMailbox(pgMessage):
+    mails = pgList(pgMessage())
+
+### mark as read
+class MarkMailAsRead(pgMessage):
+    targetMailGuid = pgString()
+
+class OnMailMarkedAsRead(pgMessage):
+    markedMailGuid = pgString()
+

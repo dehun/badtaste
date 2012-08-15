@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-14 12:01:45 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-15 16:52:33 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -162,6 +162,25 @@ lang="en" xml:lang="en">
 <li><a href="#sec-11">11 vip </a>
 <ul>
 <li><a href="#sec-11-1">11.1 get vip points </a></li>
+</ul>
+</li>
+<li><a href="#sec-12">12 sympathy </a>
+<ul>
+<li><a href="#sec-12-1">12.1 get user symphaties </a></li>
+</ul>
+</li>
+<li><a href="#sec-13">13 decore </a>
+<ul>
+<li><a href="#sec-13-1">13.1 set new decore </a></li>
+<li><a href="#sec-13-2">13.2 get decore </a></li>
+</ul>
+</li>
+<li><a href="#sec-14">14 mail </a>
+<ul>
+<li><a href="#sec-14-1">14.1 send mail </a></li>
+<li><a href="#sec-14-2">14.2 on got message in game </a></li>
+<li><a href="#sec-14-3">14.3 check mailbox </a></li>
+<li><a href="#sec-14-4">14.4 mark message as read </a></li>
 </ul>
 </li>
 </ul>
@@ -531,11 +550,102 @@ lang="en" xml:lang="en">
    &lt;- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> sympathy </h2>
+<div class="outline-text-2" id="text-12">
+
+
+</div>
+
+<div id="outline-container-12-1" class="outline-3">
+<h3 id="sec-12-1"><span class="section-number-3">12.1</span> get user symphaties </h3>
+<div class="outline-text-3" id="text-12-1">
+
+<p>   -&gt; GetUserSympathies(targetUserGuid = "someguid")
+   &lt;- OnGotUserSympathies(ownerUserGuid = "someguid", sympathies = [Sympathy(kisserGuid = "one", kisses = 10), Sympathy(kisserGuid = "two", kisses = 20)])
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> decore </h2>
+<div class="outline-text-2" id="text-13">
+
+
+</div>
+
+<div id="outline-container-13-1" class="outline-3">
+<h3 id="sec-13-1"><span class="section-number-3">13.1</span> set new decore </h3>
+<div class="outline-text-3" id="text-13-1">
+
+<p>   -&gt; SetDecore(newBackgroundGuid = "10qwe", newFrameGuid = "20asd")
+</p></div>
+
+</div>
+
+<div id="outline-container-13-2" class="outline-3">
+<h3 id="sec-13-2"><span class="section-number-3">13.2</span> get decore </h3>
+<div class="outline-text-3" id="text-13-2">
+
+<p>   -&gt; GetDecoreFor(targetUserGuid = "someguid")
+   &lt;- OnGotDecore(ownerUserGuid = "someguid", backgroundGuid = "10qwe", frameGuid = "20asd")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> mail </h2>
+<div class="outline-text-2" id="text-14">
+
+
+</div>
+
+<div id="outline-container-14-1" class="outline-3">
+<h3 id="sec-14-1"><span class="section-number-3">14.1</span> send mail </h3>
+<div class="outline-text-3" id="text-14-1">
+
+<p>   -&gt; SendMail(receiverGuid = "someguid", subject = "", body = "")
+</p></div>
+
+</div>
+
+<div id="outline-container-14-2" class="outline-3">
+<h3 id="sec-14-2"><span class="section-number-3">14.2</span> on got message in game </h3>
+<div class="outline-text-3" id="text-14-2">
+
+<p>    &lt;- OnGotNewMail(senderGuid = "anotherguid", subject="lolwhat", body="wazzap")
+</p></div>
+
+</div>
+
+<div id="outline-container-14-3" class="outline-3">
+<h3 id="sec-14-3"><span class="section-number-3">14.3</span> check mailbox </h3>
+<div class="outline-text-3" id="text-14-3">
+
+<p>   -&gt; CheckMailbox()
+   &lt;- OnGotMailbox(mails = [IncomingMail(mailGuid = "somemailguid", senderGuid = "", subject = "zxap", body = "wa", isRead = "false")])
+</p></div>
+
+</div>
+
+<div id="outline-container-14-4" class="outline-3">
+<h3 id="sec-14-4"><span class="section-number-3">14.4</span> mark message as read </h3>
+<div class="outline-text-3" id="text-14-4">
+
+<p>   -&gt; MarkMailAsRead(targetMailGuid = "somemailguid")
+   &lt;- OnMailMarkedAsRead(markedMailGuid = "somemailguid")
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-14 12:01:45 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-15 16:52:33 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

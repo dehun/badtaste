@@ -19,18 +19,20 @@ def print_info(Info):
 
 def random_string():
     chars=string.ascii_uppercase + string.digits
-    size = int(math.floor(random.uniform(0, 16)))
+    size = random_int(1, 16)
     return ''.join(random.choice(chars) for x in range(size))
+
+def random_int(begin, end):
+    return int(math.floor(random.uniform(begin, end)))
 
 def random_bool():
     if random.random() < 0.5:
         return "true"
     else:
         return "false"
-        
 
 def random_date():
-    return random_string()
+    return "%s.%s.%s" % (random_int(1, 28), random_int(1, 11), random_int(1990, 2010))
 
 def register_user():
     Info = admin_messaging.UserInfo(city = random_string(),
