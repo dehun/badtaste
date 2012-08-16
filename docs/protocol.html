@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-15 16:52:33 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-16 11:48:47 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -181,6 +181,12 @@ lang="en" xml:lang="en">
 <li><a href="#sec-14-2">14.2 on got message in game </a></li>
 <li><a href="#sec-14-3">14.3 check mailbox </a></li>
 <li><a href="#sec-14-4">14.4 mark message as read </a></li>
+</ul>
+</li>
+<li><a href="#sec-15">15 followers </a>
+<ul>
+<li><a href="#sec-15-1">15.1 buy following </a></li>
+<li><a href="#sec-15-2">15.2 get user followers </a></li>
 </ul>
 </li>
 </ul>
@@ -638,14 +644,42 @@ lang="en" xml:lang="en">
 <div class="outline-text-3" id="text-14-4">
 
 <p>   -&gt; MarkMailAsRead(targetMailGuid = "somemailguid")
-   &lt;- OnMailMarkedAsRead(markedMailGuid = "somemailguid")
+   &lt;- OnMessageMarkedAsRead(markedMailGuid = "somemailguid")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> followers </h2>
+<div class="outline-text-2" id="text-15">
+
+
+</div>
+
+<div id="outline-container-15-1" class="outline-3">
+<h3 id="sec-15-1"><span class="section-number-3">15.1</span> buy following </h3>
+<div class="outline-text-3" id="text-15-1">
+
+<p>   -&gt; BuyFollowing(targetUserGuid = "someguid")
+   &lt;- OnFollowingBought(boughtUserGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-15-2" class="outline-3">
+<h3 id="sec-15-2"><span class="section-number-3">15.2</span> get user followers </h3>
+<div class="outline-text-3" id="text-15-2">
+
+<p>   -&gt; GetUserFollowers(targetUserGuid = "someguid")
+   &lt;- OnGotUserFollowers(ownerUserGuid = "someguid", currentFollower = "someguid2", formFollowers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
 </p></div>
 </div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-15 16:52:33 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-16 11:48:47 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>

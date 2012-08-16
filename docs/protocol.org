@@ -112,3 +112,10 @@
 ** mark message as read
    -> MarkMailAsRead(targetMailGuid = "somemailguid")
    <- OnMessageMarkedAsRead(markedMailGuid = "somemailguid")
+* followers
+** buy following
+   -> BuyFollowing(targetUserGuid = "someguid")
+   <- OnFollowingBought(boughtUserGuid = "someguid")
+** get user followers
+   -> GetUserFollowers(targetUserGuid = "someguid")
+   <- OnGotUserFollowers(ownerUserGuid = "someguid", currentFollower = "someguid2", formFollowers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
