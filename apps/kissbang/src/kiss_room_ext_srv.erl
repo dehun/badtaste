@@ -124,6 +124,8 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
     if
         AreAllKissed ->
             log_srv:debug("[room ~p] all are kissed. moving to next roung ", [self()]),
+            sympathy_srv:add_sympathy(element(2, NewCurrentState#kiss_mode_state.kisser),
+                                      element(2, NewCurrentState#kiss_mode_state.victim)),
             LastSwinger = NewCurrentState#kiss_mode_state.last_swinger,
             {next_state, swinger_select_mode, 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};

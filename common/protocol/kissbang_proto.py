@@ -280,3 +280,20 @@ class MarkMailAsRead(pgMessage):
 class OnMailMarkedAsRead(pgMessage):
     markedMailGuid = pgString()
 
+# followers
+## buy following
+class BuyFollowing(pgMessage):
+    targetUserGuid = pgString()
+
+class OnFollowingBought(pgMessage):
+    boughtUserGuid = pgString()
+
+## get user followers
+class GetUserFollowers(pgMessage):
+    targetUserGuid = pgString()
+
+class OnGotUserFollowers(pgMessage):
+    ownerUserGuid = pgString()
+    rebuyPrice = pgInteger()
+    currentFollower = pgString()
+    formFollowers = pgList(pgString())

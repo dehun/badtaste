@@ -21,5 +21,6 @@
          {vip_update_time, 3600},
          {vip_points_decrease_rate, 50},
          {gifts_cfg_url, "http://178.162.190.208/cfg/gifts.json"},
+         {maximum_sympathies, 150},
          {room_maximum_users, 10}]}
  ]}.
