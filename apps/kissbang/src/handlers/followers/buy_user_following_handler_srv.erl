@@ -1,21 +1,17 @@
 %%%-------------------------------------------------------------------
-%
-%% @author  <>
+%%% @author  <>
 %%% @copyright (C) 2012, 
 %%% @doc
 %%%
 %%% @end
 %%% Created : 17 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(follower_srv).
+-module(buy_user_following_handler_srv).
 
 -behaviour(gen_server).
 
 %% API
--export([start_link/0,
-        setup_db/0]).
--export([buy_following/2,
-         get_followers/1]).
+-export([start_link/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,17 +20,11 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(followersinfo, {user_guid, followers=[], current_price}).
-
+-include("../../kissbang_messaging.hrl").
 %%%===================================================================
 %%% API
 %%%===================================================================
 
-buy_following(BuyerGuid, TargetGuid) ->
-    gen_server:call(?SERVER, {buy_following, BuyerGuid, TargetGuid}).
-
-get_followers(UserGuid) ->
-    gen_server:call(?SERVER, {get_followers, UserGuid}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -44,20 +34,6 @@ get_followers(UserGuid) ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
-
-setup_db() ->
-    Result = mnesia:create_table(folowersinfo, [{disc_copies, [node() | nodes()]}, 
-                                                {attributes, record_info(fields, followersinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([folowersinfo], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([folowersinfo], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -84,26 +60,16 @@ init([]) ->
 %%
 %% @spec handle_call(Request, From, State) ->
 %%                                   {reply, Reply, State} |
-%%                                   {Reply, Reply, State, Timeout} |
+%%                                   {reply, Reply, State, Timeout} |
 %%                                   {noreply, State} |
 %%                                   {noreply, State, Timeout} |
 %%                                   {stop, Reason, Reply, State} |
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({get_followers, UserGuid}, From, State) ->
-    utils:acall(fun() -> 
-                        inner_get_followers(UserGuid)
-                end, From),
-    {noreply, State};
-handle_call({buy_following, BuyerGuid, TargetGuid}, From, State) ->
-    utils:acall(fun() -> 
-                        inner_buy_following(BuyerGuid, TargetGuid)
-                end, From),
-    {noreply, State}.
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
+handle_call(_Request, _From, State) ->
+    Reply = ok,
+    {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -159,48 +125,14 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_buy_following(BuyerGuid, TargetGuid) ->
-    Trans = fun() ->
-                    %  prepare info to write
-                    Existance = mnesia:read({followerinfo, TargetGuid}),
-                    case Existance of
-                        [] ->
-                            BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
-                            NewFollowersInfo = #followersinfo{user_guid = TargetGuid,
-                                                              followers = [BuyerGuid],
-                                                              current_price = calculate_next_price(BuyPrice)};
-                        [OldFollowersInfo] ->
-                            BuyPrice = OldFollowersInfo#followersinfo.current_price,
-                            {ok, MaximumFollowersLength} = application:get_env(kissbang, maximum_followers),
-                            NewFollowers = lists:sublist([BuyerGuid | OldFollowersInfo#followersinfo.followers], 1, MaximumFollowersLength),
-                            NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers}
-                    end,
-                    % buy
-                    case bank_srv:withdraw(BuyerGuid, BuyPrice) of
-                        {ok, _} ->
-                            mnesia:write(NewFollowersInfo),
-                            ok;
-                        Error ->
-                            Error
-                    end
-            end,
-    mnesia:activity(transaction, Trans).
-
-
-inner_get_followers(UserGuid) ->
-    Trans = fun() ->
-                    Existance = mnesia:read({followerinfo, UserGuid}),
-                    case Existance of
-                        [] ->
-                            BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
-                            {BuyPrice, []};
-                        [FollowersInfo] ->
-                            {FollowersInfo#followersinfo.current_price, 
-                             FollowersInfo#followersinfo.followers}
-                    end
-
-            end,
-    mnesia:activity(transaction, Trans).
-
-calculate_next_price(OldPrice) ->
-    OldPrice * 2.
+handle_buy_user_following(CallerGuid, Message) ->
+    TargetUserGuid = Message#buy_following.target_user_guid,
+    case follower_srv:buy_following(CallerGuid, TargetUserGuid) of
+        ok -> 
+            proxy_srv:async_route_messages(CallerGuid, 
+                                          [#on_following_bought{bought_user_guid = TargetUserGuid}]);
+        Error ->
+            proxy_srv:async_route_messages(CallerGuid,
+                                          [#on_following_buying_fail{targeted_user_guid = TargetUserGuid,
+                                                                     reason = atom_to_list(Error)}])
+    end.

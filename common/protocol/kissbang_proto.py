@@ -288,6 +288,11 @@ class BuyFollowing(pgMessage):
 class OnFollowingBought(pgMessage):
     boughtUserGuid = pgString()
 
+class OnFollowingBuyingFail(pgMessage):
+    targetedUserGuid = pgString()
+    reason = pgString()
+
+
 ## get user followers
 class GetUserFollowers(pgMessage):
     targetUserGuid = pgString()
