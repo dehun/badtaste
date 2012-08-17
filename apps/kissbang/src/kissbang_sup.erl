@@ -36,6 +36,7 @@ init([]) ->
                                  ?CHILD(avatar_sup, supervisor),
                                  ?CHILD(rate_sup, supervisor),
                                  ?CHILD(webgate_sup, supervisor),
+                                 ?CHILD(follower_sup, supervisor),
                                  ?CHILD(handlermgr_sup, supervisor),
                                  ?CHILD(roomqueue_sup, supervisor),
                                  ?CHILD(roomfullifier_sup, supervisor),

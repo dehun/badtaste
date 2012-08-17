@@ -295,5 +295,4 @@ class GetUserFollowers(pgMessage):
 class OnGotUserFollowers(pgMessage):
     ownerUserGuid = pgString()
     rebuyPrice = pgInteger()
-    currentFollower = pgString()
-    formFollowers = pgList(pgString())
+    followers = pgList(pgString())

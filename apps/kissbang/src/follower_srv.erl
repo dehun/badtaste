@@ -1,21 +1,22 @@
 %%%-------------------------------------------------------------------
-%%% @author  <>
+%
+%% @author  <>
 %%% @copyright (C) 2012, 
 %%% @doc
 %%%
 %%% @end
-%%% Created : 16 Aug 2012 by  <>
+%%% Created : 17 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(sympathy_srv).
+-module(follower_srv).
 
 -behaviour(gen_server).
--include("kissbang_messaging.hrl").
 
 %% API
 -export([start_link/0,
-         setup_db/0]).
--export([get_sympathies/1,
-         add_sympathy/2]).
+        setup_db/0]).
+-export([buy_following/2,
+         get_followers/1]).
+
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
@@ -23,16 +24,17 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(sympathyinfo, {user_guid, sympathies = []}).
+-record(followersinfo, {user_guid, followers=[], current_price}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-get_sympathies(UserGuid) ->
-    gen_server:call(?SERVER, {get_sympathies, UserGuid}).
 
-add_sympathy(LeftUser, RightUser) ->
-    gen_server:cast(?SERVER, {add_sympathy, LeftUser, RightUser}).
+buy_following(BuyerGuid, TargetGuid) ->
+    gen_server:call(?SERVER, {buy_following, BuyerGuid, TargetGuid}).
+
+get_followers(UserGuid) ->
+    gen_server:call(?SERVER, {get_followers, UserGuid}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -43,16 +45,15 @@ add_sympathy(LeftUser, RightUser) ->
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-
 setup_db() ->
-    Result = mnesia:create_table(sympathyinfo, [{disc_copies, [node() | nodes()]}, 
-                                                {attributes, record_info(fields, sympathyinfo)}]),
+    Result = mnesia:create_table(folowersinfo, [{disc_copies, [node() | nodes()]}, 
+                                                {attributes, record_info(fields, followersinfo)}]),
     case Result of
         {atomic, ok} ->
-            mnesia:wait_for_tables([sympathyinfo], 5000),
+            mnesia:wait_for_tables([folowersinfo], 5000),
             ok;
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([sympathyinfo], 5000),
+            mnesia:wait_for_tables([folowersinfo], 5000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -83,16 +84,26 @@ init([]) ->
 %%
 %% @spec handle_call(Request, From, State) ->
 %%                                   {reply, Reply, State} |
-%%                                   {reply, Reply, State, Timeout} |
+%%                                   {Reply, Reply, State, Timeout} |
 %%                                   {noreply, State} |
 %%                                   {noreply, State, Timeout} |
 %%                                   {stop, Reason, Reply, State} |
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({get_sympathies, UserGuid}, From, State) ->
-    utils:acall(fun() -> inner_get_sympathies(UserGuid) end, From),
+handle_call({get_followers, UserGuid}, From, State) ->
+    utils:acall(fun() -> 
+                        inner_get_followers(UserGuid)
+                end, From),
+    {noreply, State};
+handle_call({buy_following, BuyerGuid, TargetGuid}, From, State) ->
+    utils:acall(fun() -> 
+                        inner_buy_following(BuyerGuid, TargetGuid)
+                end, From),
     {noreply, State}.
+%% handle_call(_Request, _From, State) ->
+%%     Reply = ok,
+%%     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -104,8 +115,7 @@ handle_call({get_sympathies, UserGuid}, From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({add_sympathy, LeftUser, RightUser}, State) ->
-    utils:acast(fun() -> inner_add_sympathy(LeftUser, RightUser) end),
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -149,45 +159,49 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_get_sympathies(UserGuid) ->
+inner_buy_following(BuyerGuid, TargetGuid) ->
     Trans = fun() ->
-                    Existance = mnesia:read({sympathyinfo, UserGuid}),
-                    case Existance of 
+                    %  prepare info to write
+                    Existance = mnesia:read({followerinfo, TargetGuid}),
+                    case Existance of
                         [] ->
-                            [];
-                        [SympathyInfo] ->
-                            SympathyInfo#sympathyinfo.sympathies
-                        end
+                            BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
+                            NewFollowersInfo = #followersinfo{user_guid = TargetGuid,
+                                                              followers = [BuyerGuid],
+                                                              current_price = calculate_next_price(BuyPrice)};
+                        [OldFollowersInfo] ->
+                            BuyPrice = OldFollowersInfo#followersinfo.current_price,
+                            {ok, MaximumFollowersLength} = application:get_env(kissbang, maximum_followers),
+                            NewFollowers = lists:sublist([BuyerGuid | OldFollowersInfo#followersinfo.followers], 1, MaximumFollowersLength),
+                            NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers}
+                    end,
+                    % buy
+                    case bank_srv:withdraw(BuyerGuid, BuyPrice) of
+                        {ok, _} ->
+                            mnesia:write(NewFollowersInfo),
+                            ok;
+                        Error ->
+                            Error
+                    end
             end,
-    mnesia:activity(async_dirty, Trans).
+    mnesia:activity(transaction, Trans).
 
-inner_add_sympathy(LeftGuid, RightGuid) ->
+
+inner_get_followers(UserGuid) ->
     Trans = fun() ->
-                    increment_sympathies(LeftGuid, RightGuid),
-                    increment_sympathies(RightGuid, LeftGuid)
-            end,
-    mnesia:activity(async_dirty, Trans).
+                    Existance = mnesia:read({followerinfo, UserGuid}),
+                    case Existance of
+                        [] ->
+                            BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
+                            {BuyPrice, []};
+                        [FollowersInfo] ->
+                            {FollowersInfo#followersinfo.current_price, 
+                             FollowersInfo#followersinfo.followers}
+                    end
 
-increment_sympathies(LeftGuid, RightGuid) ->
-    Existance = mnesia:read({sympathyinfo, LeftGuid}),
-    case Existance of
-        [] ->
-            NewSympathyInfo = #sympathyinfo{user_guid = LeftGuid, 
-                                            sympathies = [#sympathy{kisser_guid = RightGuid,
-                                                                    kisses = 1}]},
-            mnesia:write(NewSympathyInfo);
-        [OldSympathyInfo] ->
-            %% increment counter or add new sympathy to list
-            case lists:keysearch(RightGuid, 2, OldSympathyInfo#sympathyinfo.sympathies) of
-                {value, OldSympathy} ->
-                    SympathiesToTrim = [OldSympathy#sympathy{kisses = OldSympathy#sympathy.kisses + 1} | lists:keydelete(RightGuid, 2, OldSympathy#sympathyinfo.sympathies)];
-                false ->
-                    SympathiesToTrim = [#sympathy{kisser_guid = RightGuid,
-                                                  kisses = 1} | OldSympathyInfo#sympathyinfo.sympathies]
             end,
-            %% trim list of sympathies to maximum size 
-            MaximumSympathies = element(2, application:get_env(kissbang, maximum_sympathies)),
-            NewSympathies = lists:sublist(SympathiesToTrim, 1, MaximumSympathies),
-            mnesia:write(OldSympathyInfo#sympathyinfo{sympathies = NewSympathies})
-        end.
+    mnesia:activity(transaction, Trans).
 
+
+calculate_next_price(OldPrice) ->
+    OldPrice * 2.

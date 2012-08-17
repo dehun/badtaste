@@ -118,4 +118,4 @@
    <- OnFollowingBought(boughtUserGuid = "someguid")
 ** get user followers
    -> GetUserFollowers(targetUserGuid = "someguid")
-   <- OnGotUserFollowers(ownerUserGuid = "someguid", currentFollower = "someguid2", formFollowers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
+   <- OnGotUserFollowers(ownerUserGuid = "someguid", followers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
