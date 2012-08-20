@@ -234,17 +234,24 @@ class OnGotUserSympathies(pgMessage):
     sympathies = pgList(pgMessage())
 
 #decore
-class SetDecore(pgMessage):
-    newBackgroundGuid = pgString()
-    newFrameGuid = pgString()
+## buy decore
+class BuyDecore(pgMessage):
+    decoreGuid = pgString()
 
-class GetDecoreFor(pgMessage):
+class OnDecoreBoughtSuccessfully(pgMessage):
+    buyedDecoreGuid = pgString()
+
+class OnDecoreBuyFail(pgMessage):
+    failedDecoreGuid = pgString()
+    reason = pgString()
+
+## get decore for
+class GetDecorationsFor(pgMessage):
     targetUserGuid = pgString()
 
-class OnGotDecore(pgMessage):
+class OnGotDecorations(pgMessage):
     ownerUserGuid = pgString()
-    backgroundGuid = pgString()
-    frameGuid = pgString()
+    decorations = pgList(pgString())
 
 # mail
 ## send mail

@@ -21,6 +21,7 @@ setup_db() ->
     roomfullifier_srv:setup_db(),
     bank_srv:setup_db(),
     gift_srv:setup_db(),
+    decore_srv:setup_db(),
     rate_srv:setup_db(),
     vip_srv:setup_db(),
     sympathy_srv:setup_db(),

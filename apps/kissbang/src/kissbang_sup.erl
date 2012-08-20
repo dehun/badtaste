@@ -35,6 +35,7 @@ init([]) ->
                                  ?CHILD(sympathy_sup, supervisor),
                                  ?CHILD(avatar_sup, supervisor),
                                  ?CHILD(rate_sup, supervisor),
+                                 ?CHILD(decore_sup, supervisor),
                                  ?CHILD(webgate_sup, supervisor),
                                  ?CHILD(follower_sup, supervisor),
                                  ?CHILD(handlermgr_sup, supervisor),
