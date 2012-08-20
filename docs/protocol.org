@@ -96,11 +96,11 @@
    -> GetUserSympathies(targetUserGuid = "someguid")
    <- OnGotUserSympathies(ownerUserGuid = "someguid", sympathies = [Sympathy(kisserGuid = "one", kisses = 10), Sympathy(kisserGuid = "two", kisses = 20)])
 * decore
-** set new decore
-   -> SetDecore(newBackgroundGuid = "10qwe", newFrameGuid = "20asd")
+** buy new decore
+   -> BuyDecore(decoreGuid = "someguid")
 ** get decore
-   -> GetDecoreFor(targetUserGuid = "someguid")
-   <- OnGotDecore(ownerUserGuid = "someguid", backgroundGuid = "10qwe", frameGuid = "20asd")
+   -> GetDecorationFor(targetUserGuid = "someguid")
+   <- OnGotDecorations(ownerUserGuid = "someguid", decorations = ["oneguid", "twoguid"])
 * mail
 ** send mail
    -> SendMail(receiverGuid = "someguid", subject = "", body = "")
