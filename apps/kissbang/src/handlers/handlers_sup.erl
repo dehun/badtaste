@@ -120,3 +120,8 @@ get_vip_handlers() ->
 get_followers_handlers() ->
     ['get_user_followers_handler_srv',
      'buy_user_following_handler_srv'].
+
+get_mail_handlers() ->
+    ['check_mailbox_handler_srv',
+    'mark_mail_as_read_handler_srv',
+     'send_mail_handler_srv'].

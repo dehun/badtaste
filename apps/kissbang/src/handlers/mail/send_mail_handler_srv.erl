@@ -6,17 +6,14 @@
 %%% @end
 %%% Created : 21 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(mail_srv).
--include("kissbang_messaging.hrl").
+-module(send_mail_handler_srv).
+
 -behaviour(gen_server).
+-include("../../kissbang_messaging.hrl").
 
 %% API
--export([start_link/0,
-        setup_db/0]).
-
--export([get_user_mail/1,
-         send_mail/4,
-         mark_mail_as_read/2]).
+-export([start_link/0]).
+-export([handle_send_mail/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -25,19 +22,10 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(mailinfo, {user_guid, mails = []}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-get_user_mail(UserGuid) ->
-    gen_server:call(?SERVER, {get_user_mails, UserGuid}).
-
-send_mail(SenderGuid, ReceiverGuid, Subject, Body) ->
-    gen_server:call(?SERVER, {send_mail, SenderGuid, ReceiverGuid, Subject, Body}).
-
-mark_mail_as_read(UserGuid, MailGuid)->
-    gen_server:call(?SERVER, {mark_mail_as_read, UserGuid, MailGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -48,21 +36,6 @@ mark_mail_as_read(UserGuid, MailGuid)->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
-
-setup_db() ->
-    Result = mnesia:create_table(mailinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, mailinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([mailinfo], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([mailinfo], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
-
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -80,6 +53,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(send_mail, fun handle_send_mail/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -154,3 +128,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+handle_send_mail(CallerGuid, Message) ->
+    mail_srv:send_mail(CallerGuid, 
+                       Message#send_mail.receiver_guid,
+                       Message#send_mail.subject,
+                       Message#send_mail.body).
