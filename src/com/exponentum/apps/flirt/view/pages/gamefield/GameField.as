@@ -8,10 +8,13 @@
 package com.exponentum.apps.flirt.view.pages.gamefield
 {
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
 import com.exponentum.utils.centerX;
+import com.exponentum.utils.centerY;
 
 import flash.display.MovieClip;
 import flash.events.Event;
@@ -31,6 +34,8 @@ public class GameField extends BackGroundedPage
 
 	private var tabBar:TabBar = new TabBar();
 
+	private var bottle:Bottle = new Bottle();
+
 	private static const CHANGE_TABLE:String = "changeTable";
 	private static const HELP:String = "help";
 	
@@ -44,8 +49,8 @@ public class GameField extends BackGroundedPage
 		{x:395, y:404},
 		{x:260, y:404},
 		{x:130, y:394},
-		{x:73, y:240}
-	];
+		{x:73, y:240}];
+	private var avatarHolders:Vector.<AvatarHolder> = new Vector.<AvatarHolder>();
 
 	private const kissersPlacesCoords:Array = [new Point(210, 240), new Point(440, 240)];
 	private const celebrityAvatarCoords:Array = [new Point(490, 584), new Point(596, 584)];
@@ -63,6 +68,16 @@ public class GameField extends BackGroundedPage
 		createAvatars();
 		createKisserPlaces();
 		createCelebrityAvatars();
+		createBottle();
+	}
+
+	private function createBottle():void
+	{
+		addChild(bottle);
+		centerX(bottle, 760);
+		bottle.y = 315;
+
+		bottle.setBottle(1);
 	}
 
 	private const numCelebrities:int = 2;
@@ -117,6 +132,7 @@ public class GameField extends BackGroundedPage
 		tabBar.addEventListener(HELP, onHelp);
 	}
 
+	//tab buttons hanlers
 	private function onChangeTable(e:Event):void
 	{
 
@@ -129,7 +145,7 @@ public class GameField extends BackGroundedPage
 
 	private function onRatings(e:Event):void
 	{
-
+		dispatchEvent(new Event(Config.RATINGS));
 	}
 
 	private function onHelp(e:Event):void
@@ -160,5 +176,28 @@ public class GameField extends BackGroundedPage
 		tableContainer.y = 67;
 		centerX(tableContainer, 760);
 	}
+
+	//------------------------------------------------------------------------------------------------------------------
+	// Game functionality
+	//------------------------------------------------------------------------------------------------------------------
+	public function addPlayerToTable(player:User, place:int):void
+	{
+		var userAvatar:AvatarHolder = new AvatarHolder();
+		userAvatar.x = avatarCoordinates[place].x;
+		userAvatar.y = avatarCoordinates[place].y;
+		addChild(userAvatar);
+		avatarHolders.push(userAvatar);
+	}
+
+	private function showKissers(player1:User, player2:User):void
+	{
+
+	}
+
+	private function showKissDialog():void
+	{
+
+	}
+
 }
 }

@@ -80,8 +80,8 @@ public class Kiss extends Sprite
 				'"city" : "' + model.owner.city + '",' +
 				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
 
-		view.showProfile();
-//		view.showGameField();
+//		view.showProfile();
+		view.showGameField();
 
 		createTestConsole();
 	}
