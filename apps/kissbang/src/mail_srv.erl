@@ -4,41 +4,42 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 20 Aug 2012 by  <>
+%%% Created : 21 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
--module(decore_srv).
+-module(mail_srv).
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0,
-         setup_db/0]).
+        setup_db/0]).
 
--export([]).
+-export([get_user_mail/1,
+         send_mail/4,
+         mark_as_read/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
--export([buy_decore/2,
-         get_decore/1]).
-
 -define(SERVER, ?MODULE). 
 
--record(state, {config}).
--record(decoreinfo, {user_guid, decores}).
--record(config, {decores}).
--record(decore, {guid, type, price}).
+-record(state, {}).
+-record(mail, {guid, sender_guid, subject, body, is_read, date_sent}).
+-record(mailinfo, {user_guid, mails = []}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-buy_decore(TargetUserGuid, DecoreGuid) ->
-    gen_server:call(?SERVER, {buy_decore, DecoreGuid}).
+get_user_mail(UserGuid) ->
+    gen_server:call(?SERVER, {get_user_mails, UserGuid}).
 
-get_decore(TargetUserGuid) ->
-    gen_server:call(?SERVER, {get_decore, TargetUserGuid}).
-    
+send_mail(SenderGuid, ReceiverGuid, Subject, Body) ->
+    gen_server:call(?SERVER, {send_mail, SenderGuid, ReceiverGuid, Subject, Body}).
+
+mark_as_read(UserGuid, MailGuid)->
+    gen_server:call(?SERVER, {mark_as_read, UserGuid, MailGuid}).
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -50,14 +51,14 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 setup_db() ->
-    Result = mnesia:create_table(decoreinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, decoreinfo)}]),
+    Result = mnesia:create_table(mailinfo, [{disc_copies, [node() | nodes()]}, 
+                                            {attributes, record_info(fields, mailinfo)}]),
     case Result of
         {atomic, ok} ->
-            mnesia:wait_for_tables([decoreinfo], 5000),
+            mnesia:wait_for_tables([mailinfo], 5000),
             ok;
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([decoreinfo], 5000),
+            mnesia:wait_for_tables([mailinfo], 5000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -80,11 +81,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    Config = load_config(),
-    {ok, #state{config = Config}}.
-
-
-
+    {ok, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -100,13 +97,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({get_decore, TargetUserGuid}, From, State) ->
-    utils:acall(fun() -> inner_get_decore(TargetUserGuid) end,From),
-    {noreply, State};
-handle_call({buy_decore, TargetUserGuid, DecoreGuid}, From, State) ->
-    Config = State#state.config,
-    utils:acall(fun() -> inner_buy_decore(TargetUserGuid, DecoreGuid, Config#config.decores) end, From),
-    {noreply, State}.
+handle_call(_Request, _From, State) ->
+    Reply = ok,
+    {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -162,72 +155,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_get_decore(TargetUserGuid) ->
-    Trans = fun() ->
-                    Existance = mnesia:read({decoreinfo, TargetUserGuid}),
-                    case Existance of 
-                        [] ->
-                            [];
-                        [DecoreInfo] ->
-                            {DecoreInfo#decoreinfo.decores}
-                        end
-            end,
-    mnesia:activity(async_dirty, Trans).
-
-inner_buy_decore(BuyerGuid, DecoreGuid, AllDecores) ->
-    Trans = fun() ->
-                    %% check are there are such decore
-                    case lists:keyfind(DecoreGuid, 2, AllDecores) of
-                        false ->
-                            no_such_decore;
-                        Decore ->
-                            %% buy it
-                            case bank_srv:withdraw(BuyerGuid, Decore#decore.price) of
-                                {ok, _} ->
-                                    %% write info
-                                    inner_add_user_decore_trans(BuyerGuid, Decore);
-                                Error ->
-                                    Error
-                            end
-
-                    end
-   
-
-            end,
-    mnesia:activity(async_dirty, Trans).
-    
-inner_add_user_decore_trans(BuyerGuid, Decore) ->
-    Existance = mnesia:read({decoreinfo, BuyerGuid}),
-    case Existance of
-        [] ->
-            mnesia:write(#decoreinfo{user_guid = BuyerGuid,
-                                      decores = [Decore#decore.guid]});
-        [OldDecoreInfo] ->
-            NewDecores = [Decore#decore.guid | lists:keydelete(Decore#decore.type,
-                                                                   3, OldDecoreInfo#decoreinfo.decores)],
-            mnesia:write(OldDecoreInfo#decoreinfo{decores = NewDecores}),
-            ok
-        end.
-
-load_decore({struct, DecoreJson}) ->
-    #decore{guid = binary_to_list(proplists:get_value(<<"guid">>, DecoreJson)),
-            type = binary_to_list(proplists:get_value(<<"type">>, DecoreJson)),
-            price = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, DecoreJson)))};
-load_decore(Error) ->
-    throw({wrong_decore, Error}).
-
-load_config() ->
-    load_decores().
-
-load_decores() ->
-    inets:start(),
-    {ok, DecoresUrl} = application:get_env(kissbang, decore_cfg_url),
-    {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} =
-        httpc:request(get, {DecoresUrl, []}, [], []),
-    {struct, DecoresJson} = mochijson2:decode(Body),
-    [load_decore(Decore) || Decore <- proplists:get_value(<<"decores">>, DecoresJson)].
-
-    
-
-
-
