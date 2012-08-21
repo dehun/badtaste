@@ -30,7 +30,7 @@ public class TabBar extends CasaSprite
 		tabsDistribution.addChildWithDimensions(tab, width);
 		tabsDistribution.position();
 		tabs[id] = tab;
-		tab.label = label;
+		if(label != "") tab.label = label;
 		tab.toggle = !doNotToggle;
 		tab.addEventListener(TabButton.TAB_SELECTED, onTabSelected);
 	}

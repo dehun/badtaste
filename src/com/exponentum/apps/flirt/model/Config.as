@@ -9,8 +9,16 @@ package com.exponentum.apps.flirt.model
 {
 public class Config
 {
-	public static var DEV_MODE:Boolean = true;
+	public static var DEV_MODE:Boolean = false;
 
 	public static var RESOURCES_SERVER:String = "";
+
+	//----------------------------------------------
+	// View states constants
+	//----------------------------------------------
+	public static const GAMEFIELD:String = "gamefieldState";
+	public static const PROFILE:String = "profile";
+	public static const TASKS:String = "tasks";
+	public static const RATINGS:String = "ratings";
 }
 }

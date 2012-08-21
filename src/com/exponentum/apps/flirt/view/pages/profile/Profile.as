@@ -7,30 +7,23 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile
 {
-import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
-import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.Config;
-import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 
-import flash.display.DisplayObject;
 import flash.display.SimpleButton;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
-import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.layout.Distribution;
 import org.casalib.load.ImageLoad;
-import org.casalib.load.SwfLoad;
-import org.osmf.events.LoaderEvent;
 
 public class Profile extends BackGroundedPage
 {
-	private var foreground:ForegroundProfile = new ForegroundProfile();
 	private var tasksButton:SimpleButton = new TasksButton();
-	private var ratingsButton:SimpleButton = new RatingsButton();
+	private var ratingsButton:RatingsButton = new RatingsButton();
 	private var zodiacSign:ZodiacSign = new ZodiacSign();
 	private var shelf:Shelf = new Shelf();
 	private var achievementsPanel:AchievementsPanel = new AchievementsPanel();
@@ -64,10 +57,12 @@ public class Profile extends BackGroundedPage
 		tasksButton.x = -5;
 		tasksButton.y = 176;
 		addChild(tasksButton);
+		tasksButton.addEventListener(MouseEvent.CLICK, onTasksClick);
 		
 		ratingsButton.x = tasksButton.x;
 		ratingsButton.y = 312;
 		addChild(ratingsButton);
+		ratingsButton.addEventListener(MouseEvent.CLICK, onRatingsClick);
 
 		zodiacSign.x = 215;
 		zodiacSign.y = 195;
@@ -81,10 +76,7 @@ public class Profile extends BackGroundedPage
 		createBottomPanel();
 		createPresents();
 
-		foreground.x = -10;
-		foreground.y = -10;
-		addChild(foreground);
-		foreground.mouseChildren = foreground.mouseEnabled = false;
+
 	}
 
 	private function createPresents():void
@@ -157,6 +149,9 @@ public class Profile extends BackGroundedPage
 		profileDetails.nameText.text = _user.name;
 		profileDetails.ageText.text = _user.birthDate;
 		profileDetails.cityText.text = _user.city;
+		profileDetails.playInCityCheckBox.gotoAndStop(1);
+		profileDetails.hideAgeButton.gotoAndStop(1);
+		profileDetails.hideCityButton.gotoAndStop(1);
 	}
 
 	private function createFansBlock():void
@@ -171,7 +166,17 @@ public class Profile extends BackGroundedPage
 	//----------------------------------------------------------------------------------
 	private function onPlayClick(e:MouseEvent):void
 	{
-		trace("Play click");
+		dispatchEvent(new Event(Config.GAMEFIELD));
+	}
+
+	private function onTasksClick(e:MouseEvent):void
+	{
+		dispatchEvent(new Event(Config.TASKS));
+	}
+
+	private function onRatingsClick(e:MouseEvent):void
+	{
+		dispatchEvent(new Event(Config.RATINGS));
 	}
 }
 }

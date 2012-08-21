@@ -2,40 +2,91 @@ package com.exponentum.apps.flirt.view
 {
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
+import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.TextField;
+
+import mx.utils.NameUtil;
+
+import org.casalib.display.CasaSprite;
 
 public class View extends Sprite
 {
 	private var model:Model;
 	private var controller:Controller;
-	
+
+	private var pageContainer:CasaSprite = new CasaSprite();
 	//pages
 	private var profile:Profile;
 	private var gameField:GameField;
+
+	private var foreground:ForegroundProfile = new ForegroundProfile();
 
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
 		controller = aController;
+
+		addChild(pageContainer);
+		foreground.x = -10;
+		foreground.y = -10;
+		addChild(foreground);
+		foreground.mouseChildren = foreground.mouseEnabled = false;
 	}
 
-	public function showProfile():void
+	private function showPage(pageId:String):void
 	{
+		switch(pageId)
+		{
+			case Config.GAMEFIELD:
+					showGameField();
+				break;
+			case Config.PROFILE:
+					showProfile();
+				break;
+			case Config.TASKS:
+					showTasks();
+				break;
+			case Config.RATINGS:
+					showRatings();
+				break;
+		}
+	}
+
+	public function showProfile(e:Event = null):void
+	{
+		pageContainer.removeChildren(true, true);
 		profile = new Profile(model.owner);
-		addChild(profile);
+		profile.addEventListener(Config.GAMEFIELD, showGameField);
+		profile.addEventListener(Config.TASKS, showTasks);
+		profile.addEventListener(Config.RATINGS, showRatings);
+		pageContainer.addChild(profile);
 	}
 
-	public function showGameField():void
+	public function showGameField(e:Event = null):void
 	{
+		pageContainer.removeChildren(true, true);
 		gameField = new GameField();
-		addChild(gameField);
+		gameField.addEventListener(Config.PROFILE, showProfile);
+		gameField.addEventListener(Config.RATINGS, showRatings);
+		pageContainer.addChild(gameField);
+	}
+
+	private function showRatings(e:Event = null):void
+	{
+
+	}
+
+	private function showTasks(e:Event = null):void
+	{
+
 	}
 }
 }
