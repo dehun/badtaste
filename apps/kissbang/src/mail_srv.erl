@@ -7,6 +7,8 @@
 %%% Created : 21 Aug 2012 by  <>
 %%%-------------------------------------------------------------------
 -module(mail_srv).
+
+-include_lib("stdlib/include/qlc.hrl").
 -include("kissbang_messaging.hrl").
 -behaviour(gen_server).
 
@@ -54,7 +56,7 @@ start_link() ->
 
 setup_db() ->
     Result = mnesia:create_table(mail,
-                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 8}, {n_disc_copies, 8}]},
+                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 8}, {n_disc_copies, 1}]},
                                   {index, [mail_guid]},
                                   {attributes, record_info(fields, mail)}]),
     case Result of
@@ -167,7 +169,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_get_mail_for(UserGuid) ->
     Trans = fun() ->
-                    qlc:e(qlc:e([Mail || Mail <- mnesia:table(mail), 
+                    qlc:e(qlc:q([Mail || Mail <- mnesia:table(mail), 
                                          (Mail#mail.sender_guid =:= UserGuid) or (Mail#mail.receiver_guid =:= UserGuid)]))
             end,
     mnesia:activity(async_dirty, Trans, [], mnesia_frag).
