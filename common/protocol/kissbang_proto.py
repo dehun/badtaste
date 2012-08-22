@@ -270,9 +270,12 @@ class OnGotNewMail(pgMessage):
 class CheckMailbox(pgMessage):
     pass
 
-class IncomingMail(pgMessage):
+class Mail(pgMessage):
     mailGuid = pgString()
     senderGuid = pgString()
+    receiverGuid = pgString()
+    dateSend = pgInteger()
+    type = pgString()
     subject = pgString()
     body = pgString()
     isRead = pgString()

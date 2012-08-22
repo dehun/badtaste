@@ -15,8 +15,9 @@
         setup_db/0]).
 
 -export([get_user_mail/1,
+         send_mail/5,
          send_mail/4,
-         mark_mail_as_read/2]).
+         mark_mail_as_read/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -25,19 +26,21 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(mailinfo, {user_guid, mails = []}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
 get_user_mail(UserGuid) ->
-    gen_server:call(?SERVER, {get_user_mails, UserGuid}).
+    gen_server:call(?SERVER, {get_user_mail, UserGuid}).
 
 send_mail(SenderGuid, ReceiverGuid, Subject, Body) ->
-    gen_server:call(?SERVER, {send_mail, SenderGuid, ReceiverGuid, Subject, Body}).
+    send_mail(SenderGuid, ReceiverGuid, Subject, Body, "usermail").
 
-mark_mail_as_read(UserGuid, MailGuid)->
-    gen_server:call(?SERVER, {mark_mail_as_read, UserGuid, MailGuid}).
+send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
+    gen_server:call(?SERVER, {send_mail, SenderGuid, ReceiverGuid, Subject, Body, Type}).
+
+mark_mail_as_read(MailGuid)->
+    gen_server:call(?SERVER, {mark_mail_as_read, MailGuid}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -50,14 +53,16 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 setup_db() ->
-    Result = mnesia:create_table(mailinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, mailinfo)}]),
+    Result = mnesia:create_table(mail,
+                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 8}, {n_disc_copies, 8}]},
+                                  {index, [mail_guid]},
+                                  {attributes, record_info(fields, mail)}]),
     case Result of
         {atomic, ok} ->
-            mnesia:wait_for_tables([mailinfo], 5000),
+            mnesia:wait_for_tables([mail], 5000),
             ok;
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([mailinfo], 5000),
+            mnesia:wait_for_tables([mail], 5000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -96,9 +101,15 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State}.
+handle_call({get_user_mail, UserGuid}, From, State) ->
+    utils:acall(fun() -> inner_get_mail_for(UserGuid) end, From),
+    {noreply, State};
+handle_call({send_mail, SenderGuid, ReceiverGuid, Subject, Body, Type}, From, State) ->
+    utils:acall(fun() -> inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) end, From),
+    {noreply, State};
+handle_call({mark_mail_as_read, MailGuid}, From, State) ->
+    utils:acall(fun() -> inner_mark_mail_as_read(MailGuid) end, From),
+    {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -154,3 +165,36 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_get_mail_for(UserGuid) ->
+    Trans = fun() ->
+                    qlc:e(qlc:e([Mail || Mail <- mnesia:table(mail), 
+                                         (Mail#mail.sender_guid =:= UserGuid) or (Mail#mail.receiver_guid =:= UserGuid)]))
+            end,
+    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
+
+inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
+    Trans = fun() ->
+                    {ok, NewMailGuid} = guid_srv:create(),
+                    NewMail = #mail{mail_guid = NewMailGuid,
+                                    sender_guid = SenderGuid,
+                                    receiver_guid = ReceiverGuid,
+                                    type = Type,
+                                    date_send = utils:unix_time(),
+                                    subject = Subject,
+                                    body = Body,
+                                    is_read = "false"},
+                    mnesia:write(NewMail)
+            end,
+    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
+
+inner_mark_mail_as_read(MailGuid) ->
+    Trans = fun() ->
+                    case mnesia:read({mail, MailGuid}) of
+                        [] ->
+                            no_such_mail;
+                        [OldMail] ->
+                            mnesia:write(OldMail#mail{is_read = "true"}),
+                            ok
+                        end
+            end,
+    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
