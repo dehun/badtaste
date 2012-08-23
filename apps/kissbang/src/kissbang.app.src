@@ -1,0 +1,29 @@
+{application, kissbang,
+ [
+  {description, ""},
+  {vsn, "6"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  sasl,
+                  crypto,
+                  mnesia
+                 ]},
+  {mod, {kissbang_app, []}},
+  {env, [{gateway_ports, [8080, 8081, 5222]},
+         {admin_web_port, 5223},
+         {room_limit_to_start, 2},
+         {avatar_base_path, "./"},
+         {avatar_base_url, "http://lolcahost:8000/"},
+         {room_sex_parity, 10},
+         {room_limit_to_start, 2},
+         {vip_update_time, 3600},
+         {vip_points_decrease_rate, 50},
+         {gifts_cfg_url, "http://46.165.193.39/kissbang/cfg2/gifts.json"},
+         {decore_cfg_url, "http://46.165.193.39/kissbang/cfg2/decore.json"},
+         {maximum_sympathies, 15},
+         {maximum_followers, 15},
+         {following_buy_start_price, 15},
+         {room_maximum_users, 10}]}
+ ]}.
