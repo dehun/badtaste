@@ -78,7 +78,7 @@
       <file leaf-file-name="GameField.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="24" selection-start="2313" selection-end="2313" vertical-scroll-proportion="0.0">
+            <state line="84" column="20" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#213#259#0" expanded="true" />
               </folding>
@@ -100,7 +100,7 @@
       <file leaf-file-name="Chat.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="17" selection-start="510" selection-end="510" vertical-scroll-proportion="0.39823008">
+            <state line="28" column="38" selection-start="679" selection-end="679" vertical-scroll-proportion="0.48672566">
               <folding>
                 <element signature="e#218#280#0" expanded="true" />
               </folding>
@@ -505,6 +505,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="flirt" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kiss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1153,7 +1167,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="24" selection-start="2313" selection-end="2313" vertical-scroll-proportion="0.0">
+        <state line="84" column="20" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#213#259#0" expanded="true" />
           </folding>
@@ -1162,7 +1176,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="17" selection-start="510" selection-end="510" vertical-scroll-proportion="0.39823008">
+        <state line="28" column="38" selection-start="679" selection-end="679" vertical-scroll-proportion="0.48672566">
           <folding>
             <element signature="e#218#280#0" expanded="true" />
           </folding>

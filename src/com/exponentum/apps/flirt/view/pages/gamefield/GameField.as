@@ -81,8 +81,8 @@ public class GameField extends BackGroundedPage
 
 	private function createChat():void
 	{
-		chat.x = chatBG.x;
-		chat.y = chatBG.y;
+		chat.x = 0;
+		chat.y = 620;
 		addChild(chat);
 	}
 
