@@ -13,8 +13,11 @@ import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
+import com.exponentum.apps.flirt.view.pages.gamefield.chat.Chat;
 import com.exponentum.utils.centerX;
 import com.exponentum.utils.centerY;
+import com.greensock.TweenMax;
+import com.greensock.easing.Bounce;
 
 import flash.display.MovieClip;
 import flash.events.Event;
@@ -29,8 +32,10 @@ public class GameField extends BackGroundedPage
 {
 	private var tableLoad:SwfLoad;
 	private var tableContainer:CasaSprite = new CasaSprite();
+	private var doubleArrow:DoubleArrow = new DoubleArrow();
 
 	private var chatBG:MovieClip = new MovieClip();
+	private var chat:Chat = new Chat();
 
 	private var tabBar:TabBar = new TabBar();
 
@@ -38,6 +43,7 @@ public class GameField extends BackGroundedPage
 
 	private static const CHANGE_TABLE:String = "changeTable";
 	private static const HELP:String = "help";
+
 	
 	private const avatarCoordinates:Array = [
 		{x:125, y:89},
@@ -50,7 +56,7 @@ public class GameField extends BackGroundedPage
 		{x:260, y:404},
 		{x:130, y:394},
 		{x:73, y:240}];
-	private var avatarHolders:Vector.<AvatarHolder> = new Vector.<AvatarHolder>();
+	private var avatarHolders:Vector.<PlayerAvatar> = new Vector.<PlayerAvatar>();
 
 	private const kissersPlacesCoords:Array = [new Point(210, 240), new Point(440, 240)];
 	private const celebrityAvatarCoords:Array = [new Point(490, 584), new Point(596, 584)];
@@ -69,6 +75,24 @@ public class GameField extends BackGroundedPage
 		createKisserPlaces();
 		createCelebrityAvatars();
 		createBottle();
+		createArrow();
+		createChat();
+	}
+
+	private function createChat():void
+	{
+		chat.x = chatBG.x;
+		chat.y = chatBG.y;
+		addChild(chat);
+	}
+
+	private function createArrow():void
+	{
+		addChild(doubleArrow);
+		doubleArrow.x = bottle.x;
+		doubleArrow.y = bottle.y;
+		doubleArrow.visible = false;
+		addChild(doubleArrow);
 	}
 
 	private function createBottle():void
@@ -76,8 +100,13 @@ public class GameField extends BackGroundedPage
 		addChild(bottle);
 		centerX(bottle, 760);
 		bottle.y = 315;
-
+		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
 		bottle.setBottle(1);
+	}
+
+	private function onBottleStopped(e:Event):void
+	{
+		showKiss(avatarHolders[0], avatarHolders[1]);
 	}
 
 	private const numCelebrities:int = 2;
@@ -182,16 +211,21 @@ public class GameField extends BackGroundedPage
 	//------------------------------------------------------------------------------------------------------------------
 	public function addPlayerToTable(player:User, place:int):void
 	{
-		var userAvatar:AvatarHolder = new AvatarHolder();
+		var userAvatar:PlayerAvatar = new PlayerAvatar(player.photoLink);
 		userAvatar.x = avatarCoordinates[place].x;
 		userAvatar.y = avatarCoordinates[place].y;
 		addChild(userAvatar);
 		avatarHolders.push(userAvatar);
 	}
 
-	private function showKissers(player1:User, player2:User):void
+	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
 	{
+		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
+		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
 
+		doubleArrow.visible = true;
+		doubleArrow.scaleX = doubleArrow.scaleY = .4;
+		TweenMax.to(doubleArrow, .5, {scaleX:1, scaleY:1, ease:Bounce.easeInOut});
 	}
 
 	private function showKissDialog():void

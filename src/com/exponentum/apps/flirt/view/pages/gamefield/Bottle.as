@@ -10,6 +10,8 @@ package com.exponentum.apps.flirt.view.pages.gamefield
 import com.exponentum.apps.flirt.model.Config;
 import com.greensock.TweenMax;
 
+import flash.events.Event;
+
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
@@ -20,6 +22,8 @@ public class Bottle extends CasaSprite
 	private var container:CasaSprite = new CasaSprite();
 
 	private const playersAngles:Array = [310,340,20,55,90,115,150,210,245,270,315];
+
+	public static const BOTTLE_STOPPED:String = "bottleStopped";
 
 	public function Bottle()
 	{
@@ -49,7 +53,9 @@ public class Bottle extends CasaSprite
 	
 	public function showOnPlayer(placeId:int, numRotations:int = 1):void
 	{
-		TweenMax.to(container, numRotations * .5, {rotation:numRotations * 360 + playersAngles[placeId]});
+		TweenMax.to(container, numRotations * .5, {rotation:numRotations * 360 + playersAngles[placeId], onComplete:function():void{
+			dispatchEvent(new Event(BOTTLE_STOPPED));
+		}});
 	}
 }
 }
