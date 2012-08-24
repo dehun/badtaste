@@ -42,12 +42,12 @@ import flash.events.Event;
 		{
 			_localFlashVars["api_id"] = "3047691";				
 			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
-			_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";								
+			_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";
 			_localFlashVars["is_app_user"] = "1";		
 			_localFlashVars["referrer"] = "profile";			
-			_localFlashVars["secret"] = "1eace83641";		
-			_localFlashVars["sid"] = "190463b57da38790e1494f33f4b210e8eccd2480ded6cb61c630c4d359fc48"; 						
-			_localFlashVars["user_id"] = "171082395";		
+			_localFlashVars["secret"] = "07894478f7";
+			_localFlashVars["sid"] = "2413fd7a3663fe9625a898ecb69c4b6ab9b648678b79ecf3d2c7c59fff2db3";
+			_localFlashVars["user_id"] = "171082395";
 			_localFlashVars["viewer_id"] = "171082395"; 		
 			_localFlashVars["api_result"] = "";
 			

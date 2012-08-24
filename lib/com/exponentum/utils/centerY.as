@@ -6,6 +6,6 @@ package com.exponentum.utils
 	 */
 	public function centerY(target:*, coordinateSpaceHeight:int):void 
 	{
-		target.y = (coordinateSpaceHeight - target.width) / 2;
+		target.y = (coordinateSpaceHeight - target.height) / 2;
 	}
 }
