@@ -8,6 +8,7 @@
 package com.exponentum.apps.flirt.view.controlls.tabbar
 {
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.utils.centerX;
 
 import flash.display.MovieClip;
 import flash.events.Event;
@@ -33,7 +34,7 @@ public class TabButton extends CasaSprite
 	{
 		_mc = mc;
 		addChild(mc);
-		if(_mc.label) (_mc.label as TextField).mouseEnabled = false;
+		if(_mc["buttonLabel"]) (_mc["buttonLabel"] as TextField).mouseEnabled = false;
 
 		enable();
 	}
@@ -59,7 +60,6 @@ public class TabButton extends CasaSprite
 		addEventListener(MouseEvent.CLICK, onClick);
 		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-		//filters = [];
 		_mc.buttonMode = _mc.useHandCursor = true;
 	}
 
@@ -69,9 +69,7 @@ public class TabButton extends CasaSprite
 		removeEventListener(MouseEvent.CLICK, onClick);
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-
-		//filters = [Model.grayscale];
-		_mc.buttonMode = _mc.useHandCursor = true;
+		_mc.buttonMode = _mc.useHandCursor = false;
 	}
 
 	public function deselect():void
@@ -88,7 +86,7 @@ public class TabButton extends CasaSprite
 	public function set label(value:String):void
 	{
 		_label = value;
-		_mc.label.text = value;
+		_mc["buttonLabel"].text = value;
 	}
 }
 }

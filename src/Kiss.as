@@ -82,7 +82,8 @@ public class Kiss extends Sprite
 
 		view.showProfile();
 		//view.showGameField();
-		view.showTasks();
+		//view.showTasks();
+//		view.showRatings();
 
 		createTestConsole();
 	}

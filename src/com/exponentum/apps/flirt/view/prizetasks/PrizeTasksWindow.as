@@ -51,7 +51,7 @@ public class PrizeTasksWindow extends CasaSprite
 	private function onTaskButtonOver(e:MouseEvent):void
 	{
 		taskDetails.x = e.currentTarget.x + 30;
-		taskDetails.y = 165;//e.currentTarget.y;
+		taskDetails.y = 165;
 		taskDetails.visible = true;
 	}
 

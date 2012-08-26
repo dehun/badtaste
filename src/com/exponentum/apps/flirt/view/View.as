@@ -7,6 +7,7 @@ import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
 import com.exponentum.apps.flirt.view.prizetasks.PrizeTasksWindow;
+import com.exponentum.apps.flirt.view.ratings.RatingsPage;
 import com.exponentum.utils.centerX;
 import com.exponentum.utils.centerY;
 
@@ -30,6 +31,7 @@ public class View extends Sprite
 	private var profile:Profile;
 	private var gameField:GameField;
 	private var prizeTasks:PrizeTasksWindow;
+	private var ratings:RatingsPage;
 
 	private var foreground:ForegroundProfile = new ForegroundProfile();
 
@@ -89,9 +91,11 @@ public class View extends Sprite
 		pageContainer.addChild(gameField);
 	}
 
-	private function showRatings(e:Event = null):void
+	public function showRatings(e:Event = null):void
 	{
-
+		pageContainer.removeChildren(true, true);
+		ratings = new RatingsPage();
+		pageContainer.addChild(ratings);
 	}
 
 	public function showTasks(e:Event = null):void

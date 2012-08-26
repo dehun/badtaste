@@ -18,14 +18,17 @@ public class TabBar extends CasaSprite
 {
 	private var tabsDistribution:Distribution = new Distribution();
 	private var tabs:Dictionary = new Dictionary();
-	private var doNotToggle:Boolean = false;
 
 	public function TabBar()
 	{
 		addChild(tabsDistribution);
 	}
 
-	public function addTab(tab:TabButton, label:String, id:String, width:int = 0, doNotToggle:Boolean = false):void
+	public function addTab(tab:TabButton,
+						   label:String,
+						   id:String,
+						   width:int = 0,
+						   doNotToggle:Boolean = false):void
 	{
 		tabsDistribution.addChildWithDimensions(tab, width);
 		tabsDistribution.position();
