@@ -27,6 +27,7 @@
     <orderEntry type="library" name="miniProfile" level="project" />
     <orderEntry type="library" name="prizeTasks" level="project" />
     <orderEntry type="library" name="ratings" level="project" />
+    <orderEntry type="library" name="shop" level="project" />
   </component>
 </module>
 

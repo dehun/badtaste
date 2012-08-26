@@ -84,6 +84,7 @@ public class RatingsPage extends BackGroundedPage
 		for each (var o:Object in sortCriterias)
 		{
 			criteriaTabBar.addTab(new TabButton(new SortTabButton()), o.name, o.type, o.buttonWidth, false);
+			criteriaTabBar.addEventListener(o.type, onTabChange);
 			xSumm += o.buttonWidth;
 			var edge:Edge = new Edge();
 			edge.x = xSumm;
@@ -139,6 +140,11 @@ public class RatingsPage extends BackGroundedPage
 	}
 
 	private function onBack(e:MouseEvent):void
+	{
+
+	}
+
+	private function onTabChange(e:Event):void
 	{
 
 	}
