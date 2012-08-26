@@ -75,10 +75,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ShopPage.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ShopPage.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="21" selection-start="878" selection-end="878" vertical-scroll-proportion="1.488189">
+            <state line="37" column="21" selection-start="878" selection-end="878" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#208#270#0" expanded="true" />
               </folding>
@@ -86,12 +86,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RatingsPage.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/ratings/RatingsPage.as">
+      <file leaf-file-name="MiniProfile.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="39" selection-start="610" selection-end="610" vertical-scroll-proportion="0.0">
+            <state line="61" column="36" selection-start="1935" selection-end="1935" vertical-scroll-proportion="0.61946905">
               <folding>
-                <element signature="e#206#268#0" expanded="true" />
+                <element signature="e#215#260#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Profile.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="42" column="21" selection-start="1381" selection-end="1410" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RatingsPage.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/ratings/RatingsPage.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#212#274#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -100,7 +122,7 @@
       <file leaf-file-name="View.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="35" selection-start="3155" selection-end="3155" vertical-scroll-proportion="0.0">
+            <state line="122" column="49" selection-start="3381" selection-end="3381" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#41#96#0" expanded="true" />
               </folding>
@@ -111,7 +133,7 @@
       <file leaf-file-name="Kiss.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Kiss.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="5" selection-start="2675" selection-end="2675" vertical-scroll-proportion="0.0">
+            <state line="87" column="29" selection-start="2622" selection-end="2622" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -127,8 +149,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/PlayerAvatar.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/MessageItem.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/Bottle.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as" />
@@ -139,10 +159,12 @@
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/RatingsPage.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabBar.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/controlls/tabbar/TabButton.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as" />
-        <option value="$PROJECT_DIR$/src/Kiss.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/ratings/RatingsPage.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as" />
+        <option value="$PROJECT_DIR$/src/Kiss.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/miniprofile/MiniProfile.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as" />
       </list>
     </option>
   </component>
@@ -605,7 +627,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ratings" />
+              <option name="myItemId" value="pages" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -644,6 +666,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="profile" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -895,7 +921,7 @@
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.60227275" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.60227275" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -972,16 +998,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/js/VKExternal.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="17" selection-start="175" selection-end="175" vertical-scroll-proportion="0.1863354" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="23" selection-start="3972" selection-end="3972" vertical-scroll-proportion="1.9332298" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/com/exponentum/utils/centerY.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="5" selection-start="185" selection-end="185" vertical-scroll-proportion="0.0" />
@@ -992,11 +1008,11 @@
         <state line="14" column="5" selection-start="337" selection-end="337" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/prizetasks/PrizeTasksWindow.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/prizetasks/PrizeTasksWindow.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="53" column="28" selection-start="1440" selection-end="1440" vertical-scroll-proportion="0.6017699">
           <folding>
-            <element signature="e#208#239#0" expanded="true" />
+            <element signature="e#214#245#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1050,36 +1066,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="35" selection-start="3155" selection-end="3155" vertical-scroll-proportion="0.0">
+        <state line="37" column="21" selection-start="878" selection-end="878" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#41#96#0" expanded="true" />
+            <element signature="e#208#270#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Kiss.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="5" selection-start="2675" selection-end="2675" vertical-scroll-proportion="0.0">
+        <state line="87" column="29" selection-start="2622" selection-end="2622" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/ratings/RatingsPage.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/ratings/RatingsPage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="39" selection-start="610" selection-end="610" vertical-scroll-proportion="0.0">
+        <state line="19" column="39" selection-start="616" selection-end="616" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#206#268#0" expanded="true" />
+            <element signature="e#212#274#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="21" selection-start="878" selection-end="878" vertical-scroll-proportion="1.488189">
+        <state line="42" column="21" selection-start="1381" selection-end="1410" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#208#270#0" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="122" column="49" selection-start="3381" selection-end="3381" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#41#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="36" selection-start="1935" selection-end="1935" vertical-scroll-proportion="0.61946905">
+          <folding>
+            <element signature="e#215#260#0" expanded="true" />
           </folding>
         </state>
       </provider>

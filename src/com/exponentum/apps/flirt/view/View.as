@@ -4,11 +4,12 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
 import com.exponentum.apps.flirt.view.pages.shop.ShopPage;
-import com.exponentum.apps.flirt.view.prizetasks.PrizeTasksWindow;
-import com.exponentum.apps.flirt.view.ratings.RatingsPage;
+import com.exponentum.apps.flirt.view.pages.prizetasks.PrizeTasksWindow;
+import com.exponentum.apps.flirt.view.pages.ratings.RatingsPage;
 import com.exponentum.utils.centerX;
 import com.exponentum.utils.centerY;
 
@@ -34,6 +35,7 @@ public class View extends Sprite
 	private var prizeTasks:PrizeTasksWindow;
 	private var ratings:RatingsPage;
 	private var shop:ShopPage;
+	private var miniProfile:MiniProfile;
 
 	private var foreground:ForegroundProfile = new ForegroundProfile();
 
@@ -114,6 +116,14 @@ public class View extends Sprite
 		centerX(shop, 760);
 		centerY(shop, 760);
 		pageContainer.addChild(shop);
+	}
+
+	public function showMiniProfile(e:Event = null):void
+	{
+		miniProfile = new MiniProfile(model.owner);
+//		centerX(miniProfile, 760);
+//		centerY(miniProfile, 760);
+		pageContainer.addChild(miniProfile);
 	}
 }
 }
