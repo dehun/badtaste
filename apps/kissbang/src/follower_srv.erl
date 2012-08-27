@@ -46,14 +46,14 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 setup_db() ->
-    Result = mnesia:create_table(folowersinfo, [{disc_copies, [node() | nodes()]}, 
+    Result = mnesia:create_table(followersinfo, [{disc_copies, [node() | nodes()]}, 
                                                 {attributes, record_info(fields, followersinfo)}]),
     case Result of
         {atomic, ok} ->
-            mnesia:wait_for_tables([folowersinfo], 5000),
+            mnesia:wait_for_tables([followersinfo], 5000),
             ok;
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([folowersinfo], 5000),
+            mnesia:wait_for_tables([followersinfo], 5000),
             ok;
         {aborted, Reason} ->
             erlang:error(Reason)
@@ -162,7 +162,7 @@ code_change(_OldVsn, State, _Extra) ->
 inner_buy_following(BuyerGuid, TargetGuid) ->
     Trans = fun() ->
                     %  prepare info to write
-                    Existance = mnesia:read({followerinfo, TargetGuid}),
+                    Existance = mnesia:read({followersinfo, TargetGuid}),
                     case Existance of
                         [] ->
                             BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
@@ -189,7 +189,7 @@ inner_buy_following(BuyerGuid, TargetGuid) ->
 
 inner_get_followers(UserGuid) ->
     Trans = fun() ->
-                    Existance = mnesia:read({followerinfo, UserGuid}),
+                    Existance = mnesia:read({followersinfo, UserGuid}),
                     case Existance of
                         [] ->
                             BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),

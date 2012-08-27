@@ -4,17 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 17 Jul 2012 by  <>
+%%% Created : 10 Jul 2012 by  <>
 %%%-------------------------------------------------------------------
--module(get_user_info_handler_srv).
+-module(get_user_sympathies_handler_srv).
 
 -behaviour(gen_server).
-
-%% API
 -include("../../kissbang_messaging.hrl").
--include("../../admin_messaging.hrl").
+%% API
 -export([start_link/0]).
--export([handle_get_user_info/2]).
+-export([handle_get_user_sympathies/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -54,8 +52,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(get_user_info, fun handle_get_user_info/2),
-    handler_utils:register_handler(get_friend_info, fun handle_get_user_info/2),
+    handler_utils:register_handler(get_user_sympathies, fun handle_get_user_sympathies/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -130,24 +127,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_get_user_info(Guid, Message) when is_record(Message, get_user_info) ->
-    get_user_info(Guid, Message#get_user_info.target_user_guid);
-handle_get_user_info(Guid, Message) when is_record(Message, get_friend_info) ->
-    get_user_info(Guid, Message#get_friend_info.target_user_guid).
-
-get_user_info(Guid, TargetUserGuid) ->
-    Money = bank_srv:check(Guid),
-    {ok, UserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
-    ReplyMessage = #on_got_user_info{info_owner_guid = TargetUserGuid,
-                                     user_id = UserInfo#user_info.user_id,
-                                     name = UserInfo#user_info.name,
-                                     profile_url = UserInfo#user_info.profile_url,
-                                     is_man = UserInfo#user_info.is_man,
-                                     picture_url = UserInfo#user_info.avatar_url,
-                                     is_online = "false",
-                                     city = UserInfo#user_info.city,
-				     birth_date = UserInfo#user_info.birth_date,
-                                     coins = Money,
-                                     kisses = 0},
-    proxy_srv:async_route_messages(Guid, [ReplyMessage]).
-
+handle_get_user_sympathies(CallerGuid, Message) ->
+				       TargetUserGuid = Message#get_user_sympathies.target_user_guid,
+				       Sympathies = sympathy_srv:get_sympathies(TargetUserGuid),
+				       proxy_srv:async_route_messages(CallerGuid, [#on_got_user_sympathies{owner_user_guid = TargetUserGuid,
+				       						  				     sympathies = Sympathies}]).
