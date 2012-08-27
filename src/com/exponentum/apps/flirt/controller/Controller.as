@@ -9,19 +9,11 @@ import com.junkbyte.console.Cc;
 
 import flash.events.Event;
 
+import ru.evast.integration.core.SocialProfileVO;
+
 public class Controller
 {
 	private var model:Model;
-
-	//user
-	public static const AUTHENTICATE:String = "Authenticate";
-	public static const AUTHENTICATED:String = "Authenticated";
-	public static const TOUCH_USER_INFO:String = "TouchUserInfo";
-	public static const TOUCH_USER_INFO_RESULT:String = "TouchUserInfoResult";
-	public static const GET_USER_INFO:String = "GetUserInfo";
-	public static const GOT_USER_INFO:String = "OnGotUserInfo";
-	public static const TOUCH_USER_INFO_BY_USER:String = "TouchUserInfoByUser";
-	public static const TOUCH_USER_INFO_BY_USER_RESULT:String = "TouchUserInfoByUserResult";
 
 	//room
 	public static const JOIN_TO_MAIN_ROOM_QUEUE:String = "JoinMainRoomQueue";
@@ -66,9 +58,12 @@ public class Controller
 	{
 		socket.addEventListener(AUTHENTICATED, onAuthenticated);
 		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, onGotChatMessageFromRoom);
-		socket.addEventListener(TOUCH_USER_INFO_RESULT, onTouchUserInfoResult);
 		socket.addEventListener(GOT_USER_INFO, onGotUserInfo);
+		socket.addEventListener(TOUCH_USER_INFO_RESULT, onTouchUserInfoResult);
 		socket.addEventListener(TOUCH_USER_INFO_BY_USER_RESULT, touchUserInfoByUserResult);
+		socket.addEventListener(ON_GOT_MY_GIFTS, onGotMyGifts);
+		socket.addEventListener(ON_GOT_USER_SYMPATHIES, onGotUserSympathies);
+		socket.addEventListener(ON_GOT_DECORATIONS, onGotDecorations);
 
 		//room
 		socket.addEventListener(JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToMainRoomQueue);
@@ -85,33 +80,22 @@ public class Controller
 		socket.addEventListener(REFUSED_TO_KISS, onRefusedToKiss);
 		socket.addEventListener(NEW_BOTTLE_SWINGER, onNewBottleSwinger);
 
+		//mail
+		socket.addEventListener(ON_GOT_MAILBOX, onGotMailbox);
+		socket.addEventListener(ON_GOT_NEW_MAIL, onGotNewMail);
+
+		//followers
+		socket.addEventListener(ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
+		socket.addEventListener(ON_FOLLOWING_BOUGHT, onFollowingBought);
+
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
 	// Commands
 	//------------------------------------------------------------------------------------------------------------------
 	//user
-	public function touchUserInfo(userInfo:String):void
-	{
-		ServerConnector.call(TOUCH_USER_INFO, userInfo);
-	}
 
-	public function authenticate(login:String, password:String):void
-	{
-		var requestObject:Object = new Object();
-		requestObject[AUTHENTICATE] = {};
-		requestObject[AUTHENTICATE]["login"] = login;
-		requestObject[AUTHENTICATE]["password"] = password;
-		socket.sendRequest(requestObject);
-	}
 
-	public function getUserInfo(guid:String):void
-	{
-		var requestObject:Object = new Object();
-		requestObject[GET_USER_INFO] = {};
-		requestObject[GET_USER_INFO].targetUserGuid = guid;
-		socket.sendRequest(requestObject);
-	}
 
 	public function touchUserInfoByUser(changes:Object):void
 	{
@@ -165,119 +149,48 @@ public class Controller
 	// Handlers
 	//------------------------------------------------------------------------------------------------------------------
 	//user
-	private function onAuthenticated(e:ObjectEvent):void
-	{
-		model.owner.guid = e.data.guid;
-	}
 
-	private function onTouchUserInfoResult(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
-
-	private function onGotUserInfo(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
 
 	private function touchUserInfoByUserResult(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	//room
 	private function onJoinedToMainRoomQueue(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onJoinedToRoom(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onRoomStateChanged(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onRoomUserListChanged(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onRoomIsFull(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onRoomIsFool(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onAlreadyInRoom(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	private function onRoomDeath(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	//chat
 	private function onGotChatMessageFromRoom(e:ObjectEvent):void
 	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
 	}
 
 	//game
@@ -316,5 +229,206 @@ public class Controller
 			Cc.log(key + ":" + e.data[key]);
 		}
 	}
+
+	//------------------------------------------------------------------------------------------------------------------
+	// USER PROFILE INFO
+	//------------------------------------------------------------------------------------------------------------------
+	public static const AUTHENTICATE:String = "Authenticate";
+	public static const AUTHENTICATED:String = "Authenticated";
+	public static const TOUCH_USER_INFO:String = "TouchUserInfo";
+	public static const TOUCH_USER_INFO_RESULT:String = "TouchUserInfoResult";
+	public static const GET_USER_INFO:String = "GetUserInfo";
+	public static const GOT_USER_INFO:String = "OnGotUserInfo";
+	public static const TOUCH_USER_INFO_BY_USER:String = "TouchUserInfoByUser";
+	public static const TOUCH_USER_INFO_BY_USER_RESULT:String = "TouchUserInfoByUserResult";
+	public static const GET_MY_GIFTS:String = "GetMyGifts";
+	public static const ON_GOT_MY_GIFTS:String = "OnGotMyGifts";
+	public static const GET_USER_SYMPATHIES:String = "GetUserSympathies";
+	public static const ON_GOT_USER_SYMPATHIES:String = "OnGotUserSympathies";
+	public static const GET_USER_FOLLOWERS:String = "GetUserFollowers";
+	public static const ON_GOT_USER_FOLLOWERS:String = "OnGotUserFollowers";
+	public static const BUY_FOLLOWING:String = "BuyFollowing";
+	public static const ON_FOLLOWING_BOUGHT:String = "OnFollowingBought";
+	public static const BUY_DECORE:String = "BuyDecore";
+	public static const GET_DECORATION_FOR:String = "GetDecorationFor";
+	public static const ON_GOT_DECORATIONS:String = "OnGotDecorations";
+
+	public function userLogin():void
+	{
+		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
+				'{"userId" : "' + model.owner.id + '",' +
+				'"name" : "' + model.owner.name + '",' +
+				'"profileUrl" : "' + model.owner.profileLink + '",' +
+				'"isMan" : "' + model.owner.sex + '",' +
+				'"birthDate" : "' + model.owner.birthDate + '",' +
+				'"city" : "' + model.owner.city + '",' +
+				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
+	}
+
+	public function touchUserInfo(userInfo:String):void
+	{
+		ServerConnector.instance.addEventListener(TOUCH_USER_INFO_RESULT, onTouchUserInfoResult);
+		ServerConnector.call(TOUCH_USER_INFO, userInfo);
+	}
+
+	private function onTouchUserInfoResult(e:ObjectEvent):void
+	{
+		authenticate(model.owner.id, "");
+	}
+
+	public function authenticate(login:String, password:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[AUTHENTICATE] = {};
+		requestObject[AUTHENTICATE]["login"] = login;
+		requestObject[AUTHENTICATE]["password"] = password;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onAuthenticated(e:ObjectEvent):void
+	{
+		model.owner.guid = e.data.guid;
+		getUserInfo(model.owner.guid);
+	}
+
+	private function getUserInfo(guid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_INFO] = {};
+		requestObject[GET_USER_INFO].targetUserGuid = guid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotUserInfo(e:ObjectEvent):void
+	{
+		//getUserSympathies(model.owner.guid);
+		//getMyGifts();
+		getUserFollowers(model.owner.guid);
+		//getDecorationFor(model.owner.guid);
+	}
+
+	private function getUserSympathies(guid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_SYMPATHIES] = {};
+		requestObject[GET_USER_SYMPATHIES].targetUserGuid = guid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotUserSympathies(e:ObjectEvent):void
+	{
+		getMyGifts();
+	}
+
+	private function getMyGifts():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_MY_GIFTS] = {};
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotMyGifts(e:ObjectEvent):void
+	{
+
+	}
+
+	private function getUserFollowers(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_FOLLOWERS] = {};
+		requestObject[GET_USER_FOLLOWERS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotUserFollowers(e:ObjectEvent):void
+	{
+
+	}
+
+	private function buyFollowing(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[BUY_FOLLOWING] = {};
+		requestObject[BUY_FOLLOWING].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onFollowingBought(e:ObjectEvent):void
+	{
+
+	}
+
+	private function getDecorationFor(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_DECORATION_FOR] = {};
+		requestObject[GET_DECORATION_FOR].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function buyDecore(decoreGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[BUY_DECORE] = {};
+		requestObject[BUY_DECORE].decoreGuid = decoreGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotDecorations(e:ObjectEvent):void
+	{
+
+	}
+
+	//------------------------------------------------------------------------------------------------------------------
+	// DIRECT MESSAGES
+	//------------------------------------------------------------------------------------------------------------------
+	public static const CHECK_MAILBOX:String = "CheckMailbox";
+	public static const ON_GOT_MAILBOX:String = "OnGotMailbox";
+	public static const SEND_MAIL:String = "SendMail";
+	public static const ON_GOT_NEW_MAIL:String = "OnGotNewMail";
+	public static const MARK_MAIL_AS_READ:String = "MarkMailAsRead";
+	public static const ON_MESSAGE_MARKED_AS_READ:String = "OnMessageMarkedAsRead";
+
+	private function checkMailbox():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[CHECK_MAILBOX] = {};
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotMailbox(e:ObjectEvent):void
+	{
+
+	}
+
+	public function sendMail(receiverGuid:String, subject:String, body:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[SEND_MAIL] = {};
+		requestObject[SEND_MAIL].receiverGuid = receiverGuid;
+		requestObject[SEND_MAIL].subject = subject;
+		requestObject[SEND_MAIL].body = body;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotNewMail(e:ObjectEvent):void
+	{
+
+	}
+
+	public function markMailAsRead(mailGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[MARK_MAIL_AS_READ] = {};
+		requestObject[MARK_MAIL_AS_READ].targetMailGuid = mailGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onMessageMarkedAsRead(e:ObjectEvent):void
+	{
+
+	}
+
+
 }
 }

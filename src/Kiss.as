@@ -10,6 +10,7 @@ import com.junkbyte.console.ConsoleConfig;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
+import flash.system.Security;
 
 import ru.evast.integration.IntegrationProxy;
 import ru.evast.integration.core.SocialNetworkTypes;
@@ -37,6 +38,8 @@ public class Kiss extends Sprite
 
 	private function init():void
 	{
+		Security.allowDomain("*");
+
 		model = new Model();
 		controller = new Controller(model);
 		view = new View(model, controller);
@@ -69,23 +72,16 @@ public class Kiss extends Sprite
 		Cc.log("--------------- Social network response ---------------");
 		Cc.log(res);
 		Cc.log("--------------- Social network response ---------------");
+
 		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
+		controller.userLogin();
 
-		controller.touchUserInfo('{"userInfo" : { "UserInfo" : ' +
-				'{"userId" : "' + model.owner.id + '",' +
-				'"name" : "' + model.owner.name + '",' +
-				'"profileUrl" : "' + model.owner.profileLink + '",' +
-				'"isMan" : "' + model.owner.sex + '",' +
-				'"birthDate" : "' + model.owner.birthDate + '",' +
-				'"city" : "' + model.owner.city + '",' +
-				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
-
-		view.showProfile();
+		view.showOwnerProfile();
 		//view.showGameField();
 		//view.showTasks();
 		//view.showRatings();
 		//view.showShop();
-		view.showMiniProfile();
+		//view.showMiniProfile();
 
 		createTestConsole();
 	}
@@ -124,7 +120,7 @@ public class Kiss extends Sprite
 					controller.sendMessageToRoom("Hello World!");
 				break;
 			case 51:
-					controller.getUserInfo(model.owner.guid);
+
 				break;
 			case 52:
 					controller.touchUserInfoByUser({name:"newName"});

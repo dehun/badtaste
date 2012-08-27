@@ -47,7 +47,9 @@ public class Profile extends BackGroundedPage
 
 	private function init():void
 	{
-		setBackground(_user.profileBackground);
+//		setBackground(_user.profileBackground);
+		setBackground(3);
+
 
 		playButton.x = 231;
 		playButton.y = -1;

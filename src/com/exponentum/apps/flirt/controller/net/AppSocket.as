@@ -69,7 +69,7 @@ public class AppSocket extends Socket
 		var size:int = readInt();
 		var str:String = readUTFBytes(size);
 		response += str;
-		trace("->", response);
+		trace("<-", response);
 		Cc.log("<-", response);
 		for (var key:String in JSON.decode(response))
 		{

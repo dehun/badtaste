@@ -1,5 +1,8 @@
 package com.exponentum.apps.flirt.controller.net {
 import com.adobe.serialization.json.JSON;
+import com.exponentum.apps.flirt.controller.net.ServerConnector;
+import com.exponentum.apps.flirt.controller.net.ServerConnector;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.junkbyte.console.Cc;
 
 import flash.events.EventDispatcher;
@@ -44,6 +47,10 @@ import flash.events.EventDispatcher;
 		{
 			Cc.log("<-", e.currentTarget.data);
 			var o:Object = JSON.decode(e.currentTarget.data);
+			for (var key:String in o)
+			{
+				ServerConnector.instance.dispatchEvent(new ObjectEvent(key, o[key]));
+			}
 		}
 		
 		private static function showError(message:String):void 

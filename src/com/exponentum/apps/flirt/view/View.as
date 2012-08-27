@@ -59,7 +59,7 @@ public class View extends Sprite
 					showGameField();
 				break;
 			case Config.PROFILE:
-					showProfile();
+					showOwnerProfile();
 				break;
 			case Config.TASKS:
 					showTasks();
@@ -70,7 +70,15 @@ public class View extends Sprite
 		}
 	}
 
-	public function showProfile(e:Event = null):void
+//----------------------------------------------------------------------------------------------------------------------
+// USER PROFILE
+//----------------------------------------------------------------------------------------------------------------------
+	public function showOwnerProfile(e:Event = null):void
+	{
+		onUserInfoCollected();
+	}
+
+	private function onUserInfoCollected(e:Event = null):void
 	{
 		pageContainer.removeChildren(true, true);
 		profile = new Profile(model.owner);
@@ -79,12 +87,15 @@ public class View extends Sprite
 		profile.addEventListener(Config.RATINGS, showRatings);
 		pageContainer.addChild(profile);
 	}
+//----------------------------------------------------------------------------------------------------------------------
+// USER PROFILE
+//----------------------------------------------------------------------------------------------------------------------
 
 	public function showGameField(e:Event = null):void
 	{
 		pageContainer.removeChildren(true, true);
 		gameField = new GameField();
-		gameField.addEventListener(Config.PROFILE, showProfile);
+		gameField.addEventListener(Config.PROFILE, showOwnerProfile);
 		gameField.addEventListener(Config.RATINGS, showRatings);
 
 		gameField.addPlayerToTable(model.owner, 0);

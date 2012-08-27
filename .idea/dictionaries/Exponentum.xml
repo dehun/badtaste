@@ -3,7 +3,9 @@
     <words>
       <w>coords</w>
       <w>gamefield</w>
+      <w>guid</w>
       <w>prezents</w>
+      <w>swinged</w>
     </words>
   </dictionary>
 </component>
