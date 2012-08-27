@@ -77,6 +77,7 @@ get_all_handlers() ->
                    get_time_handlers(),
                    get_bank_handlers(),
                    get_rate_handlers(),
+		   get_sympathy_handlers(),
                    get_chat_handlers()]).
     
 
@@ -125,3 +126,6 @@ get_mail_handlers() ->
     ['check_mailbox_handler_srv',
     'mark_mail_as_read_handler_srv',
      'send_mail_handler_srv'].
+
+get_sympathy_handlers() ->
+			['get_user_sympathies_handler_srv'].
