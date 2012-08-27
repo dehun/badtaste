@@ -52,7 +52,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    handler_utils:register_handler(get_user_sympathies, fun handle_get_user_followers/2),
+    handler_utils:register_handler(get_user_followers, fun handle_get_user_followers/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -129,7 +129,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 handle_get_user_followers(CallerGuid, Message) ->
     TargetUserGuid = Message#get_user_followers.target_user_guid,
-    {CurrentPrice, Followers} = follower_srv:get_user_followers(TargetUserGuid),
+    {CurrentPrice, Followers} = follower_srv:get_followers(TargetUserGuid),
     proxy_srv:async_route_messages(CallerGuid, 
                                    [#on_got_user_followers{owner_user_guid = TargetUserGuid,
                                                            followers = Followers,
