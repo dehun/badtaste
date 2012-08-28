@@ -74,67 +74,14 @@ public class Kiss extends Sprite
 		Cc.log("--------------- Social network response ---------------");
 
 		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
-		controller.userLogin();
+		controller.userLogin(true);
 
 		view.showOwnerProfile();
-		//view.showGameField();
-		//view.showTasks();
-		//view.showRatings();
-		//view.showShop();
-		//view.showMiniProfile();
-
-		createTestConsole();
 	}
 
 	private function onGetFriends(res:Object):void
 	{
 		trace(res);
-	}
-
-	private function createTestConsole():void
-	{
-
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-
-		Cc.log("Press '0' Authenticate();");
-		Cc.log("Press '1' JoinMainRoomQueue();");
-		Cc.log("Press '2' SendChatMessageToRoom();");
-		Cc.log("Press '3' GetUserInfo();");
-		Cc.log("Press '4' TouchUserInfoByUser();");
-		Cc.log("Press '5' ToSwingBottle();");
-		Cc.log("Press '6' ToKiss();");
-		Cc.log("Press '7' ToRefuseToKiss();");
-	}
-
-	private function onKeyDown(e:KeyboardEvent):void
-	{
-		switch(e.keyCode)
-		{
-			case 48:
-					controller.authenticate(model.owner.id, "");
-				break;
-			case 49:
-					controller.joinToMainRoomQueue();
-				break;
-			case 50:
-					controller.sendMessageToRoom("Hello World!");
-				break;
-			case 51:
-
-				break;
-			case 52:
-					controller.touchUserInfoByUser({name:"newName"});
-				break;
-			case 53:
-					controller.swingBottle();
-				break;
-			case 54:
-					controller.kiss();
-				break;
-			case 55:
-					controller.refuseToKiss();
-				break;
-		}
 	}
 }
 }

@@ -81,9 +81,9 @@ public class MiniProfile extends CasaSprite
 			presentsContainer.y = shelf.y + 25;
 			profileInfoContainer.addChild(presentsContainer);
 		}
-		for (var i:int = 0; i < _user.presentIds.length; i++)
+		for (var i:int = 0; i < _user.presents.length; i++)
 		{
-			var present:Present = new Present(_user.presentIds[i]);
+			var present:Present = new Present(_user.presents[i]);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}

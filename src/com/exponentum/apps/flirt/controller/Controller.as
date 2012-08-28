@@ -64,6 +64,7 @@ public class Controller
 		socket.addEventListener(ON_GOT_MY_GIFTS, onGotMyGifts);
 		socket.addEventListener(ON_GOT_USER_SYMPATHIES, onGotUserSympathies);
 		socket.addEventListener(ON_GOT_DECORATIONS, onGotDecorations);
+		socket.addEventListener(ON_GOT_USER_RATE, onGotUserRate);
 
 		//room
 		socket.addEventListener(JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToMainRoomQueue);
@@ -250,10 +251,14 @@ public class Controller
 	public static const BUY_FOLLOWING:String = "BuyFollowing";
 	public static const ON_FOLLOWING_BOUGHT:String = "OnFollowingBought";
 	public static const BUY_DECORE:String = "BuyDecore";
-	public static const GET_DECORATION_FOR:String = "GetDecorationFor";
+	public static const GET_DECORATION_FOR:String = "GetDecorationsFor";
 	public static const ON_GOT_DECORATIONS:String = "OnGotDecorations";
+	public static const GET_USER_RATE:String = "GetUserRate";
+	public static const ON_GOT_USER_RATE:String = "OnGotUserRate";
 
-	public function userLogin():void
+	private var sessionStart:Boolean = false;
+
+	public function userLogin(firstSession:Boolean = false):void//TODO: not only owner support
 	{
 		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
 				'{"userId" : "' + model.owner.id + '",' +
@@ -263,6 +268,8 @@ public class Controller
 				'"birthDate" : "' + model.owner.birthDate + '",' +
 				'"city" : "' + model.owner.city + '",' +
 				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
+
+		sessionStart = firstSession;
 	}
 
 	public function touchUserInfo(userInfo:String):void
@@ -273,7 +280,8 @@ public class Controller
 
 	private function onTouchUserInfoResult(e:ObjectEvent):void
 	{
-		authenticate(model.owner.id, "");
+		if(sessionStart)
+			authenticate(model.owner.id, "");
 	}
 
 	public function authenticate(login:String, password:String):void
@@ -301,10 +309,21 @@ public class Controller
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
-		//getUserSympathies(model.owner.guid);
-		//getMyGifts();
-		getUserFollowers(model.owner.guid);
-		//getDecorationFor(model.owner.guid);
+		model.owner.birthDate = e.data.birthDate;
+		model.owner.city = e.data.city;
+		model.owner.coins = e.data.coins;
+		model.owner.id = e.data.userId;
+		model.owner.profileLink = e.data.profileUrl;
+		model.owner.photoLink = e.data.pictureUrl;
+		model.owner.name = e.data.name;
+		model.owner.kisses = e.data.kisses;
+		model.owner.isOnline = e.data.isOnline;
+		model.owner.sex = e.data.sex;
+		model.owner.guid = e.data.infoOwnerGuid;
+
+
+		if(sessionStart)
+			getUserSympathies(model.owner.guid);
 	}
 
 	private function getUserSympathies(guid:String):void
@@ -317,7 +336,9 @@ public class Controller
 
 	private function onGotUserSympathies(e:ObjectEvent):void
 	{
-		getMyGifts();
+		model.owner.sympathies = e.data.sympathies;
+		if(sessionStart)
+			getMyGifts();
 	}
 
 	private function getMyGifts():void
@@ -329,7 +350,9 @@ public class Controller
 
 	private function onGotMyGifts(e:ObjectEvent):void
 	{
-
+		model.owner.presents = e.data.gifts;
+		if(sessionStart)
+			getUserFollowers(model.owner.guid);
 	}
 
 	private function getUserFollowers(userGuid:String):void
@@ -342,7 +365,40 @@ public class Controller
 
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
+		model.owner.followers = e.data.followers;
+		model.owner.rebuyPrice = e.data.rebuyPrice;
 
+		if(sessionStart)
+			getDecorationFor(model.owner.guid);
+	}
+
+	private function getDecorationFor(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_DECORATION_FOR] = {};
+		requestObject[GET_DECORATION_FOR].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotDecorations(e:ObjectEvent):void
+	{
+		model.owner.decorations = e.data.decorations;
+		if(sessionStart)
+			getUserRate(model.owner.guid);
+	}
+
+	private function getUserRate(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_RATE] = {};
+		requestObject[GET_USER_RATE].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	private function onGotUserRate(e:ObjectEvent):void
+	{
+		model.owner.userRate = e.data.userRate;
+		model.owner.lastRaters = e.data.lastRaters;
 	}
 
 	private function buyFollowing(userGuid:String):void
@@ -358,25 +414,12 @@ public class Controller
 
 	}
 
-	private function getDecorationFor(userGuid:String):void
-	{
-		var requestObject:Object = new Object();
-		requestObject[GET_DECORATION_FOR] = {};
-		requestObject[GET_DECORATION_FOR].targetUserGuid = userGuid;
-		socket.sendRequest(requestObject);
-	}
-
 	private function buyDecore(decoreGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[BUY_DECORE] = {};
 		requestObject[BUY_DECORE].decoreGuid = decoreGuid;
 		socket.sendRequest(requestObject);
-	}
-
-	private function onGotDecorations(e:ObjectEvent):void
-	{
-
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
