@@ -209,7 +209,7 @@ class GetMyGifts(pgMessage):
     pass
 
 class OnGotMyGifts(pgMessage):
-    gifts = pgList(pgString())
+    gifts = pgList(pgMessage())
 
 # vip
 ## get vip points

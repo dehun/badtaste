@@ -200,7 +200,7 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                       [Gift] = [Gift || Gift <- State#state.gifts, Gift#gift.guid == GiftGuid],
                                       {ok, _} = bank_srv:withdraw(SenderGuid, Gift#gift.price),
                                       %% send it
-                                      Existance = mnesia:read({user_gift, ReceiverGuid}, write),
+                                      Existance = mnesia:read({user_gifts, ReceiverGuid}),
                                       case Existance of
                                           [OldUserGifts] ->
                                               NewUserGifts = OldUserGifts#user_gifts{gifts = [#received_gift{gift_guid = GiftGuid,
@@ -208,7 +208,8 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                               mnesia:write(NewUserGifts),
                                               {commit, ok};
                                           [] ->
-                                              NewUserGifts = #user_gifts{gifts = [#received_gift{gift_guid = GiftGuid,
+                                              NewUserGifts = #user_gifts{user_guid = ReceiverGuid,
+					      		     			   gifts = [#received_gift{gift_guid = GiftGuid,
                                                                                                  sender_guid = SenderGuid}]},
                                               mnesia:write(NewUserGifts),
                                               {commit, ok}

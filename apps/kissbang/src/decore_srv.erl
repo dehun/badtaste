@@ -34,7 +34,7 @@
 %%% API
 %%%===================================================================
 buy_decore(TargetUserGuid, DecoreGuid) ->
-    gen_server:call(?SERVER, {buy_decore, DecoreGuid}).
+    gen_server:call(?SERVER, {buy_decore, TargetUserGuid, DecoreGuid}).
 
 get_decore(TargetUserGuid) ->
     gen_server:call(?SERVER, {get_decore, TargetUserGuid}).
