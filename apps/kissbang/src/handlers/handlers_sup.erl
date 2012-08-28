@@ -136,4 +136,4 @@ get_sympathy_handlers() ->
 
 get_decorations_handlers() ->
     ['get_decorations_for_handler_srv',
-     'buy_decorations_handler_srv'].
+     'buy_decoration_handler_srv'].
