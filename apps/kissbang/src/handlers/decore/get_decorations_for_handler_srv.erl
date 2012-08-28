@@ -130,6 +130,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 handle_get_decorations_for(CallerGuid, Message) ->
     TargetUserGuid = Message#get_decorations_for.target_user_guid,
-    Decorations = decore_srv:get_decorations(TargetUserGuid),
+    Decorations = decore_srv:get_decore(TargetUserGuid),
     proxy_srv:async_route_messages(CallerGuid, [#on_got_decorations{owner_user_guid = TargetUserGuid,
                                                                     decorations = Decorations}]).

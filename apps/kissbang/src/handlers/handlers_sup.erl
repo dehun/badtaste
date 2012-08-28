@@ -78,12 +78,12 @@ get_all_handlers() ->
                    get_bank_handlers(),
                    get_rate_handlers(),
                    get_sympathy_handlers(),
+                   get_decorations_handlers(),
                    get_followers_handlers(),
                    get_gift_handlers(),
                    get_vip_handlers(),
                    get_mail_handlers(),
                    get_chat_handlers()]).
-    
 
 
 get_user_info_handlers() ->
@@ -133,3 +133,6 @@ get_mail_handlers() ->
 
 get_sympathy_handlers() ->
     ['get_user_sympathies_handler_srv'].
+
+get_decorations_handlers() ->
+    ['get_decorations_handler_srv'].
