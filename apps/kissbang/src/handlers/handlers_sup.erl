@@ -77,7 +77,8 @@ get_all_handlers() ->
                    get_time_handlers(),
                    get_bank_handlers(),
                    get_rate_handlers(),
-		   get_sympathy_handlers(),
+                   get_sympathy_handlers(),
+                   get_followers_handlers(),
                    get_chat_handlers()]).
     
 
