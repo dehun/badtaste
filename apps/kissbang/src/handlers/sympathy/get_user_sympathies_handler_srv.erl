@@ -128,7 +128,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_get_user_sympathies(CallerGuid, Message) ->
-				       TargetUserGuid = Message#get_user_sympathies.target_user_guid,
-				       Sympathies = sympathy_srv:get_sympathies(TargetUserGuid),
-				       proxy_srv:async_route_messages(CallerGuid, [#on_got_user_sympathies{owner_user_guid = TargetUserGuid,
-				       						  				     sympathies = Sympathies}]).
+    TargetUserGuid = Message#get_user_sympathies.target_user_guid,
+    Sympathies = sympathy_srv:get_sympathies(TargetUserGuid),
+    proxy_srv:async_route_messages(CallerGuid, [#on_got_user_sympathies{owner_user_guid = TargetUserGuid,
+                                                                        sympathies = Sympathies}]).
