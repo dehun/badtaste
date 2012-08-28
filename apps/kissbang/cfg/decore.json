@@ -1,0 +1,26 @@
+{ "decores" : [
+  {"guid" : "1",
+  "name" : "ololo frame one",
+  "type" : "frame",
+  "img" : "http://radikal.ru/someimage.png",
+  "price" : "10"
+  },
+  {"guid" : "2",
+   "name" : "abrakadabra frame 2",
+   "type" : "frame",
+   "img" : "http://radikal.ru/anotherimage.jpg",
+   "price" : "20"
+   },
+   {"guid" : "3",
+    "name" : "background one",
+    "type" : "background",
+    "img" : "http://radikal.ru/background.jpg",
+    "price" : "5"
+    },
+    {"guid" : "4",
+     "name" : "two background",
+     "type" : "background",
+     "img" : "http://radikal.ru/background2.jpg",
+     "price" : "35"
+     }
+]}
