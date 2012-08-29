@@ -6,6 +6,9 @@
                                            "isMan" : "true",
                                            "birthDate" : "1989-05-31",
                                            "city" : "kiev",
-                                           "avatarUrl" : "http://netu.net/netu.jpg"
+                                           "avatarUrl" : "http://netu.net/netu.jpg",
+                                           "hideSocialInfo" : "false",
+                                           "hideName" : "false",
+                                           "hideCity" : "false"
                  }}}}
 

@@ -173,7 +173,8 @@ inner_buy_following(BuyerGuid, TargetGuid) ->
                             BuyPrice = OldFollowersInfo#followersinfo.current_price,
                             {ok, MaximumFollowersLength} = application:get_env(kissbang, maximum_followers),
                             NewFollowers = lists:sublist([BuyerGuid | OldFollowersInfo#followersinfo.followers], 1, MaximumFollowersLength),
-                            NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers}
+                            NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers,
+                                                                              current_price = calculate_next_price(BuyPrice)}
                     end,
                     % buy
                     case bank_srv:withdraw(BuyerGuid, BuyPrice) of
