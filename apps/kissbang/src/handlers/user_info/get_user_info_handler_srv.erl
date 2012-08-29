@@ -149,7 +149,10 @@ get_user_info(Guid, TargetUserGuid) ->
                                      city = UserInfo#user_info.city,
                                      birth_date = UserInfo#user_info.birth_date,
                                      coins = Money,
-                                     kisses = 0},
+                                     kisses = 0,
+				     is_city_hidden = UserInfo#user_info.hide_city,
+				     is_name_hidden = UserInfo#user_info.hide_name,
+				     is_social_info_hidden = UserInfo#user_info.hide_social_info},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
 
 
