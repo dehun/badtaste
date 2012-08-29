@@ -169,7 +169,7 @@ inner_get_decore(TargetUserGuid) ->
                         [] ->
                             [];
                         [DecoreInfo] ->
-                            {DecoreInfo#decoreinfo.decores}
+                            DecoreInfo#decoreinfo.decores
                         end
             end,
     mnesia:activity(async_dirty, Trans).
@@ -217,7 +217,7 @@ load_decore(Error) ->
     throw({wrong_decore, Error}).
 
 load_config() ->
-    load_decores().
+    #config{decores = load_decores()}.
 
 load_decores() ->
     inets:start(),
