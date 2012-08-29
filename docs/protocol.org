@@ -101,6 +101,8 @@
 * decore
 ** buy new decore
    -> BuyDecore(decoreGuid = "someguid")
+   <- OnDecoreBoughtSuccessfully(buyedDecoreGuid = "someguid")
+   [ <- OnDecoreBuyFail(failedDecoreGuid = "someguid", reason = "asd")]
 ** get decore
    -> GetDecorationFor(targetUserGuid = "someguid")
    <- OnGotDecorations(ownerUserGuid = "someguid", decorations = ["oneguid", "twoguid"])
