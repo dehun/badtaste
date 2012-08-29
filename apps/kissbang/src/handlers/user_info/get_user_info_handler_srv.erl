@@ -137,7 +137,8 @@ handle_get_user_info(Guid, Message) when is_record(Message, get_friend_info) ->
 
 get_user_info(Guid, TargetUserGuid) ->
     Money = bank_srv:check(Guid),
-    {ok, UserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
+    {ok, RawUserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
+    UserInfo = process_hides(RawUserInfo),
     ReplyMessage = #on_got_user_info{info_owner_guid = TargetUserGuid,
                                      user_id = UserInfo#user_info.user_id,
                                      name = UserInfo#user_info.name,
@@ -146,8 +147,24 @@ get_user_info(Guid, TargetUserGuid) ->
                                      picture_url = UserInfo#user_info.avatar_url,
                                      is_online = "false",
                                      city = UserInfo#user_info.city,
-				     birth_date = UserInfo#user_info.birth_date,
+                                     birth_date = UserInfo#user_info.birth_date,
                                      coins = Money,
                                      kisses = 0},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
+
+
+process_hides(RawUserInfo) ->
+    RawUserInfo#user_info{name = if_hide_field(RawUserInfo#user_info.name, RawUserInfo#user_info.hide_name),
+                          city = if_hide_field(RawUserInfo#user_info.city, RawUserInfo#user_info.hide_city),
+                          user_id = if_hide_field(RawUserInfo#user_info.user_id, RawUserInfo#user_info.hide_social_info),
+                          profile_url = if_hide_field(RawUserInfo#user_info.profile_url, RawUserInfo#user_info.hide_social_info)}.
+
+
+if_hide_field(Field, IsHidden) ->
+    case IsHidden of
+        "true" ->
+            "hidden";
+        Other ->
+            Field
+    end.
 
