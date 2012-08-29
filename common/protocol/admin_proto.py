@@ -11,6 +11,9 @@ class UserInfo(pgMessage):
     birthDate = pgString()
     city = pgString()
     avatarUrl = pgString()
+    hideSocialInfo = pgString()
+    hideName = pgString()
+    hideCity = pgString()
 
 class TouchUserInfo(pgMessage):
     userInfo = pgMessage()
