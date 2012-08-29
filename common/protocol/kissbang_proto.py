@@ -57,7 +57,7 @@ class OnGotUserInfo(pgMessage):
 class TouchUserInfoByUser(pgMessage):
     name = pgString()
     hideName = pgString() # bool
-    hideUserId = pgString() # bool
+    hideSocialInfo = pgString() # bool
     hideCity = pgString() # bool 
 
 class TouchUserInfoByUserResult(pgMessage):

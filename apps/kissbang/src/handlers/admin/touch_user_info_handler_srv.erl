@@ -150,6 +150,7 @@ handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
             io:format("TouchResult = ~p", [TouchResult]),
             #touch_user_info_result{result = "ok"}
     end;
+
 handle_touch_user_info(CallerGuid, Message) ->
     log_srv:debug("touching user info by user"),
     {ok, OldUserInfo} = userinfo_srv:get_user_info(CallerGuid),
@@ -159,7 +160,10 @@ handle_touch_user_info(CallerGuid, Message) ->
                              is_man = OldUserInfo#user_info.is_man,
                              birth_date = OldUserInfo#user_info.birth_date,
                              city = OldUserInfo#user_info.city,
-                             avatar_url = OldUserInfo#user_info.avatar_url
+                             avatar_url = OldUserInfo#user_info.avatar_url,
+                             hide_social_info = Message#touch_user_info_by_user.hide_social_info,
+                             hide_city = Message#touch_user_info_by_user.hide_city,
+                             hide_name = Message#touch_user_info_by_user.hide_name
                             },
     userinfo_srv:update_user_info(CallerGuid, NewUserInfo),
     proxy_srv:async_route_messages(CallerGuid, [#touch_user_info_by_user_result{result = "ok"}]).
