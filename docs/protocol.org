@@ -76,6 +76,9 @@
 ** remove user rate failure
    -> DeleteRatePoint(raterGuid = "someguid")
    <- OnRatePointDeleteFailed(raterGuid = "someguid")
+** are user rated
+   -> AreUserRated(targetUserGuid = "someguid")
+   <- OnGotAreUserRated(targetUserGuid = "someguid", areRated = "true")
 * gifts
 ** present gift
    -> PresentGift(targetUserGuid, GiftGuid)
