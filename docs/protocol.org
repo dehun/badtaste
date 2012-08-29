@@ -32,7 +32,7 @@
 * web admin interface
 ** registration/updating info
    -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "http://vk.com/kcpc", isMan = "true", 
-   birthDate="1989.05.31", city="kiev",  avatarUrl = "http://radikal.ru/img/someimage.jpg")))
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "http://radikal.ru/img/someimage.jpg", hideSocialInfo="false", hideName="false", hideCity="false")))
    <- TouchUserInfoResult(result = "ok")
 * user info
 ** get user info

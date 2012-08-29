@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-08-29 14:49:10 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-08-29 15:51:39 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -342,7 +342,7 @@ lang="en" xml:lang="en">
 <div class="outline-text-3" id="text-5-1">
 
 <p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "<a href="http://vk.com/kcpc">http://vk.com/kcpc</a>", isMan = "true", 
-   birthDate="1989.05.31", city="kiev",  avatarUrl = "<img src="http://radikal.ru/img/someimage.jpg"  alt="http://radikal.ru/img/someimage.jpg" />")))
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "<img src="http://radikal.ru/img/someimage.jpg"  alt="http://radikal.ru/img/someimage.jpg" />", hideSocialInfo="false", hideName="false", hideCity="false")))
    &lt;- TouchUserInfoResult(result = "ok")
 </p></div>
 </div>
@@ -362,7 +362,7 @@ lang="en" xml:lang="en">
 
 <p>   -&gt; GetUserInfo(targetUserGuid = "someGuid")
    &lt;- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
-   smallAvatarUrl = "another<sub>url</sub>", mediumAvatarUrl = "yep<sub>another</sub><sub>url</sub>", bigAvatarUrl = "urrrl")
+   smallAvatarUrl = "another<sub>url</sub>", mediumAvatarUrl = "yep<sub>another</sub><sub>url</sub>", bigAvatarUrl = "urrrl", isNameHidden="false", isSocialInfoHidden = "false", isCityHidden="false")
 </p></div>
 
 </div>
@@ -392,7 +392,7 @@ lang="en" xml:lang="en">
 <h3 id="sec-6-4"><span class="section-number-3">6.4</span> update user info from game </h3>
 <div class="outline-text-3" id="text-6-4">
 
-<p>   -&gt; TouchUserInfoByUser(name = "dehunter")
+<p>   -&gt; TouchUserInfoByUser(name = "dehunter", hideName = "false", hideCity = "false", hideSocialInfo = "true")
    &lt;- TouchUserInfoByUserResult(result = "ok")
 </p></div>
 </div>
@@ -690,7 +690,7 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-08-29 14:49:10 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-08-29 15:51:39 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
