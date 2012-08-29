@@ -39,7 +39,7 @@ public class MiniProfile extends CasaSprite
 
 	private var profileDetails:ProfileDetails = new ProfileDetails();
 	private var profileAvatar:ProfileAvatar = new ProfileAvatar();
-	private var fans:Fans = new Fans();
+	private var fans:Fans = new Fans(null);
 
 	private var presentsContainer:Distribution = new Distribution();
 
@@ -75,7 +75,7 @@ public class MiniProfile extends CasaSprite
 		shelf.x = 60;
 		shelf.y = 455;
 		profileInfoContainer.addChild(shelf);
-
+		presentsContainer.removeChildren(true, true);
 		if(!contains(presentsContainer)){
 			presentsContainer.x = shelf.x;
 			presentsContainer.y = shelf.y + 25;
@@ -105,7 +105,7 @@ public class MiniProfile extends CasaSprite
 
 		profileAvatar.x = 56;
 		profileAvatar.y = 133;
-		profileAvatar.frame = _user.profileAvatarFrame;
+		profileAvatar.frame = _user.avatarFrame;
 		profileAvatar.sex = _user.sex;
 		profileAvatar.isVIP = _user.isVIP;
 		profileInfoContainer.addChild(profileAvatar);
@@ -122,7 +122,7 @@ public class MiniProfile extends CasaSprite
 	{
 		achievementsPanel.x = 250;
 		achievementsPanel.y = 270;
-		achievementsPanel.giftsText.text = _user.gotGifts.toString();
+		achievementsPanel.giftsText.text = _user.presents.length.toString();
 		achievementsPanel.medalsText.text = _user.tasksDone.toString();
 		achievementsPanel.ratingText.text = _user.placeInRating.toString();
 		profileInfoContainer.addChild(achievementsPanel);
@@ -190,7 +190,7 @@ public class MiniProfile extends CasaSprite
 
 	private function createMask():void
 	{
-		bg.setBackground(3);
+		bg.setBackground(_user.profileBackground);
 		addChild(bg);
 		addChild(profileMask);
 		centerX(profileMask, 760);

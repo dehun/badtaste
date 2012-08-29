@@ -4,6 +4,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
@@ -49,6 +50,13 @@ public class View extends Sprite
 		foreground.y = -10;
 		addChild(foreground);
 		foreground.mouseChildren = foreground.mouseEnabled = false;
+		
+		model.addEventListener(User.USER_INFO_UPDATED, onUserInfoUpdated);
+	}
+
+	private function onUserInfoUpdated(e:Event):void
+	{
+		if(profile) profile.update();
 	}
 
 	private function showPage(pageId:String):void
@@ -81,7 +89,7 @@ public class View extends Sprite
 	private function onUserInfoCollected(e:Event = null):void
 	{
 		pageContainer.removeChildren(true, true);
-		profile = new Profile(model.owner);
+		profile = new Profile(model.owner, controller);
 		profile.addEventListener(Config.GAMEFIELD, showGameField);
 		profile.addEventListener(Config.TASKS, showTasks);
 		profile.addEventListener(Config.RATINGS, showRatings);

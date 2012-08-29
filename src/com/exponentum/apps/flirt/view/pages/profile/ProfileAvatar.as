@@ -25,23 +25,22 @@ public class ProfileAvatar extends CasaSprite
 	{
 		addChild(avatarHolder);
 
-		showMarkBlock();
+
 	}
 
-	private function showMarkBlock():void
+	public function showMarkBlock(mark:Number, canVote:Boolean = false):void
 	{
-		var canVote:Boolean = true;
 
-		avatarHolder.averageMarkBlock.visible = canVote;
-		avatarHolder.markButtonsBlock.visible = !canVote;
+		avatarHolder.averageMarkBlock.visible = !canVote;
+		avatarHolder.markButtonsBlock.visible = canVote;
 
 		const numMarks:uint = 6;
 
-		if(!canVote)
+		if(canVote)
 			for (var i:int = 1; i <= numMarks; i++)
 				(avatarHolder.markButtonsBlock["mark" + i] as SimpleButton).addEventListener(MouseEvent.CLICK, onMarkClick);
 		else
-			avatarHolder.averageMarkBlock.markText.text = 5.1;
+			avatarHolder.averageMarkBlock.markText.text = mark.toString();
 	}
 
 	private function onMarkClick(e:MouseEvent):void

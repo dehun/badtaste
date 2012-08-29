@@ -34,6 +34,7 @@ import flash.events.EventDispatcher;
 			var request : URLRequest = new URLRequest("http://" + ServerConfig.SERVER + ":" + ServerConfig.HTTP_PORT);
 			var requestData:String = "{\"" + command + "\":" + params + "}";
 			Cc.log("->", requestData);
+			trace("->", requestData);
 			request.data = requestData;
 			request.method = URLRequestMethod.POST;
 
@@ -45,7 +46,8 @@ import flash.events.EventDispatcher;
 
 		private static function onRequestComplete(e:Event):void 
 		{
-			Cc.log("<-", e.currentTarget.data);
+			Cc.log("<--", e.currentTarget.data);
+			trace("<--", e.currentTarget.data);
 			var o:Object = JSON.decode(e.currentTarget.data);
 			for (var key:String in o)
 			{

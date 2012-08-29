@@ -12,8 +12,8 @@ import ru.evast.integration.core.SocialProfileVO;
 
 public class User
 {
-	public var guid:String = "";
 	public var id:String = "";
+	public var guid:String = "";
 	public var name:String = "";
 	public var city:String = "";
 	public var photoLink:String = "";
@@ -23,23 +23,26 @@ public class User
 	public var sex:int = 0; //Sex.MALE || Sex.Female
 	public var isOnline:Boolean = false; //Sex.MALE || Sex.Female
 
+	public var isLinkHidden:Boolean = false;
+	public var isCityHidden:Boolean = false;
+	public var isAgeHidden:Boolean = false;
+
 	public var coins:int = 0;
 	public var kisses:int = 0;
-
 	public var userRate:Number = 0;
 	public var lastRaters:Array = [];
 
 	public var followers:Array = [];
 	public var rebuyPrice:int = 0;
-	
-	public var decorations:Array = [];
-	
-	public var sympathies:Array = [];
 
-	public var presents:Array = [];
+	private var _sympathies:Array = [];
 
-	public var profileAvatarFrame:int = 1;
-	public var gotGifts:int = 2;
+	private var _decorations:Array = [];
+	public var avatarFrame:int = 1;
+	public var profileBackground:int = 1;
+
+	private var _presents:Array = [];
+
 	public var tasksDone:int = 4;
 	public var placeInRating:int = 10;
 	public var isVIP:Boolean = false;
@@ -49,6 +52,7 @@ public class User
 	public var gameEvents:Vector.<GameEventStruct> = new Vector.<GameEventStruct>();
 
 	public static const GOT_BASIC_USER_INFO:String = "gotBasicUserInfo";
+	public static const USER_INFO_UPDATED:String = "userInfoUpdated";
 
 	public function User()
 	{
@@ -66,6 +70,8 @@ public class User
 		sex = int(data.isMan);
 	}
 
+
+	// -- birthdate --
 	public function set birthDate(value:String):void
 	{
 		_birthDate = value;
@@ -75,6 +81,33 @@ public class User
 	public function get birthDate():String
 	{
 		return _birthDate;
+	}
+
+	public function get sympathies():Array
+	{
+		return _sympathies;
+	}
+
+	public function set sympathies(value:Array):void
+	{
+		_sympathies = value;
+	}
+
+	public function get presents():Array
+	{
+		return _presents;
+	}
+
+	public function set presents(value:Array):void
+	{
+		_presents = value;
+	}
+
+	public function set decorations(value:Array):void
+	{
+		_decorations = value;
+		avatarFrame = value[0];
+		profileBackground = value[1];
 	}
 }
 }

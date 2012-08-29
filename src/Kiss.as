@@ -3,6 +3,7 @@ package
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.View;
 import com.junkbyte.console.Cc;
 import com.junkbyte.console.ConsoleConfig;
@@ -74,8 +75,13 @@ public class Kiss extends Sprite
 		Cc.log("--------------- Social network response ---------------");
 
 		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
+		model.addEventListener(User.GOT_BASIC_USER_INFO, onGotBasicUserInfo);
 		controller.userLogin(true);
+	}
 
+	private function onGotBasicUserInfo(e:Event):void
+	{
+		model.removeEventListener(User.GOT_BASIC_USER_INFO, onGotBasicUserInfo);
 		view.showOwnerProfile();
 	}
 

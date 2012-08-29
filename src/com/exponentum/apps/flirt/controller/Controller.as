@@ -154,6 +154,7 @@ public class Controller
 
 	private function touchUserInfoByUserResult(e:ObjectEvent):void
 	{
+
 	}
 
 	//room
@@ -260,16 +261,23 @@ public class Controller
 
 	public function userLogin(firstSession:Boolean = false):void//TODO: not only owner support
 	{
-		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
-				'{"userId" : "' + model.owner.id + '",' +
-				'"name" : "' + model.owner.name + '",' +
-				'"profileUrl" : "' + model.owner.profileLink + '",' +
-				'"isMan" : "' + model.owner.sex + '",' +
-				'"birthDate" : "' + model.owner.birthDate + '",' +
-				'"city" : "' + model.owner.city + '",' +
-				'"avatarUrl" : "' + model.owner.photoLink + '"}}}');
+//		if(sessionStart)
+//			authenticate(model.owner.id, "");
+//		return;
+//		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
+//				'{"userId" : "' + model.owner.id + '",' +
+//				'"name" : "' + model.owner.name + '",' +
+//				'"profileUrl" : "' + model.owner.profileLink + '",' +
+//				'"isMan" : "' + model.owner.sex + '",' +
+//				'"birthDate" : "' + model.owner.birthDate + '",' +
+//				'"city" : "' + model.owner.city + '",' +
+//				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
+//				'"hideSocialInfo":"false", ' +
+//				'"hideName":"false", ' +
+//				'"hideCity":"false"}}}');
 
 		sessionStart = firstSession;
+		authenticate(model.owner.id, "");
 	}
 
 	public function touchUserInfo(userInfo:String):void
@@ -282,6 +290,8 @@ public class Controller
 	{
 		if(sessionStart)
 			authenticate(model.owner.id, "");
+		else
+			getUserInfo(model.owner.guid);
 	}
 
 	public function authenticate(login:String, password:String):void
@@ -309,21 +319,27 @@ public class Controller
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
-		model.owner.birthDate = e.data.birthDate;
-		model.owner.city = e.data.city;
-		model.owner.coins = e.data.coins;
 		model.owner.id = e.data.userId;
-		model.owner.profileLink = e.data.profileUrl;
-		model.owner.photoLink = e.data.pictureUrl;
-		model.owner.name = e.data.name;
-		model.owner.kisses = e.data.kisses;
-		model.owner.isOnline = e.data.isOnline;
-		model.owner.sex = e.data.sex;
 		model.owner.guid = e.data.infoOwnerGuid;
+		model.owner.name = e.data.name;
+		model.owner.city = e.data.city;
+		model.owner.photoLink = e.data.pictureUrl;
+		model.owner.profileLink = e.data.profileUrl;
+		model.owner.birthDate = e.data.birthDate;
+		model.owner.sex = e.data.sex;
+		model.owner.isOnline = e.data.isOnline;
 
+		model.owner.isLinkHidden = e.data.isSocialInfoHidden;
+		model.owner.isAgeHidden = e.data.isCityHidden;
+		model.owner.isCityHidden = e.data.isNameHidden;
+
+		model.owner.coins = e.data.coins;
+		model.owner.kisses = e.data.kisses;
 
 		if(sessionStart)
 			getUserSympathies(model.owner.guid);
+		else
+			model.userInfoUpdated();
 	}
 
 	private function getUserSympathies(guid:String):void
@@ -397,8 +413,11 @@ public class Controller
 
 	private function onGotUserRate(e:ObjectEvent):void
 	{
-		model.owner.userRate = e.data.userRate;
+		model.owner.userRate = e.data.averateRate;
 		model.owner.lastRaters = e.data.lastRaters;
+
+		model.basicUserInfoCollected();
+		sessionStart = false;
 	}
 
 	private function buyFollowing(userGuid:String):void

@@ -2,14 +2,26 @@ package com.exponentum.apps.flirt.model
 {
 import com.exponentum.apps.flirt.model.profile.User;
 
+import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.filters.ColorMatrixFilter;
 
-public class Model
+public class Model extends EventDispatcher
 {
 	public var owner:User = new User();
 
 	public function Model()
 	{
+	}
+
+	public function basicUserInfoCollected():void
+	{
+		dispatchEvent(new Event(User.GOT_BASIC_USER_INFO));
+	}
+
+	public function userInfoUpdated():void
+	{
+		dispatchEvent(new Event(User.USER_INFO_UPDATED));
 	}
 
 	//greyscale

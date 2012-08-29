@@ -20,9 +20,9 @@ public class Present extends CasaSprite
 	public static const PRESENT_LOADED:String = "presentLoaded";
 	private var presentLoad:SwfLoad;
 	
-	public function Present(presentId:int)
+	public function Present(present:Object)
 	{
-		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + presentId + ".swf");
+		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present.SendedGift.giftGuid + ".swf");
 		presentLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		presentLoad.start();
 	}
