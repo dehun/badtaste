@@ -113,7 +113,8 @@ get_bank_handlers() ->
 get_rate_handlers() ->
     ['get_user_rate_handler_srv',
      'delete_rate_point_handler_srv',
-     'rate_user_handler_srv'].
+     'rate_user_handler_srv',
+     'are_user_rated_handler_srv'].
 
 get_gift_handlers() ->
     ['get_my_gifts_handler_srv',
