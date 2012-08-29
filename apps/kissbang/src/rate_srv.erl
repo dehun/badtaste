@@ -17,6 +17,7 @@
 -export([start_link/0, setup_db/0]).
 -export([rate_user/3,
          get_user_rate/1,
+         are_user_rated/2,
          delete_rate_point/2]).
 
 %% gen_server callbacks
@@ -31,6 +32,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+are_user_rated(RaterGuid, RatedGuid) ->
+    gen_server:call(?SERVER, {are_user_rated, RaterGuid, RatedGuid}).
+
 rate_user(RaterGuid, TargetUserGuid, Rate) ->
     gen_server:call(?SERVER, {rate_user, RaterGuid, TargetUserGuid, Rate}).
 
@@ -96,6 +100,11 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({are_user_rated, RaterGuid, RatedGuid}, From, State) ->
+    utils:acall(fun() ->
+                        inner_are_user_rated(RaterGuid, RatedGuid)
+                end, From),
+    {noreply, State};
 handle_call({delete_rate_point, UserGuid, RaterGuid}, From, State) ->
     spawn_link(fun() ->
                        Reply = inner_delete_rate_point(UserGuid, RaterGuid),
@@ -209,3 +218,15 @@ inner_rate(RaterGuid, TargetUserGuid, Rate) ->
             end,
     mnesia:activity(async_dirty, Trans).
 
+
+inner_are_user_rated(RaterGuid, RatedGuid) ->
+    Trans = fun() ->
+                    Existance = mnesia:read({rateinfo, RatedGuid}),
+                    case Existance of
+                        [] ->
+                            false;
+                        [RateInfo] ->
+                            length([RatePoint || RatePoint <- RateInfo#rateinfo.rates, RatePoint#rate_point.rater_guid =:= RaterGuid]) == 1
+                    end
+            end,
+    mnesia:activity(async_dirty, Trans).

@@ -185,6 +185,14 @@ class OnRatePointDeleted(pgMessage):
 class OnRatePointDeleteFailed(pgMessage):
     raterGuid = pgString()
 
+## are user rated
+class AreUserRated(pgMessage):
+    targetUserGuid = pgString()
+
+class OnGotAreUserRated(pgMessage):
+    targetUserGuid = pgString()
+    areRated = pgString() # bool
+
 # gifts
 ## present gift
 class PresentGift(pgMessage):
