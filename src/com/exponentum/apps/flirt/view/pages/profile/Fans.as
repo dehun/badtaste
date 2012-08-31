@@ -16,16 +16,20 @@ import org.casalib.display.CasaSprite;
 public class Fans extends CasaSprite
 {
 	private var fansBlock:FansBlock = new FansBlock();
+	private var _controller:Controller;
+
+	private var loadedFollowers:int = 0;
+	private var _followers:Array;
 
 	public function Fans(controller:Controller)
 	{
+		_controller = controller;
 		addChild(fansBlock);
 	}
 
-	private var loadedFollowers:int = 0;
-
 	public function update(followers:Array):void
 	{
+		_followers = followers;
 
 	}
 

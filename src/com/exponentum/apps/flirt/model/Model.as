@@ -5,10 +5,13 @@ import com.exponentum.apps.flirt.model.profile.User;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.filters.ColorMatrixFilter;
+import flash.utils.Dictionary;
 
 public class Model extends EventDispatcher
 {
 	public var owner:User = new User();
+
+	public static var userCache:Dictionary = new Dictionary();
 
 	public function Model()
 	{

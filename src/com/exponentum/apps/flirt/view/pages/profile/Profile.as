@@ -228,7 +228,7 @@ public class Profile extends BackGroundedPage
 
 	private function createFansBlock():void
 	{
-
+		
 
 		if(!fans)
 		{
@@ -237,8 +237,6 @@ public class Profile extends BackGroundedPage
 			fans.y = 113;
 			addChild(fans);
 		}
-
-
 
 		fans.update(_user.followers);
 	}
