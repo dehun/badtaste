@@ -7,20 +7,58 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
+import com.exponentum.apps.flirt.view.pages.gamefield.Bottle;
+import com.exponentum.apps.flirt.view.pages.profile.BottomPanel;
+import com.exponentum.apps.flirt.view.pages.profile.messages.MessageItem;
 import com.exponentum.utils.centerX;
 
 import org.casalib.display.CasaSprite;
+import org.casalib.layout.Distribution;
 
 public class MessagesList extends CasaSprite
 {
 	private var bg:FriendList = new FriendList();
 	private var messagesBG:MessagesBG = new MessagesBG();
-	
+
+	private var messagesDistribution:Distribution = new Distribution(580);
+	private var _bottomPanelMask:BottomPanelMask = new BottomPanelMask();
+
+
 	public function MessagesList()
 	{
 		addChild(bg);
+		messagesDistribution.x = 75;
+		messagesDistribution.y = 75;
+
+		addChild(messagesDistribution);
+		_bottomPanelMask.x = messagesDistribution.x;
+		_bottomPanelMask.y = messagesDistribution.y;
+		addChild(_bottomPanelMask);
+		messagesDistribution.mask = _bottomPanelMask;
+
 		initAssets();
+	}
+
+	public function updateMessages():void
+	{
+//		var messages:Array = Model.instance.mail;
+//		messagesDistribution.removeChildren(true, true);
+//		for (var i:int = 0; i < messages.length; i++)
+//		{
+//			var mi:MessageItem = new MessageItem(messages[i]);
+//			addChild(mi);
+//		}
+//		messagesDistribution.position();
+		var messages:Array = [{}, {}, {}, {}, {}, {}, {}, {}];
+		messagesDistribution.removeChildren(true, true);
+		for (var i:int = 0; i < messages.length; i++)
+		{
+			var mi:MessageItem = new MessageItem(messages[i]);
+			messagesDistribution.addChild(mi);
+		}
+		messagesDistribution.position();
 	}
 
 	private function initAssets():void

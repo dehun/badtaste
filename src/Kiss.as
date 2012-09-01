@@ -41,8 +41,8 @@ public class Kiss extends Sprite
 	{
 		Security.allowDomain("*");
 
-		model = new Model();
-		controller = new Controller(model);
+		model = Model.instance;
+		controller = new Controller();
 		view = new View(model, controller);
 		addChild(view);
 

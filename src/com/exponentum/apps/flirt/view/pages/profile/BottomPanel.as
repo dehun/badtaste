@@ -7,6 +7,9 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.profile.messages.MessagesList;
@@ -30,8 +33,11 @@ public class BottomPanel extends CasaSprite
 	private var messageList:MessagesList = new MessagesList();
 	private var newsList:NewsList = new NewsList();
 
-	public function BottomPanel()
+	private var _controller:Controller;
+
+	public function BottomPanel(controller:Controller)
 	{
+		_controller = controller;
 		tabBar.x = 49;
 		addChild(tabBar);
 		tabBar.addTab(new TabButton(new ProfileTabButton()), "Топ 100", SOCIAL, 130, true);
@@ -89,7 +95,17 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(MESSAGES);
 		clearContainer();
+		_controller.checkMailbox();
+		Model.instance.addEventListener(User.USER_MAILBOX_RECEIVED, onMailboxReceived);
 		container.addChild(messageList);
+
+		//TODO: rewrite tomorrow
+		messageList.updateMessages();
+	}
+
+	private function onMailboxReceived(e:Event):void
+	{
+		messageList.updateMessages();
 	}
 }
 }

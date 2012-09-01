@@ -7,6 +7,8 @@
  */
 package com.exponentum.apps.flirt.model
 {
+import org.osmf.events.FacetValueChangeEvent;
+
 public class Config
 {
 	public static var DEV_MODE:Boolean = true;

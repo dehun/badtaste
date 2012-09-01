@@ -9,6 +9,8 @@ import com.junkbyte.console.Cc;
 
 import flash.events.Event;
 
+import mx.states.State;
+
 import ru.evast.integration.core.SocialProfileVO;
 
 public class Controller
@@ -40,9 +42,9 @@ public class Controller
 
 	private var socket:AppSocket;
 
-	public function Controller(aModel:Model)
+	public function Controller()
 	{
-		model = aModel;
+		model = Model.instance;
 
 		init();
 	}
@@ -256,6 +258,7 @@ public class Controller
 	public static const ON_GOT_DECORATIONS:String = "OnGotDecorations";
 	public static const GET_USER_RATE:String = "GetUserRate";
 	public static const ON_GOT_USER_RATE:String = "OnGotUserRate";
+	public static const GET_FRIEND_INFO:String = "GetUserInfo";
 
 	private var sessionStart:Boolean = false;
 
@@ -272,9 +275,9 @@ public class Controller
 //				'"birthDate" : "' + model.owner.birthDate + '",' +
 //				'"city" : "' + model.owner.city + '",' +
 //				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
-//				'"hideSocialInfo":"false", ' +
-//				'"hideName":"false", ' +
-//				'"hideCity":"false"}}}');
+//				'"hideSocialInfo":"0", ' +
+//				'"hideName":"0", ' +
+//				'"hideCity":"0"}}}');
 
 		sessionStart = firstSession;
 		authenticate(model.owner.id, "");
@@ -340,6 +343,8 @@ public class Controller
 			getUserSympathies(model.owner.guid);
 		else
 			model.userInfoUpdated();
+
+		model.basicUserInfoCollected();
 	}
 
 	private function getUserSympathies(guid:String):void
@@ -416,7 +421,7 @@ public class Controller
 		model.owner.userRate = e.data.averateRate;
 		model.owner.lastRaters = e.data.lastRaters;
 
-		model.basicUserInfoCollected();
+
 		sessionStart = false;
 	}
 
@@ -441,6 +446,14 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
+	public function getUsersInfos(guids:Array):void
+	{
+		for (var i:int = 0; i < guids.length; i++)
+		{
+			getFriendInfo(guids[i]);
+		}
+	}
+
 	//------------------------------------------------------------------------------------------------------------------
 	// DIRECT MESSAGES
 	//------------------------------------------------------------------------------------------------------------------
@@ -451,7 +464,7 @@ public class Controller
 	public static const MARK_MAIL_AS_READ:String = "MarkMailAsRead";
 	public static const ON_MESSAGE_MARKED_AS_READ:String = "OnMessageMarkedAsRead";
 
-	private function checkMailbox():void
+	public function checkMailbox():void
 	{
 		var requestObject:Object = new Object();
 		requestObject[CHECK_MAILBOX] = {};
@@ -460,7 +473,7 @@ public class Controller
 
 	private function onGotMailbox(e:ObjectEvent):void
 	{
-
+		model.mail = e.data.mails as Array;
 	}
 
 	public function sendMail(receiverGuid:String, subject:String, body:String):void
@@ -476,7 +489,7 @@ public class Controller
 	private function onGotNewMail(e:ObjectEvent):void
 	{
 
-	}
+	}	
 
 	public function markMailAsRead(mailGuid:String):void
 	{
@@ -491,6 +504,12 @@ public class Controller
 
 	}
 
-
+	private function getFriendInfo(friendGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_FRIEND_INFO] = {};
+		requestObject[GET_FRIEND_INFO].targetUserGuid = friendGuid;
+		socket.sendRequest(requestObject);
+	}
 }
 }

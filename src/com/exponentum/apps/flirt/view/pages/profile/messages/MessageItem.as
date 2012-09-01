@@ -7,12 +7,76 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
+import com.exponentum.apps.flirt.events.ObjectEvent;
+
+import flash.events.MouseEvent;
+
+import mx.states.State;
+
 import org.casalib.display.CasaSprite;
 
 public class MessageItem extends CasaSprite
 {
-	public function MessageItem()
+	private var asset:MessageItemAsset = new MessageItemAsset();
+
+	private var _messageGuid:String = "";
+	private var _messageText:String = "";
+	private var _senderName:String = "";
+	private var _message:Object;
+
+	public static const REPLY_TO_MESSAGE:String = "replyToMessage";
+	
+	public function MessageItem(message:Object)
 	{
+		_message = message.Mail;
+		addChild(asset);
+
+//		this.messageGuid = _message.mailGuid;
+//		this.senderName = _message.senderGuid;
+//		this.messageText = _message.subject;
+
+		this.messageGuid = "12312";
+		this.senderName = "Vasya";
+		this.messageText = "Some message text";
+
+		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
+	}
+
+	private function onReply(e:MouseEvent):void
+	{
+		dispatchEvent(new ObjectEvent(REPLY_TO_MESSAGE, _message));
+	}
+
+	public function get messageGuid():String
+	{
+		return _messageGuid;
+	}
+
+	public function set messageGuid(value:String):void
+	{
+		_messageGuid = value;
+	}
+
+	public function get messageText():String
+	{
+		return _messageText;
+	}
+
+	public function set messageText(value:String):void
+	{
+		_messageText = value;
+		asset.textTf.text = value;
+	}
+
+	public function get senderName():String
+	{
+		return _senderName;
+	}
+
+	public function set senderName(value:String):void
+	{
+		_senderName = value;
+		asset.nameTf.text = "Name";
 	}
 }
 }

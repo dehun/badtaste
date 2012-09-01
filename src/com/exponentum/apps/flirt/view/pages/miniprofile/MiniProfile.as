@@ -39,7 +39,7 @@ public class MiniProfile extends CasaSprite
 
 	private var profileDetails:ProfileDetails = new ProfileDetails();
 	private var profileAvatar:ProfileAvatar = new ProfileAvatar();
-	private var fans:Fans = new Fans(null);
+	private var fans:Fans = new Fans();
 
 	private var presentsContainer:Distribution = new Distribution();
 

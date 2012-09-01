@@ -33,7 +33,7 @@ public class Profile extends BackGroundedPage
 	private var profileDetails:ProfileDetails = new ProfileDetails();
 	private var profileAvatar:ProfileAvatar = new ProfileAvatar();
 	private var fans:Fans;
-	private var bottomPanel:BottomPanel = new BottomPanel();
+	private var bottomPanel:BottomPanel;
 
 	private var presentsContainer:Distribution = new Distribution();
 
@@ -95,8 +95,6 @@ public class Profile extends BackGroundedPage
 		createFansBlock();
 		createBottomPanel();
 		createPresents();
-
-
 	}
 
 	private function createPresents():void
@@ -128,8 +126,9 @@ public class Profile extends BackGroundedPage
 
 	private function createBottomPanel():void
 	{
-		if(!contains(bottomPanel))
+		if(!bottomPanel)
 		{
+			bottomPanel = new BottomPanel(_controller);
 			bottomPanel.x = 0;
 			bottomPanel.y = 548;
 			addChild(bottomPanel);
@@ -228,17 +227,17 @@ public class Profile extends BackGroundedPage
 
 	private function createFansBlock():void
 	{
-		
 
+		//_controller.getUsersInfos(_user.followers[0]);
 		if(!fans)
 		{
-			fans = new Fans(_controller);
+			fans = new Fans();
 			fans.x = 532;
 			fans.y = 113;
 			addChild(fans);
 		}
 
-		fans.update(_user.followers);
+		//fans.update(_user.followers);
 	}
 
 	//----------------------------------------------------------------------------------
@@ -257,6 +256,14 @@ public class Profile extends BackGroundedPage
 	private function onRatingsClick(e:MouseEvent):void
 	{
 		dispatchEvent(new Event(Config.RATINGS));
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	public function updateChat():void
+	{
+
 	}
 }
 }

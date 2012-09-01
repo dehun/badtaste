@@ -13,8 +13,18 @@ public class Model extends EventDispatcher
 
 	public static var userCache:Dictionary = new Dictionary();
 
+	private static var _instance:Model;
+	public static function get instance():Model
+	{
+		if(!_instance)
+			_instance = new Model();
+
+		return _instance;
+	}
+	
 	public function Model()
 	{
+		_instance = this;
 	}
 
 	public function basicUserInfoCollected():void
@@ -40,6 +50,22 @@ public class Model extends EventDispatcher
 		return new ColorMatrixFilter(matrix);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////
+	//
+	////////////////////////////////////////////////////////////////////////////////////////
+	private var _mail:Array = [];
+
+	public function get mail():Array
+	{
+		return _mail;
+
+	}
+
+	public function set mail(value:Array):void
+	{
+		_mail = value;
+		dispatchEvent(new Event(User.USER_MAILBOX_RECEIVED));
+	}
 
 }
 }

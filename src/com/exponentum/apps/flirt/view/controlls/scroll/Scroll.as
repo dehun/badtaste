@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.controlls.scroll
 {
+import flash.display.DisplayObject;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 
@@ -21,6 +22,11 @@ public class Scroll extends CasaSprite
 
 	private var _scrollHeight:int = 100;
 
+	private var _target:DisplayObject;
+	private var _source:DisplayObject;
+
+	public var position:Number = 0;
+
 	public function Scroll(aHeight:int)
 	{
 		create();
@@ -33,6 +39,16 @@ public class Scroll extends CasaSprite
 		addChild(scrollBackground);
 		addChild(downButton);
 		addChild(scrubber);
+	}
+
+	public function set target(value:DisplayObject):void
+	{
+		_target = value;
+	}
+
+	public function set source(value:DisplayObject):void
+	{
+		_source = value;
 	}
 
 	public function set scrollHeight(value:int):void
@@ -89,5 +105,6 @@ public class Scroll extends CasaSprite
 	{
 
 	}
+
 }
 }
