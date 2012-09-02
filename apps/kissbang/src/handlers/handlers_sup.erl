@@ -118,6 +118,7 @@ get_rate_handlers() ->
 
 get_gift_handlers() ->
     ['get_my_gifts_handler_srv',
+     'get_user_gifts_handler_srv',
      'present_gift_handler_srv'].
 
 get_vip_handlers() ->
