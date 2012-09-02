@@ -11,6 +11,7 @@ import com.adobe.serialization.json.JSON;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.junkbyte.console.Cc;
 
+import flash.errors.EOFError;
 import flash.errors.IOError;
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -91,10 +92,18 @@ public class AppSocket extends Socket
 	private function socketDataHandler(event:ProgressEvent):void
 	{
 		while (bytesAvailable) {
-			var size:int = readInt();
-			trace(size, bytesAvailable);
-			var str:String = readUTFBytes(size);
-			response += str;
+			try
+			{
+				var size:int = readInt();
+				var str:String = readUTFBytes(size);
+				trace(str);
+				response += str;
+			}
+			catch( e : EOFError )
+			{
+				trace("\n", e );     // EOFError: Error #2030: End of file was encountered.
+			}
+
 		}
 
 		trace("<-", response);
