@@ -89,7 +89,10 @@
    <- OnGiftReceivedInGame(giftSenderGuid, giftReceiverGuid, giftGuid)
 ** get gift list
    -> GetMyGifts()
-   <- OnGotMyGifts(giftsGuids = [])
+   <- OnGotMyGifts(gifts = [Gift(senderGuid = "123", giftGuid = "234")])
+** get gift list of me or friend
+   -> GetUserGifts(targetUserGuid = "someGuid")
+   <- OnGotUserGifts(ownerGuid = "someGuid", gifts = [Gift(senderGuid = "123", giftGuid = "234")])
 * vip
 ** get vip points
    -> GetVipPoints(targetUserGuid = "someguid")
