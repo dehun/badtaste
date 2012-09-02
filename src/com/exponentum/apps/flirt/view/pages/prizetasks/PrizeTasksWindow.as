@@ -71,7 +71,14 @@ public class PrizeTasksWindow extends CasaSprite
 
 	private function onClose(e:MouseEvent):void
 	{
-		trace("soClose!");
+		destroy();
 	}
+
+	override public function destroy():void
+	{
+		removeChildren(true, true);
+		super.destroy();
+	}
+
 }
 }

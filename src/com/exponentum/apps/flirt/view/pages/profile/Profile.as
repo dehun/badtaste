@@ -228,7 +228,7 @@ public class Profile extends BackGroundedPage
 	private function createFansBlock():void
 	{
 
-		//_controller.getUsersInfos(_user.followers[0]);
+		//_controller.getUsersInfos(_user.followers);
 		if(!fans)
 		{
 			fans = new Fans();

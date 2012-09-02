@@ -8,6 +8,7 @@ import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
+import com.exponentum.apps.flirt.view.pages.profile.messages.MessageWindow;
 import com.exponentum.apps.flirt.view.pages.shop.ShopPage;
 import com.exponentum.apps.flirt.view.pages.prizetasks.PrizeTasksWindow;
 import com.exponentum.apps.flirt.view.pages.ratings.RatingsPage;
@@ -43,6 +44,7 @@ public class View extends Sprite
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
+		model.view = this;
 		controller = aController;
 
 		addChild(pageContainer);
@@ -118,14 +120,15 @@ public class View extends Sprite
 	{
 		pageContainer.removeChildren(true, true);
 		ratings = new RatingsPage();
+		ratings.addEventListener(Config.PROFILE, showOwnerProfile);
 		pageContainer.addChild(ratings);
 	}
 
 	public function showTasks(e:Event = null):void
 	{
 		prizeTasks = new PrizeTasksWindow();
-		centerX(prizeTasks, 760);
-		centerY(prizeTasks, 760);
+		prizeTasks.x = 0;
+		prizeTasks.y = 300;
 		pageContainer.addChild(prizeTasks);
 	}
 
@@ -143,6 +146,14 @@ public class View extends Sprite
 //		centerX(miniProfile, 760);
 //		centerY(miniProfile, 760);
 		pageContainer.addChild(miniProfile);
+	}
+
+	public function showMessageWindow(message:Object):void
+	{
+		var messageWindow:MessageWindow = new MessageWindow(message);
+		messageWindow.x = messageWindow.y = 760 / 2;
+		pageContainer.addChild(messageWindow);
+
 	}
 }
 }

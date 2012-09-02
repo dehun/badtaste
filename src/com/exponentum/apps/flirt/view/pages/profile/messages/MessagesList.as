@@ -14,6 +14,8 @@ import com.exponentum.apps.flirt.view.pages.profile.BottomPanel;
 import com.exponentum.apps.flirt.view.pages.profile.messages.MessageItem;
 import com.exponentum.utils.centerX;
 
+import flash.events.Event;
+
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
 
@@ -43,15 +45,7 @@ public class MessagesList extends CasaSprite
 
 	public function updateMessages():void
 	{
-//		var messages:Array = Model.instance.mail;
-//		messagesDistribution.removeChildren(true, true);
-//		for (var i:int = 0; i < messages.length; i++)
-//		{
-//			var mi:MessageItem = new MessageItem(messages[i]);
-//			addChild(mi);
-//		}
-//		messagesDistribution.position();
-		var messages:Array = [{}, {}, {}, {}, {}, {}, {}, {}];
+		var messages:Array = Model.instance.mail;
 		messagesDistribution.removeChildren(true, true);
 		for (var i:int = 0; i < messages.length; i++)
 		{
@@ -77,7 +71,16 @@ public class MessagesList extends CasaSprite
 		var scr:Scroll = new Scroll(75);
 		scr.x = messagesBG.width + 40;
 		scr.y = messagesBG.y + 27;
+		scr.setTargetAndSource(messagesDistribution, _bottomPanelMask);
+		scr.step = 10;
+		scr.addEventListener(Event.CHANGE, onScroll);
 		addChild(scr);
+	}
+
+	private function onScroll(e:Event):void
+	{
+		var difference:Number = messagesDistribution.height - _bottomPanelMask.height;
+		messagesDistribution.y = _bottomPanelMask.y + (e.currentTarget as Scroll).position * (-difference);
 	}
 }
 }

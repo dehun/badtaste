@@ -11,8 +11,12 @@ import org.casalib.display.CasaSprite;
 
 public class NewsItem extends CasaSprite
 {
-	public function NewsItem()
+	private var asset:NewsItemAsset = new NewsItemAsset();
+
+	public function NewsItem(newsObject:Object)
 	{
+		addChild(asset);
+		asset.textTf.text = "Вася прислал вам подарок";
 	}
 }
 }

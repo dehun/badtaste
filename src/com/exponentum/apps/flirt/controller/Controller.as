@@ -5,6 +5,7 @@ import com.exponentum.apps.flirt.controller.net.ServerConfig;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 import com.junkbyte.console.Cc;
 
 import flash.events.Event;
@@ -42,10 +43,16 @@ public class Controller
 
 	private var socket:AppSocket;
 
+	private static var _instance:Controller;
+	public static function get instance():Controller
+	{
+		return _instance;
+	}
+
 	public function Controller()
 	{
 		model = Model.instance;
-
+		_instance = this;
 		init();
 	}
 
@@ -267,20 +274,20 @@ public class Controller
 //		if(sessionStart)
 //			authenticate(model.owner.id, "");
 //		return;
-//		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
-//				'{"userId" : "' + model.owner.id + '",' +
-//				'"name" : "' + model.owner.name + '",' +
-//				'"profileUrl" : "' + model.owner.profileLink + '",' +
-//				'"isMan" : "' + model.owner.sex + '",' +
-//				'"birthDate" : "' + model.owner.birthDate + '",' +
-//				'"city" : "' + model.owner.city + '",' +
-//				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
-//				'"hideSocialInfo":"0", ' +
-//				'"hideName":"0", ' +
-//				'"hideCity":"0"}}}');
+		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
+				'{"userId" : "' + model.owner.id + '",' +
+				'"name" : "' + model.owner.name + '",' +
+				'"profileUrl" : "' + model.owner.profileLink + '",' +
+				'"isMan" : "' + model.owner.sex + '",' +
+				'"birthDate" : "' + model.owner.birthDate + '",' +
+				'"city" : "' + model.owner.city + '",' +
+				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
+				'"hideSocialInfo":"0", ' +
+				'"hideName":"0", ' +
+				'"hideCity":"0"}}}');
 
 		sessionStart = firstSession;
-		authenticate(model.owner.id, "");
+		//authenticate(model.owner.id, "");
 	}
 
 	public function touchUserInfo(userInfo:String):void
@@ -293,8 +300,8 @@ public class Controller
 	{
 		if(sessionStart)
 			authenticate(model.owner.id, "");
-		else
-			getUserInfo(model.owner.guid);
+//		else
+//			getUserInfo(model.owner.guid);
 	}
 
 	public function authenticate(login:String, password:String):void
@@ -322,29 +329,28 @@ public class Controller
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
-		model.owner.id = e.data.userId;
-		model.owner.guid = e.data.infoOwnerGuid;
-		model.owner.name = e.data.name;
-		model.owner.city = e.data.city;
-		model.owner.photoLink = e.data.pictureUrl;
-		model.owner.profileLink = e.data.profileUrl;
-		model.owner.birthDate = e.data.birthDate;
-		model.owner.sex = e.data.sex;
-		model.owner.isOnline = e.data.isOnline;
+		if(model.userCache[e.data.infoOwnerGuid] == null)
+			model.userCache[e.data.infoOwnerGuid] = new User();
 
-		model.owner.isLinkHidden = e.data.isSocialInfoHidden;
-		model.owner.isAgeHidden = e.data.isCityHidden;
-		model.owner.isCityHidden = e.data.isNameHidden;
+		model.userCache[e.data.infoOwnerGuid].id = e.data.userId;
+		model.userCache[e.data.infoOwnerGuid].guid = e.data.infoOwnerGuid;
+		model.userCache[e.data.infoOwnerGuid].name = e.data.name;
+		model.userCache[e.data.infoOwnerGuid].city = e.data.city;
+		model.userCache[e.data.infoOwnerGuid].photoLink = e.data.pictureUrl;
+		model.userCache[e.data.infoOwnerGuid].profileLink = e.data.profileUrl;
+		model.userCache[e.data.infoOwnerGuid].birthDate = e.data.birthDate;
+		model.userCache[e.data.infoOwnerGuid].sex = e.data.sex;
+		model.userCache[e.data.infoOwnerGuid].isOnline = e.data.isOnline;
 
-		model.owner.coins = e.data.coins;
-		model.owner.kisses = e.data.kisses;
+		model.userCache[e.data.infoOwnerGuid].isLinkHidden = e.data.isSocialInfoHidden;
+		model.userCache[e.data.infoOwnerGuid].isAgeHidden = e.data.isCityHidden;
+		model.userCache[e.data.infoOwnerGuid].isCityHidden = e.data.isNameHidden;
+
+		model.userCache[e.data.infoOwnerGuid].coins = e.data.coins;
+		model.userCache[e.data.infoOwnerGuid].kisses = e.data.kisses;
 
 		if(sessionStart)
-			getUserSympathies(model.owner.guid);
-		else
-			model.userInfoUpdated();
-
-		model.basicUserInfoCollected();
+			getUserSympathies(e.data.infoOwnerGuid);
 	}
 
 	private function getUserSympathies(guid:String):void
@@ -357,7 +363,7 @@ public class Controller
 
 	private function onGotUserSympathies(e:ObjectEvent):void
 	{
-		model.owner.sympathies = e.data.sympathies;
+		model.userCache[e.data.ownerUserGuid].sympathies = e.data.sympathies;
 		if(sessionStart)
 			getMyGifts();
 	}
@@ -371,6 +377,7 @@ public class Controller
 
 	private function onGotMyGifts(e:ObjectEvent):void
 	{
+		//model.userCache[e.data.infoOwnerGuid].presents = e.data.gifts;
 		model.owner.presents = e.data.gifts;
 		if(sessionStart)
 			getUserFollowers(model.owner.guid);
@@ -386,11 +393,11 @@ public class Controller
 
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
-		model.owner.followers = e.data.followers;
-		model.owner.rebuyPrice = e.data.rebuyPrice;
+		model.userCache[e.data.ownerUserGuid].followers = e.data.followers;
+		model.userCache[e.data.ownerUserGuid].rebuyPrice = e.data.rebuyPrice;
 
 		if(sessionStart)
-			getDecorationFor(model.owner.guid);
+			getDecorationFor(e.data.ownerUserGuid);
 	}
 
 	private function getDecorationFor(userGuid:String):void
@@ -403,9 +410,9 @@ public class Controller
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
-		model.owner.decorations = e.data.decorations;
+		model.userCache[e.data.ownerUserGuid].decorations = e.data.decorations;
 		if(sessionStart)
-			getUserRate(model.owner.guid);
+			getUserRate(e.data.ownerUserGuid);
 	}
 
 	private function getUserRate(userGuid:String):void
@@ -418,11 +425,13 @@ public class Controller
 
 	private function onGotUserRate(e:ObjectEvent):void
 	{
-		model.owner.userRate = e.data.averateRate;
-		model.owner.lastRaters = e.data.lastRaters;
-
+		model.userCache[e.data.userGuid].userRate = e.data.averateRate;
+		model.userCache[e.data.userGuid].lastRaters = e.data.lastRaters;
 
 		sessionStart = false;
+		model.basicUserInfoCollected();
+
+		getUsersInfos(model.owner.followers)
 	}
 
 	private function buyFollowing(userGuid:String):void
@@ -450,7 +459,7 @@ public class Controller
 	{
 		for (var i:int = 0; i < guids.length; i++)
 		{
-			getFriendInfo(guids[i]);
+			getUserInfo(guids[i]);
 		}
 	}
 
@@ -502,14 +511,6 @@ public class Controller
 	private function onMessageMarkedAsRead(e:ObjectEvent):void
 	{
 
-	}
-
-	private function getFriendInfo(friendGuid:String):void
-	{
-		var requestObject:Object = new Object();
-		requestObject[GET_FRIEND_INFO] = {};
-		requestObject[GET_FRIEND_INFO].targetUserGuid = friendGuid;
-		socket.sendRequest(requestObject);
 	}
 }
 }

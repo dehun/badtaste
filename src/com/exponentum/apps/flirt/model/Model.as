@@ -1,6 +1,7 @@
 package com.exponentum.apps.flirt.model
 {
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.View;
 
 import flash.events.Event;
 import flash.events.EventDispatcher;
@@ -9,10 +10,11 @@ import flash.utils.Dictionary;
 
 public class Model extends EventDispatcher
 {
-	public var owner:User = new User();
+	private var _owner:User = new User();
 
-	public static var userCache:Dictionary = new Dictionary();
-
+	public var userCache:Dictionary = new Dictionary();
+	public var view:View;
+	
 	private static var _instance:Model;
 	public static function get instance():Model
 	{
@@ -67,5 +69,15 @@ public class Model extends EventDispatcher
 		dispatchEvent(new Event(User.USER_MAILBOX_RECEIVED));
 	}
 
+	public function get owner():User
+	{
+		if(!userCache[_owner.guid]) userCache[_owner.guid] = _owner;
+		return userCache[_owner.guid];
+	}
+
+	public function set owner(value:User):void
+	{
+		_owner = value;
+	}
 }
 }

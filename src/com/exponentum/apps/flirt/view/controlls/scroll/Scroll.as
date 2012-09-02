@@ -8,6 +8,7 @@
 package com.exponentum.apps.flirt.view.controlls.scroll
 {
 import flash.display.DisplayObject;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 
@@ -24,8 +25,9 @@ public class Scroll extends CasaSprite
 
 	private var _target:DisplayObject;
 	private var _source:DisplayObject;
-
+	private var _step:int = 10;
 	public var position:Number = 0;
+
 
 	public function Scroll(aHeight:int)
 	{
@@ -41,14 +43,12 @@ public class Scroll extends CasaSprite
 		addChild(scrubber);
 	}
 
-	public function set target(value:DisplayObject):void
+	public function setTargetAndSource(targetValue:DisplayObject, sourceValue:DisplayObject):void
 	{
-		_target = value;
-	}
+		_target = targetValue;
+		_source = sourceValue;
 
-	public function set source(value:DisplayObject):void
-	{
-		_source = value;
+		//if(_source.height <= _target.height) this.visible = false;
 	}
 
 	public function set scrollHeight(value:int):void
@@ -87,6 +87,7 @@ public class Scroll extends CasaSprite
 	{
 		scrubber.stopDrag();
 		scrubber.gotoAndStop(1);
+		removeEventListener(Event.ENTER_FRAME, onScrub);
 	}
 
 	private function onScrubberDown(e:MouseEvent):void
@@ -94,17 +95,42 @@ public class Scroll extends CasaSprite
 		scrubber.gotoAndStop(3);
 		scrubber.startDrag(true, new Rectangle(scrollBackground.x, scrollBackground.y + scrubber.height / 2, 0, scrollBackground.height - scrubber.height));
 		this.stage.addEventListener(MouseEvent.MOUSE_UP, onScrubberUp);
+		
+		addEventListener(Event.ENTER_FRAME, onScrub);
+	}
+
+	private function onScrub(e:Event = null):void
+	{
+		if(position ==Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height)) return;
+ 		position = Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height);
+		position = Math.min(position, 1);
+		position = Math.max(position, 0);
+		trace(position);
+		dispatchEvent(new Event(Event.CHANGE));
 	}
 
 	private function onDownClick(e:MouseEvent):void
 	{
-
+		var validStep:Number = (scrollBackground.height - scrubber.height) / _step;
+		scrubber.y = Math.min(scrollBackground.height - scrubber.height / 2, scrubber.y + validStep);
+		onScrub();
 	}
 
 	private function onUpClick(e:MouseEvent):void
 	{
+		var validStep:Number = (scrollBackground.height - scrubber.height) / _step;
+		scrubber.y = Math.max(scrubber.height / 2, scrubber.y - validStep);
+		onScrub();
+	}
+
+	private function updateScroll():void
+	{
 
 	}
 
+	public function set step(value:int):void
+	{
+		_step = value;
+	}
 }
 }

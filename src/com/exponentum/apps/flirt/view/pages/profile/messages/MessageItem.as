@@ -8,6 +8,7 @@
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
 import com.exponentum.apps.flirt.events.ObjectEvent;
+import com.exponentum.apps.flirt.model.Model;
 
 import flash.events.MouseEvent;
 
@@ -31,20 +32,18 @@ public class MessageItem extends CasaSprite
 		_message = message.Mail;
 		addChild(asset);
 
-//		this.messageGuid = _message.mailGuid;
-//		this.senderName = _message.senderGuid;
-//		this.messageText = _message.subject;
-
-		this.messageGuid = "12312";
-		this.senderName = "Vasya";
-		this.messageText = "Some message text";
+		this.messageGuid = _message.mailGuid;
+		this.senderName = _message.senderGuid;
+		this.messageText = _message.subject;
+		
+//		asset.replyButton.visible = _message.isRead;
 
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
 	}
 
 	private function onReply(e:MouseEvent):void
 	{
-		dispatchEvent(new ObjectEvent(REPLY_TO_MESSAGE, _message));
+		Model.instance.view.showMessageWindow(_message);
 	}
 
 	public function get messageGuid():String

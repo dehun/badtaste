@@ -18,6 +18,7 @@ import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.Socket;
 import flash.system.Security;
+import flash.utils.setTimeout;
 
 public class AppSocket extends Socket
 {
@@ -64,20 +65,6 @@ public class AppSocket extends Socket
 		flush();
 	}
 
-	private function readResponse():void
-	{
-		var size:int = readInt();
-		var str:String = readUTFBytes(size);
-		response += str;
-		trace("<-", response);
-		Cc.log("<-", response);
-		for (var key:String in JSON.decode(response))
-		{
-			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
-		}
-		response = "";
-	}
-
 	private function closeHandler(event:Event):void
 	{
 		trace("closeHandler: " + event);
@@ -88,7 +75,7 @@ public class AppSocket extends Socket
 	{
 		trace("~~~ connection established ~~~");
 		Cc.log("~~~ connection established ~~~");
-		
+
 	}
 
 	private function ioErrorHandler(event:IOErrorEvent):void
@@ -103,7 +90,20 @@ public class AppSocket extends Socket
 
 	private function socketDataHandler(event:ProgressEvent):void
 	{
-		readResponse();
+		while (bytesAvailable) {
+			var size:int = readInt();
+			trace(size, bytesAvailable);
+			var str:String = readUTFBytes(size);
+			response += str;
+		}
+
+		trace("<-", response);
+		Cc.log("<-", response);
+		for (var key:String in JSON.decode(response))
+		{
+			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
+		}
+		response = "";
 	}
 }
 }

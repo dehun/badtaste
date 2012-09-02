@@ -12,6 +12,7 @@ import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
+import com.exponentum.apps.flirt.view.pages.profile.friends.FriendsList;
 import com.exponentum.apps.flirt.view.pages.profile.messages.MessagesList;
 import com.exponentum.apps.flirt.view.pages.profile.news.NewsList;
 
@@ -77,6 +78,9 @@ public class BottomPanel extends CasaSprite
 		trace(NEWS);
 		clearContainer();
 		container.addChild(newsList);
+
+		//TODO: add functional
+		newsList.updateNews();
 	}
 
 	private function onSocialTabSelected(e:Event):void
@@ -98,9 +102,6 @@ public class BottomPanel extends CasaSprite
 		_controller.checkMailbox();
 		Model.instance.addEventListener(User.USER_MAILBOX_RECEIVED, onMailboxReceived);
 		container.addChild(messageList);
-
-		//TODO: rewrite tomorrow
-		messageList.updateMessages();
 	}
 
 	private function onMailboxReceived(e:Event):void

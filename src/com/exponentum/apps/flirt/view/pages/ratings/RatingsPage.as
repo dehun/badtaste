@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.ratings
 {
+import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
@@ -141,7 +142,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private function onBack(e:MouseEvent):void
 	{
-
+		dispatchEvent(new Event(Config.PROFILE));
 	}
 
 	private function onTabChange(e:Event):void
