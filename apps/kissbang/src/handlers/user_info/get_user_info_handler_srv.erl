@@ -150,14 +150,14 @@ get_user_info(Guid, TargetUserGuid) ->
                                      birth_date = UserInfo#user_info.birth_date,
                                      coins = Money,
                                      kisses = 0,
-				     is_city_hidden = UserInfo#user_info.hide_city,
-				     is_name_hidden = UserInfo#user_info.hide_name,
-				     is_social_info_hidden = UserInfo#user_info.hide_social_info},
+                                     is_city_hidden = UserInfo#user_info.hide_city,
+                                     is_birth_date_hidden = UserInfo#user_info.hide_birth_date,
+                                     is_social_info_hidden = UserInfo#user_info.hide_social_info},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
 
 
 process_hides(RawUserInfo) ->
-    RawUserInfo#user_info{name = if_hide_field(RawUserInfo#user_info.name, RawUserInfo#user_info.hide_name),
+    RawUserInfo#user_info{birth_date = if_hide_field(RawUserInfo#user_info.name, RawUserInfo#user_info.birth_date),
                           city = if_hide_field(RawUserInfo#user_info.city, RawUserInfo#user_info.hide_city),
                           user_id = if_hide_field(RawUserInfo#user_info.user_id, RawUserInfo#user_info.hide_social_info),
                           profile_url = if_hide_field(RawUserInfo#user_info.profile_url, RawUserInfo#user_info.hide_social_info)}.
