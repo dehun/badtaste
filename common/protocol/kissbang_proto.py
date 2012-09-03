@@ -50,13 +50,13 @@ class OnGotUserInfo(pgMessage):
     coins = pgInteger()
     kisses = pgInteger()
     city = pgString()
-    isNameHidden = pgString()
+    isBirthDateHidden = pgString()
     isSocialInfoHidden = pgString()
     isCityHidden = pgString()
 
 class TouchUserInfoByUser(pgMessage):
     name = pgString()
-    hideName = pgString() # bool
+    hideBirthDate = pgString() # bool
     hideSocialInfo = pgString() # bool
     hideCity = pgString() # bool 
 
