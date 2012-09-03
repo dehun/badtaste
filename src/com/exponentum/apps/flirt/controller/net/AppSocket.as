@@ -89,30 +89,55 @@ public class AppSocket extends Socket
 		trace("SecurityError: " + event);
 	}
 
-	private function socketDataHandler(event:ProgressEvent):void
+//	private function socketDataHandler(event:ProgressEvent):void
+//	{
+//		while (bytesAvailable) {
+//			try
+//			{
+//				var size:int = readInt();
+//				var str:String = readUTFBytes(size);
+//				trace(str);
+//				response += str;
+//
+//
+//			}
+//			catch( e : EOFError )
+//			{
+//				trace("\n", e );     // EOFError: Error #2030: End of file was encountered.
+//			}
+//
+//			trace("<-\n", response);
+//			Cc.log("<-", response);
+//			for (var key:String in JSON.decode(response))
+//			{
+//				dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
+//			}
+//			response = "";
+//		}
+//
+//	}
+	private function readResponse():int
 	{
-		while (bytesAvailable) {
-			try
-			{
-				var size:int = readInt();
-				var str:String = readUTFBytes(size);
-				trace(str);
-				response += str;
-			}
-			catch( e : EOFError )
-			{
-				trace("\n", e );     // EOFError: Error #2030: End of file was encountered.
-			}
-
-		}
-
-		trace("<-", response);
+		var size:int = readInt();
+		var str:String = readUTFBytes(size);
+		response += str;
+		trace("->", response);
 		Cc.log("<-", response);
 		for (var key:String in JSON.decode(response))
 		{
 			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
 		}
 		response = "";
+		return size + 4;
+	}
+
+	private function socketDataHandler(event:ProgressEvent):void
+	{
+		var dataToProcess:int = bytesAvailable;
+		var dataProcessed:int = 0;
+		while (dataProcessed < dataToProcess) {
+			dataProcessed += readResponse();
+		}
 	}
 }
 }
