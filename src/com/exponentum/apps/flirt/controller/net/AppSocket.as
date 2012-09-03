@@ -19,7 +19,7 @@ import flash.events.ProgressEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.Socket;
 import flash.system.Security;
-import flash.utils.setTimeout;
+import flash.utils.ByteArray;
 
 public class AppSocket extends Socket
 {
@@ -89,42 +89,13 @@ public class AppSocket extends Socket
 		trace("SecurityError: " + event);
 	}
 
-//	private function socketDataHandler(event:ProgressEvent):void
-//	{
-//		while (bytesAvailable) {
-//			try
-//			{
-//				var size:int = readInt();
-//				var str:String = readUTFBytes(size);
-//				trace(str);
-//				response += str;
-//
-//
-//			}
-//			catch( e : EOFError )
-//			{
-//				trace("\n", e );     // EOFError: Error #2030: End of file was encountered.
-//			}
-//
-//			trace("<-\n", response);
-//			Cc.log("<-", response);
-//			for (var key:String in JSON.decode(response))
-//			{
-//				dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
-//			}
-//			response = "";
-//		}
-//
-//	}
 	private function readResponse():int
 	{
 		var size:int = readInt();
 		var str:String = readUTFBytes(size);
 		response += str;
 		trace("->", response);
-		Cc.log("<-", response);
-		for (var key:String in JSON.decode(response))
-		{
+		for (var key:String in JSON.decode(response)){
 			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
 		}
 		response = "";
@@ -135,9 +106,7 @@ public class AppSocket extends Socket
 	{
 		var dataToProcess:int = bytesAvailable;
 		var dataProcessed:int = 0;
-		while (dataProcessed < dataToProcess) {
-			dataProcessed += readResponse();
-		}
+		while (dataProcessed < dataToProcess) dataProcessed += readResponse();
 	}
 }
 }

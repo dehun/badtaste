@@ -2,6 +2,7 @@ package com.exponentum.apps.flirt.view
 {
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.controller.net.ServerConnector;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
@@ -44,7 +45,7 @@ public class View extends Sprite
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
-		model.view = this;
+		model.addEventListener(Model.USER_PROFILE_UPDATED, onUserInfoUpdated);
 		controller = aController;
 
 		addChild(pageContainer);
@@ -56,9 +57,12 @@ public class View extends Sprite
 		model.addEventListener(User.USER_INFO_UPDATED, onUserInfoUpdated);
 	}
 
-	private function onUserInfoUpdated(e:Event):void
+	private function onUserInfoUpdated(e:ObjectEvent):void
 	{
-		if(profile) profile.update();
+		if(!e.data) return;
+		if(profile && (e.data as User).guid == model.owner.guid){
+			profile.update(e.data as User);
+		}
 	}
 
 	private function showPage(pageId:String):void
@@ -85,13 +89,8 @@ public class View extends Sprite
 //----------------------------------------------------------------------------------------------------------------------
 	public function showOwnerProfile(e:Event = null):void
 	{
-		onUserInfoCollected();
-	}
-
-	private function onUserInfoCollected(e:Event = null):void
-	{
 		pageContainer.removeChildren(true, true);
-		profile = new Profile(model.owner, controller);
+		profile = new Profile();
 		profile.addEventListener(Config.GAMEFIELD, showGameField);
 		profile.addEventListener(Config.TASKS, showTasks);
 		profile.addEventListener(Config.RATINGS, showRatings);

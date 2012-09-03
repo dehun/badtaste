@@ -65,38 +65,39 @@ public class Controller
 
 	private function startListenSocket():void
 	{
-		socket.addEventListener(AUTHENTICATED, onAuthenticated);
-		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, onGotChatMessageFromRoom);
-		socket.addEventListener(GOT_USER_INFO, onGotUserInfo);
-		socket.addEventListener(TOUCH_USER_INFO_RESULT, onTouchUserInfoResult);
-		socket.addEventListener(TOUCH_USER_INFO_BY_USER_RESULT, touchUserInfoByUserResult);
-		socket.addEventListener(ON_GOT_MY_GIFTS, onGotMyGifts);
-		socket.addEventListener(ON_GOT_USER_SYMPATHIES, onGotUserSympathies);
-		socket.addEventListener(ON_GOT_DECORATIONS, onGotDecorations);
-		socket.addEventListener(ON_GOT_USER_RATE, onGotUserRate);
+		socket.addEventListener(AUTHENTICATED, model.onAuthenticated);
+		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
+		socket.addEventListener(GOT_USER_INFO, model.onGotUserInfo);
+		socket.addEventListener(TOUCH_USER_INFO_RESULT, model.onTouchUserInfoResultSocket);
+		socket.addEventListener(TOUCH_USER_INFO_BY_USER_RESULT, model.touchUserInfoByUserResult);
+		socket.addEventListener(ON_GOT_MY_GIFTS, model.onGotMyGifts);
+		socket.addEventListener(ON_GOT_USER_SYMPATHIES, model.onGotUserSympathies);
+		socket.addEventListener(ON_GOT_DECORATIONS, model.onGotDecorations);
+		socket.addEventListener(ON_GOT_USER_RATE, model.onGotUserRate);
+		socket.addEventListener(ON_GOT_VIP_POINTS, model.onGotVipPoints);
 
 		//room
-		socket.addEventListener(JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToMainRoomQueue);
-		socket.addEventListener(JOINED_TO_ROOM, onJoinedToRoom);
-		socket.addEventListener(ROOM_DEATH, onRoomDeath);
-		socket.addEventListener(ROOM_USER_LIST_CHANGED, onRoomUserListChanged);
-		socket.addEventListener(ROOM_STATE_CHANGED, onRoomStateChanged);
-		socket.addEventListener(ROOM_IS_FULL, onRoomIsFool);
-		socket.addEventListener(ALREADY_IN_THIS_ROOM, onAlreadyInRoom);
+		socket.addEventListener(JOINED_TO_MAIN_ROOM_QUEUE, model.onJoinedToMainRoomQueue);
+		socket.addEventListener(JOINED_TO_ROOM, model.onJoinedToRoom);
+		socket.addEventListener(ROOM_DEATH, model.onRoomDeath);
+		socket.addEventListener(ROOM_USER_LIST_CHANGED, model.onRoomUserListChanged);
+		socket.addEventListener(ROOM_STATE_CHANGED, model.onRoomStateChanged);
+		socket.addEventListener(ROOM_IS_FULL, model.onRoomIsFool);
+		socket.addEventListener(ALREADY_IN_THIS_ROOM, model.onAlreadyInRoom);
 
 		//game
-		socket.addEventListener(BOTTLE_SWINGED, onBottleSwinged);
-		socket.addEventListener(KISSED, onKissed);
-		socket.addEventListener(REFUSED_TO_KISS, onRefusedToKiss);
-		socket.addEventListener(NEW_BOTTLE_SWINGER, onNewBottleSwinger);
+		socket.addEventListener(BOTTLE_SWINGED, model.onBottleSwinged);
+		socket.addEventListener(KISSED, model.onKissed);
+		socket.addEventListener(REFUSED_TO_KISS, model.onRefusedToKiss);
+		socket.addEventListener(NEW_BOTTLE_SWINGER, model.onNewBottleSwinger);
 
 		//mail
-		socket.addEventListener(ON_GOT_MAILBOX, onGotMailbox);
-		socket.addEventListener(ON_GOT_NEW_MAIL, onGotNewMail);
+		socket.addEventListener(ON_GOT_MAILBOX, model.onGotMailbox);
+		socket.addEventListener(ON_GOT_NEW_MAIL, model.onGotNewMail);
 
 		//followers
-		socket.addEventListener(ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
-		socket.addEventListener(ON_FOLLOWING_BOUGHT, onFollowingBought);
+		socket.addEventListener(ON_GOT_USER_FOLLOWERS, model.onGotUserFollowers);
+		socket.addEventListener(ON_FOLLOWING_BOUGHT, model.onFollowingBought);
 
 	}
 
@@ -155,91 +156,6 @@ public class Controller
 		requestObject[REFUSE_TO_KISS] = {};
 		socket.sendRequest(requestObject);
 	}
-	//------------------------------------------------------------------------------------------------------------------
-	// Handlers
-	//------------------------------------------------------------------------------------------------------------------
-	//user
-
-
-	private function touchUserInfoByUserResult(e:ObjectEvent):void
-	{
-
-	}
-
-	//room
-	private function onJoinedToMainRoomQueue(e:ObjectEvent):void
-	{
-	}
-
-	private function onJoinedToRoom(e:ObjectEvent):void
-	{
-	}
-
-	private function onRoomStateChanged(e:ObjectEvent):void
-	{
-	}
-
-	private function onRoomUserListChanged(e:ObjectEvent):void
-	{
-	}
-
-	private function onRoomIsFull(e:ObjectEvent):void
-	{
-	}
-
-	private function onRoomIsFool(e:ObjectEvent):void
-	{
-	}
-
-	private function onAlreadyInRoom(e:ObjectEvent):void
-	{
-	}
-
-	private function onRoomDeath(e:ObjectEvent):void
-	{
-	}
-
-	//chat
-	private function onGotChatMessageFromRoom(e:ObjectEvent):void
-	{
-	}
-
-	//game
-	private function onBottleSwinged(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
-
-	private function onKissed(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
-
-	private function onRefusedToKiss(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
-
-	private function onNewBottleSwinger(e:ObjectEvent):void
-	{
-		Cc.log(" ~ " + e.type + " ~ ");
-		for (var key:String in e.data)
-		{
-			Cc.log(key + ":" + e.data[key]);
-		}
-	}
 
 	//------------------------------------------------------------------------------------------------------------------
 	// USER PROFILE INFO
@@ -266,14 +182,11 @@ public class Controller
 	public static const GET_USER_RATE:String = "GetUserRate";
 	public static const ON_GOT_USER_RATE:String = "OnGotUserRate";
 	public static const GET_FRIEND_INFO:String = "GetUserInfo";
+	public static const GET_VIP_POINTS:String = "GetVipPoints";
+	public static const ON_GOT_VIP_POINTS:String = "OnGotVipPoints";
 
-	private var sessionStart:Boolean = false;
-
-	public function userLogin(firstSession:Boolean = false):void//TODO: not only owner support
+	public function userLogin():void//TODO: not only owner support
 	{
-//		if(sessionStart)
-//			authenticate(model.owner.id, "");
-//		return;
 		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
 				'{"userId" : "' + model.owner.id + '",' +
 				'"name" : "' + model.owner.name + '",' +
@@ -283,25 +196,14 @@ public class Controller
 				'"city" : "' + model.owner.city + '",' +
 				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
 				'"hideSocialInfo":"0", ' +
-				'"hideName":"0", ' +
+				'"hideBirthDate":"0", ' +
 				'"hideCity":"0"}}}');
-
-		sessionStart = firstSession;
-		//authenticate(model.owner.id, "");
 	}
 
 	public function touchUserInfo(userInfo:String):void
 	{
-		ServerConnector.instance.addEventListener(TOUCH_USER_INFO_RESULT, onTouchUserInfoResult);
+		ServerConnector.instance.addEventListener(TOUCH_USER_INFO_RESULT, model.onTouchUserInfoResultHTTP);
 		ServerConnector.call(TOUCH_USER_INFO, userInfo);
-	}
-
-	private function onTouchUserInfoResult(e:ObjectEvent):void
-	{
-		if(sessionStart)
-			authenticate(model.owner.id, "");
-//		else
-//			getUserInfo(model.owner.guid);
 	}
 
 	public function authenticate(login:String, password:String):void
@@ -313,13 +215,7 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onAuthenticated(e:ObjectEvent):void
-	{
-		model.owner.guid = e.data.guid;
-		getUserInfo(model.owner.guid);
-	}
-
-	private function getUserInfo(guid:String):void
+	public function getUserInfo(guid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_INFO] = {};
@@ -327,33 +223,7 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotUserInfo(e:ObjectEvent):void
-	{
-		if(model.userCache[e.data.infoOwnerGuid] == null)
-			model.userCache[e.data.infoOwnerGuid] = new User();
-
-		model.userCache[e.data.infoOwnerGuid].id = e.data.userId;
-		model.userCache[e.data.infoOwnerGuid].guid = e.data.infoOwnerGuid;
-		model.userCache[e.data.infoOwnerGuid].name = e.data.name;
-		model.userCache[e.data.infoOwnerGuid].city = e.data.city;
-		model.userCache[e.data.infoOwnerGuid].photoLink = e.data.pictureUrl;
-		model.userCache[e.data.infoOwnerGuid].profileLink = e.data.profileUrl;
-		model.userCache[e.data.infoOwnerGuid].birthDate = e.data.birthDate;
-		model.userCache[e.data.infoOwnerGuid].sex = e.data.sex;
-		model.userCache[e.data.infoOwnerGuid].isOnline = e.data.isOnline;
-
-		model.userCache[e.data.infoOwnerGuid].isLinkHidden = e.data.isSocialInfoHidden;
-		model.userCache[e.data.infoOwnerGuid].isAgeHidden = e.data.isCityHidden;
-		model.userCache[e.data.infoOwnerGuid].isCityHidden = e.data.isNameHidden;
-
-		model.userCache[e.data.infoOwnerGuid].coins = e.data.coins;
-		model.userCache[e.data.infoOwnerGuid].kisses = e.data.kisses;
-
-		if(sessionStart)
-			getUserSympathies(e.data.infoOwnerGuid);
-	}
-
-	private function getUserSympathies(guid:String):void
+	public function getUserSympathies(guid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_SYMPATHIES] = {};
@@ -361,29 +231,14 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotUserSympathies(e:ObjectEvent):void
-	{
-		model.userCache[e.data.ownerUserGuid].sympathies = e.data.sympathies;
-		if(sessionStart)
-			getMyGifts();
-	}
-
-	private function getMyGifts():void
+	public function getMyGifts():void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_MY_GIFTS] = {};
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotMyGifts(e:ObjectEvent):void
-	{
-		//model.userCache[e.data.infoOwnerGuid].presents = e.data.gifts;
-		model.owner.presents = e.data.gifts;
-		if(sessionStart)
-			getUserFollowers(model.owner.guid);
-	}
-
-	private function getUserFollowers(userGuid:String):void
+	public function getUserFollowers(userGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_FOLLOWERS] = {};
@@ -391,16 +246,7 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotUserFollowers(e:ObjectEvent):void
-	{
-		model.userCache[e.data.ownerUserGuid].followers = e.data.followers;
-		model.userCache[e.data.ownerUserGuid].rebuyPrice = e.data.rebuyPrice;
-
-		if(sessionStart)
-			getDecorationFor(e.data.ownerUserGuid);
-	}
-
-	private function getDecorationFor(userGuid:String):void
+	public function getDecorationFor(userGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_DECORATION_FOR] = {};
@@ -408,14 +254,7 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotDecorations(e:ObjectEvent):void
-	{
-		model.userCache[e.data.ownerUserGuid].decorations = e.data.decorations;
-		if(sessionStart)
-			getUserRate(e.data.ownerUserGuid);
-	}
-
-	private function getUserRate(userGuid:String):void
+	public function getUserRate(userGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_RATE] = {};
@@ -423,18 +262,15 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotUserRate(e:ObjectEvent):void
+	public function getVipPoints(userGuid:String):void
 	{
-		model.userCache[e.data.userGuid].userRate = e.data.averateRate;
-		model.userCache[e.data.userGuid].lastRaters = e.data.lastRaters;
-
-		sessionStart = false;
-		model.basicUserInfoCollected();
-
-		getUsersInfos(model.owner.followers)
+		var requestObject:Object = new Object();
+		requestObject[GET_VIP_POINTS] = {};
+		requestObject[GET_VIP_POINTS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
 	}
 
-	private function buyFollowing(userGuid:String):void
+	public function buyFollowing(userGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[BUY_FOLLOWING] = {};
@@ -442,25 +278,12 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onFollowingBought(e:ObjectEvent):void
-	{
-
-	}
-
-	private function buyDecore(decoreGuid:String):void
+	public function buyDecore(decoreGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[BUY_DECORE] = {};
 		requestObject[BUY_DECORE].decoreGuid = decoreGuid;
 		socket.sendRequest(requestObject);
-	}
-
-	public function getUsersInfos(guids:Array):void
-	{
-		for (var i:int = 0; i < guids.length; i++)
-		{
-			getUserInfo(guids[i]);
-		}
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -480,11 +303,6 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotMailbox(e:ObjectEvent):void
-	{
-		model.mail = e.data.mails as Array;
-	}
-
 	public function sendMail(receiverGuid:String, subject:String, body:String):void
 	{
 		var requestObject:Object = new Object();
@@ -495,22 +313,12 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
-	private function onGotNewMail(e:ObjectEvent):void
-	{
-
-	}	
-
 	public function markMailAsRead(mailGuid:String):void
 	{
 		var requestObject:Object = new Object();
 		requestObject[MARK_MAIL_AS_READ] = {};
 		requestObject[MARK_MAIL_AS_READ].targetMailGuid = mailGuid;
 		socket.sendRequest(requestObject);
-	}
-
-	private function onMessageMarkedAsRead(e:ObjectEvent):void
-	{
-
 	}
 }
 }

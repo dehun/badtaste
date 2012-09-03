@@ -17,6 +17,7 @@ public class BackGroundedPage extends CasaSprite
 {
 	private var bgLoad:SwfLoad;
 	private var background:CasaSprite = new CasaSprite();
+	public var currentBg:int = -1;
 
 	public function BackGroundedPage()
 	{
@@ -25,6 +26,7 @@ public class BackGroundedPage extends CasaSprite
 
 	public function setBackground(bgId:int):void
 	{
+		currentBg = bgId;
 		bgLoad = new SwfLoad(Config.RESOURCES_SERVER + "backgrounds/bg" + bgId + ".swf");
 		bgLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		bgLoad.start();

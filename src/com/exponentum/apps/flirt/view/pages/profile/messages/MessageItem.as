@@ -43,7 +43,7 @@ public class MessageItem extends CasaSprite
 
 	private function onReply(e:MouseEvent):void
 	{
-		Model.instance.view.showMessageWindow(_message);
+
 	}
 
 	public function get messageGuid():String

@@ -75,13 +75,14 @@ public class Kiss extends Sprite
 		Cc.log("--------------- Social network response ---------------");
 
 		model.owner.updateSocialInfo(res[0] as SocialProfileVO);
-		model.addEventListener(User.GOT_BASIC_USER_INFO, onGotBasicUserInfo);
-		controller.userLogin(true);
+		model.addEventListener(Model.USER_AUTHENTICATED, onUserAuthenticated);
+		controller.userLogin();
 	}
 
-	private function onGotBasicUserInfo(e:Event):void
+	private function onUserAuthenticated(e:Event):void
 	{
-		model.removeEventListener(User.GOT_BASIC_USER_INFO, onGotBasicUserInfo);
+		model.removeEventListener(Model.USER_AUTHENTICATED, onUserAuthenticated);
+		addChild(view);
 		view.showOwnerProfile();
 	}
 

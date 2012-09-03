@@ -1,5 +1,7 @@
 package com.exponentum.apps.flirt.model
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.View;
 
@@ -10,11 +12,10 @@ import flash.utils.Dictionary;
 
 public class Model extends EventDispatcher
 {
-	private var _owner:User = new User();
 
-	public var userCache:Dictionary = new Dictionary();
-	public var view:View;
-	
+//----------------------------------------------------------------------------------------------------------------------
+//	Instantination
+//----------------------------------------------------------------------------------------------------------------------
 	private static var _instance:Model;
 	public static function get instance():Model
 	{
@@ -29,55 +30,178 @@ public class Model extends EventDispatcher
 		_instance = this;
 	}
 
-	public function basicUserInfoCollected():void
+//----------------------------------------------------------------------------------------------------------------------
+//	Executive Code
+//----------------------------------------------------------------------------------------------------------------------
+	public static const USER_AUTHENTICATED:String = "userAuthenticated";
+	public static const USER_PROFILE_UPDATED:String = "userProfileUpdated";
+//----------------------------------------------------------------------------------------------------------------------
+//	User Data
+//----------------------------------------------------------------------------------------------------------------------
+	public var owner:User = new User();
+	public var userCache:Dictionary = new Dictionary();
+
+	public function onTouchUserInfoResultHTTP(e:ObjectEvent):void
 	{
-		dispatchEvent(new Event(User.GOT_BASIC_USER_INFO));
+		if(e.data.result == "ok") Controller.instance.authenticate(owner.id,  "");
 	}
 
-	public function userInfoUpdated():void
+	public function onTouchUserInfoResultSocket(e:ObjectEvent):void
 	{
-		dispatchEvent(new Event(User.USER_INFO_UPDATED));
-	}
-
-	//greyscale
-	public static function get grayscale():ColorMatrixFilter
-	{
-		var matrix:Array= new Array();
-
-		matrix = matrix.concat([1, 1, 1, 0, 0]); // red
-		matrix = matrix.concat([1, 1, 1, 0, 0]); // green
-		matrix = matrix.concat([1, 1, 1, 0, 0]); // blue
-		matrix = matrix.concat([0, 0, 0, 1, 0]); // alpha
-
-		return new ColorMatrixFilter(matrix);
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	//
-	////////////////////////////////////////////////////////////////////////////////////////
-	private var _mail:Array = [];
-
-	public function get mail():Array
-	{
-		return _mail;
 
 	}
 
-	public function set mail(value:Array):void
+	public function onAuthenticated(e:ObjectEvent):void
 	{
-		_mail = value;
-		dispatchEvent(new Event(User.USER_MAILBOX_RECEIVED));
+		owner.guid = e.data.guid;
+		userCache[owner.guid] = owner;
+		dispatchEvent(new Event(USER_AUTHENTICATED));
 	}
 
-	public function get owner():User
+	public function onGotUserInfo(e:ObjectEvent):void
 	{
-		if(!userCache[_owner.guid]) userCache[_owner.guid] = _owner;
-		return userCache[_owner.guid];
+		if(userCache[e.data.ownerUserGuid] == null) userCache[e.data.ownerUserGuid] = new User();
+
+		userCache[e.data.ownerUserGuid].id = e.data.userId;
+		userCache[e.data.ownerUserGuid].guid = e.data.ownerUserGuid;
+		userCache[e.data.ownerUserGuid].name = e.data.name;
+		userCache[e.data.ownerUserGuid].city = e.data.city;
+		userCache[e.data.ownerUserGuid].photoLink = e.data.pictureUrl;
+		userCache[e.data.ownerUserGuid].profileLink = e.data.profileUrl;
+		userCache[e.data.ownerUserGuid].birthDate = e.data.birthDate;
+		userCache[e.data.ownerUserGuid].sex = e.data.sex;
+		userCache[e.data.ownerUserGuid].isOnline = e.data.isOnline;
+
+		userCache[e.data.ownerUserGuid].isLinkHidden = e.data.isSocialInfoHidden;
+		userCache[e.data.ownerUserGuid].isAgeHidden = e.data.isBirthDateHidden;
+		userCache[e.data.ownerUserGuid].isCityHidden = e.data.isNameHidden;
+
+		userCache[e.data.ownerUserGuid].coins = e.data.coins;
+		userCache[e.data.ownerUserGuid].kisses = e.data.kisses;
+
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.infoOwnerGuid]));
 	}
 
-	public function set owner(value:User):void
+	public function onGotMyGifts(e:ObjectEvent):void
 	{
-		_owner = value;
+		owner.presents = e.data.gifts;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, owner));
+	}
+
+	public function onGotUserSympathies(e:ObjectEvent):void
+	{
+		(userCache[e.data.ownerUserGuid] as User).sympathies = e.data.sympathies;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.ownerUserGuid]));
+	}
+
+	public function onGotUserFollowers(e:ObjectEvent):void
+	{
+		(userCache[e.data.ownerUserGuid] as User).followers = e.data.followers;
+		(userCache[e.data.ownerUserGuid] as User).rebuyPrice = e.data.rebuyPrice;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.ownerUserGuid]));
+	}
+
+	public function onGotDecorations(e:ObjectEvent):void
+	{
+		(userCache[e.data.ownerUserGuid] as User).decorations = e.data.decorations;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.ownerUserGuid]));
+	}
+
+	public function onGotUserRate(e:ObjectEvent):void
+	{
+		(userCache[e.data.userGuid] as User).userRate = e.data.averateRate;
+		(userCache[e.data.userGuid] as User).lastRaters = e.data.lastRaters;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.ownerUserGuid]));
+	}
+
+	public function onGotVipPoints(e:ObjectEvent):void
+	{
+		(userCache[e.data.ownerUserGuid] as User).vipPoints = e.data.points;
+		dispatchEvent(new ObjectEvent(USER_PROFILE_UPDATED, userCache[e.data.ownerUserGuid]));
+	}
+
+	public function onFollowingBought(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onGotMailbox(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onGotNewMail(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onMessageMarkedAsRead(e:ObjectEvent):void
+	{
+
+	}
+
+	public function touchUserInfoByUserResult(e:ObjectEvent):void
+	{
+
+	}
+
+	//room
+	public function onJoinedToMainRoomQueue(e:ObjectEvent):void
+	{
+	}
+
+	public function onJoinedToRoom(e:ObjectEvent):void
+	{
+	}
+
+	public function onRoomStateChanged(e:ObjectEvent):void
+	{
+	}
+
+	public function onRoomUserListChanged(e:ObjectEvent):void
+	{
+	}
+
+	public function onRoomIsFull(e:ObjectEvent):void
+	{
+	}
+
+	public function onRoomIsFool(e:ObjectEvent):void
+	{
+	}
+
+	public function onAlreadyInRoom(e:ObjectEvent):void
+	{
+	}
+
+	public function onRoomDeath(e:ObjectEvent):void
+	{
+	}
+
+	//chat
+	public function onGotChatMessageFromRoom(e:ObjectEvent):void
+	{
+	}
+
+	//game
+	public function onBottleSwinged(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onKissed(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onRefusedToKiss(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onNewBottleSwinger(e:ObjectEvent):void
+	{
+
 	}
 }
 }

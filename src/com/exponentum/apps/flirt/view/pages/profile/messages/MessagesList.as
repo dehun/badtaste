@@ -45,7 +45,7 @@ public class MessagesList extends CasaSprite
 
 	public function updateMessages():void
 	{
-		var messages:Array = Model.instance.mail;
+		var messages:Array = [];
 		messagesDistribution.removeChildren(true, true);
 		for (var i:int = 0; i < messages.length; i++)
 		{

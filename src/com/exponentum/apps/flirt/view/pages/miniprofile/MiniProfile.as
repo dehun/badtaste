@@ -107,7 +107,7 @@ public class MiniProfile extends CasaSprite
 		profileAvatar.y = 133;
 		profileAvatar.frame = _user.avatarFrame;
 		profileAvatar.sex = _user.sex;
-		profileAvatar.isVIP = _user.isVIP;
+		profileAvatar.isVIP = _user.vipPoints;
 		profileInfoContainer.addChild(profileAvatar);
 
 		var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink);

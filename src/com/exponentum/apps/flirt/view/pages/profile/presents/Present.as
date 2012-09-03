@@ -22,7 +22,7 @@ public class Present extends CasaSprite
 	
 	public function Present(present:Object)
 	{
-		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present.SendedGift.giftGuid + ".swf");
+		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present + ".swf");
 		presentLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		presentLoad.start();
 	}

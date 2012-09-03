@@ -9,6 +9,7 @@ package com.exponentum.apps.flirt.view.pages.profile
 {
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
@@ -38,24 +39,40 @@ public class Profile extends BackGroundedPage
 	private var presentsContainer:Distribution = new Distribution();
 
 	private var _user:User;
+	private var _model:Model;
 	private var _controller:Controller;
 
-	public function Profile(user:User, controller:Controller)
+	public function Profile()
 	{
-		_user = user;
-		_controller = controller;
+		
+		_user = Model.instance.owner;
+		_model = Model.instance;
+		_controller = Controller.instance;
 
-		init();
+		getProfileInfo();
 	}
 
-	public function update():void
+	private function getProfileInfo():void
 	{
+		_controller.getUserInfo(_model.owner.guid);
+		_controller.getMyGifts();
+		_controller.getUserSympathies(_model.owner.guid);
+		_controller.getUserFollowers(_model.owner.guid);
+		_controller.getDecorationFor(_model.owner.guid);
+		_controller.getUserRate(_model.owner.guid);
+		_controller.getVipPoints(_model.owner.guid);
+	}
+
+	public function update(data:User):void
+	{
+		_user = data;
 		init();
 	}
 
 	private function init():void
 	{
-		setBackground(_user.profileBackground);
+		if(_user.profileBackground != currentBg)
+			setBackground(_user.profileBackground);
 		
 		if(!contains(playButton))
 		{
@@ -92,7 +109,10 @@ public class Profile extends BackGroundedPage
 		createProfileDetails();
 		createAchievementsPanel();
 		createProfileAvatar();
-		createFansBlock();
+		if(_user.followers.length > 0)
+		{
+			createFansBlock();
+		}
 		createBottomPanel();
 		createPresents();
 	}
@@ -111,7 +131,7 @@ public class Profile extends BackGroundedPage
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < _user.presents.length; i++)
 		{
-			var present:Present = new Present(_user.presents[i]);
+			var present:Present = new Present(_user.presents[i].SendedGift.giftGuid);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}
@@ -151,7 +171,7 @@ public class Profile extends BackGroundedPage
 
 		profileAvatar.frame = _user.avatarFrame;
 		profileAvatar.sex = _user.sex;
-		profileAvatar.isVIP = _user.isVIP;
+		profileAvatar.isVIP = _user.vipPoints > 0;
 		profileAvatar.showMarkBlock(_user.userRate);
 	}
 
@@ -227,17 +247,14 @@ public class Profile extends BackGroundedPage
 
 	private function createFansBlock():void
 	{
-
-		//_controller.getUsersInfos(_user.followers);
 		if(!fans)
 		{
 			fans = new Fans();
 			fans.x = 532;
 			fans.y = 113;
 			addChild(fans);
+			fans.update(_user.followers);
 		}
-
-		//fans.update(_user.followers);
 	}
 
 	//----------------------------------------------------------------------------------

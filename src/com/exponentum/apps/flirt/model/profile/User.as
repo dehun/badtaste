@@ -45,7 +45,7 @@ public class User
 
 	public var tasksDone:int = 4;
 	public var placeInRating:int = 10;
-	public var isVIP:Boolean = false;
+	public var vipPoints:int = 0;
 
 	public var directMessages:Vector.<DirectMessageStruct> = new Vector.<DirectMessageStruct>();
 	public var gameEvents:Vector.<GameEventStruct> = new Vector.<GameEventStruct>();
