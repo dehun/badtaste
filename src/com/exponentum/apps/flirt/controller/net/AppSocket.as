@@ -91,19 +91,25 @@ public class AppSocket extends Socket
 
 	private function readResponse():int
 	{
-		var size:int = readInt();
-		var str:String = readUTFBytes(size);
-		response += str;
-		trace("->", response);
-		for (var key:String in JSON.decode(response)){
-			dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
-		}
-		response = "";
+		var size:int = readUnsignedInt();
+		var str:String = "";
+		//try{
+			str = readUTFBytes(size);
+			response += str;
+			trace("->", response);
+			for (var key:String in JSON.decode(response))
+				dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
+			response = "";
+//		}catch(e:EOFError)
+//		{
+//			trace(e);
+//		}
 		return size + 4;
 	}
 
 	private function socketDataHandler(event:ProgressEvent):void
 	{
+		trace("=====", bytesAvailable )
 		var dataToProcess:int = bytesAvailable;
 		var dataProcessed:int = 0;
 		while (dataProcessed < dataToProcess) dataProcessed += readResponse();

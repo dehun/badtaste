@@ -46,9 +46,7 @@ public class Fans extends CasaSprite
 		_followers = followers;
 		Model.instance.addEventListener(Model.USER_PROFILE_UPDATED, onAddFollower);
 		for (var i:int = 0; i < _followers.length; i++)
-		{
 				Controller.instance.getUserInfo(_followers[i]);
-		}
 	}
 
 	private function onAddFollower(e:ObjectEvent):void

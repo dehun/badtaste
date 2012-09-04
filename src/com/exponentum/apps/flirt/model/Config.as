@@ -11,7 +11,7 @@ import org.osmf.events.FacetValueChangeEvent;
 
 public class Config
 {
-	public static var DEV_MODE:Boolean = true;
+	public static var DEV_MODE:Boolean = false;
 
 	public static var RESOURCES_SERVER:String = "";
 
