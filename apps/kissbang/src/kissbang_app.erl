@@ -25,6 +25,7 @@ setup_db() ->
     mail_srv:setup_db(),
     rate_srv:setup_db(),
     vip_srv:setup_db(),
+    job_srv:setup_db(),
     sympathy_srv:setup_db(),
     follower_srv:setup_db(),
     roommgr_srv:setup_db(),
