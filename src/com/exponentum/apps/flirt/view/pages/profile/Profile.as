@@ -54,10 +54,10 @@ public class Profile extends BackGroundedPage
 
 	private function getProfileInfo():void
 	{
+		_controller.getUserFollowers(_model.owner.guid);
 		_controller.getUserInfo(_model.owner.guid);
 		_controller.getMyGifts();
 		_controller.getUserSympathies(_model.owner.guid);
-		_controller.getUserFollowers(_model.owner.guid);
 		_controller.getDecorationFor(_model.owner.guid);
 		_controller.getUserRate(_model.owner.guid);
 		_controller.getVipPoints(_model.owner.guid);
@@ -177,7 +177,6 @@ public class Profile extends BackGroundedPage
 
 	private function createAchievementsPanel():void
 	{
-
 		achievementsPanel.giftsText.text = _user.presents.length.toString();
 		achievementsPanel.medalsText.text = _user.tasksDone.toString();//todo:???
 		achievementsPanel.ratingText.text = _user.placeInRating.toString();//todo:???
@@ -186,13 +185,11 @@ public class Profile extends BackGroundedPage
 			achievementsPanel.y = 270;
 			addChild(achievementsPanel);
 		}
-
 	}
 
 	//---------------------------------------------------------------------------------------------------profile details
 	private function createProfileDetails():void
 	{
-
 		if(!contains(profileDetails)){
 			profileDetails.x = 312;
 			profileDetails.y = 133;

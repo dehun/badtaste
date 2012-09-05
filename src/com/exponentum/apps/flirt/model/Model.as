@@ -35,11 +35,14 @@ public class Model extends EventDispatcher
 //----------------------------------------------------------------------------------------------------------------------
 	public static const USER_AUTHENTICATED:String = "userAuthenticated";
 	public static const USER_PROFILE_UPDATED:String = "userProfileUpdated";
+
+	public static const MAILBOX:String = "mailbox";
 //----------------------------------------------------------------------------------------------------------------------
 //	User Data
 //----------------------------------------------------------------------------------------------------------------------
 	public var owner:User = new User();
 	public var userCache:Dictionary = new Dictionary();
+	public var mailbox:Array = [];
 
 	public function onTouchUserInfoResultHTTP(e:ObjectEvent):void
 	{
@@ -127,7 +130,8 @@ public class Model extends EventDispatcher
 
 	public function onGotMailbox(e:ObjectEvent):void
 	{
-
+		mailbox = e.data.mails as Array;
+		dispatchEvent(new Event(MAILBOX));
 	}
 
 	public function onGotNewMail(e:ObjectEvent):void

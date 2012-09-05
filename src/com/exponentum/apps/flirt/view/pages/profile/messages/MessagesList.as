@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
+import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.pages.gamefield.Bottle;
@@ -41,6 +42,8 @@ public class MessagesList extends CasaSprite
 		messagesDistribution.mask = _bottomPanelMask;
 
 		initAssets();
+
+		Controller.instance.checkMailbox();
 	}
 
 	public function updateMessages():void

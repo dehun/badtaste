@@ -99,14 +99,7 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(MESSAGES);
 		clearContainer();
-		_controller.checkMailbox();
-		Model.instance.addEventListener(User.USER_MAILBOX_RECEIVED, onMailboxReceived);
 		container.addChild(messageList);
-	}
-
-	private function onMailboxReceived(e:Event):void
-	{
-		messageList.updateMessages();
 	}
 }
 }

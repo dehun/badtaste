@@ -91,28 +91,66 @@ public class AppSocket extends Socket
 
 	private function readResponse():int
 	{
-		var size:int = readUnsignedInt();
+		var size:int = readInt();
 		var str:String = "";
-		//try{
+		trace("\n",size,"\n");
+		try{
 			str = readUTFBytes(size);
 			response += str;
 			trace("->", response);
 			for (var key:String in JSON.decode(response))
 				dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
 			response = "";
-//		}catch(e:EOFError)
-//		{
-//			trace(e);
-//		}
+		}catch(e:EOFError)
+		{
+			trace(e);
+		}
 		return size + 4;
+	}
+
+//	private function socketDataHandler(event:ProgressEvent):void
+//	{
+//		var dataToProcess:int = bytesAvailable;
+//		var dataProcessed:int = 0;
+//		while (dataProcessed < dataToProcess) dataProcessed += readResponse();
+//	}
+
+	private var _lastSize:int;
+	private function readChunk():int
+	{
+		// extract data from buff
+		var sizeToReturn:int = 0;
+		var data:String = "";
+		if (_lastSize == 0) {
+			_lastSize = readInt();
+			sizeToReturn = _lastSize + 4;
+		} else {
+			sizeToReturn = _lastSize;
+		}
+		data = readUTFBytes(_lastSize);
+		_lastSize = 0;
+
+		// process data
+		trace("->", data);
+		Cc.log("<-", data);
+
+		for (var key:String in JSON.decode(data))
+		{
+			dispatchEvent(new ObjectEvent(key, JSON.decode(data)[key]));
+		}
+		return sizeToReturn;
 	}
 
 	private function socketDataHandler(event:ProgressEvent):void
 	{
-		trace("=====", bytesAvailable )
-		var dataToProcess:int = bytesAvailable;
+		var dataToProcess:int = event.bytesLoaded;
 		var dataProcessed:int = 0;
-		while (dataProcessed < dataToProcess) dataProcessed += readResponse();
+		try {
+			while (dataProcessed < dataToProcess) {
+				dataProcessed += readChunk();
+			}
+		} catch (e:EOFError) {}// here catch EOF
+
 	}
 }
 }
