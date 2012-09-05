@@ -9,6 +9,7 @@
 -module(check_bank_balance_handler_srv).
 
 -behaviour(gen_server).
+-include("../../kissbang_messaging.hrl").
 
 %% API
 -export([start_link/0]).
@@ -126,5 +127,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_check_bank_balance(UserGuid, Message) ->
-    bank_srv:check(UserGuid).
+handle_check_bank_balance(UserGuid, _Message) ->
+    Gold = bank_srv:check(UserGuid),
+    proxy_srv:route_messages(UserGuid, [#on_bank_balance_checked{gold = Gold}]).
