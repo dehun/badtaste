@@ -24,8 +24,6 @@ public class ProfileAvatar extends CasaSprite
 	public function ProfileAvatar()
 	{
 		addChild(avatarHolder);
-
-
 	}
 
 	public function showMarkBlock(mark:Number, canVote:Boolean = false):void

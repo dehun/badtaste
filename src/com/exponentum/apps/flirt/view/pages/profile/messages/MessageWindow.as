@@ -7,6 +7,8 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
+import com.exponentum.apps.flirt.model.profile.User;
+
 import flash.events.MouseEvent;
 
 import org.casalib.display.CasaSprite;
@@ -15,17 +17,12 @@ public class MessageWindow extends CasaSprite
 {
 	private var asset:MessageWindowAsset = new MessageWindowAsset();
 
-	public function MessageWindow(message:Object)
+	public function MessageWindow(message:Object, sender:User)
 	{
 		addChild(asset);
 		asset.message.text = message.body;
 		asset.closeButton.addEventListener(MouseEvent.CLICK, onClose);
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
-	}
-
-	private function getUserInfoByGuid():void
-	{
-
 	}
 
 	private function onReply(e:MouseEvent):void
@@ -35,7 +32,13 @@ public class MessageWindow extends CasaSprite
 
 	private function onClose(e:MouseEvent):void
 	{
+		destroy();
+	}
 
+	override public function destroy():void
+	{
+		removeChildren(true, true);
+		super.destroy();
 	}
 }
 }

@@ -36,6 +36,8 @@ public class BottomPanel extends CasaSprite
 
 	private var _controller:Controller;
 
+	private var _state:String = "";
+
 	public function BottomPanel(controller:Controller)
 	{
 		_controller = controller;
@@ -57,6 +59,11 @@ public class BottomPanel extends CasaSprite
 		onFriendsTabSelected(null);
 	}
 
+	public function updateMessages():void
+	{
+		if(state == MESSAGES) messageList.updateMessages();
+	}
+
 	private function clearContainer():void
 	{
 		if(!contains(container))
@@ -76,21 +83,21 @@ public class BottomPanel extends CasaSprite
 	private function onNewsTabSelected(e:Event):void
 	{
 		trace(NEWS);
+		_state = NEWS;
 		clearContainer();
 		container.addChild(newsList);
-
-		//TODO: add functional
-		newsList.updateNews();
 	}
 
 	private function onSocialTabSelected(e:Event):void
 	{
 		trace(SOCIAL);
+		_state = SOCIAL;
 	}
 
 	private function onFriendsTabSelected(e:Event):void
 	{
 		trace(FRIENDS);
+		_state = FRIENDS;
 		clearContainer();
 		container.addChild(friendsList);
 	}
@@ -98,8 +105,15 @@ public class BottomPanel extends CasaSprite
 	private function onMessagesTabSelected(e:Event):void
 	{
 		trace(MESSAGES);
+		_state = MESSAGES;
 		clearContainer();
+		_controller.checkMailbox();
 		container.addChild(messageList);
+	}
+
+	public function get state():String
+	{
+		return _state;
 	}
 }
 }

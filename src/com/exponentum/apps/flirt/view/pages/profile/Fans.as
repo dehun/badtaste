@@ -32,9 +32,8 @@ public class Fans extends CasaSprite
 	private var mainFollower:Sprite = fansBlock.fansAvatarBig;
 	private var pastFollowersContainer:Distribution = new Distribution();
 
-	private var loadedFollowers:int = 0;
 	private var _followers:Array;
-	private var _profiles:Dictionary = new Dictionary();
+	private var _followersAvatars:Vector.<FansAvatarSmall> = new Vector.<FansAvatarSmall>();
 	
 	public function Fans()
 	{
@@ -46,36 +45,16 @@ public class Fans extends CasaSprite
 		_followers = followers;
 
 		Model.instance.addEventListener(Model.USER_PROFILE_UPDATED, onAddFollower);
-		getFollowersQueue(0);
-	}
-
-	private var numFollowers:int = 0;
-	private function getFollowersQueue(followerIndex:int):void
-	{
-		Controller.instance.getUserInfo(_followers[followerIndex]);
+		for (var i:int = 0; i < _followers.length; i++)
+			Controller.instance.getUserInfo(_followers[i]);
 	}
 
 	private function onAddFollower(e:ObjectEvent):void
 	{
-		numFollowers ++;
+		var user:User = e.data as User;
+		if(!user) return;
+		if(_followers.indexOf(user.guid) == -1) return;
 
-		if(numFollowers == _followers.length - 1)
-		{
-			numFollowers = 0;
-			trace("followers loaded");
-		}else
-		{
-			getFollowersQueue(numFollowers);
-		}
-
-//		if(!_profiles[(e.data as User).guid]){
-//			_profiles[(e.data as User).guid] = e.data;
-//			//updateAvatars();
-//		}
-	}
-
-	private function updateAvatars():void
-	{
 		if(!contains(pastFollowersContainer))
 		{
 			addChild(pastFollowersContainer);
@@ -83,29 +62,34 @@ public class Fans extends CasaSprite
 			pastFollowersContainer.y = 168;
 		}
 
-		pastFollowersContainer.removeChildren(true, true);
-		for (var i:int = 0; i < _followers.length; i++)
-		{
-			var followerAvatar:FansAvatarSmall = new FansAvatarSmall();
-			if(_profiles[_followers[i]]){
-				var avatarLoad:ImageLoad = new ImageLoad(_profiles[_followers[i]].photoLink);
-				avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-					if(avatarLoad.contentAsBitmap){
-						var bmp:Bitmap = avatarLoad.contentAsBitmap;
-						bmp.width = followerAvatar.width;
-						bmp.scaleY = bmp.scaleX;
-						bmp.smoothing = true;
-						followerAvatar.avatarHolder.addChild(bmp);
-					}
-				});
-				avatarLoad.start();
-				pastFollowersContainer.addChildWithDimensions(followerAvatar, followerAvatar.width + 2);
-			}
+		trace(user.guid)
 
-		}
+		var followerAvatar:FansAvatarSmall = new FansAvatarSmall();
+		var avatarLoad:ImageLoad = new ImageLoad(user.photoLink);
+		avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
+			if(avatarLoad.contentAsBitmap){
+				var bmp:Bitmap = avatarLoad.contentAsBitmap;
+				bmp.width = followerAvatar.width;
+				bmp.scaleY = bmp.scaleX;
+				bmp.smoothing = true;
+				followerAvatar.avatarHolder.addChild(bmp);
+				_followersAvatars.push(followerAvatar);
+			}
+		});
+		avatarLoad.start();
+		
+		updatePastFollowersView();
+	}
+
+	private static const SPACE:int = 2;
+
+	private function updatePastFollowersView():void
+	{
+		pastFollowersContainer.removeChildren(true, true);
+		for (var i:int = 0; i < _followersAvatars.length; i++)
+			pastFollowersContainer.addChildWithDimensions(_followersAvatars[i], _followersAvatars[i].width + SPACE);
+
 		pastFollowersContainer.position();
 	}
-	
-	
 }
 }

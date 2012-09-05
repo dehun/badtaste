@@ -45,6 +45,7 @@ public class View extends Sprite
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
+		model.view = this;
 		model.addEventListener(Model.USER_PROFILE_UPDATED, onUserInfoUpdated);
 		controller = aController;
 
@@ -55,6 +56,12 @@ public class View extends Sprite
 		foreground.mouseChildren = foreground.mouseEnabled = false;
 		
 		model.addEventListener(User.USER_INFO_UPDATED, onUserInfoUpdated);
+		model.addEventListener(Model.MAILBOX, onMailbox);
+	}
+
+	private function onMailbox(e:Event):void
+	{
+		if(profile) profile.bottomPanel.updateMessages();
 	}
 
 	private function onUserInfoUpdated(e:ObjectEvent):void
@@ -147,9 +154,9 @@ public class View extends Sprite
 		pageContainer.addChild(miniProfile);
 	}
 
-	public function showMessageWindow(message:Object):void
+	public function showMessageWindow(message:Object, sender:User):void
 	{
-		var messageWindow:MessageWindow = new MessageWindow(message);
+		var messageWindow:MessageWindow = new MessageWindow(message, sender);
 		messageWindow.x = messageWindow.y = 760 / 2;
 		pageContainer.addChild(messageWindow);
 

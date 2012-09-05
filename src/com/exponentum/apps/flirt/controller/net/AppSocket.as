@@ -108,13 +108,6 @@ public class AppSocket extends Socket
 		return size + 4;
 	}
 
-//	private function socketDataHandler(event:ProgressEvent):void
-//	{
-//		var dataToProcess:int = bytesAvailable;
-//		var dataProcessed:int = 0;
-//		while (dataProcessed < dataToProcess) dataProcessed += readResponse();
-//	}
-
 	private var _lastSize:int;
 	private function readChunk():int
 	{
@@ -132,7 +125,7 @@ public class AppSocket extends Socket
 
 		// process data
 		trace("->", data);
-		Cc.log("<-", data);
+		//Cc.log("<-", data);
 
 		for (var key:String in JSON.decode(data))
 		{

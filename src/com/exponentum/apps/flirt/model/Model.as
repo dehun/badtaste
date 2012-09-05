@@ -37,6 +37,7 @@ public class Model extends EventDispatcher
 	public static const USER_PROFILE_UPDATED:String = "userProfileUpdated";
 
 	public static const MAILBOX:String = "mailbox";
+	public var view:View;
 //----------------------------------------------------------------------------------------------------------------------
 //	User Data
 //----------------------------------------------------------------------------------------------------------------------

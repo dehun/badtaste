@@ -34,10 +34,9 @@ public class Profile extends BackGroundedPage
 	private var profileDetails:ProfileDetails = new ProfileDetails();
 	private var profileAvatar:ProfileAvatar = new ProfileAvatar();
 	private var fans:Fans;
-	private var bottomPanel:BottomPanel;
+	private var _bottomPanel:BottomPanel;
 
 	private var presentsContainer:Distribution = new Distribution();
-
 	private var _user:User;
 	private var _model:Model;
 	private var _controller:Controller;
@@ -146,12 +145,12 @@ public class Profile extends BackGroundedPage
 
 	private function createBottomPanel():void
 	{
-		if(!bottomPanel)
+		if(!_bottomPanel)
 		{
-			bottomPanel = new BottomPanel(_controller);
-			bottomPanel.x = 0;
-			bottomPanel.y = 548;
-			addChild(bottomPanel);
+			_bottomPanel = new BottomPanel(_controller);
+			_bottomPanel.x = 0;
+			_bottomPanel.y = 548;
+			addChild(_bottomPanel);
 		}
 	}
 
@@ -278,6 +277,11 @@ public class Profile extends BackGroundedPage
 	public function updateChat():void
 	{
 
+	}
+
+	public function get bottomPanel():BottomPanel
+	{
+		return _bottomPanel;
 	}
 }
 }

@@ -7,8 +7,10 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.messages
 {
+import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 
 import flash.events.MouseEvent;
 
@@ -24,6 +26,8 @@ public class MessageItem extends CasaSprite
 	private var _messageText:String = "";
 	private var _senderName:String = "";
 	private var _message:Object;
+	
+	private var _sender:User;
 
 	public static const REPLY_TO_MESSAGE:String = "replyToMessage";
 	
@@ -33,17 +37,29 @@ public class MessageItem extends CasaSprite
 		addChild(asset);
 
 		this.messageGuid = _message.mailGuid;
-		this.senderName = _message.senderGuid;
 		this.messageText = _message.subject;
 		
-//		asset.replyButton.visible = _message.isRead;
+		Model.instance.addEventListener(Model.USER_PROFILE_UPDATED, onSenderProfile);
+		Controller.instance.getUserInfo(_message.senderGuid);
+		asset.replyButton.visible = (_message.isRead == "false")?true:false;
 
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
 	}
 
+	private function onSenderProfile(e:ObjectEvent):void
+	{
+		var user:User = e.data as User;
+		if(!user) return;
+		
+		_sender = user;
+		
+		if(user.guid == _message.senderGuid)
+			this.senderName = user.name;
+	}
+
 	private function onReply(e:MouseEvent):void
 	{
-
+		Model.instance.view.showMessageWindow(_message, _sender);
 	}
 
 	public function get messageGuid():String
@@ -75,7 +91,7 @@ public class MessageItem extends CasaSprite
 	public function set senderName(value:String):void
 	{
 		_senderName = value;
-		asset.nameTf.text = "Name";
+		asset.nameTf.text = value;
 	}
 }
 }
