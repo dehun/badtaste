@@ -39,6 +39,9 @@ public class ProfileAvatar extends CasaSprite
 				(avatarHolder.markButtonsBlock["mark" + i] as SimpleButton).addEventListener(MouseEvent.CLICK, onMarkClick);
 		else
 			avatarHolder.averageMarkBlock.markText.text = mark.toString();
+
+		this.frame = 1;
+		this.isVIP = false;
 	}
 
 	private function onMarkClick(e:MouseEvent):void

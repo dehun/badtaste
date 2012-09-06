@@ -37,9 +37,9 @@ public class User
 
 	private var _sympathies:Array = [];
 
-	private var _decorations:Array = [1, 1];
-	public var avatarFrame:int = 1;
-	public var profileBackground:int = 1;
+	private var _decorations:Array = [];
+	public var avatarFrame:int = 0;
+	public var profileBackground:int = 0;
 
 	private var _presents:Array = [];
 

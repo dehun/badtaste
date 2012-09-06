@@ -38,8 +38,7 @@ public class MessageItem extends CasaSprite
 
 		this.messageGuid = _message.mailGuid;
 		this.messageText = _message.subject;
-		
-		Model.instance.addEventListener(Model.USER_PROFILE_UPDATED, onSenderProfile);
+
 		Controller.instance.getUserInfo(_message.senderGuid);
 		asset.replyButton.visible = (_message.isRead == "false")?true:false;
 

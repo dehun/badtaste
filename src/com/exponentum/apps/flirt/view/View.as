@@ -45,31 +45,18 @@ public class View extends Sprite
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
-		model.view = this;
-		model.addEventListener(Model.USER_PROFILE_UPDATED, onUserInfoUpdated);
 		controller = aController;
 
+		createForeground();
+	}
+
+	private function createForeground():void
+	{
 		addChild(pageContainer);
 		foreground.x = -10;
 		foreground.y = -10;
 		addChild(foreground);
 		foreground.mouseChildren = foreground.mouseEnabled = false;
-		
-		model.addEventListener(User.USER_INFO_UPDATED, onUserInfoUpdated);
-		model.addEventListener(Model.MAILBOX, onMailbox);
-	}
-
-	private function onMailbox(e:Event):void
-	{
-		if(profile) profile.bottomPanel.updateMessages();
-	}
-
-	private function onUserInfoUpdated(e:ObjectEvent):void
-	{
-		if(!e.data) return;
-		if(profile && (e.data as User).guid == model.owner.guid){
-			profile.update(e.data as User);
-		}
 	}
 
 	private function showPage(pageId:String):void

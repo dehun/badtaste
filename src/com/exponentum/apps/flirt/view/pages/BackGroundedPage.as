@@ -35,7 +35,7 @@ public class BackGroundedPage extends CasaSprite
 	private function onBgLoaded(e:LoadEvent):void
 	{
 		background.removeChildren(true, true);
-		//background.addChild(bgLoad.contentAsMovieClip);
+		background.addChild(bgLoad.contentAsMovieClip);
 	}
 }
 }

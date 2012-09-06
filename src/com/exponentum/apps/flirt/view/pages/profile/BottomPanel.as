@@ -34,13 +34,10 @@ public class BottomPanel extends CasaSprite
 	private var messageList:MessagesList = new MessagesList();
 	private var newsList:NewsList = new NewsList();
 
-	private var _controller:Controller;
-
 	private var _state:String = "";
 
-	public function BottomPanel(controller:Controller)
+	public function BottomPanel()
 	{
-		_controller = controller;
 		tabBar.x = 49;
 		addChild(tabBar);
 		tabBar.addTab(new TabButton(new ProfileTabButton()), "Топ 100", SOCIAL, 130, true);
@@ -107,7 +104,6 @@ public class BottomPanel extends CasaSprite
 		trace(MESSAGES);
 		_state = MESSAGES;
 		clearContainer();
-		_controller.checkMailbox();
 		container.addChild(messageList);
 	}
 
