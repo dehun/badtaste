@@ -32,6 +32,7 @@ init([]) ->
                                  ?CHILD(sex_sup, supervisor),
                                  ?CHILD(job_sup, supervisor),
                                  ?CHILD(gift_sup, supervisor),
+                                 ?CHILD(vip_sup, supervisor),
                                  ?CHILD(bank_sup, supervisor),
                                  ?CHILD(sympathy_sup, supervisor),
                                  ?CHILD(avatar_sup, supervisor),

@@ -172,7 +172,8 @@ inner_buy_vip_points(UserGuid, Points, TransSync) ->
                                           [OldVipInfo] ->
                                               NewVipInfo = OldVipInfo#vipinfo{points = OldVipInfo#vipinfo.points + Points},
                                               mnesia:write(NewVipInfo)
-                                      end
+                                      end,
+				      {commit, ok}
                               end, TransSync),
     mnesia:activity(transaction, Trans).
 

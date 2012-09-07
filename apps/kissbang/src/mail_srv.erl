@@ -172,7 +172,7 @@ inner_get_mail_for(UserGuid) ->
                     qlc:e(qlc:q([Mail || Mail <- mnesia:table(mail), 
                                          (Mail#mail.sender_guid =:= UserGuid) or (Mail#mail.receiver_guid =:= UserGuid)]))
             end,
-    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
+    mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
 
 inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
     Trans = fun() ->
@@ -187,7 +187,7 @@ inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
                                     is_read = "false"},
                     mnesia:write(NewMail)
             end,
-    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
+    mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
 
 inner_mark_mail_as_read(MailGuid) ->
     Trans = fun() ->
@@ -199,4 +199,4 @@ inner_mark_mail_as_read(MailGuid) ->
                             ok
                         end
             end,
-    mnesia:activity(async_dirty, Trans, [], mnesia_frag).
+    mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
