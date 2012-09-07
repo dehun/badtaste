@@ -56,7 +56,7 @@ start_link() ->
 
 setup_db() ->
     Result = mnesia:create_table(mail,
-                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 8}, {n_disc_copies, 1}]}
+                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 8}, {n_disc_copies, 1}]},
                                   {type, bag},
                                   {index, [mail_guid]},
                                   {attributes, record_info(fields, mail)}]),
