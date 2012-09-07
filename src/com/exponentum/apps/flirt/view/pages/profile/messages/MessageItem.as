@@ -29,8 +29,6 @@ public class MessageItem extends CasaSprite
 	
 	private var _sender:User;
 
-	public static const REPLY_TO_MESSAGE:String = "replyToMessage";
-	
 	public function MessageItem(message:Object)
 	{
 		_message = message.Mail;
