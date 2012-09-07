@@ -39,7 +39,9 @@ public class MessageItem extends CasaSprite
 		this.messageGuid = _message.mailGuid;
 		this.messageText = _message.subject;
 
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onSenderProfile);
 		Controller.instance.getUserInfo(_message.senderGuid);
+
 		asset.replyButton.visible = (_message.isRead == "false")?true:false;
 
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
@@ -47,18 +49,14 @@ public class MessageItem extends CasaSprite
 
 	private function onSenderProfile(e:ObjectEvent):void
 	{
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onSenderProfile);
 		var user:User = e.data as User;
-		if(!user) return;
-		
-		_sender = user;
-		
-		if(user.guid == _message.senderGuid)
-			this.senderName = user.name;
+		this.senderName = user.name;
 	}
 
 	private function onReply(e:MouseEvent):void
 	{
-		Model.instance.view.showMessageWindow(_message, _sender);
+
 	}
 
 	public function get messageGuid():String

@@ -17,6 +17,8 @@ import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
+import flash.net.URLRequest;
+import flash.net.navigateToURL;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
@@ -28,7 +30,7 @@ public class Fans extends CasaSprite
 	private var fansBlock:FansBlock = new FansBlock();
 	private var upArrow:SimpleButton = fansBlock.upArrow;
 	private var downArrow:SimpleButton = fansBlock.downArrow;
-	private var pastFollowersContainer:Distribution = new Distribution(200);
+	private var pastFollowersContainer:Distribution = new Distribution(155);
 
 	private var _followers:Array;
 	private var _followersAvatars:Vector.<FansAvatarSmall> = new Vector.<FansAvatarSmall>();
@@ -95,6 +97,9 @@ public class Fans extends CasaSprite
 		if(updatedUsers == 0)
 		{
 			var mainFollowerLoad:ImageLoad = new ImageLoad(user.photoLink);
+			mainFollowerLoad.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
+				navigateToURL(new URLRequest(user.profileLink));
+			});
 			mainFollowerLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
 				if(mainFollowerLoad.contentAsBitmap){
 					var bmp:Bitmap = mainFollowerLoad.contentAsBitmap;
@@ -145,7 +150,7 @@ public class Fans extends CasaSprite
 	{
 		pastFollowersContainer.removeChildren();
 		for (var i:int = 0; i < _followersAvatars.length; i++)
-			pastFollowersContainer.addChildWithDimensions(_followersAvatars[i], _followersAvatars[i].width + SPACE);
+			pastFollowersContainer.addChildWithDimensions(_followersAvatars[i], 48 + SPACE, 48 + SPACE + 2);
 
 		pastFollowersContainer.position();
 	}

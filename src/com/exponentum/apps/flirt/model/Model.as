@@ -130,6 +130,7 @@ public class Model extends EventDispatcher
 	public function onGotMailbox(e:ObjectEvent):void
 	{
 		mailbox = e.data.mails as Array;
+		dispatchEvent(new Event(e.type));
 	}
 
 	public function onGotNewMail(e:ObjectEvent):void

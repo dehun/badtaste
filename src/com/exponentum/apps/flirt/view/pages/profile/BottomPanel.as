@@ -56,11 +56,6 @@ public class BottomPanel extends CasaSprite
 		onFriendsTabSelected(null);
 	}
 
-	public function updateMessages():void
-	{
-		if(state == MESSAGES) messageList.updateMessages();
-	}
-
 	private function clearContainer():void
 	{
 		if(!contains(container))

@@ -217,6 +217,10 @@ public class Controller
 
 	public function getUserInfo(guid:String):void
 	{
+		if(model.userCache[guid]) {
+			model.dispatchEvent(new ObjectEvent(GOT_USER_INFO, model.userCache[guid]));
+			return;
+		}
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_INFO] = {};
 		requestObject[GET_USER_INFO].targetUserGuid = guid;

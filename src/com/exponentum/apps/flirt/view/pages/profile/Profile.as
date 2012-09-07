@@ -215,8 +215,9 @@ public class Profile extends BackGroundedPage
 			presentsContainer.y = shelf.y + 25;
 			addChild(presentsContainer);
 		}
+		const presentsShown:int = 6;
 		presentsContainer.removeChildren(true, true);
-		for (var i:int = 0; i < Model.instance.owner.presents.length; i++)
+		for (var i:int = 0; i < Math.min(Model.instance.owner.presents.length, presentsShown); i++)
 		{
 			var present:Present = new Present(Model.instance.owner.presents[i].SendedGift.giftGuid);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);

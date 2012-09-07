@@ -43,7 +43,13 @@ public class MessagesList extends CasaSprite
 
 		initAssets();
 
+		Model.instance.addEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
 		Controller.instance.checkMailbox();
+	}
+
+	private function onMailBox(e:Event):void
+	{
+		updateMessages();
 	}
 
 	public function updateMessages():void
