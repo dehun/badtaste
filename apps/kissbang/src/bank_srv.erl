@@ -220,7 +220,6 @@ inner_check(UserGuid, TransSync) ->
                                       {commit, Balance#bank_balance.gold}
                               end, TransSync),
     Result = mnesia:activity(transaction, Trans),
-%    proxy_srv:route_messages(UserGuid, [#on_bank_balance_checked{gold = Result}]),
     Result.
 
 

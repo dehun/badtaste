@@ -172,7 +172,7 @@ load_jobs() ->
 
 load_job({struct, JobJson}) ->
     #job{guid = binary_to_list(proplists:get_value(<<"guid">>, JobJson)),
-         are_on_server_side = list_to_atom(binary_to_list(proplists:get_value(<<"are_on_server_side">>, JobJson)))}.
+         are_on_server_side = binary_to_list(proplists:get_value(<<"are_on_server_side">>, JobJson))}.
 
 are_job_guid_correct(JobGuid, Config) ->
     Jobs = Config#config.jobs,
