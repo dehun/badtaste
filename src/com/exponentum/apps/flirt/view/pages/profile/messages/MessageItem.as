@@ -48,13 +48,13 @@ public class MessageItem extends CasaSprite
 	private function onSenderProfile(e:ObjectEvent):void
 	{
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onSenderProfile);
-		var user:User = e.data as User;
-		this.senderName = user.name;
+		_sender = e.data as User;
+		this.senderName = _sender.name;
 	}
 
 	private function onReply(e:MouseEvent):void
 	{
-
+		Model.instance.view.showMessageWindow(_message, _sender);
 	}
 
 	public function get messageGuid():String
@@ -87,6 +87,12 @@ public class MessageItem extends CasaSprite
 	{
 		_senderName = value;
 		asset.nameTf.text = value;
+	}
+
+	override public function destroy():void
+	{
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onSenderProfile);
+		super.destroy();
 	}
 }
 }

@@ -17,6 +17,8 @@ import com.exponentum.utils.centerX;
 
 import flash.events.Event;
 
+import mx.utils.NameUtil;
+
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
 
@@ -42,26 +44,27 @@ public class MessagesList extends CasaSprite
 		messagesDistribution.mask = _bottomPanelMask;
 
 		initAssets();
-
-		Model.instance.addEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
-		Controller.instance.checkMailbox();
 	}
 
 	private function onMailBox(e:Event):void
 	{
-		updateMessages();
-	}
-
-	public function updateMessages():void
-	{
+		Model.instance.removeEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
 		var messages:Array = Model.instance.mailbox;
 		messagesDistribution.removeChildren(true, true);
 		for (var i:int = 0; i < messages.length; i++)
 		{
-			var mi:MessageItem = new MessageItem(messages[i]);
-			messagesDistribution.addChild(mi);
+			if(messages[i].Mail.type == "usermail"){
+				var mi:MessageItem = new MessageItem(messages[i]);
+				messagesDistribution.addChild(mi);
+			}
 		}
 		messagesDistribution.position();
+	}
+
+	public function updateMessages():void
+	{
+		Model.instance.addEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
+		Controller.instance.checkMailbox();
 	}
 
 	private function initAssets():void
@@ -90,6 +93,17 @@ public class MessagesList extends CasaSprite
 	{
 		var difference:Number = messagesDistribution.height - _bottomPanelMask.height;
 		messagesDistribution.y = _bottomPanelMask.y + (e.currentTarget as Scroll).position * (-difference);
+	}
+
+	override public function destroy():void
+	{
+		removeChildren(true, true);
+		Model.instance.removeEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
+		bg = null;
+		messagesBG = null;
+		messagesDistribution = null;
+		_bottomPanelMask = null;
+		super.destroy();
 	}
 }
 }

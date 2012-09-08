@@ -45,6 +45,7 @@ public class View extends Sprite
 	public function View(aModel:Model, aController:Controller)
 	{
 		model = aModel;
+		model.view = this;
 		controller = aController;
 
 		createForeground();
@@ -133,12 +134,12 @@ public class View extends Sprite
 		pageContainer.addChild(shop);
 	}
 
-	public function showMiniProfile(e:Event = null):void
+	public function showMiniProfile(targetUser:User):void
 	{
-		miniProfile = new MiniProfile(model.owner);
+		miniProfile = new MiniProfile(targetUser);
 //		centerX(miniProfile, 760);
 //		centerY(miniProfile, 760);
-		pageContainer.addChild(miniProfile);
+		addChild(miniProfile);
 	}
 
 	public function showMessageWindow(message:Object, sender:User):void

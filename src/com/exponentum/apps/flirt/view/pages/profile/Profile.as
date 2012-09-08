@@ -164,12 +164,22 @@ public class Profile extends BackGroundedPage
 
 	private function onHideAgeClick(e:MouseEvent):void
 	{
-
+		Controller.instance.touchUserInfoByUser({
+			name:Model.instance.owner.name,
+			hideSocialInfo:false,
+			hideBirthDate:!Model.instance.owner.isAgeHidden,
+			hideCity:Model.instance.owner.isCityHidden
+		});
 	}
 
 	private function onHideCityClick(e:MouseEvent):void
 	{
-
+		Controller.instance.touchUserInfoByUser({
+			name:Model.instance.owner.name,
+			hideSocialInfo:false,
+			hideBirthDate:Model.instance.owner.isAgeHidden,
+			hideCity:!Model.instance.owner.isCityHidden
+		});
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void

@@ -97,8 +97,8 @@ public class Fans extends CasaSprite
 		if(updatedUsers == 0)
 		{
 			var mainFollowerLoad:ImageLoad = new ImageLoad(user.photoLink);
-			mainFollowerLoad.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
-				navigateToURL(new URLRequest(user.profileLink));
+			fansBlock.fansAvatarBig.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
+				Model.instance.view.showMiniProfile(user);
 			});
 			mainFollowerLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
 				if(mainFollowerLoad.contentAsBitmap){
@@ -128,6 +128,9 @@ public class Fans extends CasaSprite
 			}
 
 			var followerAvatar:FansAvatarSmall = new FansAvatarSmall();
+			followerAvatar.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
+				Model.instance.view.showMiniProfile(user);
+			});
 			var avatarLoad:ImageLoad = new ImageLoad(user.photoLink);
 			_followersAvatars.push(followerAvatar);
 			avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){

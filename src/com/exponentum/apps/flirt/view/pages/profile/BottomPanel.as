@@ -64,7 +64,7 @@ public class BottomPanel extends CasaSprite
 			container.y = -16;
 			addChild(container);
 		}
-		container.removeChildren();
+		container.removeChildren(true, true);
 	}
 
 	private function onAddFriendsTabSelected(e:Event):void
@@ -99,7 +99,9 @@ public class BottomPanel extends CasaSprite
 		trace(MESSAGES);
 		_state = MESSAGES;
 		clearContainer();
+		messageList = new MessagesList();
 		container.addChild(messageList);
+		messageList.updateMessages();
 	}
 
 	public function get state():String
