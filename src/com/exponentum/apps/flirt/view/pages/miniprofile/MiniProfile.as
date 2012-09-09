@@ -19,13 +19,18 @@ import com.exponentum.apps.flirt.view.pages.profile.ProfileAvatar;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 import com.exponentum.utils.centerX;
 
+import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.net.URLRequest;
+import flash.system.LoaderContext;
 
 import org.casalib.events.LoadEvent;
 import org.casalib.layout.Distribution;
 import org.casalib.load.ImageLoad;
+
+import ru.cleptoman.net.UnsecurityDisplayLoader;
 
 public class MiniProfile extends BackGroundedPage
 {
@@ -122,12 +127,20 @@ public class MiniProfile extends BackGroundedPage
 			profileAvatar.user = _user;
 			addChild(profileAvatar);
 
-			var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink);
-			avatarLoad.addEventListener(LoadEvent.COMPLETE,
-					function(e:LoadEvent){
-						profileAvatar.photo = avatarLoad.contentAsBitmap;
-					});
-			avatarLoad.start();
+			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+			loader.addEventListener(Event.INIT, function(e:Event):void {
+				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+				profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+			});
+			var req:URLRequest		= new URLRequest(_user.photoLink);
+			loader.load(req);
+//			var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink, new LoaderContext(true));
+//			avatarLoad.addEventListener(LoadEvent.COMPLETE,
+//					function(e:LoadEvent){
+//						profileAvatar.photo = avatarLoad.contentAsBitmap;
+//					});
+//			avatarLoad.start();
+
 		}
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);

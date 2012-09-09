@@ -16,14 +16,18 @@ import com.greensock.TweenMax;
 import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.net.URLRequest;
 import flash.net.navigateToURL;
+import flash.system.LoaderContext;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.layout.Distribution;
 import org.casalib.load.ImageLoad;
+
+import ru.cleptoman.net.UnsecurityDisplayLoader;
 
 public class Fans extends CasaSprite
 {
@@ -96,21 +100,35 @@ public class Fans extends CasaSprite
 
 		if(updatedUsers == 0)
 		{
-			var mainFollowerLoad:ImageLoad = new ImageLoad(user.photoLink);
 			fansBlock.fansAvatarBig.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
 				Model.instance.view.showMiniProfile(user);
 			});
-			mainFollowerLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-				if(mainFollowerLoad.contentAsBitmap){
-					var bmp:Bitmap = mainFollowerLoad.contentAsBitmap;
-					bmp.width = fansBlock.fansAvatarBig.width;
-					bmp.scaleY = bmp.scaleX;
-					bmp.smoothing = true;
-					fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
-					updatePastFollowersView();
-				}
+
+//			var mainFollowerLoad:ImageLoad = new ImageLoad(user.photoLink, new LoaderContext(true));
+//			mainFollowerLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
+//				if(mainFollowerLoad.contentAsBitmap){
+//					var bmp:Bitmap = mainFollowerLoad.contentAsBitmap;
+//					bmp.width = fansBlock.fansAvatarBig.width;
+//					bmp.scaleY = bmp.scaleX;
+//					bmp.smoothing = true;
+//					fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
+//					updatePastFollowersView();
+//				}
+//			});
+//			mainFollowerLoad.start();
+
+			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+			loader.addEventListener(Event.INIT, function(e:Event):void {
+				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+				var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
+				bmp.width = fansBlock.fansAvatarBig.width;
+				bmp.scaleY = bmp.scaleX;
+				bmp.smoothing = true;
+				fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
+				updatePastFollowersView();
 			});
-			mainFollowerLoad.start();
+			var req:URLRequest		= new URLRequest(user.photoLink);
+			loader.load(req);
 			updatedUsers ++;
 		}else
 		{
@@ -131,19 +149,33 @@ public class Fans extends CasaSprite
 			followerAvatar.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{
 				Model.instance.view.showMiniProfile(user);
 			});
-			var avatarLoad:ImageLoad = new ImageLoad(user.photoLink);
+
+//			var avatarLoad:ImageLoad = new ImageLoad(user.photoLink);
+
+//			avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
+//				if(avatarLoad.contentAsBitmap){
+//					var bmp:Bitmap = avatarLoad.contentAsBitmap;
+//					bmp.width = followerAvatar.width;
+//					bmp.scaleY = bmp.scaleX;
+//					bmp.smoothing = true;
+//					followerAvatar.avatarHolder.addChild(bmp);
+//					updatePastFollowersView();
+//				}
+//			});
+//			avatarLoad.start();
 			_followersAvatars.push(followerAvatar);
-			avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-				if(avatarLoad.contentAsBitmap){
-					var bmp:Bitmap = avatarLoad.contentAsBitmap;
-					bmp.width = followerAvatar.width;
-					bmp.scaleY = bmp.scaleX;
-					bmp.smoothing = true;
-					followerAvatar.avatarHolder.addChild(bmp);
-					updatePastFollowersView();
-				}
+			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+			loader.addEventListener(Event.INIT, function(e:Event):void {
+				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+				var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
+				bmp.width = followerAvatar.width;
+				bmp.scaleY = bmp.scaleX;
+				bmp.smoothing = true;
+				followerAvatar.avatarHolder.addChild(bmp);
+				updatePastFollowersView();
 			});
-			avatarLoad.start();
+			var req:URLRequest		= new URLRequest(user.photoLink);
+			loader.load(req);
 		}
 	}
 

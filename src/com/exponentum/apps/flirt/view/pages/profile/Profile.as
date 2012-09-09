@@ -15,13 +15,17 @@ import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 
+import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.net.URLRequest;
 
 import org.casalib.events.LoadEvent;
 import org.casalib.layout.Distribution;
 import org.casalib.load.ImageLoad;
+
+import ru.cleptoman.net.UnsecurityDisplayLoader;
 
 public class Profile extends BackGroundedPage
 {
@@ -122,12 +126,20 @@ public class Profile extends BackGroundedPage
 			profileAvatar.isVIP = false;
 			addChild(profileAvatar);
 
-			var avatarLoad:ImageLoad = new ImageLoad(Model.instance.owner.photoLink);
-			avatarLoad.addEventListener(LoadEvent.COMPLETE,
-					function(e:LoadEvent){
-						profileAvatar.photo = avatarLoad.contentAsBitmap;
-					});
-			avatarLoad.start();
+//			var avatarLoad:ImageLoad = new ImageLoad(Model.instance.owner.photoLink);
+//			avatarLoad.addEventListener(LoadEvent.COMPLETE,
+//					function(e:LoadEvent){
+//						profileAvatar.photo = avatarLoad.contentAsBitmap;
+//					});
+//			avatarLoad.start();
+
+			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+			loader.addEventListener(Event.INIT, function(e:Event):void {
+				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+				profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+			});
+			var req:URLRequest		= new URLRequest(Model.instance.owner.photoLink);
+			loader.load(req);
 		}
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
