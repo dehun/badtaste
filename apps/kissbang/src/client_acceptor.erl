@@ -3,7 +3,8 @@
 -export([start_link/1, accept_loop/1, client_sock_process/1]).
 
 start_link(Port) ->
-    {ok, ListenSocket} = gen_tcp:listen(Port, [{reuseaddr, true}]),
+    {ok, ListenSocket} = gen_tcp:listen(Port, [{reuseaddr, true},
+    	 	       	 		        binary]),
     spawn_link(client_acceptor, accept_loop, [ListenSocket]).
 
 accept_loop(ListenSock) ->
@@ -26,7 +27,7 @@ client_sock_process(State) ->
     client_sock_process_loop(State).
 
 client_sock_process_loop(State) ->
-        inet:setopts(State#cstate.socket, [list, {active, once}, {packet, 4}]),
+        inet:setopts(State#cstate.socket, [{active, once}, {packet, 4}, binary]),
     receive
         {tcp, ClientSock, Packet} ->
             State#cstate.origin_pid ! {got_packet, Packet},

@@ -38,6 +38,7 @@ origin_work_loop(State) ->
     end.
 
 on_got_packet(Packet, State) ->
+    log_srv:info("got ~p packet", [Packet]),
     Msg = kissbang_json_messaging:deserialize_message(Packet),
     case State#state.authenticated of
         {true, _Guid} ->
