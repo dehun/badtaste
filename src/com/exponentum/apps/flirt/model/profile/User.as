@@ -26,6 +26,8 @@ public class User
 	public var isLinkHidden:Boolean = false;
 	public var isCityHidden:Boolean = false;
 	public var isAgeHidden:Boolean = false;
+	public var isRated:Boolean = false;
+
 
 	public var coins:int = 0;
 	public var kisses:int = 0;

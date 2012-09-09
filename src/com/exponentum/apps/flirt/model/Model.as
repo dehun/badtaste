@@ -108,6 +108,12 @@ public class Model extends EventDispatcher
 		dispatchEvent(new Event(e.type));
 	}
 
+	public function onGotUserGifts(e:ObjectEvent):void
+	{
+		(userCache[e.data.ownerGuid] as User).presents = e.data.gifts;
+		dispatchEvent(new Event(e.type));
+	}
+
 	public function onGotUserSympathies(e:ObjectEvent):void
 	{
 		(userCache[e.data.ownerUserGuid] as User).sympathies = e.data.sympathies;
@@ -120,7 +126,12 @@ public class Model extends EventDispatcher
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.userGuid]));
 	}
 
-
+	public function onGotIsUserRated(e:ObjectEvent):void
+	{
+		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+		trace(e.data.targetUserGuid, e.data.areRated);
+	}
 
 	public function onFollowingBought(e:ObjectEvent):void
 	{

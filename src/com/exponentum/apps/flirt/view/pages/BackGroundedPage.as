@@ -16,7 +16,7 @@ import org.casalib.load.SwfLoad;
 public class BackGroundedPage extends CasaSprite
 {
 	private var bgLoad:SwfLoad;
-	private var background:CasaSprite = new CasaSprite();
+	public var background:CasaSprite = new CasaSprite();
 	public var currentBg:int = -1;
 
 	public function BackGroundedPage()

@@ -7,9 +7,14 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.model.profile.User;
+
 import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.events.MouseEvent;
+
+import mx.controls.PopUpButton;
 
 import org.casalib.display.CasaSprite;
 
@@ -20,33 +25,35 @@ public class ProfileAvatar extends CasaSprite
 	private var _sex:int = 1;
 	private var _photo:Bitmap;
 	private var _isVIP:Boolean;
+	private var _user:User;
 
 	public function ProfileAvatar()
 	{
 		addChild(avatarHolder);
+		showMarkBlock();
 	}
 
-	public function showMarkBlock(mark:Number, canVote:Boolean = false):void
+	public function showMarkBlock():void
 	{
-
-		avatarHolder.averageMarkBlock.visible = !canVote;
-		avatarHolder.markButtonsBlock.visible = canVote;
-
 		const numMarks:uint = 6;
 
-		if(canVote)
-			for (var i:int = 1; i <= numMarks; i++)
-				(avatarHolder.markButtonsBlock["mark" + i] as SimpleButton).addEventListener(MouseEvent.CLICK, onMarkClick);
-		else
-			avatarHolder.averageMarkBlock.markText.text = mark.toString();
+		for (var i:int = 1; i <= numMarks; i++)
+			(avatarHolder.markButtonsBlock["mark" + i] as SimpleButton).addEventListener(MouseEvent.CLICK, onMarkClick);
+	}
 
-		this.frame = 1;
-		this.isVIP = false;
+	public function set mark(m:Number):void{
+		avatarHolder.averageMarkBlock.markText.text = m.toString();
+	}
+
+	public function set isRated(b:Boolean):void{
+		avatarHolder.averageMarkBlock.visible = b;
+		avatarHolder.markButtonsBlock.visible = !b;
 	}
 
 	private function onMarkClick(e:MouseEvent):void
 	{
-		trace(" == >", e.currentTarget.name.split("mark")[1]);
+		Controller.instance.rateUser(_user.guid, e.currentTarget.name.split("mark")[1].toString());
+		isRated = true;
 	}
 
 	public function set frame(value:int):void
@@ -73,6 +80,11 @@ public class ProfileAvatar extends CasaSprite
 	{
 		_isVIP = value;
 		avatarHolder.crown.visible = _isVIP;
+	}
+
+	public function set user(value:User):void
+	{
+		_user = value;
 	}
 }
 }

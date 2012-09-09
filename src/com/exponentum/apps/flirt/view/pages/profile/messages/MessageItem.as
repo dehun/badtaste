@@ -41,6 +41,7 @@ public class MessageItem extends CasaSprite
 		Controller.instance.getUserInfo(_message.senderGuid);
 
 		asset.replyButton.visible = (_message.isRead == "false")?true:false;
+		if(_message.type == "news") asset.replyButton.visible = false;
 
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
 	}

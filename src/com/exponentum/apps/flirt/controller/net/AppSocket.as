@@ -61,6 +61,7 @@ public class AppSocket extends Socket
 	{
 		response = "";
 		write(JSON.encode(data));
+		trace("->", JSON.encode(data).length);
 		trace("->", JSON.encode(data));
 		Cc.log("->", JSON.encode(data));
 		flush();

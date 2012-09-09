@@ -71,9 +71,11 @@ public class Controller
 		socket.addEventListener(TOUCH_USER_INFO_RESULT, model.onTouchUserInfoResultSocket);
 		socket.addEventListener(TOUCH_USER_INFO_BY_USER_RESULT, model.touchUserInfoByUserResult);
 		socket.addEventListener(ON_GOT_MY_GIFTS, model.onGotMyGifts);
+		socket.addEventListener(ON_GOT_USER_GIFTS, model.onGotUserGifts);
 		socket.addEventListener(ON_GOT_USER_SYMPATHIES, model.onGotUserSympathies);
 		socket.addEventListener(ON_GOT_DECORATIONS, model.onGotDecorations);
 		socket.addEventListener(ON_GOT_USER_RATE, model.onGotUserRate);
+		socket.addEventListener(ON_GOT_IS_USER_RATED, model.onGotIsUserRated);
 		socket.addEventListener(ON_GOT_VIP_POINTS, model.onGotVipPoints);
 
 		//room
@@ -170,6 +172,8 @@ public class Controller
 	public static const TOUCH_USER_INFO_BY_USER_RESULT:String = "TouchUserInfoByUserResult";
 	public static const GET_MY_GIFTS:String = "GetMyGifts";
 	public static const ON_GOT_MY_GIFTS:String = "OnGotMyGifts";
+	public static const GET_USER_GIFTS:String = "GetUserGifts";
+	public static const ON_GOT_USER_GIFTS:String = "OnGotUserGifts";
 	public static const GET_USER_SYMPATHIES:String = "GetUserSympathies";
 	public static const ON_GOT_USER_SYMPATHIES:String = "OnGotUserSympathies";
 	public static const GET_USER_FOLLOWERS:String = "GetUserFollowers";
@@ -181,6 +185,12 @@ public class Controller
 	public static const ON_GOT_DECORATIONS:String = "OnGotDecorations";
 	public static const GET_USER_RATE:String = "GetUserRate";
 	public static const ON_GOT_USER_RATE:String = "OnGotUserRate";
+	public static const IS_USER_RATED:String = "AreUserRated";
+	public static const RATE_USER:String = "RateUser";
+
+	public static const ON_GOT_IS_USER_RATED:String = "OnGotAreUserRated";
+
+
 	public static const GET_FRIEND_INFO:String = "GetUserInfo";
 	public static const GET_VIP_POINTS:String = "GetVipPoints";
 	public static const ON_GOT_VIP_POINTS:String = "OnGotVipPoints";
@@ -242,6 +252,14 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
+	public function getUserGifts(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_GIFTS] = {};
+		requestObject[GET_USER_GIFTS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
 	public function getUserFollowers(userGuid:String):void
 	{
 		var requestObject:Object = new Object();
@@ -263,6 +281,23 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_RATE] = {};
 		requestObject[GET_USER_RATE].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	public function isUserRated(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[IS_USER_RATED] = {};
+		requestObject[IS_USER_RATED].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	public function rateUser(userGuid:String, rate:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[RATE_USER] = {};
+		requestObject[RATE_USER].rate = rate;
+		requestObject[RATE_USER].targetUserGuid = userGuid;
 		socket.sendRequest(requestObject);
 	}
 

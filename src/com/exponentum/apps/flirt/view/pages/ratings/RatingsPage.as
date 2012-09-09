@@ -27,7 +27,7 @@ public class RatingsPage extends BackGroundedPage
 	private var timeTabBar:TabBar = new TabBar();
 	private var criteriaTabBarContainer:RatingsSortTabBar = new RatingsSortTabBar();
 	private var criteriaTabBar:TabBar = new TabBar();
-	private var background:RatingsBg = new RatingsBg();
+	private var _ratingsBg:RatingsBg = new RatingsBg();
 	private var backButton:BackButton = new BackButton();
 
 	private const DAY:String = "day";
@@ -61,7 +61,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private function createBackButton():void
 	{
-		backButton.y = background.y + background.height + 10;
+		backButton.y = _ratingsBg.y + _ratingsBg.height + 10;
 		centerX(backButton, 760);
 		addChild(backButton);
 		backButton.addEventListener(MouseEvent.CLICK, onBack);
@@ -76,7 +76,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private function createCriteriaTabBar():void
 	{
-		criteriaTabBarContainer.y = background.y + 5;
+		criteriaTabBarContainer.y = _ratingsBg.y + 5;
 		centerX(criteriaTabBarContainer, 760);
 		criteriaTabBarContainer.x -= 5;
 		addChild(criteriaTabBarContainer);
@@ -113,9 +113,9 @@ public class RatingsPage extends BackGroundedPage
 
 	private function createWindow():void
 	{
-		centerX(background, 760);
-		background.y = 155;
-		addChild(background);
+		centerX(_ratingsBg, 760);
+		_ratingsBg.y = 155;
+		addChild(_ratingsBg);
 	}
 
 	//----------------------------------------------------------

@@ -20,6 +20,8 @@ import flash.events.Event;
 
 import org.casalib.display.CasaSprite;
 
+import ru.evast.integration.IntegrationProxy;
+
 public class BottomPanel extends CasaSprite
 {
 	private static const SOCIAL:String = "social";
@@ -70,6 +72,7 @@ public class BottomPanel extends CasaSprite
 	private function onAddFriendsTabSelected(e:Event):void
 	{
 		trace(ADD_FRIEND);
+		IntegrationProxy.adapter.InviteFriends("Посоны! Вот это игра! Я такую игру джва года ждал!");
 	}
 
 	private function onNewsTabSelected(e:Event):void
@@ -77,7 +80,9 @@ public class BottomPanel extends CasaSprite
 		trace(NEWS);
 		_state = NEWS;
 		clearContainer();
+		newsList = new NewsList();
 		container.addChild(newsList);
+		newsList.updateMessages();
 	}
 
 	private function onSocialTabSelected(e:Event):void
@@ -91,6 +96,7 @@ public class BottomPanel extends CasaSprite
 		trace(FRIENDS);
 		_state = FRIENDS;
 		clearContainer();
+		friendsList = new FriendsList();
 		container.addChild(friendsList);
 	}
 

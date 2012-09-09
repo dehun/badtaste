@@ -120,7 +120,6 @@ public class Profile extends BackGroundedPage
 			profileAvatar.frame = 1;
 			profileAvatar.sex = Model.instance.owner.sex;
 			profileAvatar.isVIP = false;
-			profileAvatar.showMarkBlock(0, false);
 			addChild(profileAvatar);
 
 			var avatarLoad:ImageLoad = new ImageLoad(Model.instance.owner.photoLink);
@@ -174,11 +173,17 @@ public class Profile extends BackGroundedPage
 
 	private function onHideCityClick(e:MouseEvent):void
 	{
+//		Controller.instance.touchUserInfoByUser({
+//			name:Model.instance.owner.name,
+//			hideSocialInfo:false,
+//			hideBirthDate:Model.instance.owner.isAgeHidden,
+//			hideCity:!Model.instance.owner.isCityHidden
+//		});
 		Controller.instance.touchUserInfoByUser({
-			name:Model.instance.owner.name,
-			hideSocialInfo:false,
-			hideBirthDate:Model.instance.owner.isAgeHidden,
-			hideCity:!Model.instance.owner.isCityHidden
+			name:"Броалваофдвоа",
+			hideSocialInfo:"false",//
+			hideBirthDate:"false",//
+			hideCity:"false"
 		});
 	}
 
@@ -251,7 +256,8 @@ public class Profile extends BackGroundedPage
 		var user:User = e.data as User;
 		if(!user || user.guid != Model.instance.owner.guid) return;
 
-		profileAvatar.showMarkBlock(Model.instance.owner.userRate, true) //todo:
+		profileAvatar.mark = Model.instance.owner.userRate
+		profileAvatar.isRated = true;
 	}
 
 	//----------------------------------------------------------------------------------
