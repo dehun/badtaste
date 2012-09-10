@@ -68,6 +68,7 @@ public class Controller
 		socket.addEventListener(AUTHENTICATED, model.onAuthenticated);
 		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
 		socket.addEventListener(GOT_USER_INFO, model.onGotUserInfo);
+		socket.addEventListener(ON_GOT_USER_INFO_BY_SOCIAL_ID, model.onGotUserInfoBySocial);
 		socket.addEventListener(TOUCH_USER_INFO_RESULT, model.onTouchUserInfoResultSocket);
 		socket.addEventListener(TOUCH_USER_INFO_BY_USER_RESULT, model.touchUserInfoByUserResult);
 		socket.addEventListener(ON_GOT_MY_GIFTS, model.onGotMyGifts);
@@ -195,6 +196,9 @@ public class Controller
 	public static const GET_VIP_POINTS:String = "GetVipPoints";
 	public static const ON_GOT_VIP_POINTS:String = "OnGotVipPoints";
 
+	public static const GET_USER_INFO_BY_SOCIAL_ID:String = "GetUserInfoBySocialId";
+	public static const ON_GOT_USER_INFO_BY_SOCIAL_ID:String = "OnGotUserInfoBySocialIdSuccess";
+
 	public function userLogin():void//TODO: not only owner support
 	{
 		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
@@ -234,6 +238,14 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_INFO] = {};
 		requestObject[GET_USER_INFO].targetUserGuid = guid;
+		socket.sendRequest(requestObject);
+	}
+
+	public function getUserInfoBySocialId(sid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_INFO_BY_SOCIAL_ID] = {};
+		requestObject[GET_USER_INFO_BY_SOCIAL_ID].targetSocialId = sid;
 		socket.sendRequest(requestObject);
 	}
 

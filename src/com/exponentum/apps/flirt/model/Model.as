@@ -84,6 +84,30 @@ public class Model extends EventDispatcher
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.infoOwnerGuid]));
 	}
 
+	public function onGotUserInfoBySocial(e:ObjectEvent):void
+	{
+		if(userCache[e.data.guid] == null) userCache[e.data.guid] = new User();
+
+		userCache[e.data.guid].id = e.data.ownerSocialId;
+		userCache[e.data.guid].guid = e.data.guid;
+		userCache[e.data.guid].name = e.data.name;
+		userCache[e.data.guid].city = e.data.city;
+		userCache[e.data.guid].photoLink = e.data.pictureUrl;
+		userCache[e.data.guid].profileLink = e.data.profileUrl;
+		userCache[e.data.guid].birthDate = e.data.birthDate;
+		userCache[e.data.guid].sex = e.data.sex;
+		userCache[e.data.guid].isOnline = e.data.isOnline;
+
+		userCache[e.data.guid].isLinkHidden = e.data.isSocialInfoHidden;
+		userCache[e.data.guid].isAgeHidden = e.data.isBirthDateHidden;
+		userCache[e.data.guid].isCityHidden = e.data.isNameHidden;
+
+		userCache[e.data.guid].coins = e.data.coins;
+		userCache[e.data.guid].kisses = e.data.kisses;
+
+		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.guid]));
+	}
+
 	public function onGotVipPoints(e:ObjectEvent):void
 	{
 		(userCache[e.data.ownerUserGuid] as User).vipPoints = e.data.points;

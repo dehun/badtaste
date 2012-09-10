@@ -89,6 +89,7 @@ public class BottomPanel extends CasaSprite
 	{
 		trace(SOCIAL);
 		_state = SOCIAL;
+		Model.instance.view.showRatings();
 	}
 
 	private function onFriendsTabSelected(e:Event):void

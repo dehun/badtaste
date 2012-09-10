@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.profile.friends
 {
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.utils.centerX;
 
 import flash.display.MovieClip;
@@ -34,14 +35,20 @@ public class FriendsList extends CasaSprite
 		initAssets();
 		container.y = 72;
 		addChild(container);
+		
+		
 
-		for (var i:int = 0; i < MAX_FRIENDS; i++)
+		for (var i:int = 0; i < Math.min(MAX_FRIENDS, Model.instance.owner.friends.length); i++)
 		{
-			container.addChildWithDimensions(new FriendListItem(), 97);
+			container.addChildWithDimensions(new FriendListItem(Model.instance.owner.friends[i]), 97);
 			container.position();
 			centerX(container, bg.width);
 		}
 
+		oneLeft.visible =
+		oneRight.visible =
+		fastLeft.visible =
+		fastRight.visible = MAX_FRIENDS < Model.instance.owner.friends.length;
 	}
 
 	private function initAssets():void

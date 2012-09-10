@@ -82,13 +82,14 @@ public class Kiss extends Sprite
 	private function onUserAuthenticated(e:Event):void
 	{
 		model.removeEventListener(Model.USER_AUTHENTICATED, onUserAuthenticated);
-		addChild(view);
-		view.showOwnerProfile();
+		IntegrationProxy.adapter.GetAppFriends(false, onGetFriends);
 	}
 
 	private function onGetFriends(res:Object):void
 	{
-		trace(res);
+		model.owner.friends = res as Array;
+		addChild(view);
+		view.showOwnerProfile();
 	}
 }
 }

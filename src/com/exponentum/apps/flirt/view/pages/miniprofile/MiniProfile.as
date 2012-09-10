@@ -134,13 +134,6 @@ public class MiniProfile extends BackGroundedPage
 			});
 			var req:URLRequest		= new URLRequest(_user.photoLink);
 			loader.load(req);
-//			var avatarLoad:ImageLoad = new ImageLoad(_user.photoLink, new LoaderContext(true));
-//			avatarLoad.addEventListener(LoadEvent.COMPLETE,
-//					function(e:LoadEvent){
-//						profileAvatar.photo = avatarLoad.contentAsBitmap;
-//					});
-//			avatarLoad.start();
-
 		}
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);

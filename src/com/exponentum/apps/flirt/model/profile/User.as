@@ -49,12 +49,7 @@ public class User
 	public var placeInRating:int = 10;
 	public var vipPoints:int = 0;
 
-	public var directMessages:Vector.<DirectMessageStruct> = new Vector.<DirectMessageStruct>();
-	public var gameEvents:Vector.<GameEventStruct> = new Vector.<GameEventStruct>();
-
-	public static const GOT_BASIC_USER_INFO:String = "gotBasicUserInfo";
-	public static const USER_INFO_UPDATED:String = "userInfoUpdated";
-	public static const USER_MAILBOX_RECEIVED:String = "userMailboxReceived";
+	public var friends:Array = [];
 
 	public function User()
 	{
