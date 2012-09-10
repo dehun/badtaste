@@ -41,7 +41,7 @@ public class User
 
 	private var _decorations:Array = [];
 	public var avatarFrame:int = 1;
-	public var profileBackground:int = 1;
+	private var _profileBackground:int = 1;
 
 	private var _presents:Array = [];
 
@@ -104,7 +104,18 @@ public class User
 	{
 		_decorations = value;
 		avatarFrame = value[0];
-		profileBackground = value[1];
+		_profileBackground = value[1];
+	}
+
+	public function get profileBackground():int
+	{
+		if(_profileBackground == 0) _profileBackground = 1;
+		return _profileBackground;
+	}
+
+	public function set profileBackground(value:int):void
+	{
+		_profileBackground = value;
 	}
 }
 }

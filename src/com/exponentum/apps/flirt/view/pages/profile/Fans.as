@@ -104,19 +104,6 @@ public class Fans extends CasaSprite
 				Model.instance.view.showMiniProfile(user);
 			});
 
-//			var mainFollowerLoad:ImageLoad = new ImageLoad(user.photoLink, new LoaderContext(true));
-//			mainFollowerLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-//				if(mainFollowerLoad.contentAsBitmap){
-//					var bmp:Bitmap = mainFollowerLoad.contentAsBitmap;
-//					bmp.width = fansBlock.fansAvatarBig.width;
-//					bmp.scaleY = bmp.scaleX;
-//					bmp.smoothing = true;
-//					fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
-//					updatePastFollowersView();
-//				}
-//			});
-//			mainFollowerLoad.start();
-
 			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 			loader.addEventListener(Event.INIT, function(e:Event):void {
 				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
@@ -137,7 +124,7 @@ public class Fans extends CasaSprite
 			if(updatedUsers == _followers.length)
 				Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
 
-			if(!fansBlock.contains(pastFollowersContainer))
+			if(!fansBlock.contains(pastFollowersContainer) && _followers.length > 0)
 			{
 				fansBlock.addChildAt(pastFollowersContainer, fansBlock.getChildIndex(userMask) - 1);
 				pastFollowersContainer.x = 40;
@@ -150,19 +137,6 @@ public class Fans extends CasaSprite
 				Model.instance.view.showMiniProfile(user);
 			});
 
-//			var avatarLoad:ImageLoad = new ImageLoad(user.photoLink);
-
-//			avatarLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-//				if(avatarLoad.contentAsBitmap){
-//					var bmp:Bitmap = avatarLoad.contentAsBitmap;
-//					bmp.width = followerAvatar.width;
-//					bmp.scaleY = bmp.scaleX;
-//					bmp.smoothing = true;
-//					followerAvatar.avatarHolder.addChild(bmp);
-//					updatePastFollowersView();
-//				}
-//			});
-//			avatarLoad.start();
 			_followersAvatars.push(followerAvatar);
 			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 			loader.addEventListener(Event.INIT, function(e:Event):void {

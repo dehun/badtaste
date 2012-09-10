@@ -212,6 +212,19 @@ public class Controller
 				'"hideSocialInfo":"0", ' +
 				'"hideBirthDate":"0", ' +
 				'"hideCity":"0"}}}');
+		var requestObject:Object = new Object();
+		requestObject[TOUCH_USER_INFO] = {"userInfo" : {
+			"UserInfo" : {"userId" : model.owner.id,
+				"name" :model.owner.name,
+				"profileUrl" :model.owner.profileLink,
+				"isMan" :model.owner.sex,
+				"birthDate" : model.owner.birthDate,
+				"city" : model.owner.city,
+				"avatarUrl" : model.owner.photoLink,
+				"hideSocialInfo":"0",
+				"hideBirthDate":"0",
+				"hideCity":"0"}}};
+		socket.sendRequest(requestObject);
 	}
 
 	public function touchUserInfo(userInfo:String):void

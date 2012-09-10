@@ -188,7 +188,8 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
-		profileAvatar.frame = _user.avatarFrame;
+		//profileAvatar.frame = _user.avatarFrame;
+		//setBackground(_user.profileBackground);
 	}
 
 	private function onGotUserFollowers(e:ObjectEvent):void
@@ -292,7 +293,6 @@ public class MiniProfile extends BackGroundedPage
 	}
 
 	private var profileMask:ProfileMask = new ProfileMask();
-	private var bg:BackGroundedPage = new BackGroundedPage();
 
 	private function createBecameFanButton():void
 	{

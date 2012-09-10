@@ -40,17 +40,6 @@ public class MessageWindow extends CasaSprite
 		asset.senderName.text = sender.name;
 		asset.messageInput.text = "";
 
-//		var imageLoad:ImageLoad = new ImageLoad(sender.photoLink);
-//		imageLoad.addEventListener(LoadEvent.COMPLETE, function(e:LoadEvent){
-//			if(imageLoad.contentAsBitmap){
-//				var bmp:Bitmap = imageLoad.contentAsBitmap;
-//				bmp.width = asset.senderAvatarContainer.width;
-//				bmp.scaleY = bmp.scaleX;
-//				bmp.smoothing = true;
-//				asset.senderAvatarContainer.holder.addChild(bmp);
-//			}
-//		});
-//		imageLoad.start();
 		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 		loader.addEventListener(Event.INIT, function(e:Event):void {
 			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
