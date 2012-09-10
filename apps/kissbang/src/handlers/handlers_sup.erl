@@ -87,7 +87,8 @@ get_all_handlers() ->
 
 
 get_user_info_handlers() ->
-    ['get_user_info_handler_srv'].
+    ['get_user_info_handler_srv',
+    'get_user_info_by_social_id_handler_srv'].
 
 get_admin_handlers() ->
     ['touch_user_info_handler_srv'].

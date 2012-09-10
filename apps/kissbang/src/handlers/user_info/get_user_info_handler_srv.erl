@@ -138,7 +138,7 @@ handle_get_user_info(Guid, Message) when is_record(Message, get_friend_info) ->
 get_user_info(Guid, TargetUserGuid) ->
     Money = bank_srv:check(Guid),
     {ok, RawUserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
-    UserInfo = process_hides(RawUserInfo),
+    UserInfo = userinfo_srv:process_hides(RawUserInfo),
     ReplyMessage = #on_got_user_info{info_owner_guid = TargetUserGuid,
                                      user_id = UserInfo#user_info.user_id,
                                      name = UserInfo#user_info.name,
@@ -154,13 +154,6 @@ get_user_info(Guid, TargetUserGuid) ->
                                      is_birth_date_hidden = UserInfo#user_info.hide_birth_date,
                                      is_social_info_hidden = UserInfo#user_info.hide_social_info},
     proxy_srv:async_route_messages(Guid, [ReplyMessage]).
-
-
-process_hides(RawUserInfo) ->
-    RawUserInfo#user_info{birth_date = if_hide_field(RawUserInfo#user_info.birth_date, RawUserInfo#user_info.birth_date),
-                          city = if_hide_field(RawUserInfo#user_info.city, RawUserInfo#user_info.hide_city),
-                          user_id = if_hide_field(RawUserInfo#user_info.user_id, RawUserInfo#user_info.hide_social_info),
-                          profile_url = if_hide_field(RawUserInfo#user_info.profile_url, RawUserInfo#user_info.hide_social_info)}.
 
 
 if_hide_field(Field, IsHidden) ->

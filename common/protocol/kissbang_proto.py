@@ -54,11 +54,38 @@ class OnGotUserInfo(pgMessage):
     isSocialInfoHidden = pgString()
     isCityHidden = pgString()
 
+
+class GetUserInfoBySocialId(pgMessage):
+    targetSocialId = pgString()
+
+class OnGotUserInfoBySocialIdSuccess(pgMessage):
+    ownerSocialId = pgString()
+    guid = pgString()
+    name = pgString()
+    profileUrl = pgString()
+    birthDate = pgString()
+    isMan = pgString()
+    pictureUrl = pgString()
+    isOnline = pgInteger()
+    coins = pgInteger()
+    kisses = pgInteger()
+    city = pgString()
+    isBirthDateHidden = pgString()
+    isSocialInfoHidden = pgString()
+    isCityHidden = pgString()
+
+class OnGotUserInfoBySocialIdFail(pgMessage):
+    targetSocialId = pgString()
+
+    
+
 class TouchUserInfoByUser(pgMessage):
     name = pgString()
     hideBirthDate = pgString() # bool
     hideSocialInfo = pgString() # bool
-    hideCity = pgString() # bool 
+    hideCity = pgString() # bool
+
+
 
 class TouchUserInfoByUserResult(pgMessage):
     result = pgString()
