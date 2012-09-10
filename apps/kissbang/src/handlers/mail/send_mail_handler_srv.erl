@@ -129,7 +129,13 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_send_mail(CallerGuid, Message) ->
-    mail_srv:send_mail(CallerGuid, 
-                       Message#send_mail.receiver_guid,
-                       Message#send_mail.subject,
-                       Message#send_mail.body).
+    ReceiverGuid = Message#send_mail.receiver_guid,
+    case mail_srv:send_mail(CallerGuid, 
+                            ReceiverGuid,
+                            Message#send_mail.subject,
+                            Message#send_mail.body) of
+        ok ->
+            proxy_srv:route_messages(CallerGuid, [#on_mail_sended_successfully{receiver_guid = ReceiverGuid}]);
+        Error ->
+            proxy_srv:route_messages(CallerGuid, [#on_mail_send_fail{receiver_guid = ReceiverGuid}])
+    end.

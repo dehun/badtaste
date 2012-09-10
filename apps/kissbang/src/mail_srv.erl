@@ -186,7 +186,8 @@ inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
                                     subject = Subject,
                                     body = Body,
                                     is_read = "false"},
-                    mnesia:write(NewMail)
+                    mnesia:write(NewMail),
+                    ok
             end,
     mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
 
