@@ -4,15 +4,17 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 16 Jul 2012 by  <>
+%%% Created : 10 Sep 2012 by  <>
 %%%-------------------------------------------------------------------
--module(userinfo_srv).
--include("admin_messaging.hrl").
+-module(get_user_info_by_social_id_handler_srv).
+
 -behaviour(gen_server).
+-include("../../admin_messaging.hrl").
+-include("../../kissbang_messaging.hrl").
 
 %% API
--export([start_link/0, setup_db/0]).
--export([get_user_info/1, update_user_info/2, async_update_user_info/2, process_hides/1]).
+-export([start_link/0]).
+-export([handle_get_user_info_by_social_id/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -21,26 +23,11 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(byuserinfo, {user_guid, user_info}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-process_hides(RawUserInfo) ->
-    RawUserInfo#user_info{birth_date = if_hide_field(RawUserInfo#user_info.birth_date, RawUserInfo#user_info.birth_date),
-                          city = if_hide_field(RawUserInfo#user_info.city, RawUserInfo#user_info.hide_city),
-                          user_id = if_hide_field(RawUserInfo#user_info.user_id, RawUserInfo#user_info.hide_social_info),
-                          profile_url = if_hide_field(RawUserInfo#user_info.profile_url, RawUserInfo#user_info.hide_social_info)}.
 
-
-get_user_info(UserGuid) ->
-    gen_server:call(?SERVER, {get_user_info, UserGuid}).
-
-update_user_info(UserGuid, UserInfo) ->
-    gen_server:call(?SERVER, {update_user_info, UserGuid, UserInfo}).
-
-async_update_user_info(UserGuid, UserInfo) ->
-    gen_server:cast(?SERVER, {update_user_info, UserGuid, UserInfo}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -50,20 +37,6 @@ async_update_user_info(UserGuid, UserInfo) ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
-
-setup_db() ->
-    Result = mnesia:create_table(byuserinfo, [{disc_copies, [node() | nodes()]}, 
-                                              {attributes, record_info(fields, byuserinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([byuserinfo], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([byuserinfo], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -81,6 +54,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(get_user_info_by_social_id, fun handle_get_user_info_by_social_id/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -97,21 +71,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({update_user_info, UserGuid, UserInfo}, From, State) ->
-    spawn_link(fun() ->
-                       Reply = inner_update_user_info(UserGuid, UserInfo),
-                       gen_server:reply(From, Reply)
-               end),
-    {noreply, State};
-handle_call({get_user_info, UserGuid}, From, State) ->
-    spawn_link(fun() ->
-                       Reply = inner_get_user_info(UserGuid),
-                       gen_server:reply(From, Reply)
-               end),
-    {noreply, State}.
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
+handle_call(_Request, _From, State) ->
+    Reply = ok,
+    {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -123,13 +85,8 @@ handle_call({get_user_info, UserGuid}, From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({update_user_info, UserGuid, UserInfo}, State) ->
-    spawn_link(fun() ->
-                       inner_update_user_info(UserGuid, UserInfo)
-               end),
+handle_cast(_Msg, State) ->
     {noreply, State}.
-%% handle_cast(_Msg, State) ->
-%%     {noreply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -172,35 +129,29 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_get_user_info(UserGuid) ->
-    Trans = fun() ->
-                    Existance = mnesia:read({byuserinfo, UserGuid}),
-                    case Existance of 
-                        [] ->
-                            no_info_for_user;
-                        [UserInfo] ->
-                            {ok, UserInfo#byuserinfo.user_info}
-                    end
-            end,
-    mnesia:activity(sync_dirty, Trans).
-
-inner_update_user_info(UserGuid, UserInfo) ->
-    log_srv:debug("userinfo_srv : updating user info"),
-    Trans = fun() ->
-                    ByUserInfo = #byuserinfo{user_guid = UserGuid,
-                                             user_info = UserInfo},
-                    mnesia:write(ByUserInfo),
-                    sex_srv:set_sex(UserGuid, UserInfo#user_info.is_man),
-                    ok
-
-            end,
-    mnesia:activity(sync_dirty, Trans).
-
-if_hide_field(Field, IsHidden) ->
-    case IsHidden of
-        "true" ->
-            "hidden";
-        Other ->
-            Field
+handle_get_user_info_by_social_id(CallerGuid, Message) ->
+    TargetSocialId = Message#get_user_info_by_social_id.target_social_id,
+    case auth_srv:auth(TargetSocialId, "") of
+        {ok, TargetUserGuid} ->
+            Money = bank_srv:check(TargetUserGuid),
+            {ok, RawUserInfo} = userinfo_srv:get_user_info(TargetUserGuid),
+            UserInfo = userinfo_srv:process_hides(RawUserInfo),
+            ReplyMessage = #on_got_user_info_by_social_id_success{guid = TargetUserGuid,
+                                                                   owner_social_id = UserInfo#user_info.user_id,
+                                                                   name = UserInfo#user_info.name,
+                                                                   profile_url = UserInfo#user_info.profile_url,
+                                                                   is_man = UserInfo#user_info.is_man,
+                                                                   picture_url = UserInfo#user_info.avatar_url,
+                                                                   is_online = "false",
+                                                                   city = UserInfo#user_info.city,
+                                                                   birth_date = UserInfo#user_info.birth_date,
+                                                                   coins = Money,
+                                                                   kisses = 0,
+                                                                   is_city_hidden = UserInfo#user_info.hide_city,
+                                                                   is_birth_date_hidden = UserInfo#user_info.hide_birth_date,
+                                                                   is_social_info_hidden = UserInfo#user_info.hide_social_info},
+            proxy_srv:async_route_messages(CallerGuid, [ReplyMessage]);
+        Error ->
+            proxy_srv:async_route_messages(CallerGuid, [#on_got_user_info_by_social_id_fail{target_social_id = TargetSocialId}])
     end.
-
+    
