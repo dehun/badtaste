@@ -309,6 +309,12 @@ class SendMail(pgMessage):
     subject = pgString()
     body = pgString()
 
+class OnMailSendedSuccessfully(pgMessage):
+    receiverGuid = pgString()
+
+class OnMailSendFail(pgMessage):
+    receiverGuid = pgString()
+
 class OnGotNewMail(pgMessage):
     senderGuid = pgString()
     subject = pgString()
