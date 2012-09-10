@@ -197,9 +197,12 @@ inner_update_user_info(UserGuid, UserInfo) ->
     mnesia:activity(sync_dirty, Trans).
 
 if_hide_field(Field, IsHidden) ->
+    HiddenValue = "hidden",
     case IsHidden of
+        "1" ->
+            HiddenValue;
         "true" ->
-            "hidden";
+            HiddenValue;
         Other ->
             Field
     end.
