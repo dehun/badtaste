@@ -37,7 +37,7 @@ public class Model extends EventDispatcher
 //----------------------------------------------------------------------------------------------------------------------
 //	User Data
 //----------------------------------------------------------------------------------------------------------------------
-	public var owner:User = new User();
+	private var _owner:User = new User();
 	public var userCache:Dictionary = new Dictionary();
 	public var mailbox:Array = [];
 
@@ -45,7 +45,7 @@ public class Model extends EventDispatcher
 
 	public function onTouchUserInfoResultHTTP(e:ObjectEvent):void
 	{
-		if(e.data.result == "ok") Controller.instance.authenticate(owner.id,  "");
+		if(e.data.result == "ok") Controller.instance.authenticate(_owner.id,  "");
 	}
 
 	public function onTouchUserInfoResultSocket(e:ObjectEvent):void
@@ -55,56 +55,28 @@ public class Model extends EventDispatcher
 
 	public function onAuthenticated(e:ObjectEvent):void
 	{
-		owner.guid = e.data.guid;
-		userCache[owner.guid] = owner;
+		_owner.guid = e.data.guid;
+		userCache[_owner.guid] = _owner;
 		dispatchEvent(new Event(USER_AUTHENTICATED));
 	}
 
 	public function onGotUserInfo(e:ObjectEvent):void
 	{
 		if(userCache[e.data.infoOwnerGuid] == null) userCache[e.data.infoOwnerGuid] = new User();
+		(userCache[e.data.infoOwnerGuid] as User).update(e.data);
 
-		userCache[e.data.infoOwnerGuid].id = e.data.userId;
-		userCache[e.data.infoOwnerGuid].guid = e.data.infoOwnerGuid;
-		userCache[e.data.infoOwnerGuid].name = e.data.name;
-		userCache[e.data.infoOwnerGuid].city = e.data.city;
-		userCache[e.data.infoOwnerGuid].photoLink = e.data.pictureUrl;
-		userCache[e.data.infoOwnerGuid].profileLink = e.data.profileUrl;
-		userCache[e.data.infoOwnerGuid].birthDate = e.data.birthDate;
-		userCache[e.data.infoOwnerGuid].sex = e.data.sex;
-		userCache[e.data.infoOwnerGuid].isOnline = e.data.isOnline;
-
-		userCache[e.data.infoOwnerGuid].isLinkHidden = e.data.isSocialInfoHidden;
-		userCache[e.data.infoOwnerGuid].isAgeHidden = e.data.isBirthDateHidden;
-		userCache[e.data.infoOwnerGuid].isCityHidden = e.data.isNameHidden;
-
-		userCache[e.data.infoOwnerGuid].coins = e.data.coins;
-		userCache[e.data.infoOwnerGuid].kisses = e.data.kisses;
-
+		trace("================================================================");
+		trace("0");
+		trace((e.data).isBirthDateHidden);
+		trace((e.data).isCityHidden);
+		trace("================================================================");
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.infoOwnerGuid]));
 	}
 
 	public function onGotUserInfoBySocial(e:ObjectEvent):void
 	{
 		if(userCache[e.data.guid] == null) userCache[e.data.guid] = new User();
-
-		userCache[e.data.guid].id = e.data.ownerSocialId;
-		userCache[e.data.guid].guid = e.data.guid;
-		userCache[e.data.guid].name = e.data.name;
-		userCache[e.data.guid].city = e.data.city;
-		userCache[e.data.guid].photoLink = e.data.pictureUrl;
-		userCache[e.data.guid].profileLink = e.data.profileUrl;
-		userCache[e.data.guid].birthDate = e.data.birthDate;
-		userCache[e.data.guid].sex = e.data.sex;
-		userCache[e.data.guid].isOnline = e.data.isOnline;
-
-		userCache[e.data.guid].isLinkHidden = e.data.isSocialInfoHidden;
-		userCache[e.data.guid].isAgeHidden = e.data.isBirthDateHidden;
-		userCache[e.data.guid].isCityHidden = e.data.isNameHidden;
-
-		userCache[e.data.guid].coins = e.data.coins;
-		userCache[e.data.guid].kisses = e.data.kisses;
-
+		(userCache[e.data.guid] as User).update(e.data);
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.guid]));
 	}
 
@@ -128,7 +100,7 @@ public class Model extends EventDispatcher
 	}
 	public function onGotMyGifts(e:ObjectEvent):void
 	{
-		owner.presents = e.data.gifts;
+		_owner.presents = e.data.gifts;
 		dispatchEvent(new Event(e.type));
 	}
 
@@ -240,6 +212,12 @@ public class Model extends EventDispatcher
 	public function onNewBottleSwinger(e:ObjectEvent):void
 	{
 
+	}
+
+	public function get owner():User
+	{
+		if(_owner.guid && userCache[_owner.guid]) return userCache[_owner.guid];
+		return _owner
 	}
 }
 }

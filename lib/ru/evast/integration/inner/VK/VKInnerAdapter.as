@@ -40,13 +40,29 @@ import flash.events.Event;
 		
 		public function VKInnerAdapter() 
 		{
+			/* {"api_url":"http:\/\/api.vk.com\/api.php",
+			 "api_id":3047691,
+			 "api_settings":263,
+			 "viewer_id":171082395,
+			 "viewer_type":2,
+			 "sid":"aa2f93b1b8edea43def66a8834807391b74ed0aba093e18949efcff217d7fa",
+			 "secret":"7ec9220aa3",
+			 "access_token":"a1d476cbfb935d43abb833f33eabc8755baabe6abe6f557291a744c351e93a0",
+			 "user_id":171082395,
+			 "group_id":0,
+			 "is_app_user":1,
+			 "auth_key":"9497b71d9c83ba1807a99c18511791c8",
+			 "language":"0",
+			 "parent_language":0,
+			 "ad_info":"ElsdCQBbQFVsBwdSEEVUXiN2AFdzBx5pU1BXIgZUJlIEAWcgAUoLQg==",
+			 "referrer":"menu","lc_name":"94dfd34d"};*/
 			_localFlashVars["api_id"] = "3047691";				
-			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
+			_localFlashVars["api_url"] = "http://api.vk.com/api.php";
 			_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";
 			_localFlashVars["is_app_user"] = "1";		
 			_localFlashVars["referrer"] = "profile";			
-			_localFlashVars["secret"] = "07894478f7";
-			_localFlashVars["sid"] = "2413fd7a3663fe9625a898ecb69c4b6ab9b648678b79ecf3d2c7c59fff2db3";
+			_localFlashVars["secret"] = "7ec9220aa3";
+			_localFlashVars["sid"] = "aa2f93b1b8edea43def66a8834807391b74ed0aba093e18949efcff217d7fa";
 			_localFlashVars["user_id"] = "171082395";
 			_localFlashVars["viewer_id"] = "171082395"; 		
 			_localFlashVars["api_result"] = "";

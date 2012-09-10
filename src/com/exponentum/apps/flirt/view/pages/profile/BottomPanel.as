@@ -71,13 +71,13 @@ public class BottomPanel extends CasaSprite
 
 	private function onAddFriendsTabSelected(e:Event):void
 	{
-		trace(ADD_FRIEND);
+		//trace(ADD_FRIEND);
 		IntegrationProxy.adapter.InviteFriends("Посоны! Вот это игра! Я такую игру джва года ждал!");
 	}
 
 	private function onNewsTabSelected(e:Event):void
 	{
-		trace(NEWS);
+		//trace(NEWS);
 		_state = NEWS;
 		clearContainer();
 		newsList = new NewsList();
@@ -87,14 +87,14 @@ public class BottomPanel extends CasaSprite
 
 	private function onSocialTabSelected(e:Event):void
 	{
-		trace(SOCIAL);
+		//trace(SOCIAL);
 		_state = SOCIAL;
 		Model.instance.view.showRatings();
 	}
 
 	private function onFriendsTabSelected(e:Event):void
 	{
-		trace(FRIENDS);
+		//trace(FRIENDS);
 		_state = FRIENDS;
 		clearContainer();
 		friendsList = new FriendsList();
@@ -103,7 +103,7 @@ public class BottomPanel extends CasaSprite
 
 	private function onMessagesTabSelected(e:Event):void
 	{
-		trace(MESSAGES);
+		//trace(MESSAGES);
 		_state = MESSAGES;
 		clearContainer();
 		messageList = new MessagesList();

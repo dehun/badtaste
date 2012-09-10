@@ -67,9 +67,9 @@ public class AppSocket extends Socket
 	{
 		response = "";
 		write(JSON.encode(data));
-		trace("->", JSON.encode(data).length);
+//		trace("->", JSON.encode(data).length);
 		trace("->", JSON.encode(data));
-		Cc.log("->", JSON.encode(data));
+//		Cc.log("->", JSON.encode(data));
 		flush();
 	}
 
@@ -96,25 +96,6 @@ public class AppSocket extends Socket
 		trace("SecurityError: " + event);
 	}
 
-	private function readResponse():int
-	{
-		var size:int = readInt();
-		var str:String = "";
-		trace("\n",size,"\n");
-		try{
-			str = readUTFBytes(size);
-			response += str;
-			trace("->", response);
-			for (var key:String in JSON.decode(response))
-				dispatchEvent(new ObjectEvent(key, JSON.decode(response)[key]));
-			response = "";
-		}catch(e:EOFError)
-		{
-			trace(e);
-		}
-		return size + 4;
-	}
-
 	private var _lastSize:int;
 	private function readChunk():int
 	{
@@ -131,7 +112,7 @@ public class AppSocket extends Socket
 		_lastSize = 0;
 
 		// process data
-		trace("->", data);
+		trace("<-", data);
 		//Cc.log("<-", data);
 
 		for (var key:String in JSON.decode(data))

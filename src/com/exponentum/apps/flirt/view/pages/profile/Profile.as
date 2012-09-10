@@ -17,6 +17,7 @@ import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
 
 import flash.display.Bitmap;
 import flash.display.SimpleButton;
+import flash.display.TriangleCulling;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.net.URLRequest;
@@ -42,13 +43,12 @@ public class Profile extends BackGroundedPage
 	private var _bottomPanel:BottomPanel;
 
 	private var presentsContainer:Distribution = new Distribution();
+	private var user:User;
 
 	public function Profile()
 	{
 		configureListeners();
 		Controller.instance.getUserInfo(Model.instance.owner.guid);
-
-		createView();
 	}
 
 	private function createView():void
@@ -82,9 +82,15 @@ public class Profile extends BackGroundedPage
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
-		var user:User = e.data as User;
-		if(!user) return;
+		user = e.data as User;
+		createView();
 
+		trace("================================================================");
+		trace("1");
+		trace((e.data as User).isAgeHidden);
+		trace((e.data as User).isCityHidden);
+		trace("================================================================");
+		
 		//zodiac
 		if(!contains(zodiacSign))
 		{
@@ -92,7 +98,7 @@ public class Profile extends BackGroundedPage
 			zodiacSign.y = 195;
 			addChild(zodiacSign);
 		}
-		zodiacSign.gotoAndStop(Model.instance.owner.zodiac);
+		zodiacSign.gotoAndStop(user.zodiac);
 
 		//details
 		if(!contains(profileDetails)){
@@ -102,18 +108,16 @@ public class Profile extends BackGroundedPage
 
 			profileDetails.hideAgeButton.buttonMode = profileDetails.hideAgeButton.useHandCursor = true;
 			profileDetails.hideCityButton.buttonMode = profileDetails.hideCityButton.useHandCursor = true;
-			profileDetails.hideAgeButton.addEventListener(MouseEvent.CLICK, onHideAgeClick);
-			profileDetails.hideCityButton.addEventListener(MouseEvent.CLICK, onHideCityClick);
+			profileDetails.playInCityCheckBox.buttonMode = profileDetails.playInCityCheckBox.useHandCursor = true;
 			profileDetails.playInCityCheckBox.addEventListener(MouseEvent.CLICK, onPlayInCityClick);
 		}
 
-		profileDetails.hideAgeButton.gotoAndStop(int(!Model.instance.owner.isAgeHidden) + 1);
-		profileDetails.hideCityButton.gotoAndStop(int(!Model.instance.owner.isCityHidden) + 1);
+		updateProfileDetailsButtons();
 
-		profileDetails.sexIndicator.gotoAndStop(Model.instance.owner.sex);
-		profileDetails.nameText.text = Model.instance.owner.name;
-		profileDetails.ageText.text = Model.instance.owner.birthDate;
-		profileDetails.cityText.text = Model.instance.owner.city;
+		profileDetails.sexIndicator.gotoAndStop(user.sex);
+		profileDetails.nameText.text = user.name;
+		profileDetails.ageText.text = user.birthDate;
+		profileDetails.cityText.text = user.city;
 		profileDetails.playInCityCheckBox.gotoAndStop(1);
 
 		if(!profileAvatar)
@@ -122,33 +126,26 @@ public class Profile extends BackGroundedPage
 			profileAvatar.x = 56;
 			profileAvatar.y = 133;
 			profileAvatar.frame = 1;
-			profileAvatar.sex = Model.instance.owner.sex;
+			profileAvatar.sex = user.sex;
 			profileAvatar.isVIP = false;
 			addChild(profileAvatar);
-
-//			var avatarLoad:ImageLoad = new ImageLoad(Model.instance.owner.photoLink);
-//			avatarLoad.addEventListener(LoadEvent.COMPLETE,
-//					function(e:LoadEvent){
-//						profileAvatar.photo = avatarLoad.contentAsBitmap;
-//					});
-//			avatarLoad.start();
 
 			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 			loader.addEventListener(Event.INIT, function(e:Event):void {
 				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
 				profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
 			});
-			var req:URLRequest		= new URLRequest(Model.instance.owner.photoLink);
+			var req:URLRequest		= new URLRequest(user.photoLink);
 			loader.load(req);
 		}
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 
-		Controller.instance.getDecorationFor(Model.instance.owner.guid);
-		Controller.instance.getVipPoints(Model.instance.owner.guid);
-		Controller.instance.getUserFollowers(Model.instance.owner.guid);
+		Controller.instance.getDecorationFor(user.guid);
+		Controller.instance.getVipPoints(user.guid);
+		Controller.instance.getUserFollowers(user.guid);
 		Controller.instance.getMyGifts();
-		Controller.instance.getUserRate(Model.instance.owner.guid);
+		Controller.instance.getUserRate(user.guid);
 			//TODO: coins, city checkbox, link to social
 
 		if(!contains(achievementsPanel)){
@@ -166,51 +163,60 @@ public class Profile extends BackGroundedPage
 		}
 	}
 
-	
+	private function updateProfileDetailsButtons():void
+	{
+		Controller.instance.touchUserInfoByUser({
+			name:user.name,
+			hideSocialInfo:"0",
+			hideBirthDate:user.isAgeHidden.toString(),
+			hideCity:user.isCityHidden.toString()
+		});
+		
+		trace("================================================================");
+		trace(user.isAgeHidden);
+		if(user.isAgeHidden == true) profileDetails.hideAgeButton.gotoAndStop(2);
+		else profileDetails.hideAgeButton.gotoAndStop(1);
+
+		trace(user.isCityHidden);
+		if(user.isCityHidden == true) profileDetails.hideCityButton.gotoAndStop(2);
+		else profileDetails.hideCityButton.gotoAndStop(1);
+		trace("================================================================");
+
+		if(!profileDetails.hideAgeButton.hasEventListener(MouseEvent.CLICK))
+			profileDetails.hideAgeButton.addEventListener(MouseEvent.CLICK, onHideAgeClick);
+		if(!profileDetails.hideCityButton.hasEventListener(MouseEvent.CLICK))
+			profileDetails.hideCityButton.addEventListener(MouseEvent.CLICK, onHideCityClick);
+	}
+
+	private function onHideAgeClick(e:MouseEvent):void
+	{
+		user.isAgeHidden = !user.isAgeHidden;
+		updateProfileDetailsButtons();
+	}
+
+	private function onHideCityClick(e:MouseEvent):void
+	{
+		user.isCityHidden = !user.isCityHidden;
+		updateProfileDetailsButtons();
+	}
 
 	private function onPlayInCityClick(e:MouseEvent):void
 	{
 
 	}
 
-	private function onHideAgeClick(e:MouseEvent):void
-	{
-		Controller.instance.touchUserInfoByUser({
-			name:Model.instance.owner.name,
-			hideSocialInfo:false,
-			hideBirthDate:!Model.instance.owner.isAgeHidden,
-			hideCity:Model.instance.owner.isCityHidden
-		});
-	}
-
-	private function onHideCityClick(e:MouseEvent):void
-	{
-//		Controller.instance.touchUserInfoByUser({
-//			name:Model.instance.owner.name,
-//			hideSocialInfo:false,
-//			hideBirthDate:Model.instance.owner.isAgeHidden,
-//			hideCity:!Model.instance.owner.isCityHidden
-//		});
-		Controller.instance.touchUserInfoByUser({
-			name:"Броалваофдвоа",
-			hideSocialInfo:"false",//
-			hideBirthDate:"false",//
-			hideCity:"false"
-		});
-	}
-
 	private function onGotVipPoints(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != Model.instance.owner.guid) return;
+		if(!user || user.guid != user.guid) return;
 
-		profileAvatar.isVIP = Model.instance.owner.vipPoints > 0;
+		profileAvatar.isVIP = user.vipPoints > 0;
 	}
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != Model.instance.owner.guid) return;
+		if(!user || user.guid != user.guid) return;
 
 		setBackground(user.profileBackground);
 		profileAvatar.frame = user.avatarFrame;
@@ -219,7 +225,7 @@ public class Profile extends BackGroundedPage
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != Model.instance.owner.guid) return;
+		if(!user || user.guid != user.guid) return;
 
 		if(!fans)
 		{
@@ -228,7 +234,7 @@ public class Profile extends BackGroundedPage
 			fans.y = 113;
 			addChild(fans);
 		}
-		fans.update(Model.instance.owner.followers);
+		fans.update(user.followers);
 	}
 
 	private function onGotMyGifts(e:Event):void
@@ -244,9 +250,9 @@ public class Profile extends BackGroundedPage
 		}
 		const presentsShown:int = 6;
 		presentsContainer.removeChildren(true, true);
-		for (var i:int = 0; i < Math.min(Model.instance.owner.presents.length, presentsShown); i++)
+		for (var i:int = 0; i < Math.min(user.presents.length, presentsShown); i++)
 		{
-			var present:Present = new Present(Model.instance.owner.presents[i].SendedGift.giftGuid);
+			var present:Present = new Present(user.presents[i].SendedGift.giftGuid);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}
@@ -258,17 +264,17 @@ public class Profile extends BackGroundedPage
 		for (var i:int = 0; i < presentsContainer.numChildren; i++)
 			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 
-		achievementsPanel.giftsText.text = Model.instance.owner.presents.length.toString();
-//		achievementsPanel.medalsText.text = Model.instance.owner.tasksDone.toString();//todo:
-//		achievementsPanel.ratingText.text = Model.instance.owner.placeInRating.toString();//todo:
+		achievementsPanel.giftsText.text = user.presents.length.toString();
+//		achievementsPanel.medalsText.text = user.tasksDone.toString();//todo:
+//		achievementsPanel.ratingText.text = user.placeInRating.toString();//todo:
 	}
 
 	private function onGotUserRate(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != Model.instance.owner.guid) return;
+		if(!user || user.guid != user.guid) return;
 
-		profileAvatar.mark = Model.instance.owner.userRate
+		profileAvatar.mark = user.userRate
 		profileAvatar.isRated = true;
 	}
 

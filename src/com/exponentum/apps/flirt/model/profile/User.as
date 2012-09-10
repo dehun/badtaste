@@ -23,7 +23,6 @@ public class User
 	public var sex:int = 0; //Sex.MALE || Sex.Female
 	public var isOnline:Boolean = false; //Sex.MALE || Sex.Female
 
-	public var isLinkHidden:Boolean = false;
 	public var isCityHidden:Boolean = false;
 	public var isAgeHidden:Boolean = false;
 	public var isRated:Boolean = false;
@@ -51,6 +50,8 @@ public class User
 
 	public var friends:Array = [];
 
+	public var playInCity:Boolean = true;
+
 	public function User()
 	{
 
@@ -66,7 +67,25 @@ public class User
 		birthDate = data.BirthDate;
 		sex = int(data.isMan);
 	}
+	
+	public function update(data:Object):void
+	{
+		this.id = data.userId;
+		this.guid = data.infoOwnerGuid;
+		this.name = data.name;
+		this.city = data.city;
+		this.photoLink = data.pictureUrl;
+		this.profileLink = data.profileUrl;
+		this.birthDate = data.birthDate;
+		this.sex = data.sex;
+		this.isOnline = data.isOnline;
 
+		this.isCityHidden = data.isCityHidden == "true";
+		this.isAgeHidden = data.isBirthDateHidden  == "true";
+
+		this.coins = data.coins;
+		this.kisses = data.kisses;
+	}
 
 	// -- birthdate --
 	public function set birthDate(value:String):void

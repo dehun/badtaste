@@ -209,9 +209,9 @@ public class Controller
 				'"birthDate" : "' + model.owner.birthDate + '",' +
 				'"city" : "' + model.owner.city + '",' +
 				'"avatarUrl" : "' + model.owner.photoLink + '", ' +
-				'"hideSocialInfo":"0", ' +
-				'"hideBirthDate":"0", ' +
-				'"hideCity":"0"}}}');
+				'"hideSocialInfo":"1", ' +
+				'"hideBirthDate":"1", ' +
+				'"hideCity":"1"}}}');
 	}
 
 	public function touchUserInfo(userInfo:String):void
@@ -231,10 +231,6 @@ public class Controller
 
 	public function getUserInfo(guid:String):void
 	{
-		if(model.userCache[guid]) {
-			model.dispatchEvent(new ObjectEvent(GOT_USER_INFO, model.userCache[guid]));
-			return;
-		}
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_INFO] = {};
 		requestObject[GET_USER_INFO].targetUserGuid = guid;
