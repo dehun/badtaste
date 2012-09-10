@@ -48,13 +48,19 @@ public class AppSocket extends Socket
 	{
 		try
 		{
-			writeUnsignedInt(str.length);
+			writeUnsignedInt(getNumBytesUTF8(str));
 			writeUTFBytes(str);
 		}
 		catch (e:IOError)
 		{
 			trace(e);
 		}
+	}
+
+	private function getNumBytesUTF8 (s:String):Number {
+		var byteArray:ByteArray = new ByteArray();
+		byteArray.writeUTFBytes(s);
+		return byteArray.length;
 	}
 
 	public function sendRequest(data:Object):void
