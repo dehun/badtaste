@@ -27,7 +27,7 @@
 %%% API
 %%%===================================================================
 process_hides(RawUserInfo) ->
-    RawUserInfo#user_info{birth_date = if_hide_field(RawUserInfo#user_info.birth_date, RawUserInfo#user_info.birth_date),
+    RawUserInfo#user_info{birth_date = if_hide_field(RawUserInfo#user_info.birth_date, RawUserInfo#user_info.hide_birth_date),
                           city = if_hide_field(RawUserInfo#user_info.city, RawUserInfo#user_info.hide_city),
                           user_id = if_hide_field(RawUserInfo#user_info.user_id, RawUserInfo#user_info.hide_social_info),
                           profile_url = if_hide_field(RawUserInfo#user_info.profile_url, RawUserInfo#user_info.hide_social_info)}.
