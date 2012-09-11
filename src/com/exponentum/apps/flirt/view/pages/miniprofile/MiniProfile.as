@@ -221,7 +221,7 @@ public class MiniProfile extends BackGroundedPage
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < Math.min(_user.presents.length, presentsShown); i++)
 		{
-			var present:Present = new Present(_user.presents[i].SendedGift.giftGuid);
+			var present:Present = new Present(_user.presents[i].SendedGift.giftGuid, _user);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}

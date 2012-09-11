@@ -85,12 +85,6 @@ public class Profile extends BackGroundedPage
 		user = e.data as User;
 		createView();
 
-		trace("================================================================");
-		trace("1");
-		trace((e.data as User).isAgeHidden);
-		trace((e.data as User).isCityHidden);
-		trace("================================================================");
-		
 		//zodiac
 		if(!contains(zodiacSign))
 		{
@@ -146,7 +140,7 @@ public class Profile extends BackGroundedPage
 		Controller.instance.getUserFollowers(user.guid);
 		Controller.instance.getMyGifts();
 		Controller.instance.getUserRate(user.guid);
-			//TODO: coins, city checkbox, link to social
+		//TODO: coins, city checkbox, link to social
 
 		if(!contains(achievementsPanel)){
 			achievementsPanel.x = 250;
@@ -172,15 +166,8 @@ public class Profile extends BackGroundedPage
 			hideCity:user.isCityHidden.toString()
 		});
 		
-		trace("================================================================");
-		trace(user.isAgeHidden);
-		if(user.isAgeHidden == true) profileDetails.hideAgeButton.gotoAndStop(2);
-		else profileDetails.hideAgeButton.gotoAndStop(1);
-
-		trace(user.isCityHidden);
-		if(user.isCityHidden == true) profileDetails.hideCityButton.gotoAndStop(2);
-		else profileDetails.hideCityButton.gotoAndStop(1);
-		trace("================================================================");
+		profileDetails.hideAgeButton.gotoAndStop(int(user.isAgeHidden) + 1);
+		profileDetails.hideCityButton.gotoAndStop(int(user.isCityHidden) + 1);
 
 		if(!profileDetails.hideAgeButton.hasEventListener(MouseEvent.CLICK))
 			profileDetails.hideAgeButton.addEventListener(MouseEvent.CLICK, onHideAgeClick);
@@ -252,7 +239,7 @@ public class Profile extends BackGroundedPage
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < Math.min(user.presents.length, presentsShown); i++)
 		{
-			var present:Present = new Present(user.presents[i].SendedGift.giftGuid);
+			var present:Present = new Present(user.presents[i], Model.instance.owner);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}

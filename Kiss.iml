@@ -28,6 +28,7 @@
     <orderEntry type="library" name="prizeTasks" level="project" />
     <orderEntry type="library" name="ratings" level="project" />
     <orderEntry type="library" name="shop" level="project" />
+    <orderEntry type="library" name="giftsWindow" level="project" />
   </component>
 </module>
 

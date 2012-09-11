@@ -6,6 +6,7 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.pages.gifts.GiftsPage;
 import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
 import com.exponentum.apps.flirt.view.pages.profile.Profile;
@@ -39,6 +40,7 @@ public class View extends Sprite
 	private var ratings:RatingsPage;
 	private var shop:ShopPage;
 	private var miniProfile:MiniProfile;
+	private var giftsWindow:GiftsPage;
 
 	private var foreground:ForegroundProfile = new ForegroundProfile();
 
@@ -137,9 +139,13 @@ public class View extends Sprite
 	public function showMiniProfile(targetUser:User):void
 	{
 		miniProfile = new MiniProfile(targetUser);
-//		centerX(miniProfile, 760);
-//		centerY(miniProfile, 760);
 		addChild(miniProfile);
+	}
+
+	public function showGiftsWindow(targetUser:User):void
+	{
+		giftsWindow = new GiftsPage(targetUser);
+		addChild(giftsWindow);
 	}
 
 	public function showMessageWindow(message:Object, sender:User):void

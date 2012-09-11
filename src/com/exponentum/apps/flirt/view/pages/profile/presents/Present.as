@@ -8,8 +8,11 @@
 package com.exponentum.apps.flirt.view.pages.profile.presents
 {
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 
 import flash.events.Event;
+import flash.events.MouseEvent;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
@@ -19,10 +22,13 @@ public class Present extends CasaSprite
 {
 	public static const PRESENT_LOADED:String = "presentLoaded";
 	private var presentLoad:SwfLoad;
+	private var _presentOwner:User;
 	
-	public function Present(present:Object)
+	public function Present(present:Object, presentOwner:User)
 	{
-		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present + ".swf");
+		_presentOwner = presentOwner;
+
+		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present.SendedGift.giftGuid + ".swf");
 		presentLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		presentLoad.start();
 	}
@@ -32,6 +38,13 @@ public class Present extends CasaSprite
 		this.removeChildren(true, true);
 		this.addChild(presentLoad.contentAsMovieClip);
 		dispatchEvent(new Event(PRESENT_LOADED));
+
+		addEventListener(MouseEvent.CLICK, onPresentClick);
+	}
+
+	private function onPresentClick(e:MouseEvent):void
+	{
+		Model.instance.view.showGiftsWindow(_presentOwner);
 	}
 }
 }
