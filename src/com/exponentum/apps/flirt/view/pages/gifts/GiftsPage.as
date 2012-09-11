@@ -74,6 +74,8 @@ public class GiftsPage extends CasaSprite
 	{
 		removeChildren();
 		asset = null;
+		scroll.removeEventListener(Event.CHANGE, onScroll);
+		scroll = null;
 		super.destroy();
 	}
 }

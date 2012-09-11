@@ -47,7 +47,7 @@ public class Profile extends BackGroundedPage
 
 	public function Profile()
 	{
-		configureListeners();
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Controller.instance.getUserInfo(Model.instance.owner.guid);
 	}
 
@@ -71,7 +71,6 @@ public class Profile extends BackGroundedPage
 	
 	private function configureListeners():void
 	{
-		Model.instance.addEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Model.instance.addEventListener(Controller.ON_GOT_VIP_POINTS, onGotVipPoints);
 		Model.instance.addEventListener(Controller.ON_GOT_DECORATIONS, onGotDecorations);
 		Model.instance.addEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
@@ -83,6 +82,7 @@ public class Profile extends BackGroundedPage
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
 		user = e.data as User;
+		if((e.data as User).guid != Model.instance.owner.guid) return;
 		createView();
 
 		//zodiac
@@ -134,6 +134,8 @@ public class Profile extends BackGroundedPage
 		}
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
+
+		configureListeners();
 
 		Controller.instance.getDecorationFor(user.guid);
 		Controller.instance.getVipPoints(user.guid);
@@ -195,7 +197,7 @@ public class Profile extends BackGroundedPage
 	private function onGotVipPoints(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != user.guid) return;
+		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		profileAvatar.isVIP = user.vipPoints > 0;
 	}
@@ -203,7 +205,7 @@ public class Profile extends BackGroundedPage
 	private function onGotDecorations(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != user.guid) return;
+		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		setBackground(user.profileBackground);
 		profileAvatar.frame = user.avatarFrame;
@@ -212,7 +214,7 @@ public class Profile extends BackGroundedPage
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != user.guid) return;
+		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		if(!fans)
 		{
@@ -259,7 +261,7 @@ public class Profile extends BackGroundedPage
 	private function onGotUserRate(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
-		if(!user || user.guid != user.guid) return;
+		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		profileAvatar.mark = user.userRate
 		profileAvatar.isRated = true;

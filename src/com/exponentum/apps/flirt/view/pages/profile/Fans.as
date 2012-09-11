@@ -163,5 +163,20 @@ public class Fans extends CasaSprite
 
 		pastFollowersContainer.position();
 	}
+
+	override public function destroy():void
+	{
+		removeChildren();
+		fansBlock = null;
+		upArrow = null;
+		downArrow = null;
+		pastFollowersContainer = null;
+
+		_followers = null;
+		_followersAvatars = null;
+		userMask = null;
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		super.destroy();
+	}
 }
 }

@@ -52,7 +52,8 @@ public class MiniProfile extends BackGroundedPage
 	public function MiniProfile(user:User)
 	{
 		_user = user;
-		configureListeners();
+
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Controller.instance.getUserInfo(_user.guid);
 
 		createView();
@@ -70,7 +71,6 @@ public class MiniProfile extends BackGroundedPage
 
 	private function configureListeners():void
 	{
-		Model.instance.addEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Model.instance.addEventListener(Controller.ON_GOT_VIP_POINTS, onGotVipPoints);
 		Model.instance.addEventListener(Controller.ON_GOT_DECORATIONS, onGotDecorations);
 		Model.instance.addEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
@@ -96,12 +96,6 @@ public class MiniProfile extends BackGroundedPage
 			profileDetails.x = 312;
 			profileDetails.y = 180;
 			addChild(profileDetails);
-
-			profileDetails.hideAgeButton.buttonMode = profileDetails.hideAgeButton.useHandCursor = true;
-			profileDetails.hideCityButton.buttonMode = profileDetails.hideCityButton.useHandCursor = true;
-			profileDetails.hideAgeButton.addEventListener(MouseEvent.CLICK, onHideAgeClick);
-			profileDetails.hideCityButton.addEventListener(MouseEvent.CLICK, onHideCityClick);
-			profileDetails.playInCityCheckBox.addEventListener(MouseEvent.CLICK, onPlayInCityClick);
 		}
 
 		profileDetails.hideAgeButton.visible = false;
@@ -111,7 +105,6 @@ public class MiniProfile extends BackGroundedPage
 		profileDetails.nameText.text = _user.name;
 		profileDetails.ageText.text = _user.birthDate;
 		profileDetails.cityText.text = _user.city;
-		profileDetails.playInCityCheckBox.gotoAndStop(1);
 
 		profileDetails.playInCityCheckBox.visible = false;
 		profileDetails.playInYourCityText.visible = false;
@@ -138,6 +131,8 @@ public class MiniProfile extends BackGroundedPage
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 
+		configureListeners();
+
 		Controller.instance.getDecorationFor(_user.guid);
 		Controller.instance.getVipPoints(_user.guid);
 		Controller.instance.getUserFollowers(_user.guid);
@@ -154,33 +149,6 @@ public class MiniProfile extends BackGroundedPage
 		}
 	}
 
-
-
-	private function onPlayInCityClick(e:MouseEvent):void
-	{
-
-	}
-
-	private function onHideAgeClick(e:MouseEvent):void
-	{
-		Controller.instance.touchUserInfoByUser({
-			name:_user.name,
-			hideSocialInfo:false,
-			hideBirthDate:!_user.isAgeHidden,
-			hideCity:_user.isCityHidden
-		});
-	}
-
-	private function onHideCityClick(e:MouseEvent):void
-	{
-		Controller.instance.touchUserInfoByUser({
-			name:_user.name,
-			hideSocialInfo:false,
-			hideBirthDate:_user.isAgeHidden,
-			hideCity:!_user.isCityHidden
-		});
-	}
-
 	private function onGotVipPoints(e:ObjectEvent):void
 	{
 		profileAvatar.isVIP = _user.vipPoints > 0;
@@ -188,8 +156,8 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
-		//profileAvatar.frame = _user.avatarFrame;
-		//setBackground(_user.profileBackground);
+		profileAvatar.frame = _user.avatarFrame;
+		setBackground(_user.profileBackground);
 	}
 
 	private function onGotUserFollowers(e:ObjectEvent):void
@@ -221,7 +189,7 @@ public class MiniProfile extends BackGroundedPage
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < Math.min(_user.presents.length, presentsShown); i++)
 		{
-			var present:Present = new Present(_user.presents[i].SendedGift.giftGuid, _user);
+			var present:Present = new Present(_user.presents[i], _user);
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}
@@ -246,7 +214,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotIsUserRated(e:ObjectEvent):void
 	{
-		profileAvatar.isRated = _user.isRated;
+		profileAvatar.isRated = _user.isRated == "true";
 	}
 
 	//----------------------------------------------------------------------------------

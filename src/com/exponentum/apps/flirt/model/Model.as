@@ -64,12 +64,6 @@ public class Model extends EventDispatcher
 	{
 		if(userCache[e.data.infoOwnerGuid] == null) userCache[e.data.infoOwnerGuid] = new User();
 		(userCache[e.data.infoOwnerGuid] as User).update(e.data);
-
-		trace("================================================================");
-		trace("0");
-		trace((e.data).isBirthDateHidden);
-		trace((e.data).isCityHidden);
-		trace("================================================================");
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.infoOwnerGuid]));
 	}
 
