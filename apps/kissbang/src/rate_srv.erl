@@ -212,8 +212,13 @@ inner_rate(RaterGuid, TargetUserGuid, Rate) ->
                                                    rates = [NewRatePoint]}),
                             ok;
                         [OldRateInfo] ->
-                            mnesia:write(OldRateInfo#rateinfo{rates = [NewRatePoint | OldRateInfo#rateinfo.rates]}),
-                            ok
+                            case lists:keysearch(RaterGuid, 3, OldRateInfo#rateinfo.rates) of
+                                false ->
+                                    mnesia:write(OldRateInfo#rateinfo{rates = [NewRatePoint | OldRateInfo#rateinfo.rates]}),
+                                    ok;
+                                _ ->
+                                    already_rate
+                            end
                         end
             end,
     mnesia:activity(async_dirty, Trans).
