@@ -46,7 +46,9 @@ public class MiniProfile extends BackGroundedPage
 	private var fans:Fans;
 
 	private var presentsContainer:Distribution = new Distribution();
-	
+
+	private var becomeFanButton:BecameFunButton;
+
 	private var _user:User;
 
 	public function MiniProfile(user:User)
@@ -172,6 +174,9 @@ public class MiniProfile extends BackGroundedPage
 			addChild(fans);
 		}
 		fans.update(_user.followers);
+
+		becomeFanButton.price.text = _user.rebuyPrice.toString();
+		becomeFanButton.visible = true;
 	}
 
 	private function onGotUserGifts(e:Event):void
@@ -264,11 +269,12 @@ public class MiniProfile extends BackGroundedPage
 
 	private function createBecameFanButton():void
 	{
-		var becomeFanButton:BecameFunButton = new BecameFunButton();
+		becomeFanButton = new BecameFunButton();
 		becomeFanButton.x = profileMask.x + (profileMask.width - becomeFanButton.width) / 2;
 		becomeFanButton.y = profileMask.y;
 		becomeFanButton.addEventListener(MouseEvent.CLICK, onBecameFan);
 		addChild(becomeFanButton);
+		becomeFanButton.visible = false;
 	}
 
 	private function createGiftButton():void
