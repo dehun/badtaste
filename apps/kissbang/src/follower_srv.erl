@@ -161,28 +161,33 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_buy_following(BuyerGuid, TargetGuid) ->
     Trans = fun() ->
-                    %  prepare info to write
-                    Existance = mnesia:read({followersinfo, TargetGuid}),
-                    case Existance of
-                        [] ->
-                            BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
-                            NewFollowersInfo = #followersinfo{user_guid = TargetGuid,
-                                                              followers = [BuyerGuid],
-                                                              current_price = calculate_next_price(BuyPrice)};
-                        [OldFollowersInfo] ->
-                            BuyPrice = OldFollowersInfo#followersinfo.current_price,
-                            {ok, MaximumFollowersLength} = application:get_env(kissbang, maximum_followers),
-                            NewFollowers = lists:sublist([BuyerGuid | OldFollowersInfo#followersinfo.followers], 1, MaximumFollowersLength),
-                            NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers,
-                                                                              current_price = calculate_next_price(BuyPrice)}
-                    end,
-                    % buy
-                    case bank_srv:withdraw(BuyerGuid, BuyPrice) of
-                        {ok, _} ->
-                            mnesia:write(NewFollowersInfo),
-                            ok;
-                        Error ->
-                            Error
+                    case BuyerGuid of
+                        TargetGuid ->
+                            cant_buy_yourself_following;
+                        _Other ->
+                                                %  prepare info to write
+                            Existance = mnesia:read({followersinfo, TargetGuid}),
+                            case Existance of
+                                [] ->
+                                    BuyPrice = element(2, application:get_env(kissbang, following_buy_start_price)),
+                                    NewFollowersInfo = #followersinfo{user_guid = TargetGuid,
+                                                                      followers = [BuyerGuid],
+                                                                      current_price = calculate_next_price(BuyPrice)};
+                                [OldFollowersInfo] ->
+                                    BuyPrice = OldFollowersInfo#followersinfo.current_price,
+                                    {ok, MaximumFollowersLength} = application:get_env(kissbang, maximum_followers),
+                                    NewFollowers = lists:sublist([BuyerGuid | OldFollowersInfo#followersinfo.followers], 1, MaximumFollowersLength),
+                                    NewFollowersInfo = OldFollowersInfo#followersinfo{followers = NewFollowers,
+                                                                                      current_price = calculate_next_price(BuyPrice)}
+                            end,
+                                                % buy
+                            case bank_srv:withdraw(BuyerGuid, BuyPrice) of
+                                {ok, _} ->
+                                    mnesia:write(NewFollowersInfo),
+                                    ok;
+                                Error ->
+                                    Error
+                            end
                     end
             end,
     mnesia:activity(transaction, Trans).
