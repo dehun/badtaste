@@ -14,11 +14,14 @@ import com.exponentum.utils.centerX;
 import flash.events.Event;
 
 import org.casalib.display.CasaSprite;
+import org.casalib.layout.Distribution;
 
 public class ShopPage extends CasaSprite
 {
 	private var shopPageAsset:ShopWindowAsset = new ShopWindowAsset();
 	private var tabBar:TabBar = new TabBar();
+
+	private var distribution:Distribution = new Distribution(560);
 
 	private const shopData:Array = [
 		{name:"Подарки", type:"gifts"},
@@ -31,6 +34,7 @@ public class ShopPage extends CasaSprite
 		addChild(shopPageAsset);
 		
 		createTabBar();
+		reloadItems();
 	}
 
 	private function createTabBar():void
@@ -39,17 +43,23 @@ public class ShopPage extends CasaSprite
 		shopPageAsset.addChildAt(tabBar, shopPageAsset.getChildIndex(shopPageAsset.orangeBg) - 1);
 		for each (var o:Object in shopData)
 		{
+			var tb:RatingsTimeTab = new RatingsTimeTab();
+			tb.buttonLabel.visible = false;
 			tabBar.addTab(new TabButton(new RatingsTimeTab()), o.name, o.type, 130);
 			tabBar.addEventListener(o.type, onTabChange);
 		}
 
 		centerX(tabBar, this.width);
+	}
+
+	private function reloadItems():void
+	{
 
 	}
 
 	private function onTabChange(e:Event):void
 	{
-
+		reloadItems();
 	}
 }
 }

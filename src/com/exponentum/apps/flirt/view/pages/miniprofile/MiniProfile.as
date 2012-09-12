@@ -325,7 +325,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onSendGift(e:MouseEvent):void
 	{
-		trace("so send!");
+		Model.instance.view.showShop();
 	}
 }
 }

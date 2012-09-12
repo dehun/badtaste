@@ -11,10 +11,12 @@ import org.osmf.events.FacetValueChangeEvent;
 
 public class Config
 {
-	public static var DEV_MODE:Boolean = true;
+	public static const DEV_MODE:Boolean = true;
 
-	public static var RESOURCES_SERVER:String = "";
+	public static const RESOURCES_SERVER:String = "";
 
+	public static const JOBS_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/jobs.txt";
+	public static var jobsData:Object = {};
 	//----------------------------------------------
 	// View states constants
 	//----------------------------------------------

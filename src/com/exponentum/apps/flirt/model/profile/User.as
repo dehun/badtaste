@@ -70,8 +70,8 @@ public class User
 	
 	public function update(data:Object):void
 	{
-		this.id = data.userId;
-		this.guid = data.infoOwnerGuid;
+		this.id = data.userId || data.ownerSocialId;
+		this.guid = data.infoOwnerGuid || data.guid;
 		this.name = data.name;
 		this.city = data.city;
 		this.photoLink = data.pictureUrl;
