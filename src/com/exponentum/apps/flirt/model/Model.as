@@ -109,25 +109,6 @@ public class Model extends EventDispatcher
 		(userCache[e.data.ownerUserGuid] as User).sympathies = e.data.sympathies;
 	}
 
-	public function onGotUserRate(e:ObjectEvent):void
-	{
-		(userCache[e.data.userGuid] as User).userRate = e.data.averateRate;
-		(userCache[e.data.userGuid] as User).lastRaters = e.data.lastRaters;
-		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.userGuid]));
-	}
-
-	public function onGotIsUserRated(e:ObjectEvent):void
-	{
-		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
-		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
-		trace(e.data.targetUserGuid, e.data.areRated);
-	}
-
-	public function onFollowingBought(e:ObjectEvent):void
-	{
-
-	}
-
 	public function onGotMailbox(e:ObjectEvent):void
 	{
 		mailbox = e.data.mails as Array;
@@ -149,7 +130,102 @@ public class Model extends EventDispatcher
 
 	}
 
-	//room
+//----------------------------------------------------------------------------------------------------------------------
+//	SERVICE
+//----------------------------------------------------------------------------------------------------------------------
+	public function onGotCurrentTime(e:ObjectEvent):void
+	{
+
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+//	BANK METHODS
+//----------------------------------------------------------------------------------------------------------------------
+	public function onBankBalanceChecked(e:ObjectEvent):void
+	{
+
+	}
+
+	public function onBankBalanceChanged(e:ObjectEvent):void
+	{
+
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+//	USER RATE METHODS
+//----------------------------------------------------------------------------------------------------------------------
+
+	public function onGotUserRate(e:ObjectEvent):void
+	{
+		(userCache[e.data.userGuid] as User).userRate = e.data.averateRate;
+		(userCache[e.data.userGuid] as User).lastRaters = e.data.lastRaters;
+		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.userGuid]));
+	}
+
+	public function onGotIsUserRated(e:ObjectEvent):void
+	{
+		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+		trace(e.data.targetUserGuid, e.data.areRated);
+	}
+
+	public function onRateUserSuccess(e:ObjectEvent):void
+	{
+//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+//		trace(e.data.targetUserGuid, e.data.areRated);
+	}
+
+	public function onRateUserFailure(e:ObjectEvent):void
+	{
+//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+//		trace(e.data.targetUserGuid, e.data.areRated);
+	}
+
+	public function onRatePointDeleteSuccess(e:ObjectEvent):void
+	{
+//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+//		trace(e.data.targetUserGuid, e.data.areRated);
+	}
+
+	public function onRatePointDeleteFailure(e:ObjectEvent):void
+	{
+//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
+//		trace(e.data.targetUserGuid, e.data.areRated);
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+//	BUY LINKED METHODS
+//----------------------------------------------------------------------------------------------------------------------
+	public function onDecoreBuySuccess(e:ObjectEvent):void
+	{
+	}
+
+	public function onDecoreBuyFail(e:ObjectEvent):void
+	{
+	}
+
+	public function onFollowingBought(e:ObjectEvent):void
+	{
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+//	GIFT METHODS
+//----------------------------------------------------------------------------------------------------------------------
+	public function onGiftReceivedInGame(e:ObjectEvent):void
+	{
+	}
+
+	public function onGotGift(e:ObjectEvent):void
+	{
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+//	ROOMS
+//----------------------------------------------------------------------------------------------------------------------
 	public function onJoinedToMainRoomQueue(e:ObjectEvent):void
 	{
 	}
