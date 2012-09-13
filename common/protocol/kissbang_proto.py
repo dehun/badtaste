@@ -245,6 +245,7 @@ class OnGiftReceivedInGame(pgMessage):
 class SendedGift(pgMessage):
     senderGuid = pgString()
     giftGuid = pgString()
+    isNew = pgString()
     
 class GetMyGifts(pgMessage):
     pass

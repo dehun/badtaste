@@ -27,7 +27,8 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
--export([send_gift/3,
+-export([mark_old/1,
+         send_gift/3,
          send_gift/4,
          get_gifts_for/1]).
 %%--------------------------------------------------------------------
@@ -39,6 +40,10 @@
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+
+mark_old(UserGuid) ->
+    gen_server:cast(?SERVER, {mark_old, UserGuid}).
+    
 
 send_gift(ReceiverGuid, SenderGuid, GiftGuid) ->
     NoopSync = fun(_Result) -> ok end,
@@ -115,7 +120,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({mark_old, UserGuid}, State) ->
+    inner_mark_old(UserGuid),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -221,3 +227,17 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                       end
                               end, TransSync),
     mnesia:activity(transaction, Trans).
+
+inner_mark_old(UserGuid) ->
+    Trans = fun() ->
+                    case mnesia:read({user_gifts, UserGuid}) of
+                        [OldUserGifts] ->
+                            OldGifts = OldUserGifts#user_gifts.gifts,
+                            NewGifts = OldUserGifts#user_gifts{gifts = [Gift#received_gift{is_new = false} || Gift <- OldGifts]},
+                            mnesia:write(NewGifts);
+                        [] ->
+                            []
+                    end
+            end,
+    mnesia:activity(transaction, Trans).
+    
