@@ -145,7 +145,7 @@ get_user_info(Guid, TargetUserGuid) ->
                                      profile_url = UserInfo#user_info.profile_url,
                                      is_man = UserInfo#user_info.is_man,
                                      picture_url = UserInfo#user_info.avatar_url,
-                                     is_online = "false",
+                                     is_online = atom_to_list(proxy_srv:is_online(TargetUserGuid)),
                                      city = UserInfo#user_info.city,
                                      birth_date = UserInfo#user_info.birth_date,
                                      coins = Money,

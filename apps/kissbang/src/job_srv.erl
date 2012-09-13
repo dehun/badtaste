@@ -26,6 +26,7 @@
 -record(state, {config}).
 -record(config, {jobs}).
 -record(job, {guid, are_on_server_side}).
+-record(userjob, {guid, count}).
 -record(jobsinfo, {user_guid, completed_jobs}).
 
 %%%===================================================================
@@ -222,3 +223,7 @@ inner_get_completed_jobs(UserGuid) ->
     mnesia:activity(sync_dirty, Trans).
                     
 
+inner_update_job(Guid, Count) ->
+    ok.
+                    
+    

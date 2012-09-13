@@ -133,6 +133,7 @@ handle_present_gift(SenderGuid, Message) ->
     GiftGuid = Message#present_gift.gift_guid,
     case gift_srv:send_gift(ReceiverGuid, SenderGuid, GiftGuid) of
         ok ->
+            gift_srv:mark_old(ReceiverGuid),
             proxy_srv:async_route_messages(ReceiverGuid, [#on_got_gift{gift_sender_guid = SenderGuid,
                                                                        gift_guid = ReceiverGuid}]),
             case roommgr_srv:get_room_for(ReceiverGuid) of

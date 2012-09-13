@@ -132,6 +132,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 handle_get_my_gifts(UserGuid, Message) ->
     Gifts = gift_srv:get_gifts_for(UserGuid),
+    gift_srv:mark_old(UserGuid),
     proxy_srv:async_route_messages(UserGuid, [#on_got_my_gifts{gifts = [#sended_gift{sender_guid = Gift#received_gift.sender_guid,
-                                                                                     gift_guid = Gift#received_gift.gift_guid} 
+                                                                                     gift_guid = Gift#received_gift.gift_guid,
+                                                                                     is_new = Gift#received_gift.is_new} 
                                                                         || Gift <- Gifts]}]).

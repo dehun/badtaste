@@ -25,7 +25,8 @@
          drop_all/0,
          drop_origin/1,
          drop_guid/1,
-         async_route_messages/2]).
+         async_route_messages/2,
+         is_online/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -38,6 +39,14 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
+is_online(Guid) ->
+    case proxy_srv:get_origin(Guid) of
+        {ok, _} ->
+            true;
+        _ ->
+            false
+        end.
+
 %%--------------------------------------------------------------------
 %% @doc
 %% registers users origin. It means that gateway tells us from where 

@@ -3,11 +3,28 @@
      "name" : "first gift",
      "img" : "http://lolcahost/first_gift.jpg",
      "price" : "10",
-     "description" : "this is just a first gift"
+     "description" : "this is just a first gift",
+     "group" : "toys"
     },
     {"guid" : "2",
      "name" : "second gift",
      "img" : "http://lolcahost/second_gift.jpg",
      "price" : "20",
-     "description" : "yep. this is a second gift"}
+     "description" : "yep. this is a second gift"
+     "group" : "hellmets"
+     },
+    {"guid" : "3",
+     "name" : "third gift",
+     "img" : "http://lolcahost/third_gift.jpg",
+     "price" : "20",
+     "description" : "yep. this is a third gift"
+     "group" : "hellmets"
+     },
+    {"guid" : "4",
+     "name" : "four gift",
+     "img" : "http://lolcahost/four_gift.jpg",
+     "price" : "20",
+     "description" : "yep. this is a 4 gift"
+     "group" : "toys"
+     }
 ]}

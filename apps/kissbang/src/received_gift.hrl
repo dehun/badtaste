@@ -1,1 +1,1 @@
--record(received_gift, {gift_guid, sender_guid}).
+-record(received_gift, {gift_guid, sender_guid, is_new}).
