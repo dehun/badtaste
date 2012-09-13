@@ -138,6 +138,7 @@ public class View extends Sprite
 
 	public function showMiniProfile(targetUser:User):void
 	{
+		if(miniProfile != null) miniProfile.destroy();
 		miniProfile = new MiniProfile(targetUser);
 		addChild(miniProfile);
 	}

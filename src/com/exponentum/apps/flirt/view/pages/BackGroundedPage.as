@@ -42,11 +42,10 @@ public class BackGroundedPage extends CasaSprite
 	override public function destroy():void
 	{
 		removeChildren();
-		bgLoad.removeEventListener(LoadEvent.COMPLETE, onBgLoaded);
+		if(bgLoad) bgLoad.removeEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		bgLoad = null;
 		background = null;
 		super.destroy();
-
 	}
 }
 }

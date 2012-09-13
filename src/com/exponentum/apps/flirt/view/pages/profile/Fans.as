@@ -49,6 +49,10 @@ public class Fans extends CasaSprite
 
 		upArrow.addEventListener(MouseEvent.CLICK, onUp);
 		downArrow.addEventListener(MouseEvent.CLICK, onDown);
+		
+		userMask.visible = false;
+		upArrow.visible = false;
+		downArrow.visible = false;
 	}
 
 	private function onUp(e:MouseEvent):void
@@ -74,6 +78,8 @@ public class Fans extends CasaSprite
 	public function update(followers:Array):void
 	{
 		_followers = followers;
+
+		userMask.visible = _followers.length > 0;
 
 		updatedUsers = 0;
 		offset = 0;

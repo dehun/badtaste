@@ -34,18 +34,15 @@ import ru.cleptoman.net.UnsecurityDisplayLoader;
 
 public class MiniProfile extends BackGroundedPage
 {
-	private var tasksButton:SimpleButton = new TasksButton();
-	private var ratingsButton:RatingsButton = new RatingsButton();
-	private var zodiacSign:ZodiacSign = new ZodiacSign();
+	private var zodiacSign:ZodiacSign;
 	private var shelf:Shelf = new Shelf();
-	private var achievementsPanel:AchievementsPanel = new AchievementsPanel();
-	private var playButton:PlayButton = new PlayButton();
+	private var achievementsPanel:AchievementsPanel;
 
-	private var profileDetails:ProfileDetails = new ProfileDetails();
+	private var profileDetails:ProfileDetails;
 	private var profileAvatar:ProfileAvatar;
 	private var fans:Fans;
 
-	private var presentsContainer:Distribution = new Distribution();
+	private var presentsContainer:Distribution;
 
 	private var becomeFanButton:BecameFunButton;
 
@@ -67,8 +64,83 @@ public class MiniProfile extends BackGroundedPage
 		createCloseButton();
 		createCorners();
 
+		if(!zodiacSign)
+		{
+			zodiacSign = new ZodiacSign();
+			zodiacSign.x = 215;
+			zodiacSign.y = 195;
+			addChild(zodiacSign);
+			zodiacSign.gotoAndStop(1);
+		}
+
+		if(!profileDetails)
+		{
+			profileDetails = new ProfileDetails();
+			profileDetails.x = 312;
+			profileDetails.y = 183;
+			addChild(profileDetails);
+
+			profileDetails.hideAgeButton.buttonMode = profileDetails.hideAgeButton.useHandCursor = true;
+			profileDetails.hideCityButton.buttonMode = profileDetails.hideCityButton.useHandCursor = true;
+			profileDetails.playInCityCheckBox.buttonMode = profileDetails.playInCityCheckBox.useHandCursor = true;
+			profileDetails.hideAgeButton.gotoAndStop(1);
+			profileDetails.hideCityButton.gotoAndStop(1);
+			profileDetails.playInCityCheckBox.gotoAndStop(1);
+			profileDetails.sexIndicator.gotoAndStop(1);
+
+			profileDetails.hideAgeButton.visible = false;
+			profileDetails.hideCityButton.visible = false;
+			profileDetails.playInCityCheckBox.visible = false;
+			profileDetails.playInYourCityText.visible = false;
+
+		}
+
+		if(!profileAvatar)
+		{
+			profileAvatar = new ProfileAvatar();
+			profileAvatar.x = 56;
+			profileAvatar.y = 133;
+			addChild(profileAvatar);
+		}
+
+		if(!achievementsPanel)
+		{
+			achievementsPanel = new AchievementsPanel();
+			achievementsPanel.x = 250;
+			achievementsPanel.y = 290;
+			addChild(achievementsPanel);
+			achievementsPanel.giftsText.text = "0";
+			achievementsPanel.ratingText.text = "0";
+			achievementsPanel.medalsText.text = "0";
+		}
+
+		if(!fans)
+		{
+			fans = new Fans();
+			fans.x = 532;
+			fans.y = 133;
+			addChild(fans);
+		}
+
+		if(!presentsContainer)
+		{
+			shelf.x = 60;
+			shelf.y = 455;
+			addChild(shelf);
+
+			presentsContainer = new Distribution();
+			presentsContainer.x = shelf.x;
+			presentsContainer.y = shelf.y + 25;
+			addChild(presentsContainer);
+		}
+
+		var sendGiftButton:SendGiftButton = new SendGiftButton();
+		sendGiftButton.y = profileMask.y + profileMask.height - sendGiftButton.height - 35;
+		sendGiftButton.x = 240;
+		sendGiftButton.addEventListener(MouseEvent.CLICK, onSendGift);
+		addChild(sendGiftButton);
+
 		createBecameFanButton();
-		createGiftButton();
 	}
 
 	private function configureListeners():void
@@ -83,53 +155,27 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		//zodiac
-
-		if(!contains(zodiacSign))
-		{
-			zodiacSign.x = 215;
-			zodiacSign.y = 195;
-			addChild(zodiacSign);
-		}
 		zodiacSign.gotoAndStop(_user.zodiac);
 
 		//details
-		if(!contains(profileDetails)){
-			profileDetails.x = 312;
-			profileDetails.y = 180;
-			addChild(profileDetails);
-		}
-
-		profileDetails.hideAgeButton.visible = false;
-		profileDetails.hideCityButton.visible = false;
-
 		profileDetails.sexIndicator.gotoAndStop(_user.sex);
 		profileDetails.nameText.text = _user.name;
-		profileDetails.ageText.text = _user.birthDate;
+		profileDetails.ageText.text = "Скрыто";
 		profileDetails.cityText.text = _user.city;
 
-		profileDetails.playInCityCheckBox.visible = false;
-		profileDetails.playInYourCityText.visible = false;
+		profileAvatar.sex = _user.sex;
+		profileAvatar.user = _user;
 
-		if(!profileAvatar)
-		{
-			profileAvatar = new ProfileAvatar();
-			profileAvatar.x = 56;
-			profileAvatar.y = 133;
-			profileAvatar.frame = 1;
-			profileAvatar.sex = _user.sex;
-			profileAvatar.isVIP = false;
-			profileAvatar.user = _user;
-			addChild(profileAvatar);
-
-			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-			loader.addEventListener(Event.INIT, function(e:Event):void {
-				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-				profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
-			});
-			var req:URLRequest		= new URLRequest(_user.photoLink);
-			loader.load(req);
-		}
+		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+		loader.addEventListener(Event.INIT, function(e:Event):void {
+			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+			profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+		});
+		var req:URLRequest = new URLRequest(_user.photoLink);
+		loader.load(req);
 
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 
@@ -143,53 +189,35 @@ public class MiniProfile extends BackGroundedPage
 		Controller.instance.isUserRated(_user.guid);
 
 		//TODO: coins, city checkbox, link to social
-
-		if(!contains(achievementsPanel)){
-			achievementsPanel.x = 250;
-			achievementsPanel.y = 290;
-			addChild(achievementsPanel);
-		}
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		profileAvatar.isVIP = _user.vipPoints > 0;
 	}
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		profileAvatar.frame = _user.avatarFrame;
 		setBackground(_user.profileBackground);
 	}
 
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		if(_user.followers.length == 0) return;
-
-		if(!fans)
-		{
-			fans = new Fans();
-			fans.x = 532;
-			fans.y = 133;
-			addChild(fans);
-		}
 		fans.update(_user.followers);
-
 		becomeFanButton.price.text = _user.rebuyPrice.toString();
 		becomeFanButton.visible = true;
 	}
 
 	private function onGotUserGifts(e:Event):void
 	{
-		if(!contains(presentsContainer)){
-			shelf.x = 60;
-			shelf.y = 455;
-			addChild(shelf);
-
-			presentsContainer.x = shelf.x;
-			presentsContainer.y = shelf.y + 25;
-			addChild(presentsContainer);
-		}
 		const presentsShown:int = 6;
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < Math.min(_user.presents.length, presentsShown); i++)
@@ -214,30 +242,16 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotUserRate(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		profileAvatar.mark = _user.userRate;
 	}
 
 	private function onGotIsUserRated(e:ObjectEvent):void
 	{
+		var curUser = e.data as User;
+		if(curUser.guid != _user.guid) return;
 		profileAvatar.isRated = _user.isRated == "true";
-	}
-
-	//----------------------------------------------------------------------------------
-	// Button handlers
-	//----------------------------------------------------------------------------------
-	private function onPlayClick(e:MouseEvent):void
-	{
-		dispatchEvent(new Event(Config.GAMEFIELD));
-	}
-
-	private function onTasksClick(e:MouseEvent):void
-	{
-		dispatchEvent(new Event(Config.TASKS));
-	}
-
-	private function onRatingsClick(e:MouseEvent):void
-	{
-		dispatchEvent(new Event(Config.RATINGS));
 	}
 
 	override public function destroy():void
@@ -251,11 +265,9 @@ public class MiniProfile extends BackGroundedPage
 		Model.instance.removeEventListener(Controller.ON_GOT_IS_USER_RATED, onGotIsUserRated);
 
 		removeChildren();
-		ratingsButton = null;
 		zodiacSign = null;
 		shelf = null;
 		achievementsPanel = null;
-		playButton = null;
 
 		profileDetails = null;
 		profileAvatar = null;
@@ -275,15 +287,6 @@ public class MiniProfile extends BackGroundedPage
 		becomeFanButton.addEventListener(MouseEvent.CLICK, onBecameFan);
 		addChild(becomeFanButton);
 		becomeFanButton.visible = false;
-	}
-
-	private function createGiftButton():void
-	{
-		var sendGiftButton:SendGiftButton = new SendGiftButton();
-		sendGiftButton.y = profileMask.y + profileMask.height - sendGiftButton.height - 35;
-		sendGiftButton.x = 240;
-		sendGiftButton.addEventListener(MouseEvent.CLICK, onSendGift);
-		addChild(sendGiftButton);
 	}
 
 	private function createCloseButton():void

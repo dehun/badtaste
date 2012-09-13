@@ -32,23 +32,63 @@ public class Profile extends BackGroundedPage
 {
 	private var tasksButton:SimpleButton = new TasksButton();
 	private var ratingsButton:RatingsButton = new RatingsButton();
-	private var zodiacSign:ZodiacSign = new ZodiacSign();
+	private var zodiacSign:ZodiacSign;
 	private var shelf:Shelf = new Shelf();
 	private var achievementsPanel:AchievementsPanel = new AchievementsPanel();
 	private var playButton:PlayButton = new PlayButton();
 
-	private var profileDetails:ProfileDetails = new ProfileDetails();
+	private var profileDetails:ProfileDetails;
 	private var profileAvatar:ProfileAvatar;
 	private var fans:Fans;
 	private var _bottomPanel:BottomPanel;
 
-	private var presentsContainer:Distribution = new Distribution();
+	private var presentsContainer:Distribution;
 	private var user:User;
 
 	public function Profile()
 	{
 		Model.instance.addEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Controller.instance.getUserInfo(Model.instance.owner.guid);
+
+		createView();
+	}
+
+	private function onGotUserInfo(e:ObjectEvent):void
+	{
+		user = e.data as User;
+		if(user.guid != Model.instance.owner.guid) return;
+
+		//zodiac
+		zodiacSign.gotoAndStop(user.zodiac);
+
+		//details
+		updateProfileDetailsButtons();
+
+		profileDetails.sexIndicator.gotoAndStop(user.sex);
+		profileDetails.nameText.text = user.name;
+		profileDetails.ageText.text = user.birthDate;
+		profileDetails.cityText.text = user.city;
+		profileDetails.playInCityCheckBox.gotoAndStop(1);
+
+		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+		loader.addEventListener(Event.INIT, function(e:Event):void {
+			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+			profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+		});
+		var req:URLRequest = new URLRequest(user.photoLink);
+		loader.load(req);
+
+		configureListeners();
+
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
+
+		Controller.instance.getDecorationFor(user.guid);
+		Controller.instance.getVipPoints(user.guid);
+		Controller.instance.getUserFollowers(user.guid);
+		Controller.instance.getMyGifts();
+		Controller.instance.getUserRate(user.guid);
+
+		//TODO: coins, city checkbox, link to social
 	}
 
 	private function createView():void
@@ -67,35 +107,19 @@ public class Profile extends BackGroundedPage
 		ratingsButton.y = 312;
 		addChild(ratingsButton);
 		ratingsButton.addEventListener(MouseEvent.CLICK, onRatingsClick);
-	}
-	
-	private function configureListeners():void
-	{
-		Model.instance.addEventListener(Controller.ON_GOT_VIP_POINTS, onGotVipPoints);
-		Model.instance.addEventListener(Controller.ON_GOT_DECORATIONS, onGotDecorations);
-		Model.instance.addEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
-		Model.instance.addEventListener(Controller.ON_GOT_MY_GIFTS, onGotMyGifts);
-		Model.instance.addEventListener(Controller.ON_GOT_USER_RATE, onGotUserRate);
-	}
 
-
-	private function onGotUserInfo(e:ObjectEvent):void
-	{
-		user = e.data as User;
-		if((e.data as User).guid != Model.instance.owner.guid) return;
-		createView();
-
-		//zodiac
-		if(!contains(zodiacSign))
+		if(!zodiacSign)
 		{
+			zodiacSign = new ZodiacSign();
 			zodiacSign.x = 215;
 			zodiacSign.y = 195;
 			addChild(zodiacSign);
+			zodiacSign.gotoAndStop(1);
 		}
-		zodiacSign.gotoAndStop(user.zodiac);
 
-		//details
-		if(!contains(profileDetails)){
+		if(!profileDetails)
+		{
+			profileDetails = new ProfileDetails();
 			profileDetails.x = 312;
 			profileDetails.y = 133;
 			addChild(profileDetails);
@@ -104,50 +128,29 @@ public class Profile extends BackGroundedPage
 			profileDetails.hideCityButton.buttonMode = profileDetails.hideCityButton.useHandCursor = true;
 			profileDetails.playInCityCheckBox.buttonMode = profileDetails.playInCityCheckBox.useHandCursor = true;
 			profileDetails.playInCityCheckBox.addEventListener(MouseEvent.CLICK, onPlayInCityClick);
+			profileDetails.hideAgeButton.gotoAndStop(1);
+			profileDetails.hideCityButton.gotoAndStop(1);
+			profileDetails.playInCityCheckBox.gotoAndStop(1);
+			profileDetails.sexIndicator.gotoAndStop(1);
 		}
-
-		updateProfileDetailsButtons();
-
-		profileDetails.sexIndicator.gotoAndStop(user.sex);
-		profileDetails.nameText.text = user.name;
-		profileDetails.ageText.text = user.birthDate;
-		profileDetails.cityText.text = user.city;
-		profileDetails.playInCityCheckBox.gotoAndStop(1);
 
 		if(!profileAvatar)
 		{
 			profileAvatar = new ProfileAvatar();
 			profileAvatar.x = 56;
 			profileAvatar.y = 133;
-			profileAvatar.frame = 1;
-			profileAvatar.sex = user.sex;
-			profileAvatar.isVIP = false;
 			addChild(profileAvatar);
-
-			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-			loader.addEventListener(Event.INIT, function(e:Event):void {
-				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-				profileAvatar.photo = (new Bitmap((loader.content as Bitmap).bitmapData));
-			});
-			var req:URLRequest		= new URLRequest(user.photoLink);
-			loader.load(req);
 		}
 
-		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
-
-		configureListeners();
-
-		Controller.instance.getDecorationFor(user.guid);
-		Controller.instance.getVipPoints(user.guid);
-		Controller.instance.getUserFollowers(user.guid);
-		Controller.instance.getMyGifts();
-		Controller.instance.getUserRate(user.guid);
-		//TODO: coins, city checkbox, link to social
-
-		if(!contains(achievementsPanel)){
+		if(achievementsPanel)
+		{
+			achievementsPanel = new AchievementsPanel();
 			achievementsPanel.x = 250;
 			achievementsPanel.y = 270;
 			addChild(achievementsPanel);
+			achievementsPanel.giftsText.text = "0";
+			achievementsPanel.ratingText.text = "0";
+			achievementsPanel.medalsText.text = "0";
 		}
 
 		if(!_bottomPanel)
@@ -157,6 +160,35 @@ public class Profile extends BackGroundedPage
 			_bottomPanel.y = 548;
 			addChild(_bottomPanel);
 		}
+
+		if(!fans)
+		{
+			fans = new Fans();
+			fans.x = 532;
+			fans.y = 113;
+			addChild(fans);
+		}
+
+		if(!presentsContainer)
+		{
+			shelf.x = 60;
+			shelf.y = 455;
+			addChild(shelf);
+
+			presentsContainer = new Distribution();
+			presentsContainer.x = shelf.x;
+			presentsContainer.y = shelf.y + 25;
+			addChild(presentsContainer);
+		}
+	}
+
+	private function configureListeners():void
+	{
+		Model.instance.addEventListener(Controller.ON_GOT_VIP_POINTS, onGotVipPoints);
+		Model.instance.addEventListener(Controller.ON_GOT_DECORATIONS, onGotDecorations);
+		Model.instance.addEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
+		Model.instance.addEventListener(Controller.ON_GOT_MY_GIFTS, onGotMyGifts);
+		Model.instance.addEventListener(Controller.ON_GOT_USER_RATE, onGotUserRate);
 	}
 
 	private function updateProfileDetailsButtons():void
@@ -216,27 +248,12 @@ public class Profile extends BackGroundedPage
 		var user:User = e.data as User;
 		if((e.data as User).guid != Model.instance.owner.guid) return;
 
-		if(!fans)
-		{
-			fans = new Fans();
-			fans.x = 532;
-			fans.y = 113;
-			addChild(fans);
-		}
 		fans.update(user.followers);
 	}
 
 	private function onGotMyGifts(e:Event):void
 	{
-		if(!contains(presentsContainer)){
-			shelf.x = 60;
-			shelf.y = 455;
-			addChild(shelf);
 
-			presentsContainer.x = shelf.x;
-			presentsContainer.y = shelf.y + 25;
-			addChild(presentsContainer);
-		}
 		const presentsShown:int = 6;
 		presentsContainer.removeChildren(true, true);
 		for (var i:int = 0; i < Math.min(user.presents.length, presentsShown); i++)

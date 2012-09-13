@@ -31,6 +31,11 @@ public class ProfileAvatar extends CasaSprite
 	{
 		addChild(avatarHolder);
 		showMarkBlock();
+		frame = 1;
+		isVIP = false;
+		sex = 1;
+		isRated = true;
+		mark = 0;
 	}
 
 	public function showMarkBlock():void
