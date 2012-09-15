@@ -7,6 +7,8 @@
  */
 package com.exponentum.apps.flirt.view.pages.gamefield
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
@@ -65,11 +67,10 @@ public class GameField extends BackGroundedPage
 
 	public function GameField()
 	{
-		setBackground(1);
-		setTable(2);
+		setBackground(Model.instance.owner.profileBackground);
+		setTable(3);
 
 		createView();
-
 		createTabBar();
 		createAvatars();
 		createKisserPlaces();
@@ -77,7 +78,58 @@ public class GameField extends BackGroundedPage
 		createBottle();
 		createArrow();
 		createChat();
+
+		Model.instance.addEventListener(Controller.ON_JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToRoom);
+		Model.instance.addEventListener(Controller.ON_JOINED_TO_TAGGED_ROOM_QUEUE, onJoinedToRoom);
+		Model.instance.addEventListener(Controller.ROOM_STATE_CHANGED, onRoomStateChanged);
+		Model.instance.addEventListener(Controller.ROOM_DEATH, onRoomDeath);
+		Model.instance.addEventListener(Controller.ROOM_USER_LIST_CHANGED, onUserListChanged);
+		Model.instance.addEventListener(Controller.ROOM_IS_FULL, onRoomIsFool);
+		Model.instance.addEventListener(Controller.ALREADY_IN_THIS_ROOM, onAlreadyInThisRoom);
+		if(Model.instance.owner.playInCity)
+		{
+			Controller.instance.joinToTaggedRoomQueue(Model.instance.owner.city);
+		}
+		else
+		{
+			Controller.instance.joinToMainRoomQueue();
+		}
 	}
+
+
+	//handlers
+
+	private function onJoinedToRoom(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onUserListChanged(e:ObjectEvent):void
+	{
+
+	}
+
+
+	private function onRoomDeath(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onRoomIsFool(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onAlreadyInThisRoom(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onRoomStateChanged(e:Event):void
+	{
+
+	}
+	//handlers
 
 	private function createChat():void
 	{
@@ -106,7 +158,7 @@ public class GameField extends BackGroundedPage
 
 	private function onBottleStopped(e:Event):void
 	{
-		showKiss(avatarHolders[0], avatarHolders[1]);
+		
 	}
 
 	private const numCelebrities:int = 2;

@@ -228,10 +228,14 @@ public class Model extends EventDispatcher
 //----------------------------------------------------------------------------------------------------------------------
 	public function onJoinedToMainRoomQueue(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+		trace("====>onJoinedToMainRoomQueue");
 	}
 
-	public function onJoinedToRoom(e:ObjectEvent):void
+	public function onJoinedToTaggedRoomQueue(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+		trace("====>onJoinedToRoom");
 	}
 
 	public function onRoomStateChanged(e:ObjectEvent):void
@@ -243,10 +247,6 @@ public class Model extends EventDispatcher
 	}
 
 	public function onRoomIsFull(e:ObjectEvent):void
-	{
-	}
-
-	public function onRoomIsFool(e:ObjectEvent):void
 	{
 	}
 

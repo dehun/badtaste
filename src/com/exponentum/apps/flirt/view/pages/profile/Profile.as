@@ -68,7 +68,7 @@ public class Profile extends BackGroundedPage
 		profileDetails.nameText.text = user.name;
 		profileDetails.ageText.text = user.birthDate;
 		profileDetails.cityText.text = user.city;
-		profileDetails.playInCityCheckBox.gotoAndStop(1);
+		profileDetails.playInCityCheckBox.gotoAndStop(int(Model.instance.owner.playInCity) + 1);
 
 		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 		loader.addEventListener(Event.INIT, function(e:Event):void {
@@ -223,7 +223,8 @@ public class Profile extends BackGroundedPage
 
 	private function onPlayInCityClick(e:MouseEvent):void
 	{
-
+		Model.instance.owner.playInCity = !Model.instance.owner.playInCity;
+		profileDetails.playInCityCheckBox.gotoAndStop(int(Model.instance.owner.playInCity) + 1);
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void

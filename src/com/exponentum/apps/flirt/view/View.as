@@ -104,10 +104,10 @@ public class View extends Sprite
 		gameField.addEventListener(Config.PROFILE, showOwnerProfile);
 		gameField.addEventListener(Config.RATINGS, showRatings);
 
-		gameField.addPlayerToTable(model.owner, 0);
-		gameField.addPlayerToTable(model.owner, 3);
-		gameField.addPlayerToTable(model.owner, 4);
-		gameField.addPlayerToTable(model.owner, 7);
+//		gameField.addPlayerToTable(model.owner, 0);
+//		gameField.addPlayerToTable(model.owner, 3);
+//		gameField.addPlayerToTable(model.owner, 4);
+//		gameField.addPlayerToTable(model.owner, 7);
 
 		pageContainer.addChild(gameField);
 	}
