@@ -35,14 +35,13 @@ public class FriendsList extends CasaSprite
 		initAssets();
 		container.y = 72;
 		addChild(container);
-		
-		
-
-		for (var i:int = 0; i < Math.min(MAX_FRIENDS, Model.instance.owner.friends.length); i++)
-		{
-			container.addChildWithDimensions(new FriendListItem(Model.instance.owner.friends[i]), 97);
-			container.position();
-			centerX(container, bg.width);
+		if(Model.instance.owner.friends.length > 0){
+			for (var i:int = 0; i < Math.min(MAX_FRIENDS, Model.instance.owner.friends.length); i++)
+			{
+				container.addChildWithDimensions(new FriendListItem(Model.instance.owner.friends[i]), 97);
+				container.position();
+				centerX(container, bg.width);
+			}
 		}
 
 		oneLeft.visible =

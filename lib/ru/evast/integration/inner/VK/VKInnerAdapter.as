@@ -3,6 +3,7 @@ package ru.evast.integration.inner.VK
 	import adobe.utils.CustomActions;
 
 import com.adobe.serialization.json.JSON;
+import com.exponentum.apps.flirt.model.Config;
 
 import flash.events.Event;
 	import flash.external.ExternalInterface;
@@ -40,55 +41,33 @@ import flash.events.Event;
 		
 		public function VKInnerAdapter() 
 		{
-			/* {"api_url":"http:\/\/api.vk.com\/api.php",
-			 "api_id":3047691,
-			 "api_settings":263,
-			 "viewer_id":171082395,
-			 "viewer_type":2,
-			 "sid":"aa2f93b1b8edea43def66a8834807391b74ed0aba093e18949efcff217d7fa",
-			 "secret":"7ec9220aa3",
-			 "access_token":"a1d476cbfb935d43abb833f33eabc8755baabe6abe6f557291a744c351e93a0",
-			 "user_id":171082395,
-			 "group_id":0,
-			 "is_app_user":1,
-			 "auth_key":"9497b71d9c83ba1807a99c18511791c8",
-			 "language":"0",
-			 "parent_language":0,
-			 "ad_info":"ElsdCQBbQFVsBwdSEEVUXiN2AFdzBx5pU1BXIgZUJlIEAWcgAUoLQg==",
-			 "referrer":"menu","lc_name":"94dfd34d"};*/
-			_localFlashVars["api_id"] = "3047691";				
-			_localFlashVars["api_url"] = "http://api.vk.com/api.php";
-			_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";
-			_localFlashVars["is_app_user"] = "1";		
-			_localFlashVars["referrer"] = "profile";			
-			_localFlashVars["secret"] = "7ec9220aa3";
-			_localFlashVars["sid"] = "aa2f93b1b8edea43def66a8834807391b74ed0aba093e18949efcff217d7fa";
-			_localFlashVars["user_id"] = "171082395";
-			_localFlashVars["viewer_id"] = "171082395"; 		
-			_localFlashVars["api_result"] = "";
-			
-		//	{"api_url":"http:\/\/api.vk.com\/api.php","api_id":3047691,"api_settings":1,"viewer_id":171082395,"viewer_type":2,"sid":"190463b57da38790e1494f33f4b210e8eccd2480ded6cb61c630c4d359fc48","secret":"1eace83641","access_token":"9c8ede7cc68b55e9966931b5479692ddec996bc96bc5ce679e35f8d0b27cb00","user_id":171082395,"group_id":0,"is_app_user":1,"auth_key":"9497b71d9c83ba1807a99c18511791c8","language":"0","parent_language":0,"ad_info":"ElsdCQBbQFVsBwdSEEVUXiN2AFZzBx5pU1BXIgZUJlIEAWcgAUoLQg==","referrer":"user_apps","lc_name":"44f4a7a7"};
-			
-			/*_localFlashVars["api_id"] = "2755129";				
-			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
-			_localFlashVars["auth_key"] = "799028cf787103bb7a9cb283b871faa8";					
-			_localFlashVars["api_server"] = "http://api.odnoklassniki.ru//";				
-			_localFlashVars["is_app_user"] = "1";		
-			_localFlashVars["referrer"] = "profile";			
-			_localFlashVars["secret"] = "ec69e7d079";		
-			_localFlashVars["sid"] = "e741bda34440758ff19e7ea7d48eb4f07e6e94b1fb9316f231d3c243ab4c97"; 						
-			_localFlashVars["user_id"] = "9150273";		
-			_localFlashVars["viewer_id"] = "9150273"; 		
-			_localFlashVars["api_result"] = "";*/
-			// '<?xml version="1.0" encoding="utf-8" ?><response><balance>1000</balance></response>';
+			//Bronezoid
+			if(Config.TESTER == 0)//Bronezoid
+			{
+				_localFlashVars["api_id"] = "3047691";
+				_localFlashVars["api_url"] = "http://api.vk.com/api.php";
+				_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";
+				_localFlashVars["is_app_user"] = "1";
+				_localFlashVars["referrer"] = "profile";
+				_localFlashVars["secret"] = "7ec9220aa3";
+				_localFlashVars["sid"] = "aa2f93b1b8edea43def66a8834807391b74ed0aba093e18949efcff217d7fa";
+				_localFlashVars["user_id"] = "171082395";
+				_localFlashVars["viewer_id"] = "171082395";
+				_localFlashVars["api_result"] = "";
+			}else{//Alex
+				_localFlashVars["api_id"] = "3047691";
+				_localFlashVars["api_url"] = "http://api.vk.com/api.php";
+				_localFlashVars["auth_key"] = "aab191f4c481f6543fe74d445d8bd51c";
+				_localFlashVars["is_app_user"] = "1";
+				_localFlashVars["referrer"] = "profile";
+				_localFlashVars["secret"] = "55737fd341";
+				_localFlashVars["sid"] = "5a4eeab0c63f11aef100bf2db59ff723c584ed373a9be0fd258889f105caac";
+				_localFlashVars["user_id"] = "8532894";
+				_localFlashVars["viewer_id"] = "8532894";
+				_localFlashVars["api_result"] = "";
+			}
 		}
-		/*http://monopoly.static.evast.ru/VK/monopoly.html?api_url=http://api.vk.com/api.php&api_id=2755129&api_settings=8199&viewer_id=9150273&viewer_type=2&
-			 * sid=e741bda34440758ff19e7ea7d48eb4f07e6e94b1fb9316f231d3c243ab4c97&
-			 * secret=ec69e7d079&access_token=275ff00d68666a75278a77b44727fe6575227d427d44f4b7f9291774f5ecd74&
-			 * user_id=9150273&group_id=0&is_app_user=1&auth_key=799028cf787103bb7a9cb283b871faa8&language=0&
-			 * parent_language=0&ad_info=ElsdCQhdRFVmAgdNRARQBHR+FAsmMQxVUUZGNgBQbwYfQyQrWQA=&
-			 * referrer=user_apps&lc_name=9ca66fd5&hash=
-		 */
+
 		public function init(params:Object, local:Boolean):void {
 			if (local)
 				_flashVars = _localFlashVars;
@@ -167,11 +146,14 @@ import flash.events.Event;
 		}
 		
 		public function GetProfiles(uids:String, callback:Function):void {
+			if(uids != "")
 			_apiLib.api("getProfiles", 
 						{ fields:"uid,first_name,last_name,sex,photo,photo_medium,photo_big,bdate,city,country", uids:uids }, 
 						function(input:Object):void 
 									{ TransformProfiles(input, callback); }, 
 						onApiError );
+			else callback([]);
+
 		}
 		
 		
@@ -290,6 +272,7 @@ import flash.events.Event;
 		}
 		
 		private function onApiError(o:Object):void {
+
 			trace("VKDataAdapter Api Error");
 		}
 	}

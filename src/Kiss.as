@@ -92,10 +92,8 @@ public class Kiss extends Sprite
 		configsLoaded();
 	}
 
-
 	private function configsLoaded():void
 	{
-
 		model.addEventListener(Model.USER_AUTHENTICATED, onUserAuthenticated);
 		controller.userLogin();
 	}

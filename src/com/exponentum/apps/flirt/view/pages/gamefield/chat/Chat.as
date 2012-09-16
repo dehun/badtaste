@@ -7,8 +7,12 @@
  */
 package com.exponentum.apps.flirt.view.pages.gamefield.chat
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 
+import flash.events.MouseEvent;
 import flash.text.TextField;
 
 import org.casalib.display.CasaSprite;
@@ -22,6 +26,13 @@ public class Chat extends CasaSprite
 	public function Chat()
 	{
 		createScroll();
+
+		Model.instance.addEventListener(Controller.GOT_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
+	}
+
+	private function onNewMessageFromRoom(e:ObjectEvent):void
+	{
+
 	}
 
 	private function createScroll():void
@@ -34,10 +45,16 @@ public class Chat extends CasaSprite
 		sayButton.x = 575;
 		sayButton.y = 112;
 		addChild(sayButton);
+		sayButton.addEventListener(MouseEvent.CLICK, onSendMessage);
 
 		chatInput.y = 116;
 		chatInput.x = 155;
 		addChild(chatInput);
+	}
+
+	private function onSendMessage(e:MouseEvent):void
+	{
+		Controller.instance.sendMessageToRoom(chatInput.tf.text);
 	}
 }
 }

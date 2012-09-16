@@ -229,13 +229,16 @@ public class Model extends EventDispatcher
 	public function onJoinedToMainRoomQueue(e:ObjectEvent):void
 	{
 		dispatchEvent(new ObjectEvent(e.type, e.data));
-		trace("====>onJoinedToMainRoomQueue");
 	}
 
 	public function onJoinedToTaggedRoomQueue(e:ObjectEvent):void
 	{
 		dispatchEvent(new ObjectEvent(e.type, e.data));
-		trace("====>onJoinedToRoom");
+	}
+
+	public function onJoinedToRoom(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRoomStateChanged(e:ObjectEvent):void
@@ -252,6 +255,7 @@ public class Model extends EventDispatcher
 
 	public function onAlreadyInRoom(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRoomDeath(e:ObjectEvent):void
@@ -266,22 +270,22 @@ public class Model extends EventDispatcher
 	//game
 	public function onBottleSwinged(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onKissed(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRefusedToKiss(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onNewBottleSwinger(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function get owner():User

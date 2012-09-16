@@ -9,6 +9,7 @@ package com.exponentum.apps.flirt.view.pages.gamefield
 {
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
@@ -25,10 +26,12 @@ import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.Event;
 import flash.geom.Point;
+import flash.utils.Dictionary;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
+import org.osmf.metadata.IFacet;
 
 public class GameField extends BackGroundedPage
 {
@@ -37,7 +40,7 @@ public class GameField extends BackGroundedPage
 	private var doubleArrow:DoubleArrow = new DoubleArrow();
 
 	private var chatBG:MovieClip = new MovieClip();
-	private var chat:Chat = new Chat();
+	private var chat:Chat;
 
 	private var tabBar:TabBar = new TabBar();
 
@@ -46,6 +49,7 @@ public class GameField extends BackGroundedPage
 	private static const CHANGE_TABLE:String = "changeTable";
 	private static const HELP:String = "help";
 
+	private var placesOccupied:Dictionary = new Dictionary();
 	
 	private const avatarCoordinates:Array = [
 		{x:125, y:89},
@@ -77,15 +81,23 @@ public class GameField extends BackGroundedPage
 		createCelebrityAvatars();
 		createBottle();
 		createArrow();
-		createChat();
 
-		Model.instance.addEventListener(Controller.ON_JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToRoom);
-		Model.instance.addEventListener(Controller.ON_JOINED_TO_TAGGED_ROOM_QUEUE, onJoinedToRoom);
+		Model.instance.addEventListener(Controller.ON_JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToRoomQueue);
+		Model.instance.addEventListener(Controller.ON_JOINED_TO_TAGGED_ROOM_QUEUE, onJoinedToRoomQueue);
+		Model.instance.addEventListener(Controller.ON_JOINED_TO_ROOM, onJoinedToRoom);
 		Model.instance.addEventListener(Controller.ROOM_STATE_CHANGED, onRoomStateChanged);
 		Model.instance.addEventListener(Controller.ROOM_DEATH, onRoomDeath);
 		Model.instance.addEventListener(Controller.ROOM_USER_LIST_CHANGED, onUserListChanged);
 		Model.instance.addEventListener(Controller.ROOM_IS_FULL, onRoomIsFool);
 		Model.instance.addEventListener(Controller.ALREADY_IN_THIS_ROOM, onAlreadyInThisRoom);
+
+
+		Model.instance.addEventListener(Controller.BOTTLE_SWINGED, onBottleSwinged);
+		Model.instance.addEventListener(Controller.KISSED, onKissed);
+		Model.instance.addEventListener(Controller.REFUSED_TO_KISS, onRefusedToKiss);
+		Model.instance.addEventListener(Controller.NEW_BOTTLE_SWINGER, onNewBottleSwinger);
+
+
 		if(Model.instance.owner.playInCity)
 		{
 			Controller.instance.joinToTaggedRoomQueue(Model.instance.owner.city);
@@ -96,10 +108,51 @@ public class GameField extends BackGroundedPage
 		}
 	}
 
+	private function onBottleSwinged(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onKissed(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onRefusedToKiss(e:ObjectEvent):void
+	{
+
+	}
+
+	private function onNewBottleSwinger(e:ObjectEvent):void
+	{
+
+	}
 
 	//handlers
 
+	private function onJoinedToRoomQueue(e:ObjectEvent):void
+	{
+		trace("Joined to room queue!");
+	}
+
 	private function onJoinedToRoom(e:ObjectEvent):void
+	{
+
+//		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo)
+//		for (var i:int = 0; i < (e.data.users as Array).length; i++)
+//		{
+//
+//		}
+		createChat();
+	}
+
+	private function onAlreadyInThisRoom(e:ObjectEvent):void
+	{
+		createChat();
+		addPlayerToTable(Model.instance.owner, nextFreePlace());
+	}
+
+	private function onUserInfo(e:ObjectEvent):void
 	{
 
 	}
@@ -120,19 +173,24 @@ public class GameField extends BackGroundedPage
 
 	}
 
-	private function onAlreadyInThisRoom(e:ObjectEvent):void
+	private function nextFreePlace():int
 	{
-
+		for (var i:int = 0; i < avatarCoordinates.length; i++)
+		{
+			if(placesOccupied[i] == null) return i;
+		}
+		return 0;
 	}
 
 	private function onRoomStateChanged(e:Event):void
 	{
-
+		
 	}
 	//handlers
 
 	private function createChat():void
 	{
+		chat = new Chat();
 		chat.x = 0;
 		chat.y = 620;
 		addChild(chat);
@@ -261,8 +319,9 @@ public class GameField extends BackGroundedPage
 	//------------------------------------------------------------------------------------------------------------------
 	// Game functionality
 	//------------------------------------------------------------------------------------------------------------------
-	public function addPlayerToTable(player:User, place:int):void
+	public function addPlayerToTable(player:User, place:int = 0):void
 	{
+		placesOccupied[place] = place;
 		var userAvatar:PlayerAvatar = new PlayerAvatar(player.photoLink);
 		userAvatar.x = avatarCoordinates[place].x;
 		userAvatar.y = avatarCoordinates[place].y;

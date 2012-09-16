@@ -66,7 +66,7 @@ public class Controller
 		//room
 		socket.addEventListener(ON_JOINED_TO_MAIN_ROOM_QUEUE, model.onJoinedToMainRoomQueue);
 		socket.addEventListener(ON_JOINED_TO_TAGGED_ROOM_QUEUE, model.onJoinedToTaggedRoomQueue);
-		//socket.addEventListener(JOINED_TO_ROOM, model.onJoinedToRoom);
+		socket.addEventListener(ON_JOINED_TO_ROOM, model.onJoinedToRoom);
 		socket.addEventListener(ROOM_DEATH, model.onRoomDeath);
 		socket.addEventListener(ROOM_USER_LIST_CHANGED, model.onRoomUserListChanged);
 		socket.addEventListener(ROOM_STATE_CHANGED, model.onRoomStateChanged);
@@ -402,10 +402,11 @@ public class Controller
 //----------------------------------------------------------------------------------------------------------------------
 //	ROOM METHODS
 //----------------------------------------------------------------------------------------------------------------------
-	public static const JOIN_TO_MAIN_ROOM_QUEUE:String = "JoinToMainRoomQueue";
+	public static const JOIN_TO_MAIN_ROOM_QUEUE:String = "JoinMainRoomQueue";
 	public static const JOIN_TO_TAGGED_ROOM_QUEUE:String = "JoinTaggedRoomQueue";
 	public static const ON_JOINED_TO_MAIN_ROOM_QUEUE:String = "OnJoinedToMainRoomQueue";
 	public static const ON_JOINED_TO_TAGGED_ROOM_QUEUE:String = "OnJoinedToTaggedRoomQueue";
+	public static const ON_JOINED_TO_ROOM:String = "OnJoinedToRoom";
 	public static const ROOM_DEATH:String = "OnRoomDeath";
 	public static const ROOM_USER_LIST_CHANGED:String = "OnRoomUserListChanged";
 	public static const ROOM_STATE_CHANGED:String = "OnRoomStateChaned";
