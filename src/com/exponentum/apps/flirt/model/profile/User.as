@@ -50,7 +50,7 @@ public class User
 
 	public var friends:Array = [];
 
-	public var playInCity:Boolean = true;
+	public var playInCity:Boolean = false;
 
 	public function User()
 	{

@@ -17,6 +17,8 @@ import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
 import com.exponentum.apps.flirt.view.pages.gamefield.chat.Chat;
+import com.exponentum.apps.flirt.view.pages.profile.Profile;
+import com.exponentum.apps.flirt.view.pages.profile.ProfileAvatar;
 import com.exponentum.utils.centerX;
 import com.exponentum.utils.centerY;
 import com.greensock.TweenMax;
@@ -25,6 +27,7 @@ import com.greensock.easing.Bounce;
 import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.Event;
+import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.utils.Dictionary;
 
@@ -50,6 +53,7 @@ public class GameField extends BackGroundedPage
 	private static const HELP:String = "help";
 
 	private var placesOccupied:Dictionary = new Dictionary();
+	//private var tablePlayers:Dictionary = new Dictionary();
 	
 	private const avatarCoordinates:Array = [
 		{x:125, y:89},
@@ -98,6 +102,7 @@ public class GameField extends BackGroundedPage
 		Model.instance.addEventListener(Controller.NEW_BOTTLE_SWINGER, onNewBottleSwinger);
 
 
+
 		if(Model.instance.owner.playInCity)
 		{
 			Controller.instance.joinToTaggedRoomQueue(Model.instance.owner.city);
@@ -110,12 +115,15 @@ public class GameField extends BackGroundedPage
 
 	private function onBottleSwinged(e:ObjectEvent):void
 	{
+		if(e.data.victimGuid == Model.instance.owner.guid)
+			bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
 
+		bottle.showOnPlayer(getPlaceByGuid(e.data.victimGuid), int(Math.random() * 25));
 	}
 
 	private function onKissed(e:ObjectEvent):void
 	{
-
+		showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
 	}
 
 	private function onRefusedToKiss(e:ObjectEvent):void
@@ -125,52 +133,98 @@ public class GameField extends BackGroundedPage
 
 	private function onNewBottleSwinger(e:ObjectEvent):void
 	{
-
+		Controller.instance.swingBottle();
 	}
 
-	//handlers
+	private function onBottleStopped(e:Event):void
+	{
+		bottle.removeEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
+		showKissDialog();
+	}
 
+	private var _kissDialog:KissDialog;
+	private function showKissDialog():void
+	{
+		_kissDialog = new KissDialog();
+		centerX(_kissDialog,  760);
+		centerY(_kissDialog,  760);
+		addChild(_kissDialog);
+		_kissDialog.yesButton.addEventListener(MouseEvent.CLICK, onYes);
+		_kissDialog.noButton.addEventListener(MouseEvent.CLICK, onNo);
+		_kissDialog.tf.text = "Поцеловать?";
+	}
+
+	private function onYes(e:MouseEvent):void
+	{
+		Controller.instance.kiss();
+		destroyKissDialog();
+	}
+
+	private function onNo(e:MouseEvent):void
+	{
+		Controller.instance.refuseToKiss();
+		destroyKissDialog();
+
+		putAllToTheirPlaces();
+	}
+
+	private function putAllToTheirPlaces():void
+	{
+		for (var i:int = 0; i < avatarHolders.length; i++)
+		{
+			var playerAvatar:PlayerAvatar = avatarHolders[i];
+			TweenMax.to(playerAvatar, .5, {x:avatarCoordinates[i].x, y:avatarCoordinates[i].y});
+		}
+	}
+
+	private function destroyKissDialog():void
+	{
+		removeChild(_kissDialog);
+		_kissDialog.yesButton.removeEventListener(MouseEvent.CLICK, onYes);
+		_kissDialog.noButton.removeEventListener(MouseEvent.CLICK, onNo);
+		_kissDialog = null;
+	}
+
+
+	//handlers
 	private function onJoinedToRoomQueue(e:ObjectEvent):void
 	{
 		trace("Joined to room queue!");
+		createChat();
 	}
 
 	private function onJoinedToRoom(e:ObjectEvent):void
 	{
-
-//		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo)
-//		for (var i:int = 0; i < (e.data.users as Array).length; i++)
-//		{
-//
-//		}
-		createChat();
+		onUserListChanged(e);
 	}
 
 	private function onAlreadyInThisRoom(e:ObjectEvent):void
 	{
 		createChat();
-		addPlayerToTable(Model.instance.owner, nextFreePlace());
 	}
 
-	private function onUserInfo(e:ObjectEvent):void
-	{
-
-	}
 
 	private function onUserListChanged(e:ObjectEvent):void
 	{
+		placesOccupied = new Dictionary();
+		for (var i:int = 0; i < avatarHolders.length; i++){
+			if(contains(avatarHolders[i])) removeChild(avatarHolders[i]);
+			avatarHolders[i] = null;
+		}
+		avatarHolders = new Vector.<PlayerAvatar>();
 
+		for (var j:int = 0; j < e.data.users.length; j++)
+			addPlayerToTable(e.data.users[j], j);
 	}
-
 
 	private function onRoomDeath(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new Event(Config.PROFILE));
 	}
 
 	private function onRoomIsFool(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new Event(Config.PROFILE));
 	}
 
 	private function nextFreePlace():int
@@ -184,7 +238,7 @@ public class GameField extends BackGroundedPage
 
 	private function onRoomStateChanged(e:Event):void
 	{
-		
+		//???
 	}
 	//handlers
 
@@ -210,13 +264,7 @@ public class GameField extends BackGroundedPage
 		addChild(bottle);
 		centerX(bottle, 760);
 		bottle.y = 315;
-		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
 		bottle.setBottle(1);
-	}
-
-	private function onBottleStopped(e:Event):void
-	{
-		
 	}
 
 	private const numCelebrities:int = 2;
@@ -319,10 +367,10 @@ public class GameField extends BackGroundedPage
 	//------------------------------------------------------------------------------------------------------------------
 	// Game functionality
 	//------------------------------------------------------------------------------------------------------------------
-	public function addPlayerToTable(player:User, place:int = 0):void
+	public function addPlayerToTable(playerGuid:String, place:int = 0):void
 	{
 		placesOccupied[place] = place;
-		var userAvatar:PlayerAvatar = new PlayerAvatar(player.photoLink);
+		var userAvatar:PlayerAvatar = new PlayerAvatar(playerGuid);
 		userAvatar.x = avatarCoordinates[place].x;
 		userAvatar.y = avatarCoordinates[place].y;
 		addChild(userAvatar);
@@ -336,13 +384,26 @@ public class GameField extends BackGroundedPage
 
 		doubleArrow.visible = true;
 		doubleArrow.scaleX = doubleArrow.scaleY = .4;
-		TweenMax.to(doubleArrow, .5, {scaleX:1, scaleY:1, ease:Bounce.easeInOut});
+		TweenMax.to(doubleArrow, .5, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
+			putAllToTheirPlaces();
+		}});
 	}
 
-	private function showKissDialog():void
+	private function getAvatarByGuid(guid:String):PlayerAvatar
 	{
-
+		for (var i:int = 0; i < avatarHolders.length; i++)
+			if(avatarHolders[i].player.guid == guid) return avatarHolders[i];
+		return null;
 	}
+
+	private function getPlaceByGuid(guid:String):int
+	{
+		for (var i:int = 0; i < avatarHolders.length; i++)
+			if(avatarHolders[i].player.guid == guid) return i;
+		return -1;
+	}
+
+
 
 }
 }

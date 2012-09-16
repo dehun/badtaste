@@ -36,8 +36,6 @@ public class Bottle extends CasaSprite
 		container.addChild(bottleLoad.contentAsMovieClip);
 		bottleLoad.contentAsMovieClip.x = -bottleLoad.contentAsMovieClip.width / 2;
 		bottleLoad.contentAsMovieClip.y = -bottleLoad.contentAsMovieClip.height / 2;
-
-		showOnPlayer(1, 3);
 	}
 
 	//---------------------------------------------------------------------------------------------------

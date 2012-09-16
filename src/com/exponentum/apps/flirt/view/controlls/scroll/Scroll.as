@@ -48,7 +48,7 @@ public class Scroll extends CasaSprite
 		_target = targetValue;
 		_source = sourceValue;
 
-		//if(_source.height <= _target.height) this.visible = false;
+		this.visible = (_target.height > _source.height);
 	}
 
 	public function set scrollHeight(value:int):void

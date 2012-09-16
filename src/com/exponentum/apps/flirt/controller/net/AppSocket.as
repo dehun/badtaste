@@ -67,9 +67,8 @@ public class AppSocket extends Socket
 	{
 		response = "";
 		write(JSON.encode(data));
-//		trace("->", JSON.encode(data).length);
 		trace("->", JSON.encode(data));
-//		Cc.log("->", JSON.encode(data));
+		Cc.log("->", JSON.encode(data));
 		flush();
 	}
 
@@ -113,7 +112,7 @@ public class AppSocket extends Socket
 
 		// process data
 		trace("<-", data);
-		//Cc.log("<-", data);
+		Cc.log("<-", data);
 
 		for (var key:String in JSON.decode(data))
 		{
@@ -130,7 +129,7 @@ public class AppSocket extends Socket
 			while (dataProcessed < dataToProcess) {
 				dataProcessed += readChunk();
 			}
-		} catch (e:EOFError) {}// here catch EOF
+		} catch (e:EOFError) {}
 
 	}
 }

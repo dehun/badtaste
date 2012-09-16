@@ -247,10 +247,12 @@ public class Model extends EventDispatcher
 
 	public function onRoomUserListChanged(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRoomIsFull(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onAlreadyInRoom(e:ObjectEvent):void
@@ -260,11 +262,13 @@ public class Model extends EventDispatcher
 
 	public function onRoomDeath(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	//chat
 	public function onGotChatMessageFromRoom(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	//game

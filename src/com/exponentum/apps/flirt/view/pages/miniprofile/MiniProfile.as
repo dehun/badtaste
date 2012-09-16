@@ -155,7 +155,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotUserInfo(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		//zodiac
 		zodiacSign.gotoAndStop(_user.zodiac);
@@ -193,14 +193,14 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotVipPoints(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.isVIP = _user.vipPoints > 0;
 	}
 
 	private function onGotDecorations(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.frame = _user.avatarFrame;
 		setBackground(_user.profileBackground);
@@ -208,7 +208,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotUserFollowers(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		if(_user.followers.length == 0) return;
 		fans.update(_user.followers);
@@ -242,14 +242,14 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onGotUserRate(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.mark = _user.userRate;
 	}
 
 	private function onGotIsUserRated(e:ObjectEvent):void
 	{
-		var curUser = e.data as User;
+		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.isRated = _user.isRated == "true";
 	}

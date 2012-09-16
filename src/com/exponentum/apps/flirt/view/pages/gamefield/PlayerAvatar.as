@@ -7,32 +7,50 @@
  */
 package com.exponentum.apps.flirt.view.pages.gamefield
 {
-import flash.display.Bitmap;
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
+import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.profile.User;
 
+import flash.display.Bitmap;
+import flash.events.Event;
+import flash.net.URLRequest;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.ImageLoad;
+
+import ru.cleptoman.net.UnsecurityDisplayLoader;
 
 public class PlayerAvatar extends CasaSprite
 {
 	private var avatarHolder:AvatarHolder = new AvatarHolder();
 	private var _photo:Bitmap;
 	private var _isVIP:Boolean;
-	
-	private var avatarLoad:ImageLoad;
 
-	public function PlayerAvatar(photoURL:String)
+	private var _player:User = new User();
+
+	public function PlayerAvatar(guid:String)
 	{
 		addChild(avatarHolder);
-		avatarLoad = new ImageLoad(photoURL);
-		avatarLoad.addEventListener(LoadEvent.COMPLETE, onLoadComplete);
-		avatarLoad.start();
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		Controller.instance.getUserInfo(guid);
+		_player.guid = guid;
 	}
 
-	private function onLoadComplete(e:LoadEvent):void
+	private function onUserInfo(e:ObjectEvent):void
 	{
-		this.photo = avatarLoad.contentAsBitmap;
+		if((e.data as User).guid != _player.guid) return;
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		_player = e.data as User;
+
+		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+		loader.addEventListener(Event.INIT, function(e:Event):void {
+			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+			photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+		});
+		var req:URLRequest = new URLRequest(_player.photoLink);
+		loader.load(req);
 	}
 
 	private function set photo(value:Bitmap):void
@@ -49,6 +67,11 @@ public class PlayerAvatar extends CasaSprite
 	{
 		_isVIP = value;
 		avatarHolder.vipMarker.visible = _isVIP;
+	}
+
+	public function get player():User
+	{
+		return _player;
 	}
 }
 }
