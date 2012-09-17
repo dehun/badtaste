@@ -358,9 +358,10 @@ inner_join(Guid, State, StateName) ->
                     ExtensionsResult = call_extensions(fun(ExtensionPid) -> room_ext:on_user_join(ExtensionPid, Guid) end, State#state.extensions),
                     case ExtensionsResult of
                         ok ->
-                            inner_broadcast_message(Guid, #on_room_user_list_changed{users = sets:to_list(Users)}, sets:to_list(Users)),
-                            proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(Users), state = StateName}]),
-                            {ok, sets:add_element(Guid, Users)};
+			    NewUsers = sets:add_element(Guid, Users),
+                            inner_broadcast_message(Guid, #on_room_user_list_changed{users = sets:to_list(NewUsers)}, sets:to_list(Users)),
+                            proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(NewUsers), state = StateName}]),
+                            {ok, NewUsers};
                         Error ->
                             {error, Error}
                     end

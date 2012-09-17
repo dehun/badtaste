@@ -174,7 +174,7 @@ inner_touch_tagged_queue(Tag) ->
     Existance = mnesia:read({tagged_queue, Tag}),
     case Existance of 
         [] ->
-            Queue = roomqueue_sup:start_queue(),
+            {ok, Queue} = roomqueue_sup:start_queue(),
             NewTaggedQueue = #tagged_queue{tag = Tag, 
                                            queue = Queue},
             mnesia:write(NewTaggedQueue),

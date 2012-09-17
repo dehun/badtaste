@@ -139,7 +139,8 @@ handle_touch_user_info(CallerGuid, Message) when CallerGuid =:= admin ->
 	    log_srv:debug("updating existant user info"),
             {ok, OldUserInfo} = userinfo_srv:get_user_info(UserGuid),
             NewUserInfo = OldUserInfo#user_info{birth_date = UserInfo#user_info.birth_date,
-                                                city = UserInfo#user_info.city},
+                                                city = UserInfo#user_info.city,
+						is_man = UserInfo#user_info.is_man},
             ok = userinfo_srv:update_user_info(UserGuid, NewUserInfo),
             #touch_user_info_result{result = "ok"};
         _NoExists -> %% if user is not registered yet - sync all data from social net

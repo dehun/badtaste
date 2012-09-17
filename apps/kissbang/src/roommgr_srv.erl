@@ -162,10 +162,10 @@ handle_call({leave_room, UserGuid}, From, State) ->
     utils:acall(fun() -> inner_leave_room(UserGuid) end, From),
     {noreply, State};
 handle_call({get_room_for, UserGuid}, From, State) ->
-    utils:acall(inner_get_room_for(UserGuid), From),
+    utils:acall(fun () -> inner_get_room_for(UserGuid) end, From),
     {noreply, State};
 handle_call({get_room, RoomGuid}, From, State) ->
-    utils:acall(fun() ->     Reply = inner_get_room(RoomGuid) end, From),
+    utils:acall(fun() -> Reply = inner_get_room(RoomGuid) end, From),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -262,8 +262,12 @@ inner_get_room(RoomGuid) ->
                         [] ->
                             no_such_room;
                         [Room] ->
-                            check_room_heart(Room),
-                            {ok, Room}
+                            case check_room_heart(Room) of
+                            ok ->
+			       {ok, Room};
+			    _ ->
+			      no_such_room
+			    end
                     end
             end,
     mnesia:activity(async_dirty, Trans).
@@ -277,7 +281,7 @@ inner_leave_room(UserGuid) ->
                     end,
             mnesia:activity(async_dirty, Trans),
             LeaveResult = room_srv:leave(Room#room.room_pid, UserGuid),
-            check_room_heart(Room),
+	    check_room_heart(Room),
             LeaveResult;
         Error ->
             Error
