@@ -131,7 +131,9 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
         true ->
             {next_state, kiss_mode, NewState, 60000}
-    end.
+    end;
+kiss_mode(_, State) ->
+	     {next_state, kiss_mode, State, 60000}.
 
 %% active({on_room_death}, _From, State) ->
 %%     Reply = ok,
