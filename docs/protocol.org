@@ -29,6 +29,10 @@
    -> SendChatMessageToRoom(message = "some message text body")
 ** getting chat message from room where you are
    <- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+** send vip chat message to room where you are 
+   -> SendVipChatMessageToRoom(message = "some message text body")
+** getting vipchat message from room where you are
+   <- OnGotVipChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
 * web admin interface
 ** registration/updating info
    -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "http://vk.com/kcpc", isMan = "true", 
