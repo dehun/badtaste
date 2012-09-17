@@ -115,6 +115,14 @@ class OnGotChatMessageFromRoom(pgMessage):
     senderGuid = pgString()
     message = pgString()
 
+class SendVipChatMessageToRoom(pgMessage):
+    message = pgString()
+
+class OnGotVipChatMessageFromRoom(pgMessage):
+    senderGuid = pgString()
+    message = pgString()
+
+
 # room queues
 class JoinMainRoomQueue(pgMessage):
     pass

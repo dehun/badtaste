@@ -98,7 +98,8 @@ get_room_handlers() ->
      'join_tagged_roomqueue_handler_srv'].
 
 get_chat_handlers() ->
-    ['send_chat_message_to_room_handler_srv'].
+    ['send_chat_message_to_room_handler_srv',
+     'send_vip_chat_message_to_room_handler_srv'].
 
 get_kiss_game_handlers() ->
     ['kiss_handler_srv',

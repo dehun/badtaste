@@ -13,7 +13,8 @@
 
 %% API
 -export([start_link/0, start/0, start/1, start_link/1]).
--export([join/2, broadcast_message/3, broadcast_message/2, are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1,
+-export([join/2, broadcast_message/3, broadcast_message/2, broadcast_vip_message/3, broadcast_vip_message/2,
+         are_in_room/2, leave/2, drop/1, is_active/1, get_number_of_users/1,
          send_message_to_extensions/2]).
 
 %% gen_fsm callbacks
@@ -47,6 +48,11 @@ broadcast_message(RoomPid, Message) ->
     broadcast_message(RoomPid, unknown, Message).
 broadcast_message(RoomPid, Sender, Message) ->
     gen_fsm:send_event(RoomPid, {broadcast_message, Sender, Message}).
+
+broadcast_vip_message(RoomPid, Message) ->
+    broadcast_message(RoomPid, unknown, Message).
+broadcast_vip_message(RoomPid, Sender, Message) ->
+    gen_fsm:send_event(RoomPid, {broadcast_vip_message, Sender, Message}).
 
 join(RoomPid, Guid) ->
     gen_fsm:sync_send_event(RoomPid, {join, Guid}).
@@ -115,13 +121,18 @@ init([Extensions]) ->
 %%                   {stop, Reason, NewState}
 %% @end
 %%--------------------------------------------------------------------
+pending({broadcast_vip_message, Sender, Message}, State) ->
+    inner_broadcast_vip_message(Sender, Message, sets:to_list(State#state.users)),
+    {next_state, pending, State};
 pending({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#state.users)),
     {next_state, pending, State};
 pending(_Event, State) ->
     {next_state, pending, State}.
 
-
+active({broadcast_vip_message, Sender, Message}, State) ->
+    inner_broadcast_message(Sender, Message, sets:to_list(State#state.users)),
+    {next_state, active, State};
 active({broadcast_message, Sender, Message}, State) ->
     inner_broadcast_message(Sender, Message, sets:to_list(State#state.users)),
     {next_state, active, State};
@@ -332,6 +343,18 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+inner_broadcast_vip_message(Sender, Message, [User | RestUsers]) ->
+    AreVip = vip_srv:get_vip_points(User) > 0,
+    if 
+        AreVip ->
+            proxy_srv:async_route_messages(User, [Message]);
+        true ->
+            []
+    end,
+    inner_broadcast_vip_message(Sender, Message, RestUsers);
+inner_broadcast_vip_message(_, _, []) ->
+    ok.
+
 inner_broadcast_message(Message, [User | RestUsers]) ->
     proxy_srv:async_route_messages(User, [Message]),
     inner_broadcast_message(Message, RestUsers);
