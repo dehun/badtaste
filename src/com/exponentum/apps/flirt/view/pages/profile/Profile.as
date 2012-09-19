@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.presents.Present;
@@ -44,6 +45,8 @@ public class Profile extends BackGroundedPage
 
 	private var presentsContainer:Distribution;
 	private var user:User;
+
+	private var bp:BlockerPreloader;
 
 	public function Profile()
 	{
@@ -180,6 +183,9 @@ public class Profile extends BackGroundedPage
 			presentsContainer.y = shelf.y + 25;
 			addChild(presentsContainer);
 		}
+		
+		bp = new BlockerPreloader(this, this.width, this.height, .4);
+		bp.preload(2);
 	}
 
 	private function configureListeners():void
@@ -327,5 +333,7 @@ public class Profile extends BackGroundedPage
 		presentsContainer = null;
 		super.destroy();
 	}
+
+
 }
 }
