@@ -382,8 +382,9 @@ class UserJob(pgMessage):
     jobGuid = pgString()
     count = pgInteger()
 
-class GetMyCompletedJobs(pgMessage):
-    pass
+class GetUserCompletedJobs(pgMessage):
+    targetUserGuid = pgString()
 
 class OnGotUserCompletedJobs(pgMessage):
+    ownerGuid = pgString()
     completedJobs = pgList(pgMessage())

@@ -131,3 +131,7 @@
 ** get user followers
    -> GetUserFollowers(targetUserGuid = "someguid")
    <- OnGotUserFollowers(ownerUserGuid = "someguid", followers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
+* jobs
+** get user completed jobs
+   -> GetUserCompletedJobs(targetUserGuid = "123")
+   <- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2")])
