@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.greensock.TweenMax;
 
 import flash.display.Bitmap;
@@ -119,9 +120,12 @@ public class Fans extends CasaSprite
 				bmp.smoothing = true;
 				fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
 				updatePastFollowersView();
+				bpMainFollower.partsLoaded++;
 			});
 			var req:URLRequest		= new URLRequest(user.photoLink);
 			loader.load(req);
+			var bpMainFollower:BlockerPreloader = new BlockerPreloader(fansBlock.fansAvatarBig, fansBlock.fansAvatarBig.width, fansBlock.fansAvatarBig.height, 0);
+			bpMainFollower.preload(1);
 			updatedUsers ++;
 		}else
 		{
@@ -153,7 +157,10 @@ public class Fans extends CasaSprite
 				bmp.smoothing = true;
 				followerAvatar.avatarHolder.addChild(bmp);
 				updatePastFollowersView();
+				bp.partsLoaded++;
 			});
+			var bp:BlockerPreloader = new BlockerPreloader(followerAvatar, followerAvatar.width, followerAvatar.height, 0);
+			bp.preload(1);
 			var req:URLRequest		= new URLRequest(user.photoLink);
 			loader.load(req);
 		}

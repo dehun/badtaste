@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 
 import flash.display.Bitmap;
 import flash.events.Event;
@@ -71,7 +72,10 @@ public class FriendListItem extends CasaSprite
 			bmp.scaleY = bmp.scaleX;
 			bmp.smoothing = true;
 			asset.friendAvatarContainer.holder.addChild(bmp);
+			bp.partsLoaded++;
 		});
+		var bp:BlockerPreloader = new BlockerPreloader(asset.friendAvatarContainer.holder, asset.friendAvatarContainer.holder.width, asset.friendAvatarContainer.holder.height, 0);
+		bp.preload(1);
 		var req:URLRequest = new URLRequest(user.photoLink);
 		loader.load(req);
 
