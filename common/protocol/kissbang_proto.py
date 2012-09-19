@@ -390,4 +390,4 @@ class OnGotUserCompletedJobs(pgMessage):
     completedJobs = pgList(pgMessage())
 
 class OnJobCompleted(pgMessage):
-    jobGuid = "1"
+    jobGuid = pgString()
