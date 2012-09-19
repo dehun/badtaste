@@ -20,12 +20,16 @@ import flash.display.Bitmap;
 import flash.display.SimpleButton;
 import flash.display.TriangleCulling;
 import flash.events.Event;
+import flash.events.FocusEvent;
+import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.net.URLRequest;
+import flash.ui.Keyboard;
 
 import org.casalib.events.LoadEvent;
 import org.casalib.layout.Distribution;
 import org.casalib.load.ImageLoad;
+import org.casalib.ui.Key;
 
 import ru.cleptoman.net.UnsecurityDisplayLoader;
 
@@ -73,6 +77,9 @@ public class Profile extends BackGroundedPage
 		profileDetails.cityText.text = user.city;
 		profileDetails.playInCityCheckBox.gotoAndStop(int(Model.instance.owner.playInCity) + 1);
 
+		profileDetails.nameText.addEventListener(FocusEvent.FOCUS_IN, onNameTFFocusIn);
+		profileDetails.nameText.addEventListener(FocusEvent.FOCUS_OUT, onNameTFFocusOut);
+
 		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
 		loader.addEventListener(Event.INIT, function(e:Event):void {
 			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
@@ -93,6 +100,30 @@ public class Profile extends BackGroundedPage
 
 		//TODO: coins, link to social
 		bp.partsLoaded++;
+	}
+
+	private function onNameTFFocusIn(e:FocusEvent):void
+	{
+		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+	}
+
+	private function onNameTFFocusOut(e:FocusEvent):void
+	{
+		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+	}
+
+	private function onKeyDown(e:KeyboardEvent):void
+	{
+		if(e.keyCode == Keyboard.ENTER)
+		{
+			this.stage.focus = null;
+			Controller.instance.touchUserInfoByUser({
+				name:profileDetails.nameText.text,
+				hideSocialInfo:"0",
+				hideBirthDate:user.isAgeHidden.toString(),
+				hideCity:user.isCityHidden.toString()
+			});
+		}
 	}
 
 	private function createView():void
@@ -318,6 +349,10 @@ public class Profile extends BackGroundedPage
 
 	override public function destroy():void
 	{
+		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		profileDetails.nameText.removeEventListener(FocusEvent.FOCUS_IN, onNameTFFocusIn);
+		profileDetails.nameText.removeEventListener(FocusEvent.FOCUS_OUT, onNameTFFocusOut);
+
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 		Model.instance.removeEventListener(Controller.ON_GOT_VIP_POINTS, onGotVipPoints);
 		Model.instance.removeEventListener(Controller.ON_GOT_DECORATIONS, onGotDecorations);
