@@ -375,3 +375,15 @@ class OnGotUserFollowers(pgMessage):
     ownerUserGuid = pgString()
     rebuyPrice = pgInteger()
     followers = pgList(pgString())
+
+# jobs
+## get completed jobs
+class UserJob(pgMessage):
+    jobGuid = pgString()
+    count = pgInteger()
+
+class GetMyCompletedJobs(pgMessage):
+    pass
+
+class OnGotUserCompletedJobs(pgMessage):
+    completedJobs = pgList(pgMessage())

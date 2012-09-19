@@ -9,13 +9,14 @@
 -module(job_srv).
 
 -behaviour(gen_server).
+-include("kissbang_messaging.hrl").
 
 %% API
 -export([start_link/0, 
         setup_db/0]).
 
 -export([get_completed_jobs/1,
-        complete_job/2]).
+        try_complete_job/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -25,9 +26,8 @@
 
 -record(state, {config}).
 -record(config, {jobs}).
--record(job, {guid, are_on_server_side}).
--record(userjob, {guid, count}).
--record(jobsinfo, {user_guid, completed_jobs}).
+-record(job, {guid, are_on_server_side, count_to_complete}).
+-record(jobsinfo, {user_guid, jobs}).
 
 %%%===================================================================
 %%% API
@@ -35,8 +35,8 @@
 get_completed_jobs(UserGuid) ->
     gen_server:call(?SERVER, {get_completed_jobs, UserGuid}).
 
-complete_job(UserGuid, JobGuid) ->
-    gen_server:call(?SERVER, {complete_job, UserGuid, JobGuid}).
+try_complete_job(UserGuid, JobGuid) ->
+    gen_server:call(?SERVER, {try_complete_job, UserGuid, JobGuid}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -98,8 +98,8 @@ init([]) ->
 handle_call({get_completed_jobs, UserGuid}, From, State) ->
     utils:acall(fun() -> inner_get_completed_jobs(UserGuid) end, From),
     {noreply, State};
-handle_call({complete_job, UserGuid, JobGuid}, From, State) ->
-    utils:acall(fun() -> inner_complete_job(UserGuid, JobGuid, State#state.config) end, From),
+handle_call({try_complete_job, UserGuid, JobGuid}, From, State) ->
+    utils:acall(fun() -> inner_try_complete_job(UserGuid, JobGuid, State#state.config) end, From),
     {noreply, State}.
 %% handle_call(_Request, _From, State) ->
 %%     Reply = ok,
@@ -173,7 +173,8 @@ load_jobs() ->
 
 load_job({struct, JobJson}) ->
     #job{guid = binary_to_list(proplists:get_value(<<"guid">>, JobJson)),
-         are_on_server_side = binary_to_list(proplists:get_value(<<"are_on_server_side">>, JobJson))}.
+         are_on_server_side = binary_to_list(proplists:get_value(<<"are_on_server_side">>, JobJson)),
+         count_to_complete = binary_to_list(proplists:get_value(<<"count">>, JobJson))}.
 
 are_job_guid_correct(JobGuid, Config) ->
     Jobs = Config#config.jobs,
@@ -184,7 +185,7 @@ are_job_guid_correct(JobGuid, Config) ->
             ok
     end.
 
-inner_complete_job(UserGuid, JobGuid, Config) ->
+inner_try_complete_job(UserGuid, JobGuid, Config) ->
     case are_job_guid_correct(JobGuid, Config) of
         ok ->
             Trans = fun() ->
@@ -192,16 +193,24 @@ inner_complete_job(UserGuid, JobGuid, Config) ->
                             case Existance of
                                 [] ->
                                     NewJobsInfo = #jobsinfo{user_guid = UserGuid,
-                                                            completed_jobs = sets:from_list([JobGuid])},
+                                                            jobs = ([#user_job{job_guid = JobGuid,
+                                                                               count = 1}])},
                                     mnesia:write(NewJobsInfo),
                                     ok;
                                 [OldJobsInfo] ->
-                                    case sets:is_element(JobGuid, OldJobsInfo#jobsinfo.completed_jobs) of
-                                        true ->
-                                            mnesia:write(OldJobsInfo#jobsinfo{completed_jobs = sets:add_element(JobGuid, OldJobsInfo#jobsinfo.completed_jobs)}),
+                                    case [Job || Job <- OldJobsInfo#jobsinfo.jobs, Job#user_job.job_guid =:= JobGuid] of
+                                        [] ->
+                                            NewJob = #user_job{job_guid = JobGuid,
+                                                               count=1},
+                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [NewJob | OldJobsInfo#jobsinfo.jobs]},
+                                            mnesia:write(NewJobsInfo),
                                             ok;
-                                        false ->
-                                            job_already_completed
+                                        [OldJob] ->
+                                            NewJob = OldJob#user_job{count = OldJob#user_job.count + 1},
+                                            ExceptJobs = [Job || Job <- OldJobsInfo#jobsinfo.jobs, Job#user_job.job_guid =/= JobGuid],
+                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [NewJob | ExceptJobs]},
+                                            mnesia:write(NewJobsInfo),
+                                            ok
                                         end
                                 end
                     end,
@@ -217,13 +226,8 @@ inner_get_completed_jobs(UserGuid) ->
                         [] ->
                             [];
                         [JobsInfo] ->
-                            sets:to_list(JobsInfo#jobsinfo.completed_jobs)
+                            JobsInfo#jobsinfo.jobs
                     end
             end,
     mnesia:activity(sync_dirty, Trans).
-                    
-
-inner_update_job(Guid, Count) ->
-    ok.
-                    
     
