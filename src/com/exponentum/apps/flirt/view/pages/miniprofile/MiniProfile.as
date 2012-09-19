@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.pages.profile.BottomPanel;
@@ -47,6 +48,8 @@ public class MiniProfile extends BackGroundedPage
 	private var becomeFanButton:BecameFunButton;
 
 	private var _user:User;
+
+	private var bp:BlockerPreloader;
 
 	public function MiniProfile(user:User)
 	{
@@ -141,6 +144,11 @@ public class MiniProfile extends BackGroundedPage
 		addChild(sendGiftButton);
 
 		createBecameFanButton();
+
+		bp = new BlockerPreloader(this, profileMask.width, profileMask.height, 0);
+		bp.x = profileMask.x;
+		bp.y = profileMask.y;
+		bp.preload(7);
 	}
 
 	private function configureListeners():void
@@ -189,6 +197,7 @@ public class MiniProfile extends BackGroundedPage
 		Controller.instance.isUserRated(_user.guid);
 
 		//TODO: coins, city checkbox, link to social
+		bp.partsLoaded++;
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void
@@ -196,6 +205,7 @@ public class MiniProfile extends BackGroundedPage
 		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.isVIP = _user.vipPoints > 0;
+		bp.partsLoaded++;
 	}
 
 	private function onGotDecorations(e:ObjectEvent):void
@@ -204,6 +214,7 @@ public class MiniProfile extends BackGroundedPage
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.frame = _user.avatarFrame;
 		setBackground(_user.profileBackground);
+		bp.partsLoaded++;
 	}
 
 	private function onGotUserFollowers(e:ObjectEvent):void
@@ -214,6 +225,7 @@ public class MiniProfile extends BackGroundedPage
 		fans.update(_user.followers);
 		becomeFanButton.price.text = _user.rebuyPrice.toString();
 		becomeFanButton.visible = true;
+		bp.partsLoaded++;
 	}
 
 	private function onGotUserGifts(e:Event):void
@@ -226,6 +238,7 @@ public class MiniProfile extends BackGroundedPage
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}
+		bp.partsLoaded++;
 	}
 
 	private function onPresentLoaded(e:Event):void
@@ -237,6 +250,7 @@ public class MiniProfile extends BackGroundedPage
 		achievementsPanel.giftsText.text = _user.presents.length.toString();
 //		achievementsPanel.medalsText.text = _user.tasksDone.toString();//todo:
 //		achievementsPanel.ratingText.text = _user.placeInRating.toString();//todo:
+		bp.partsLoaded++;
 	}
 
 
@@ -245,6 +259,7 @@ public class MiniProfile extends BackGroundedPage
 		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.mark = _user.userRate;
+		bp.partsLoaded++;
 	}
 
 	private function onGotIsUserRated(e:ObjectEvent):void
@@ -252,6 +267,7 @@ public class MiniProfile extends BackGroundedPage
 		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
 		profileAvatar.isRated = _user.isRated == "true";
+		bp.partsLoaded++;
 	}
 
 	override public function destroy():void

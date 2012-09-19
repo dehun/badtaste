@@ -91,7 +91,8 @@ public class Profile extends BackGroundedPage
 		Controller.instance.getMyGifts();
 		Controller.instance.getUserRate(user.guid);
 
-		//TODO: coins, city checkbox, link to social
+		//TODO: coins, link to social
+		bp.partsLoaded++;
 	}
 
 	private function createView():void
@@ -185,7 +186,7 @@ public class Profile extends BackGroundedPage
 		}
 		
 		bp = new BlockerPreloader(this, this.width, this.height, .4);
-		bp.preload(2);
+		bp.preload(7);
 	}
 
 	private function configureListeners():void
@@ -239,6 +240,7 @@ public class Profile extends BackGroundedPage
 		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		profileAvatar.isVIP = user.vipPoints > 0;
+		bp.partsLoaded++;
 	}
 
 	private function onGotDecorations(e:ObjectEvent):void
@@ -248,6 +250,7 @@ public class Profile extends BackGroundedPage
 
 		setBackground(user.profileBackground);
 		profileAvatar.frame = user.avatarFrame;
+		bp.partsLoaded++;
 	}
 
 	private function onGotUserFollowers(e:ObjectEvent):void
@@ -256,6 +259,7 @@ public class Profile extends BackGroundedPage
 		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		fans.update(user.followers);
+		bp.partsLoaded++;
 	}
 
 	private function onGotMyGifts(e:Event):void
@@ -269,6 +273,7 @@ public class Profile extends BackGroundedPage
 			present.addEventListener(Present.PRESENT_LOADED, onPresentLoaded);
 			presentsContainer.addChildWithDimensions(present);
 		}
+		bp.partsLoaded++;
 	}
 
 	private function onPresentLoaded(e:Event):void
@@ -280,6 +285,7 @@ public class Profile extends BackGroundedPage
 		achievementsPanel.giftsText.text = user.presents.length.toString();
 //		achievementsPanel.medalsText.text = user.tasksDone.toString();//todo:
 //		achievementsPanel.ratingText.text = user.placeInRating.toString();//todo:
+		bp.partsLoaded++;
 	}
 
 	private function onGotUserRate(e:ObjectEvent):void
@@ -289,6 +295,7 @@ public class Profile extends BackGroundedPage
 
 		profileAvatar.mark = user.userRate
 		profileAvatar.isRated = true;
+		bp.partsLoaded++;
 	}
 
 	//----------------------------------------------------------------------------------
