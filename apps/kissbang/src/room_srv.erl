@@ -198,7 +198,7 @@ pending({join, Guid}, _From, State) ->
     % join it to room
     case inner_join(Guid, State, "pending") of
         {ok, NewUsers} ->
-            AreReadyToStart = sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start)),
+            AreReadyToStart = (sets:size(NewUsers) >= element(2, application:get_env(kissbang, room_limit_to_start))),
             if
                 AreReadyToStart ->
                     inner_broadcast_message(#on_room_state_changed{state = "active"}, sets:to_list(NewUsers)),

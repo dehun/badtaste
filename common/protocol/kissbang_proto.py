@@ -389,5 +389,6 @@ class OnGotUserCompletedJobs(pgMessage):
     ownerGuid = pgString()
     completedJobs = pgList(pgMessage())
 
+## on job completed
 class OnJobCompleted(pgMessage):
     jobGuid = pgString()
