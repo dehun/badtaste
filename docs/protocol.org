@@ -134,6 +134,6 @@
 * jobs
 ** get user completed jobs
    -> GetUserCompletedJobs(targetUserGuid = "123")
-   <- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2")])
+   <- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2", areCompleted="false")])
 ** on job completed
    <- OnJobCompleted(jobGuid = "2")
