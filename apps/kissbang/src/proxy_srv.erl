@@ -268,6 +268,7 @@ inner_register_origin(Guid, Origin) ->
             end,
     
     {ok, Pureness} = mnesia:activity(sync_dirty, Trans),
+    job_srv:try_complete_job(Guid, <<"1">>),
     case Pureness of
         pure ->
             ok;
