@@ -57,6 +57,7 @@ on_got_unauthorized_message(Message, State) when is_record(Message, authenticate
         {ok, Guid} ->
             proxy_srv:register_origin(Guid, get_my_origin()),
             send_message(get_my_origin(), #authenticated{guid = Guid}),
+            job_srv:try_complete_job(Guid, <<"1">>),
             State#state{authenticated = {true, Guid}};
         FailReason ->
             send_message(get_my_origin(), #authentication_failed{reason=atom_to_list(FailReason)}),

@@ -162,6 +162,8 @@ inner_get_sympathies(UserGuid) ->
     mnesia:activity(async_dirty, Trans).
 
 inner_add_sympathy(LeftGuid, RightGuid) ->
+    job_srv:try_complete_job(LeftGuid, <<"7">>),
+    job_srv:try_complete_job(RightGuid, <<"7">>),
     Trans = fun() ->
                     increment_sympathies(LeftGuid, RightGuid),
                     increment_sympathies(RightGuid, LeftGuid)
