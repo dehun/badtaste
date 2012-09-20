@@ -381,6 +381,7 @@ class OnGotUserFollowers(pgMessage):
 class UserJob(pgMessage):
     jobGuid = pgString()
     count = pgInteger()
+    areCompleted = pgString()
 
 class GetUserCompletedJobs(pgMessage):
     targetUserGuid = pgString()

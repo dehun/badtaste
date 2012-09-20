@@ -201,14 +201,17 @@ inner_try_complete_job(UserGuid, JobGuid, Config) ->
                                     case [Job || Job <- OldJobsInfo#jobsinfo.jobs, Job#user_job.job_guid =:= JobGuid] of
                                         [] ->
                                             NewJob = #user_job{job_guid = JobGuid,
-                                                               count=1},
-                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [NewJob | OldJobsInfo#jobsinfo.jobs]},
+                                                               count=1,
+                                                               are_completed="false"},
+                                            CheckedNewJob = check_job_completness(UserGuid, NewJob, Config),
+                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [CheckedNewJob | OldJobsInfo#jobsinfo.jobs]},
                                             mnesia:write(NewJobsInfo),
                                             ok;
                                         [OldJob] ->
                                             NewJob = OldJob#user_job{count = OldJob#user_job.count + 1},
                                             ExceptJobs = [Job || Job <- OldJobsInfo#jobsinfo.jobs, Job#user_job.job_guid =/= JobGuid],
-                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [NewJob | ExceptJobs]},
+                                            CheckedNewJob = check_job_completness(UserGuid, NewJob, Config),
+                                            NewJobsInfo = OldJobsInfo#jobsinfo{jobs = [CheckedNewJob | ExceptJobs]},
                                             mnesia:write(NewJobsInfo),
                                             ok
                                         end
@@ -230,4 +233,17 @@ inner_get_completed_jobs(UserGuid) ->
                     end
             end,
     mnesia:activity(sync_dirty, Trans).
+    
+
+check_job_completness(CompleterGuid, Job, Config) ->
+    [ConfigJob] = [J || J <- Config#config.jobs, J#job.guid =:= Job#user_job.job_guid],
+    AreCompleted = ((Job#user_job.count > ConfigJob#job.count_to_complete) and (not Job#user_job.are_completed)),
+    if 
+        AreCompleted ->
+            proxy_srv:async_route_messages(CompleterGuid, [#on_job_completed{job_guid = Job#user_job.job_guid}]),
+            Job#user_job{are_completed = "true"};
+        true ->
+            Job
+    end.
+    
     
