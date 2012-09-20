@@ -162,6 +162,7 @@ code_change(_OldVsn, State, _Extra) ->
 inner_buy_vip_points(UserGuid, Points, TransSync) ->
     Trans = dtranse:transefun(fun() -> 
                                       trans_touch_vip_points(UserGuid),
+                                      job_srv:try_complete_job(UserGuid, <<"9">>),
                                       Existance = mnesia:read({vipinfo, UserGuid}),
                                       case Existance of
                                           [] ->
@@ -171,6 +172,13 @@ inner_buy_vip_points(UserGuid, Points, TransSync) ->
                                               mnesia:write(NewVipInfo);
                                           [OldVipInfo] ->
                                               NewVipInfo = OldVipInfo#vipinfo{points = OldVipInfo#vipinfo.points + Points},
+                                              AreJobCompleted = NewVipInfo#vipinfo.points > 10000,
+                                              if
+                                                  AreJobCompleted ->
+                                                      job_srv:try_complete_job(UserGuid, <<"10">>);
+                                                  true ->
+                                                      []
+                                              end,
                                               mnesia:write(NewVipInfo)
                                       end,
 				      {commit, ok}

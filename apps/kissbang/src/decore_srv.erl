@@ -185,6 +185,7 @@ inner_buy_decore(BuyerGuid, DecoreGuid, AllDecores) ->
                             case bank_srv:withdraw(BuyerGuid, Decore#decore.price) of
                                 {ok, _} ->
                                     %% write info
+                                      job_srv:try_complete_job(BuyerGuid, <<"3">>),
                                     inner_add_user_decore_trans(BuyerGuid, Decore);
                                 Error ->
                                     Error

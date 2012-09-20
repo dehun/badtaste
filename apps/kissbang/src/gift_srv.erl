@@ -209,6 +209,9 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                               %% buy gift
                                               [Gift] = [Gift || Gift <- State#state.gifts, Gift#gift.guid == GiftGuid],
                                               {ok, _} = bank_srv:withdraw(SenderGuid, Gift#gift.price),
+                                              %% complete job
+                                              job_srv:try_complete_job(SenderGuid, <<"2">>),
+                                              job_srv:try_complete_job(SenderGuid, <<"3">>),
                                               %% send it
                                               Existance = mnesia:read({user_gifts, ReceiverGuid}),
                                               case Existance of

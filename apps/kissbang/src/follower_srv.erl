@@ -183,6 +183,8 @@ inner_buy_following(BuyerGuid, TargetGuid) ->
                                                 % buy
                             case bank_srv:withdraw(BuyerGuid, BuyPrice) of
                                 {ok, _} ->
+                                    job_srv:try_complete_job(BuyerGuid, <<"5">>),
+                                    job_srv:try_complete_job(TargetGuid, <<"6">>),
                                     mnesia:write(NewFollowersInfo),
                                     ok;
                                 Error ->

@@ -26,7 +26,7 @@
 
 -record(state, {config}).
 -record(config, {jobs}).
--record(job, {guid, are_on_server_side, count_to_complete}).
+-record(job, {guid, are_on_server_side, count_to_complete, reward}).
 -record(jobsinfo, {user_guid, jobs}).
 
 %%%===================================================================
@@ -174,7 +174,8 @@ load_jobs() ->
 load_job({struct, JobJson}) ->
     #job{guid = binary_to_list(proplists:get_value(<<"guid">>, JobJson)),
          are_on_server_side = binary_to_list(proplists:get_value(<<"are_on_server_side">>, JobJson)),
-         count_to_complete = binary_to_list(proplists:get_value(<<"count">>, JobJson))}.
+         reward = list_to_integer(binary_to_list(proplists:get_value(<<"reward">>, JobJson))),
+         count_to_complete = list_to_integer(binary_to_list(proplists:get_value(<<"count">>, JobJson)))}.
 
 are_job_guid_correct(JobGuid, Config) ->
     Jobs = Config#config.jobs,
