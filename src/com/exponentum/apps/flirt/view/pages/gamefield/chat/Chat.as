@@ -16,17 +16,13 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
-import flash.text.TextField;
 import flash.ui.Keyboard;
-
-import mx.containers.ControlBar;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
 
 public class Chat extends CasaSprite
 {
-	private var messageContainer:CasaSprite = new CasaSprite();
 	private var sayButton:SayButton = new SayButton();
 	private var chatInput:ChatInput = new ChatInput();
 
@@ -57,20 +53,23 @@ public class Chat extends CasaSprite
 	private function onFocusIn(e:FocusEvent):void
 	{
 		chatInput.tf.text = "";
-		addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 	}
 
 	private function onFocusOut(e:FocusEvent):void
 	{
-		removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+
 	}
 
 	private function onKeyDown(e:KeyboardEvent):void
 	{
+
 		if(chatInput.tf.text == "") return;
 		if(e.keyCode == Keyboard.ENTER){
 			Controller.instance.sendMessageToRoom(chatInput.tf.text);
 			chatInput.tf.text = "";
+			this.stage.focus = null;
+			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 	}
 
@@ -118,7 +117,10 @@ public class Chat extends CasaSprite
 	override public function destroy():void
 	{
 		Model.instance.removeEventListener(Controller.GOT_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
-		removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
+		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusOut);
+		removeChildren(true, true);
 		super.destroy();
 	}
 	

@@ -349,7 +349,7 @@ public class Profile extends BackGroundedPage
 
 	override public function destroy():void
 	{
-		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		if(this.stage) this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		profileDetails.nameText.removeEventListener(FocusEvent.FOCUS_IN, onNameTFFocusIn);
 		profileDetails.nameText.removeEventListener(FocusEvent.FOCUS_OUT, onNameTFFocusOut);
 

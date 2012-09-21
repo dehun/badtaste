@@ -115,9 +115,7 @@ public class GameField extends BackGroundedPage
 
 	private function onBottleSwinged(e:ObjectEvent):void
 	{
-		if(e.data.victimGuid == Model.instance.owner.guid)
-			bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
-
+		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
 		bottle.showOnPlayer(getPlaceByGuid(e.data.victimGuid), int(Math.random() * 25));
 	}
 
@@ -170,6 +168,7 @@ public class GameField extends BackGroundedPage
 
 	private function putAllToTheirPlaces():void
 	{
+		doubleArrow.visible = false;
 		for (var i:int = 0; i < avatarHolders.length; i++)
 		{
 			var playerAvatar:PlayerAvatar = avatarHolders[i];
