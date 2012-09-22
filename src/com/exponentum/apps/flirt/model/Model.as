@@ -297,5 +297,17 @@ public class Model extends EventDispatcher
 		if(_owner.guid && userCache[_owner.guid]) return userCache[_owner.guid];
 		return _owner
 	}
+
+	//jobs
+	public function onGotUserCompletedJobs(e:ObjectEvent):void
+	{
+		if(e.data.ownerGuid == _owner.guid) _owner.jobsCompleted = e.data.jobsCompleted;
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onJobCompleted(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
 }
 }

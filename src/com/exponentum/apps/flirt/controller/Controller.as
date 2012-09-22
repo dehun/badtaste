@@ -103,6 +103,10 @@ public class Controller
 		socket.addEventListener(ON_GOT_GIFT, model.onGotGift);
 		socket.addEventListener(ON_GOT_GIFT_IN_GAME, model.onGiftReceivedInGame);
 
+		//job handlers
+		socket.addEventListener(ON_GOT_USER_COMPLETED_JOBS, model.onGotUserCompletedJobs);
+		socket.addEventListener(ON_JOB_COMPLETED, model.onJobCompleted);
+
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -471,6 +475,20 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
+//----------------------------------------------------------------------------------------------------------------------
+//	PRIZE TASKS
+//----------------------------------------------------------------------------------------------------------------------
+	public static const GET_USER_COMPLETED_JOBS:String = "GetUserCompletedJobs";
+	public static const ON_GOT_USER_COMPLETED_JOBS:String = "OnGotUserCompletedJobs";
+	public static const ON_JOB_COMPLETED:String = "OnJobCompleted";
+
+	public function getUserCompletedJobs(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_USER_COMPLETED_JOBS] = {};
+		requestObject[GET_USER_COMPLETED_JOBS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
 
 }
 }

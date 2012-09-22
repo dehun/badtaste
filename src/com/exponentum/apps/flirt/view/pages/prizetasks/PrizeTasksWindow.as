@@ -8,6 +8,7 @@
 package com.exponentum.apps.flirt.view.pages.prizetasks
 {
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
 
 import flash.events.MouseEvent;
 
@@ -35,12 +36,26 @@ public class PrizeTasksWindow extends CasaSprite
 		asset.taskContainer.addChild(tasksDistr);
 		for (var i:int = 0; i < (tasks.jobs as Array).length; i++)
 		{
+			var completed:Boolean = false;
+			for (var j:int = 0; j < Model.instance.owner.jobsCompleted.length; j++)
+			{
+				var completedJob:Object = Model.instance.owner.jobsCompleted[j];
+				if(completedJob.jobGuid == tasks.jobs[i].guid && completedJob.areCompleted == "true") {
+					completed = true;
+					break;
+				}
+			}
 			var taskButton:TaskButton = new TaskButton();
 			taskButton.label.text = (i + 1).toString();
 			taskButton.label.mouseEnabled = false;
-			taskButton.addEventListener(MouseEvent.CLICK, onTaskButtonClick);
-			taskButton.addEventListener(MouseEvent.MOUSE_OVER, onTaskButtonOver);
-			taskButton.addEventListener(MouseEvent.MOUSE_OUT, onTaskButtonOut);
+			if(!completed){
+				taskButton.addEventListener(MouseEvent.CLICK, onTaskButtonClick);
+				taskButton.addEventListener(MouseEvent.MOUSE_OVER, onTaskButtonOver);
+				taskButton.addEventListener(MouseEvent.MOUSE_OUT, onTaskButtonOut);
+			}else
+			{
+				taskButton.alpha = .3;
+			}
 			tasksDistr.addChildWithDimensions(taskButton, taskButton.width + 3);
 		}
 		tasksDistr.position();

@@ -52,6 +52,8 @@ public class User
 
 	public var playInCity:Boolean = false;
 
+	private var _jobsCompleted:Array = [];
+
 	public function User()
 	{
 
@@ -135,6 +137,16 @@ public class User
 	public function set profileBackground(value:int):void
 	{
 		_profileBackground = value;
+	}
+
+	public function get jobsCompleted():Array
+	{
+		return _jobsCompleted;
+	}
+
+	public function set jobsCompleted(value:Array):void
+	{
+		_jobsCompleted = value;
 	}
 }
 }

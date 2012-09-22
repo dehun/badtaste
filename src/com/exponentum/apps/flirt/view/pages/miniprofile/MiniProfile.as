@@ -148,7 +148,7 @@ public class MiniProfile extends BackGroundedPage
 		bp = new BlockerPreloader(this, profileMask.width, profileMask.height, 0);
 		bp.x = profileMask.x;
 		bp.y = profileMask.y;
-		bp.preload(7);
+		bp.preload(8);
 	}
 
 	private function configureListeners():void
@@ -195,6 +195,7 @@ public class MiniProfile extends BackGroundedPage
 		Controller.instance.getUserGifts(_user.guid);
 		Controller.instance.getUserRate(_user.guid);
 		Controller.instance.isUserRated(_user.guid);
+		Controller.instance.getUserCompletedJobs(_user.guid);
 
 		//TODO: coins, city checkbox, link to social
 		bp.partsLoaded++;
@@ -248,8 +249,15 @@ public class MiniProfile extends BackGroundedPage
 			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 
 		achievementsPanel.giftsText.text = _user.presents.length.toString();
-//		achievementsPanel.medalsText.text = _user.tasksDone.toString();//todo:
 //		achievementsPanel.ratingText.text = _user.placeInRating.toString();//todo:
+		bp.partsLoaded++;
+	}
+
+	private function onGotUserCompletedJobs(e:ObjectEvent):void
+	{
+		if(e.data.ownerGuid == _user.guid)
+			achievementsPanel.medalsText.text = (e.data.completedJobs as Array).length.toString();
+
 		bp.partsLoaded++;
 	}
 
@@ -279,6 +287,7 @@ public class MiniProfile extends BackGroundedPage
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_GIFTS, onGotUserGifts)
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_RATE, onGotUserRate);
 		Model.instance.removeEventListener(Controller.ON_GOT_IS_USER_RATED, onGotIsUserRated);
+		Model.instance.removeEventListener(Controller.ON_GOT_USER_COMPLETED_JOBS, onGotUserCompletedJobs);
 
 		removeChildren();
 		zodiacSign = null;

@@ -97,6 +97,7 @@ public class Profile extends BackGroundedPage
 		Controller.instance.getUserFollowers(user.guid);
 		Controller.instance.getMyGifts();
 		Controller.instance.getUserRate(user.guid);
+		Controller.instance.getUserCompletedJobs(user.guid);
 
 		//TODO: coins, link to social
 		bp.partsLoaded++;
@@ -217,7 +218,7 @@ public class Profile extends BackGroundedPage
 		}
 		
 		bp = new BlockerPreloader(this, this.width, this.height, .4);
-		bp.preload(7);
+		bp.preload(8);
 	}
 
 	private function configureListeners():void
@@ -227,6 +228,7 @@ public class Profile extends BackGroundedPage
 		Model.instance.addEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
 		Model.instance.addEventListener(Controller.ON_GOT_MY_GIFTS, onGotMyGifts);
 		Model.instance.addEventListener(Controller.ON_GOT_USER_RATE, onGotUserRate);
+		Model.instance.addEventListener(Controller.ON_GOT_USER_COMPLETED_JOBS, onGotUserCompletedJobs);
 	}
 
 	private function updateProfileDetailsButtons():void
@@ -314,8 +316,15 @@ public class Profile extends BackGroundedPage
 			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 
 		achievementsPanel.giftsText.text = user.presents.length.toString();
-//		achievementsPanel.medalsText.text = user.tasksDone.toString();//todo:
 //		achievementsPanel.ratingText.text = user.placeInRating.toString();//todo:
+		bp.partsLoaded++;
+	}
+
+	private function onGotUserCompletedJobs(e:ObjectEvent):void
+	{
+		if(e.data.ownerGuid == Model.instance.owner.guid)
+			achievementsPanel.medalsText.text = (e.data.completedJobs as Array).length.toString();
+
 		bp.partsLoaded++;
 	}
 
@@ -359,6 +368,7 @@ public class Profile extends BackGroundedPage
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_FOLLOWERS, onGotUserFollowers);
 		Model.instance.removeEventListener(Controller.ON_GOT_MY_GIFTS, onGotMyGifts);
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_RATE, onGotUserRate);
+		Model.instance.removeEventListener(Controller.ON_GOT_USER_COMPLETED_JOBS, onGotUserCompletedJobs);
 
 		removeChildren();
 		ratingsButton = null;

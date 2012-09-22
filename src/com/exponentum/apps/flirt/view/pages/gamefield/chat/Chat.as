@@ -80,6 +80,9 @@ public class Chat extends CasaSprite
 		chatMessages.push(message);
 		messagesDistribution.position();
 		scr.setTargetAndSource(messagesDistribution, _bottomPanelMask);
+		scr.position = 1;
+		var difference:Number = messagesDistribution.height - _bottomPanelMask.height;
+		messagesDistribution.y = _bottomPanelMask.y + scr.position * (-difference);
 	}
 
 	private var scr:Scroll = new Scroll(85);
