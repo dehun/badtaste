@@ -410,3 +410,21 @@ class OnGotUserCompletedJobs(pgMessage):
 ## on job completed
 class OnJobCompleted(pgMessage):
     jobGuid = pgString()
+
+# wanna chat
+## get random wanna chat user
+class GetRandomChater(pgMessage):
+    pass
+
+class OnGotRandomChatter(pgMessage):
+    chatterGuid = pgString()
+
+## buy chatter status
+class BuyRandomChatterStatus(pgMessage):
+    pass
+
+class OnBoughtRandomChatterStatusSuccess(pgMessage):
+    pass
+
+class OnBuyRandomChatterStatusFailed(pgMessage):
+    pass
