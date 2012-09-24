@@ -278,6 +278,23 @@ class OnGotVipPoints(pgMessage):
     ownerUserGuid = pgString()
     points = pgInteger()
 
+## get random vip
+class GetRandomVip(pgMessage):
+    pass
+
+class OnGotRandomVip(pgMessage):
+    vipGuid = pgString()
+
+## buy vip status
+class BuyVipPoints(pgMessage):
+    pass
+
+class OnVipPointsBoughtSuccessfully(pgMessage):
+    pass
+
+class OnVipPointsBuyFail(pgMessage):
+    pass
+
 # sympathy
 ## get user sympathies
 class GetUserSympathies(pgMessage):

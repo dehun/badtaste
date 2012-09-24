@@ -28,7 +28,8 @@
 %%%===================================================================
 -export([buy_vip_points/3,
          buy_vip_points/2,
-         get_vip_points/1]).
+         get_vip_points/1,
+         get_random_vip/0]).
 
 
 buy_vip_points(UserGuid, Points) ->
@@ -38,6 +39,9 @@ buy_vip_points(UserGuid, Points, TransSync) ->
 
 get_vip_points(UserGuid) ->
     gen_server:call(?SERVER, {get_vip_points, UserGuid}).
+
+get_random_vip() ->
+    gen_server:call(?SERVER, {get_random_vip}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -95,16 +99,15 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({get_random_vip}, From, State) ->
+    utils:acall(fun() -> inner_get_random_vip() end, From),
+    {noreply, State};
 handle_call({buy_vip_points, UserGuid, Points, TransSync}, From, State) ->
     utils:acall(fun() -> inner_buy_vip_points(UserGuid, Points, TransSync) end, From),
     {noreply, State};
 handle_call({get_vip_points, UserGuid}, From, State) ->
     utils:acall(fun() -> inner_get_vip_points(UserGuid) end, From),
     {noreply, State}.
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
-
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -228,3 +231,8 @@ decrease_points_with_time(OldVipInfo) ->
             end
     end.
     
+
+inner_get_random_vip() ->
+    Keys = mnesia:dirty_all_keys(vipinfo),
+    _Guid = lists:nth(random:uniform(length(Keys)), Keys).
+

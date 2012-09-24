@@ -98,9 +98,19 @@
    -> GetUserGifts(targetUserGuid = "someGuid")
    <- OnGotUserGifts(ownerGuid = "someGuid", gifts = [Gift(senderGuid = "123", giftGuid = "234")])
 * vip
+** buy vip points
+*** success
+    -> BuyVipPoints()
+    <- OnVipPointsBoughtSuccessfully()
+*** fail
+    -> BuyVipPoints()
+    <- OnVipPointsBuyFail()
 ** get vip points
    -> GetVipPoints(targetUserGuid = "someguid")
    <- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+** get random vip
+   -> GetRandomVip()
+   <- OnGotRandomVip(vipGuid = "someguid")
 * sympathy
 ** get user symphaties
    -> GetUserSympathies(targetUserGuid = "someguid")

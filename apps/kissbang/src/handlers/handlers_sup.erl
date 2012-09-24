@@ -125,7 +125,9 @@ get_gift_handlers() ->
      'present_gift_handler_srv'].
 
 get_vip_handlers() ->
-    ['get_vip_points_handler_srv'].
+    ['get_vip_points_handler_srv',
+     'buy_vip_points_handler_srv',
+     'get_random_vip_handler_srv'].
 
 get_followers_handlers() ->
     ['get_followers_handler_srv',
