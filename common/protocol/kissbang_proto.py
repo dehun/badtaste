@@ -413,7 +413,7 @@ class OnJobCompleted(pgMessage):
 
 # wanna chat
 ## get random wanna chat user
-class GetRandomChater(pgMessage):
+class GetRandomChatter(pgMessage):
     pass
 
 class OnGotRandomChatter(pgMessage):
