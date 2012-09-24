@@ -15,7 +15,8 @@
          setup_db/0]).
  -export([buy_wanna_chat_status/2,
           buy_wanna_chat_status/3,
-          get_random_chatter/0]).
+          get_random_chatter/0,
+         purge_expired/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -37,6 +38,9 @@ buy_wanna_chat_status(BuyerGuid, Period, TransSync) ->
 
 get_random_chatter() ->
     gen_server:call(?SERVER, {get_random_chatter}).
+
+purge_expired() ->
+    gen_server:cast(?SERVER, {purge_expired}).
     
 %%--------------------------------------------------------------------
 %% @doc
@@ -79,6 +83,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    init_purger(),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -183,7 +188,7 @@ inner_buy_wanna_chat_status(BuyerGuid, Period, TransSync) ->
                               end, TransSync),
     mnesia:activity(transaction, Trans).
 
-inner_purge_expired() ->
+inner_purge_expired() -> %% TODO : optimize me
     Trans = fun() ->
                     Expired = qlc:e(qlc:q([E || E <- mnesia:table(wannachatinfo), is_expired(E)])),
                     lists:foreach(fun(E) -> 
@@ -194,5 +199,6 @@ inner_purge_expired() ->
     
 is_expired(E) ->
     E#wannachatinfo.expiration_date < utils:unix_time().
-    
 
+init_purger() ->
+    timer:apply_interval(60 * 10 * 1000, wannachat_srv, purge_expired, []).
