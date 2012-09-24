@@ -147,3 +147,15 @@
    <- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2", areCompleted="false")])
 ** on job completed
    <- OnJobCompleted(jobGuid = "2")
+* wannachat
+** buy wanna chat status
+*** success
+    -> BuyRandomChatterStatus()
+    <- OnBoughtRandomChatterStatusSuccess()
+*** fail
+    -> BuyRandomChatterStatus()
+    <- OnBuyRandomChatterStatusFailed()
+
+** get random chatter
+   -> GetRandomChatter()
+   <- OnGotRandomChatter(chatterGuid = "someguid")

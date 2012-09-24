@@ -7,7 +7,7 @@ lang="en" xml:lang="en">
 <title>protocol</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
 <meta name="generator" content="Org-mode"/>
-<meta name="generated" content="2012-09-20 18:21:09 Local time zone must be set--see zic manual page"/>
+<meta name="generated" content="2012-09-24 17:22:39 Local time zone must be set--see zic manual page"/>
 <meta name="author" content=""/>
 <meta name="description" content=""/>
 <meta name="keywords" content=""/>
@@ -165,7 +165,14 @@ lang="en" xml:lang="en">
 </li>
 <li><a href="#sec-11">11 vip </a>
 <ul>
-<li><a href="#sec-11-1">11.1 get vip points </a></li>
+<li><a href="#sec-11-1">11.1 buy vip points </a>
+<ul>
+<li><a href="#sec-11-1-1">11.1.1 success </a></li>
+<li><a href="#sec-11-1-2">11.1.2 fail </a></li>
+</ul>
+</li>
+<li><a href="#sec-11-2">11.2 get vip points </a></li>
+<li><a href="#sec-11-3">11.3 get random vip </a></li>
 </ul>
 </li>
 <li><a href="#sec-12">12 sympathy </a>
@@ -197,6 +204,17 @@ lang="en" xml:lang="en">
 <ul>
 <li><a href="#sec-16-1">16.1 get user completed jobs </a></li>
 <li><a href="#sec-16-2">16.2 on job completed </a></li>
+</ul>
+</li>
+<li><a href="#sec-17">17 wannachat </a>
+<ul>
+<li><a href="#sec-17-1">17.1 buy wanna chat status </a>
+<ul>
+<li><a href="#sec-17-1-1">17.1.1 success </a></li>
+<li><a href="#sec-17-1-2">17.1.2 fail </a></li>
+</ul>
+</li>
+<li><a href="#sec-17-2">17.2 get random chatter </a></li>
 </ul>
 </li>
 </ul>
@@ -597,11 +615,49 @@ lang="en" xml:lang="en">
 </div>
 
 <div id="outline-container-11-1" class="outline-3">
-<h3 id="sec-11-1"><span class="section-number-3">11.1</span> get vip points </h3>
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> buy vip points </h3>
 <div class="outline-text-3" id="text-11-1">
+
+
+</div>
+
+<div id="outline-container-11-1-1" class="outline-4">
+<h4 id="sec-11-1-1"><span class="section-number-4">11.1.1</span> success </h4>
+<div class="outline-text-4" id="text-11-1-1">
+
+<p>    -&gt; BuyVipPoints()
+    &lt;- OnVipPointsBoughtSuccessfully()
+</p></div>
+
+</div>
+
+<div id="outline-container-11-1-2" class="outline-4">
+<h4 id="sec-11-1-2"><span class="section-number-4">11.1.2</span> fail </h4>
+<div class="outline-text-4" id="text-11-1-2">
+
+<p>    -&gt; BuyVipPoints()
+    &lt;- OnVipPointsBuyFail()
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-11-2" class="outline-3">
+<h3 id="sec-11-2"><span class="section-number-3">11.2</span> get vip points </h3>
+<div class="outline-text-3" id="text-11-2">
 
 <p>   -&gt; GetVipPoints(targetUserGuid = "someguid")
    &lt;- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+</p></div>
+
+</div>
+
+<div id="outline-container-11-3" class="outline-3">
+<h3 id="sec-11-3"><span class="section-number-3">11.3</span> get random vip </h3>
+<div class="outline-text-3" id="text-11-3">
+
+<p>   -&gt; GetRandomVip()
+   &lt;- OnGotRandomVip(vipGuid = "someguid")
 </p></div>
 </div>
 
@@ -752,11 +808,58 @@ lang="en" xml:lang="en">
 <p>   &lt;- OnJobCompleted(jobGuid = "2")
 </p></div>
 </div>
+
+</div>
+
+<div id="outline-container-17" class="outline-2">
+<h2 id="sec-17"><span class="section-number-2">17</span> wannachat </h2>
+<div class="outline-text-2" id="text-17">
+
+
+</div>
+
+<div id="outline-container-17-1" class="outline-3">
+<h3 id="sec-17-1"><span class="section-number-3">17.1</span> buy wanna chat status </h3>
+<div class="outline-text-3" id="text-17-1">
+
+
+</div>
+
+<div id="outline-container-17-1-1" class="outline-4">
+<h4 id="sec-17-1-1"><span class="section-number-4">17.1.1</span> success </h4>
+<div class="outline-text-4" id="text-17-1-1">
+
+<p>    -&gt; BuyRandomChatterStatus()
+    &lt;- OnBoughtRandomChatterStatusSuccess()
+</p></div>
+
+</div>
+
+<div id="outline-container-17-1-2" class="outline-4">
+<h4 id="sec-17-1-2"><span class="section-number-4">17.1.2</span> fail </h4>
+<div class="outline-text-4" id="text-17-1-2">
+
+<p>    -&gt; BuyRandomChatterStatus()
+    &lt;- OnBuyRandomChatterStatusFailed()
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-17-2" class="outline-3">
+<h3 id="sec-17-2"><span class="section-number-3">17.2</span> get random chatter </h3>
+<div class="outline-text-3" id="text-17-2">
+
+<p>   -&gt; GetRandomChatter()
+   &lt;- OnGotRandomChatter(chatterGuid = "someguid")
+</p></div>
+</div>
 </div>
 </div>
 
 <div id="postamble">
-<p class="date">Date: 2012-09-20 18:21:09 Local time zone must be set--see zic manual page</p>
+<p class="date">Date: 2012-09-24 17:22:39 Local time zone must be set--see zic manual page</p>
 <p class="author">Author: </p>
 <p class="creator">Org version 7.7 with Emacs version 23</p>
 <a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
