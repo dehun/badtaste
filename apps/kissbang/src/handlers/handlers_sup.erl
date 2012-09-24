@@ -84,7 +84,8 @@ get_all_handlers() ->
                    get_vip_handlers(),
                    get_mail_handlers(),
                    get_chat_handlers(),
-                   get_job_handlers()]).
+                   get_job_handlers(),
+                   get_wannachat_handlers()]).
 
 
 get_user_info_handlers() ->
@@ -148,3 +149,7 @@ get_decorations_handlers() ->
 get_job_handlers() ->
     ['get_user_completed_jobs_handler_srv'].
     
+get_wannachat_handlers() ->
+    ['buy_random_chatter_handler_srv',
+     'get_random_chatter_handler_srv'].
+

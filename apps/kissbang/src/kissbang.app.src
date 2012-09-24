@@ -27,5 +27,7 @@
          {maximum_followers, 15},
          {following_buy_start_price, 15},
          {vip_status_cost, 15},
+         {wannachat_status_cost, 15},
+         {wannachat_period, 3600}, %% seconds
          {room_maximum_users, 10}]}
  ]}.

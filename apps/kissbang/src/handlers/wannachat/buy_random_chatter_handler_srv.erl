@@ -6,16 +6,15 @@
 %%% @end
 %%% Created : 24 Sep 2012 by  <>
 %%%-------------------------------------------------------------------
--module(wannachat_srv).
+-module(buy_random_chatter_handler_srv).
 
+
+-include("../../kissbang_messaging.hrl").
 -behaviour(gen_server).
 
 %% API
--export([start_link/0,
-         setup_db/0]).
- -export([buy_wanna_chat_status/2,
-          buy_wanna_chat_status/3,
-          get_random_chatter/0]).
+-export([start_link/0]).
+-export([handle_buy_random_chatter_status/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -24,20 +23,11 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {}).
--record(wannachatinfo, {user_guid, expiration_date}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
-buy_wanna_chat_status(BuyerGuid, Period) ->
-    NoopSync = fun(_Result) -> ok end,
-    buy_wanna_chat_status(BuyerGuid, Period, NoopSync).
-buy_wanna_chat_status(BuyerGuid, Period, TransSync) ->
-    gen_server:call(?SERVER, {buy_wanna_chat_status, BuyerGuid, Period, TransSync}).
 
-get_random_chatter() ->
-    gen_server:call(?SERVER, {get_random_chatter}).
-    
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -47,21 +37,6 @@ get_random_chatter() ->
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
-
-setup_db() ->
-    Result = mnesia:create_table(wannachatinfo, [{disc_copies, [node() | nodes()]}, 
-                                            {attributes, record_info(fields, wannachatinfo)}]),
-    case Result of
-        {atomic, ok} ->
-            mnesia:wait_for_tables([wannachatinfo], 5000),
-            ok;
-        {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([wannachatinfo], 5000),
-            ok;
-        {aborted, Reason} ->
-            erlang:error(Reason)
-        end.
-
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -79,6 +54,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(buy_random_chatter_status, fun handle_buy_random_chatter_status/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -95,16 +71,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({buy_wanna_chat_status, BuyerGuid, Period, TransSync}, From, State) ->
-    utils:acall(fun() -> inner_buy_wanna_chat_status(BuyerGuid, Period, TransSync) end, From),
-    {noreply, State};
-handle_call({get_random_chatter}, From, State) ->
-    utils:acall(fun() -> inner_get_random_chatter() end, From),
-    {noreply, State}.
-    
-%% handle_call(_Request, _From, State) ->
-%%     Reply = ok,
-%%     {reply, Reply, State}.
+handle_call(_Request, _From, State) ->
+    Reply = ok,
+    {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -160,39 +129,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_get_random_chatter() ->
-    Keys = mnesia:dirty_all_keys(wannachatinfo),
-    _Guid = lists:nth(random:uniform(length(Keys)), Keys).
-
-inner_buy_wanna_chat_status(BuyerGuid, Period, TransSync) ->
-    Trans = dtranse:transefun(fun() ->
-                                      case  mnesia:read({wannachatinfo, BuyerGuid}) of
-                                          [] ->
-                                              mnesia:write(#wannachatinfo{user_guid = BuyerGuid, 
-                                                                          expiration_date = utils:unix_time() + Period});
-                                          [OldWannaChatInfo] ->
-                                              AreExpired = is_expired(OldWannaChatInfo),
-                                              if
-                                                  AreExpired ->
-                                                      mnesia:write(OldWannaChatInfo#wannachatinfo{expiration_date = utils:unix_time() + Period});
-                                                  true ->
-                                                      mnesia:write(OldWannaChatInfo#wannachatinfo{expiration_date = OldWannaChatInfo#wannachatinfo.expiration_date + Period})
-                                              end
-                                      end,
-                                      {commit, ok}
-                              end, TransSync),
-    mnesia:activity(transaction, Trans).
-
-inner_purge_expired() ->
-    Trans = fun() ->
-                    Expired = qlc:e(qlc:q([E || E <- mnesia:table(wannachatinfo), is_expired(E)])),
-                    lists:foreach(fun(E) -> 
-                                          mnesia:delete(E) 
-                                  end, Expired)
-            end,
-    mnesia:activity(transaction, Trans).
-    
-is_expired(E) ->
-    E#wannachatinfo.expiration_date < utils:unix_time().
-    
-
+handle_buy_random_chatter_status(CallerGuid, _Message) ->
+    {ok, Price} = application:get_env(kissbang, wannachat_status_cost),
+    {ok, Period} = application:get_env(kissbang, wannachat_period),
+    dtranse:dtranse([fun(TransSync) -> bank_srv:withdraw(CallerGuid, Price, TransSync) end,
+                     fun(TransSync) -> wannachat_srv:buy_wanna_chat_status(CallerGuid, Period, TransSync) end]).
