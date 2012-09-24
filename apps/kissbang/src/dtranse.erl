@@ -56,11 +56,13 @@ dtranse(Functions) ->
 		[] -> %result is ok. send good answers
 			lists:foreach(fun({From, _Res}) ->
 								  From ! {commit, TransId}												  
-						  end, Votes);
+						  end, Votes),
+            ok;
 		_Other ->
 			lists:foreach(fun({From, _Res}) ->
 								  From ! {rollback, TransId}
-								  end, Votes)
+                          end, Votes),
+            fail
 	end.
 
 
