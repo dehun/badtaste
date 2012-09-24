@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>protocol</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-09-20 18:21:09 Local time zone must be set--see zic manual page"/>
+<meta name="author" content=""/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">protocol</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 common info </a>
+<ul>
+<li><a href="#sec-1-1">1.1 socket port </a></li>
+<li><a href="#sec-1-2">1.2 admin web port </a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 connect </a>
+<ul>
+<li><a href="#sec-2-1">2.1 authentication successfull </a></li>
+<li><a href="#sec-2-2">2.2 authentication failed </a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 rooms </a>
+<ul>
+<li><a href="#sec-3-1">3.1 join to tagged room queue (game in your city) </a></li>
+<li><a href="#sec-3-2">3.2 join to a random room </a></li>
+<li><a href="#sec-3-3">3.3 on room dead(all users leaved room) </a></li>
+<li><a href="#sec-3-4">3.4 on somebody joined to room when you are in this room </a></li>
+<li><a href="#sec-3-5">3.5 on room came to active state(game begin) </a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 chat </a>
+<ul>
+<li><a href="#sec-4-1">4.1 send chat message to room where you are </a></li>
+<li><a href="#sec-4-2">4.2 getting chat message from room where you are </a></li>
+<li><a href="#sec-4-3">4.3 send vip chat message to room where you are </a></li>
+<li><a href="#sec-4-4">4.4 getting vipchat message from room where you are </a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 web admin interface </a>
+<ul>
+<li><a href="#sec-5-1">5.1 registration/updating info </a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 user info </a>
+<ul>
+<li><a href="#sec-6-1">6.1 get user info </a></li>
+<li><a href="#sec-6-2">6.2 get friend info </a></li>
+<li><a href="#sec-6-3">6.3 upload avatar (by http) </a></li>
+<li><a href="#sec-6-4">6.4 update user info from game </a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 time </a>
+<ul>
+<li><a href="#sec-7-1">7.1 get current time </a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 bank </a>
+<ul>
+<li><a href="#sec-8-1">8.1 check bank balance </a></li>
+<li><a href="#sec-8-2">8.2 when some action change bank balance(for example user have bought something, or got some money) </a></li>
+</ul>
+</li>
+<li><a href="#sec-9">9 rates </a>
+<ul>
+<li><a href="#sec-9-1">9.1 rate user success </a></li>
+<li><a href="#sec-9-2">9.2 rate user fail </a></li>
+<li><a href="#sec-9-3">9.3 get user rate </a></li>
+<li><a href="#sec-9-4">9.4 remove user rate succcess </a></li>
+<li><a href="#sec-9-5">9.5 remove user rate failure </a></li>
+<li><a href="#sec-9-6">9.6 are user rated </a></li>
+</ul>
+</li>
+<li><a href="#sec-10">10 gifts </a>
+<ul>
+<li><a href="#sec-10-1">10.1 present gift </a></li>
+<li><a href="#sec-10-2">10.2 when gift presented to somebody in room </a></li>
+<li><a href="#sec-10-3">10.3 get gift list </a></li>
+<li><a href="#sec-10-4">10.4 get gift list of me or friend </a></li>
+</ul>
+</li>
+<li><a href="#sec-11">11 vip </a>
+<ul>
+<li><a href="#sec-11-1">11.1 get vip points </a></li>
+</ul>
+</li>
+<li><a href="#sec-12">12 sympathy </a>
+<ul>
+<li><a href="#sec-12-1">12.1 get user symphaties </a></li>
+</ul>
+</li>
+<li><a href="#sec-13">13 decore </a>
+<ul>
+<li><a href="#sec-13-1">13.1 buy new decore </a></li>
+<li><a href="#sec-13-2">13.2 get decore </a></li>
+</ul>
+</li>
+<li><a href="#sec-14">14 mail </a>
+<ul>
+<li><a href="#sec-14-1">14.1 send mail </a></li>
+<li><a href="#sec-14-2">14.2 on got message in game </a></li>
+<li><a href="#sec-14-3">14.3 check mailbox </a></li>
+<li><a href="#sec-14-4">14.4 mark message as read </a></li>
+</ul>
+</li>
+<li><a href="#sec-15">15 followers </a>
+<ul>
+<li><a href="#sec-15-1">15.1 buy following </a></li>
+<li><a href="#sec-15-2">15.2 get user followers </a></li>
+</ul>
+</li>
+<li><a href="#sec-16">16 jobs </a>
+<ul>
+<li><a href="#sec-16-1">16.1 get user completed jobs </a></li>
+<li><a href="#sec-16-2">16.2 on job completed </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> common info </h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> socket port </h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>   8080
+</p></div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> admin web port </h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   5223
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> connect </h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> authentication successfull </h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>   -&gt; Authenticate(login="dehun", password="123")
+   &lt;- Authenticated(guid = "123871523816kajsbhdqw")
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> authentication failed </h3>
+<div class="outline-text-3" id="text-2-2">
+
+<p>   -&gt; Authenticate(login="wrong<sub>name</sub>", password="wrongpass")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> rooms </h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> join to tagged room queue (game in your city) </h3>
+<div class="outline-text-3" id="text-3-1">
+
+<p>   -&gt; JoinTaggedRoomQueue(tag = "kiev")
+   &lt;- OnJoinedToTaggedRoomQueue(tag = "kiev")
+   &lt;- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
+</p></div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> join to a random room </h3>
+<div class="outline-text-3" id="text-3-2">
+
+<p>   -&gt; JoinMainRoomQueue()
+   &lt;- OnJoinedToMainRoomQueue()
+   &lt;- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
+</p></div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> on room dead(all users leaved room) </h3>
+<div class="outline-text-3" id="text-3-3">
+
+<p>   &lt;- OnRoomDeath()
+</p></div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> on somebody joined to room when you are in this room </h3>
+<div class="outline-text-3" id="text-3-4">
+
+<p>   &lt;- OnRoomUserListChanged(users = [guid1, guid2, guid3])
+</p></div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> on room came to active state(game begin) </h3>
+<div class="outline-text-3" id="text-3-5">
+
+<p>   &lt;- OnRoomStateChaned(state = "active")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> chat </h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> send chat message to room where you are </h3>
+<div class="outline-text-3" id="text-4-1">
+
+<p>   -&gt; SendChatMessageToRoom(message = "some message text body")
+</p></div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> getting chat message from room where you are </h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>   &lt;- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+</p></div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> send vip chat message to room where you are </h3>
+<div class="outline-text-3" id="text-4-3">
+
+<p>   -&gt; SendVipChatMessageToRoom(message = "some message text body")
+</p></div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> getting vipchat message from room where you are </h3>
+<div class="outline-text-3" id="text-4-4">
+
+<p>   &lt;- OnGotVipChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> web admin interface </h2>
+<div class="outline-text-2" id="text-5">
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> registration/updating info </h3>
+<div class="outline-text-3" id="text-5-1">
+
+<p>   -&gt; TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "<a href="http://vk.com/kcpc">http://vk.com/kcpc</a>", isMan = "true", 
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "<img src="http://radikal.ru/img/someimage.jpg"  alt="http://radikal.ru/img/someimage.jpg" />", hideSocialInfo="false", hideName="false", hideCity="false")))
+   &lt;- TouchUserInfoResult(result = "ok")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> user info </h2>
+<div class="outline-text-2" id="text-6">
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> get user info </h3>
+<div class="outline-text-3" id="text-6-1">
+
+<p>   -&gt; GetUserInfo(targetUserGuid = "someGuid")
+   &lt;- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
+   smallAvatarUrl = "another<sub>url</sub>", mediumAvatarUrl = "yep<sub>another</sub><sub>url</sub>", bigAvatarUrl = "urrrl", isNameHidden="false", isSocialInfoHidden = "false", isCityHidden="false")
+</p></div>
+
+</div>
+
+<div id="outline-container-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> get friend info </h3>
+<div class="outline-text-3" id="text-6-2">
+
+<p>   -&gt; GetFriendInfo(targetUserGuid = "someGuid")
+   &lt;- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
+   smallAvatarUrl = "another<sub>url</sub>", mediumAvatarUrl = "yep<sub>another</sub><sub>url</sub>", bigAvatarUrl = "urrrl")
+</p></div>
+
+</div>
+
+<div id="outline-container-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> upload avatar (by http) </h3>
+<div class="outline-text-3" id="text-6-3">
+
+<p>   -&gt; UploadNewUserAvatar(userGuid = "someguid", imageFormatName = "png", imageDataBase64 = "image<sub>data</sub><sub>encoded</sub><sub>into</sub><sub>base64</sub><sub>string</sub>")
+   &lt;- UploadNewUserAvatarResult(result = "ok")
+</p></div>
+
+</div>
+
+<div id="outline-container-6-4" class="outline-3">
+<h3 id="sec-6-4"><span class="section-number-3">6.4</span> update user info from game </h3>
+<div class="outline-text-3" id="text-6-4">
+
+<p>   -&gt; TouchUserInfoByUser(name = "dehunter", hideName = "false", hideCity = "false", hideSocialInfo = "true")
+   &lt;- TouchUserInfoByUserResult(result = "ok")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> time </h2>
+<div class="outline-text-2" id="text-7">
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> get current time </h3>
+<div class="outline-text-3" id="text-7-1">
+
+<p>   -&gt; GetCurrentTime()
+   &lt;- OnGotCurrentTime(time = 1234567) // time is a unixtime (number of seconds since&hellip;)
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> bank </h2>
+<div class="outline-text-2" id="text-8">
+
+
+</div>
+
+<div id="outline-container-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> check bank balance </h3>
+<div class="outline-text-3" id="text-8-1">
+
+<p>   -&gt; CheckBankBalance()
+   &lt;- OnBankBalanceChecked(gold = 123)
+</p></div>
+
+</div>
+
+<div id="outline-container-8-2" class="outline-3">
+<h3 id="sec-8-2"><span class="section-number-3">8.2</span> when some action change bank balance(for example user have bought something, or got some money) </h3>
+<div class="outline-text-3" id="text-8-2">
+
+<p>   &lt;- OnBankBalanceChanged(newGold = 123)
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> rates </h2>
+<div class="outline-text-2" id="text-9">
+
+
+</div>
+
+<div id="outline-container-9-1" class="outline-3">
+<h3 id="sec-9-1"><span class="section-number-3">9.1</span> rate user success </h3>
+<div class="outline-text-3" id="text-9-1">
+
+<p>   -&gt; RateUser(targetUserGuid = "someguid", rate = 5)
+   &lt;- OnUserRatedSuccessfully(ratedUserGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-9-2" class="outline-3">
+<h3 id="sec-9-2"><span class="section-number-3">9.2</span> rate user fail </h3>
+<div class="outline-text-3" id="text-9-2">
+
+<p>   -&gt; RateUser(targetUserGuid = "someguid", rate = 5)
+   &lt;- OnUserRateFailed(ratedUserGuid = "someguid", reason = "already<sub>rated</sub>") 
+</p></div>
+
+</div>
+
+<div id="outline-container-9-3" class="outline-3">
+<h3 id="sec-9-3"><span class="section-number-3">9.3</span> get user rate </h3>
+<div class="outline-text-3" id="text-9-3">
+
+<p>   -&gt; GetUserRate(targetUserGuid = "someguid")
+   &lt;- OnGotUserRate(userGuid = "someguid", averageRate = 4, lastRaters = [Rater(guid = "some", rate = 2), Rater(guid = "other", rate = 10)])
+</p></div>
+
+</div>
+
+<div id="outline-container-9-4" class="outline-3">
+<h3 id="sec-9-4"><span class="section-number-3">9.4</span> remove user rate succcess </h3>
+<div class="outline-text-3" id="text-9-4">
+
+<p>   -&gt; DeleteRatePoint(raterGuid = "someguid")
+   &lt;- OnRatePointDeleted(raterGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-9-5" class="outline-3">
+<h3 id="sec-9-5"><span class="section-number-3">9.5</span> remove user rate failure </h3>
+<div class="outline-text-3" id="text-9-5">
+
+<p>   -&gt; DeleteRatePoint(raterGuid = "someguid")
+   &lt;- OnRatePointDeleteFailed(raterGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-9-6" class="outline-3">
+<h3 id="sec-9-6"><span class="section-number-3">9.6</span> are user rated </h3>
+<div class="outline-text-3" id="text-9-6">
+
+<p>   -&gt; AreUserRated(targetUserGuid = "someguid")
+   &lt;- OnGotAreUserRated(targetUserGuid = "someguid", areRated = "true")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> gifts </h2>
+<div class="outline-text-2" id="text-10">
+
+
+</div>
+
+<div id="outline-container-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> present gift </h3>
+<div class="outline-text-3" id="text-10-1">
+
+<p>   -&gt; PresentGift(targetUserGuid, GiftGuid)
+   &lt;- OnGotGift(giftSenderGuid, GiftGuid)
+</p></div>
+
+</div>
+
+<div id="outline-container-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> when gift presented to somebody in room </h3>
+<div class="outline-text-3" id="text-10-2">
+
+<p>   -&gt; PresentGift(targetUserGuid, giftGuid)
+   &lt;- OnGotGift(giftSenderGuid, giftGuid)
+   &lt;- OnGiftReceivedInGame(giftSenderGuid, giftReceiverGuid, giftGuid)
+</p></div>
+
+</div>
+
+<div id="outline-container-10-3" class="outline-3">
+<h3 id="sec-10-3"><span class="section-number-3">10.3</span> get gift list </h3>
+<div class="outline-text-3" id="text-10-3">
+
+<p>   -&gt; GetMyGifts()
+   &lt;- OnGotMyGifts(gifts = [Gift(senderGuid = "123", giftGuid = "234")])
+</p></div>
+
+</div>
+
+<div id="outline-container-10-4" class="outline-3">
+<h3 id="sec-10-4"><span class="section-number-3">10.4</span> get gift list of me or friend </h3>
+<div class="outline-text-3" id="text-10-4">
+
+<p>   -&gt; GetUserGifts(targetUserGuid = "someGuid")
+   &lt;- OnGotUserGifts(ownerGuid = "someGuid", gifts = [Gift(senderGuid = "123", giftGuid = "234")])
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> vip </h2>
+<div class="outline-text-2" id="text-11">
+
+
+</div>
+
+<div id="outline-container-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> get vip points </h3>
+<div class="outline-text-3" id="text-11-1">
+
+<p>   -&gt; GetVipPoints(targetUserGuid = "someguid")
+   &lt;- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> sympathy </h2>
+<div class="outline-text-2" id="text-12">
+
+
+</div>
+
+<div id="outline-container-12-1" class="outline-3">
+<h3 id="sec-12-1"><span class="section-number-3">12.1</span> get user symphaties </h3>
+<div class="outline-text-3" id="text-12-1">
+
+<p>   -&gt; GetUserSympathies(targetUserGuid = "someguid")
+   &lt;- OnGotUserSympathies(ownerUserGuid = "someguid", sympathies = [Sympathy(kisserGuid = "one", kisses = 10), Sympathy(kisserGuid = "two", kisses = 20)])
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> decore </h2>
+<div class="outline-text-2" id="text-13">
+
+
+</div>
+
+<div id="outline-container-13-1" class="outline-3">
+<h3 id="sec-13-1"><span class="section-number-3">13.1</span> buy new decore </h3>
+<div class="outline-text-3" id="text-13-1">
+
+<p>   -&gt; BuyDecore(decoreGuid = "someguid")
+   &lt;- OnDecoreBoughtSuccessfully(buyedDecoreGuid = "someguid")
+   [ &lt;- OnDecoreBuyFail(failedDecoreGuid = "someguid", reason = "asd")]
+</p></div>
+
+</div>
+
+<div id="outline-container-13-2" class="outline-3">
+<h3 id="sec-13-2"><span class="section-number-3">13.2</span> get decore </h3>
+<div class="outline-text-3" id="text-13-2">
+
+<p>   -&gt; GetDecorationFor(targetUserGuid = "someguid")
+   &lt;- OnGotDecorations(ownerUserGuid = "someguid", decorations = ["oneguid", "twoguid"])
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> mail </h2>
+<div class="outline-text-2" id="text-14">
+
+
+</div>
+
+<div id="outline-container-14-1" class="outline-3">
+<h3 id="sec-14-1"><span class="section-number-3">14.1</span> send mail </h3>
+<div class="outline-text-3" id="text-14-1">
+
+<p>   -&gt; SendMail(receiverGuid = "someguid", subject = "", body = "")
+</p></div>
+
+</div>
+
+<div id="outline-container-14-2" class="outline-3">
+<h3 id="sec-14-2"><span class="section-number-3">14.2</span> on got message in game </h3>
+<div class="outline-text-3" id="text-14-2">
+
+<p>    &lt;- OnGotNewMail(senderGuid = "anotherguid", subject="lolwhat", body="wazzap")
+</p></div>
+
+</div>
+
+<div id="outline-container-14-3" class="outline-3">
+<h3 id="sec-14-3"><span class="section-number-3">14.3</span> check mailbox </h3>
+<div class="outline-text-3" id="text-14-3">
+
+<p>   -&gt; CheckMailbox()
+   &lt;- OnGotMailbox(mails = [IncomingMail(mailGuid = "somemailguid", senderGuid = "", subject = "zxap", body = "wa", isRead = "false")])
+</p></div>
+
+</div>
+
+<div id="outline-container-14-4" class="outline-3">
+<h3 id="sec-14-4"><span class="section-number-3">14.4</span> mark message as read </h3>
+<div class="outline-text-3" id="text-14-4">
+
+<p>   -&gt; MarkMailAsRead(targetMailGuid = "somemailguid")
+   &lt;- OnMessageMarkedAsRead(markedMailGuid = "somemailguid")
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> followers </h2>
+<div class="outline-text-2" id="text-15">
+
+
+</div>
+
+<div id="outline-container-15-1" class="outline-3">
+<h3 id="sec-15-1"><span class="section-number-3">15.1</span> buy following </h3>
+<div class="outline-text-3" id="text-15-1">
+
+<p>   -&gt; BuyFollowing(targetUserGuid = "someguid")
+   &lt;- OnFollowingBought(boughtUserGuid = "someguid")
+</p></div>
+
+</div>
+
+<div id="outline-container-15-2" class="outline-3">
+<h3 id="sec-15-2"><span class="section-number-3">15.2</span> get user followers </h3>
+<div class="outline-text-3" id="text-15-2">
+
+<p>   -&gt; GetUserFollowers(targetUserGuid = "someguid")
+   &lt;- OnGotUserFollowers(ownerUserGuid = "someguid", followers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-16" class="outline-2">
+<h2 id="sec-16"><span class="section-number-2">16</span> jobs </h2>
+<div class="outline-text-2" id="text-16">
+
+
+</div>
+
+<div id="outline-container-16-1" class="outline-3">
+<h3 id="sec-16-1"><span class="section-number-3">16.1</span> get user completed jobs </h3>
+<div class="outline-text-3" id="text-16-1">
+
+<p>   -&gt; GetUserCompletedJobs(targetUserGuid = "123")
+   &lt;- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2", areCompleted="false")])
+</p></div>
+
+</div>
+
+<div id="outline-container-16-2" class="outline-3">
+<h3 id="sec-16-2"><span class="section-number-3">16.2</span> on job completed </h3>
+<div class="outline-text-3" id="text-16-2">
+
+<p>   &lt;- OnJobCompleted(jobGuid = "2")
+</p></div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-09-20 18:21:09 Local time zone must be set--see zic manual page</p>
+<p class="author">Author: </p>
+<p class="creator">Org version 7.7 with Emacs version 23</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+ebin
+*.beam
+*.gz
+*~
+doc
+logs
+deps
+.eunit
+.directory
+src/protobuffs_parser.erl
+src/protobuffs_scanner.erl
+erl_crash.dump
