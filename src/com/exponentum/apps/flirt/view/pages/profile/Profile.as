@@ -323,7 +323,10 @@ public class Profile extends BackGroundedPage
 	private function onGotUserCompletedJobs(e:ObjectEvent):void
 	{
 		if(e.data.ownerGuid == Model.instance.owner.guid)
+		{
+			Model.instance.owner.jobsCompleted = (e.data.completedJobs as Array);
 			achievementsPanel.medalsText.text = (e.data.completedJobs as Array).length.toString();
+		}
 
 		bp.partsLoaded++;
 	}

@@ -44,7 +44,6 @@ public class Controller
 	{
 		socket.addEventListener(AUTHENTICATED, model.onAuthenticated);
 
-		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
 		socket.addEventListener(GOT_USER_INFO, model.onGotUserInfo);
 		socket.addEventListener(ON_GOT_USER_INFO_BY_SOCIAL_ID, model.onGotUserInfoBySocial);
 		socket.addEventListener(TOUCH_USER_INFO_RESULT, model.onTouchUserInfoResultSocket);
@@ -107,6 +106,19 @@ public class Controller
 		socket.addEventListener(ON_GOT_USER_COMPLETED_JOBS, model.onGotUserCompletedJobs);
 		socket.addEventListener(ON_JOB_COMPLETED, model.onJobCompleted);
 
+		//vip points
+		socket.addEventListener(ON_VIP_POINTS_BUY_SUCCESS, model.onVIPPointsBuySuccess);
+		socket.addEventListener(ON_JOB_COMPLETED, model.onVIPPointsBuyFail);
+
+		//chat and chat avatar methods
+		socket.addEventListener(ON_GOT_RANDOM_VIP, model.onGotRandomVIP);
+		socket.addEventListener(ON_GOT_RANDOM_CHATTER, model.onGotRandomChatter);
+
+		socket.addEventListener(ON_BUY_CHATTER_STATUS_SUCCESS, model.onBuyChatterStatusSuccess);
+		socket.addEventListener(ON_BUY_CHATTER_STATUS_FAIL, model.onBuyChatterStatusFail);
+
+		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
+		socket.addEventListener(GOT_VIP_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromVIPRoom);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -149,11 +161,11 @@ public class Controller
 	public static const GET_DECORATION_FOR:String = "GetDecorationsFor";
 	public static const ON_GOT_DECORATIONS:String = "OnGotDecorations";
 
-	public static const GET_VIP_POINTS:String = "GetVipPoints";
-	public static const ON_GOT_VIP_POINTS:String = "OnGotVipPoints";
-
 	public static const GET_USER_INFO_BY_SOCIAL_ID:String = "GetUserInfoBySocialId";
 	public static const ON_GOT_USER_INFO_BY_SOCIAL_ID:String = "OnGotUserInfoBySocialIdSuccess";
+
+
+
 
 	public function userLogin():void//TODO: not only owner support
 	{
@@ -237,14 +249,6 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[GET_DECORATION_FOR] = {};
 		requestObject[GET_DECORATION_FOR].targetUserGuid = userGuid;
-		socket.sendRequest(requestObject);
-	}
-
-	public function getVipPoints(userGuid:String):void
-	{
-		var requestObject:Object = new Object();
-		requestObject[GET_VIP_POINTS] = {};
-		requestObject[GET_VIP_POINTS].targetUserGuid = userGuid;
 		socket.sendRequest(requestObject);
 	}
 
@@ -430,6 +434,20 @@ public class Controller
 	public static const SEND_CHAT_MESSAGE_TO_ROOM:String = "SendChatMessageToRoom";
 	public static const GOT_CHAT_MESSAGE_FROM_ROOM:String = "OnGotChatMessageFromRoom";
 
+	public static const SEND_VIP_CHAT_MESSAGE_TO_ROOM:String = "SendVipChatMessageToRoom";
+	public static const GOT_VIP_CHAT_MESSAGE_FROM_ROOM:String = "OnGotVipChatMessageFromRoom";
+
+	public static const GET_RANDOM_VIP:String = "GetRandomVip";
+	public static const ON_GOT_RANDOM_VIP:String = "OnGotRandomVip";
+
+	public static const GET_RANDOM_CHATTER:String = "GetRandomChatter";
+	public static const ON_GOT_RANDOM_CHATTER:String = "OnGotRandomChatter";
+
+	public static const BUY_CHATTER_STATUS:String = "BuyRandomChatterStatus";
+	public static const ON_BUY_CHATTER_STATUS_SUCCESS:String = "OnBoughtRandomChatterStatusSuccess";
+	public static const ON_BUY_CHATTER_STATUS_FAIL:String = "OnBuyRandomChatterStatusFailed";
+
+
 	public function joinToMainRoomQueue():void
 	{
 		var requestObject:Object = new Object();
@@ -450,6 +468,14 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[SEND_CHAT_MESSAGE_TO_ROOM] = {};
 		requestObject[SEND_CHAT_MESSAGE_TO_ROOM].message = messageText;
+		socket.sendRequest(requestObject);
+	}
+
+	public function sendMessageToVIPRoom(messageText:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[SEND_VIP_CHAT_MESSAGE_TO_ROOM] = {};
+		requestObject[SEND_VIP_CHAT_MESSAGE_TO_ROOM].message = messageText;
 		socket.sendRequest(requestObject);
 	}
 
@@ -475,6 +501,28 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
+	//chat avatars methods
+	public function getRandomVIP():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_RANDOM_VIP] = {};
+		socket.sendRequest(requestObject);
+	}
+
+	public function getRandomChatter():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_RANDOM_CHATTER] = {};
+		socket.sendRequest(requestObject);
+	}
+
+	public function buyChatterStatus():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[BUY_CHATTER_STATUS] = {};
+		socket.sendRequest(requestObject);
+	}
+
 //----------------------------------------------------------------------------------------------------------------------
 //	PRIZE TASKS
 //----------------------------------------------------------------------------------------------------------------------
@@ -487,6 +535,29 @@ public class Controller
 		var requestObject:Object = new Object();
 		requestObject[GET_USER_COMPLETED_JOBS] = {};
 		requestObject[GET_USER_COMPLETED_JOBS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+//----------------------------------------------------------------------------------------------------------------------
+//	VIP POINTS
+//----------------------------------------------------------------------------------------------------------------------
+	public static const GET_VIP_POINTS:String = "GetVipPoints";
+	public static const ON_GOT_VIP_POINTS:String = "OnGotVipPoints";
+	public static const BUY_VIP_POINTS:String = "BuyVipPoints";
+	public static const ON_VIP_POINTS_BUY_SUCCESS:String = "OnVipPointsBoughtSuccessfully";
+	public static const ON_VIP_POINTS_BUY_FAIL:String = "OnVipPointsBuyFail";
+
+	public function getVipPoints(userGuid:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_VIP_POINTS] = {};
+		requestObject[GET_VIP_POINTS].targetUserGuid = userGuid;
+		socket.sendRequest(requestObject);
+	}
+
+	public function buyVIPPoints():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[BUY_VIP_POINTS] = {};
 		socket.sendRequest(requestObject);
 	}
 

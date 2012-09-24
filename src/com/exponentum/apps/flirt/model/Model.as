@@ -265,12 +265,6 @@ public class Model extends EventDispatcher
 		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
-	//chat
-	public function onGotChatMessageFromRoom(e:ObjectEvent):void
-	{
-		dispatchEvent(new ObjectEvent(e.type, e.data));
-	}
-
 	//game
 	public function onBottleSwinged(e:ObjectEvent):void
 	{
@@ -306,6 +300,47 @@ public class Model extends EventDispatcher
 	}
 
 	public function onJobCompleted(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	//chat
+	public function onGotChatMessageFromRoom(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onGotChatMessageFromVIPRoom(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onGotRandomVIP(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onGotRandomChatter(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onVIPPointsBuySuccess(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onVIPPointsBuyFail(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onBuyChatterStatusSuccess(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function onBuyChatterStatusFail(e:ObjectEvent):void
 	{
 		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
