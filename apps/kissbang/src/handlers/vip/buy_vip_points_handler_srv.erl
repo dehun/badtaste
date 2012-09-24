@@ -129,8 +129,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 handle_buy_vip_points(CallerGuid, Message) ->
     {ok, GoldPrice} = application:get_env(kissbang, vip_status_cost),
-    case dtranse:dtranse([fun(TransSync) -> vip_srv:buy_vip_points(CallerGuid, 1000, TransSync) end,
-                    fun(TransSync) -> bank_srv:withdraw(CallerGuid, TransSync) end]) of
+    case dtranse:dtranse([fun(Trans) -> vip_srv:buy_vip_points(CallerGuid, 1000, Trans) end,
+                          fun(Trans) -> bank_srv:withdraw(CallerGuid, 200, Trans) end]) of
         ok ->
             proxy_srv:async_route_messages(CallerGuid, [#on_vip_points_bought_successfully{}]);
         fail ->

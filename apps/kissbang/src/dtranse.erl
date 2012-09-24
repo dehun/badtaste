@@ -52,7 +52,7 @@ dtranse(Functions) ->
 	% gather votes
 	{ok, Votes} = gather_votes(FunctionIds),
 	% reply to all
-	case [{From, Res} || {From, Res} <- Votes, Res /= ok] of
+	case [{From, Res} || {From, Res} <- Votes, Res /= commit] of
 		[] -> %result is ok. send good answers
 			lists:foreach(fun({From, _Res}) ->
 								  From ! {commit, TransId}												  
