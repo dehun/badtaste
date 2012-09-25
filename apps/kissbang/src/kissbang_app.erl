@@ -27,6 +27,7 @@ setup_db() ->
     wannachat_srv:setup_db(),
     vip_srv:setup_db(),
     job_srv:setup_db(),
+    scoreboard_srv:setup_db(),
     sympathy_srv:setup_db(),
     follower_srv:setup_db(),
     roommgr_srv:setup_db(),
