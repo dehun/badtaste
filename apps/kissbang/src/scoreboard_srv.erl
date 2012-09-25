@@ -10,6 +10,7 @@
 
 -behaviour(gen_server).
 -include_lib("stdlib/include/qlc.hrl").
+-include("server_user_score.hrl").
 
 %% API
 -export([start_link/0,
@@ -28,7 +29,6 @@
 
 -record(state, {}).
 
--record(userscore, {user_guid, tag, score}).
 -record(toplist, {period, tag, scorelist, build_time}).
 
 %%%===================================================================
@@ -57,22 +57,23 @@ start_link() ->
 
 
 setup_db() ->
-    Result = mnesia:create_table(userscore,
-                                 [{frag_properties, [{node_pool, [node() | nodes()]}, {n_fragments, 32}, {n_disc_copies, 1}]},
+    Result = mnesia:create_table(server_user_score,
+                                 [{frag_properties, [{node_pool, [node() | nodes()]}, 
+                                                     {n_fragments, 8}, 
+                                                     {n_disc_copies, 1}]},
                                   {type, bag},
-                                  {index, [user_guid, tag]},
-                                  {attributes, record_info(fields, userscore)}]),
+                                  {attributes, record_info(fields, server_user_score)}]),
     case Result of
         {atomic, ok} ->
-            mnesia:wait_for_tables([userscore], 5000);
+            mnesia:wait_for_tables([server_user_score], 5000);
         {aborted, {already_exists, _}} ->
-            mnesia:wait_for_tables([userscore], 5000);
+            mnesia:wait_for_tables([server_user_score], 5000);
         {aborted, Reason} ->
             erlang:error(Reason)
     end,
-    Result = mnesia:create_table(toplist, [{disc_copies, [node() | nodes()]}, 
+    Result2 = mnesia:create_table(toplist, [{disc_copies, [node() | nodes()]}, 
                                             {attributes, record_info(fields, toplist)}]),
-    case Result of
+    case Result2 of
         {atomic, ok} ->
             mnesia:wait_for_tables([toplist], 5000),
             ok;
@@ -181,23 +182,24 @@ code_change(_OldVsn, State, _Extra) ->
 
 inner_set_score(UserGuid, Tag, Amount) ->
     Trans = fun() ->
-                    case qlc:e(qlc:e([E || E <- mnesia:table(userscore), E#userscore.tag =:= Tag, E#userscore.user_guid =:= UserGuid])) of
+                    case qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.tag =:= Tag, E#server_user_score.user_guid =:= UserGuid])) of
                         [] ->
                             [];
                         [OldScore] ->
                             mnesia:delete_object(OldScore)
                     end,
-                    mnesia:write(#userscore{user_guid = UserGuid, tag = Tag, score = Amount})
+                    mnesia:write(#server_user_score{user_guid = UserGuid, tag = Tag, score = Amount})
             end,
     mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
 
 inner_add_score(UserGuid, Tag, Amount) ->
+    log_srv:debug("adding ~p scorepoints to user ~p by tag ~p", [Amount, UserGuid, Tag]),
     Trans = fun() ->
-                    case qlc:e(qlc:e([E || E <- mnesia:table(userscore), E#userscore.tag =:= Tag, E#userscore.user_guid =:= UserGuid])) of
+                    case qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.tag =:= Tag, E#server_user_score.user_guid =:= UserGuid])) of
                         [] ->
-                            mnesia:write(#userscore{user_guid = UserGuid, tag = Tag, score = Amount});
+                            mnesia:write(#server_user_score{user_guid = UserGuid, tag = Tag, score = Amount});
                         [OldScore] ->
-                            mnesia:write(OldScore#userscore{score = Amount + OldScore#userscore.score})
+                            mnesia:write(OldScore#server_user_score{score = Amount + OldScore#server_user_score.score})
                     end
             end,
     mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
@@ -206,7 +208,7 @@ inner_get_top_list(Tag, Period)  ->
     inner_try_rebuild_top_list(Tag, Period),
     Trans = fun() ->
                     [TopList] = qlc:e(qlc:q([T || T <- mnesia:table(toplist), T#toplist.tag =:= Tag, T#toplist.period =:= Period])),
-                    TopList
+                    TopList#toplist.scorelist
             end,
     mnesia:activity(sync_dirty, Trans).
 
@@ -245,8 +247,8 @@ get_period_in_seconds(month) ->
 
 inner_rebuild_top_list(Tag, Period) ->
     TopTrans = fun() ->
-                       C = qlc:cursor(qlc:sort(qlc:q([E || E <- mnesia:table(userscore), E#userscore.tag =:= Tag]), 
-                                                 fun(E1, E2) -> E1#userscore.score < E2#userscore.score end)),
+                       C = qlc:cursor(qlc:sort(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.tag =:= Tag]), 
+                                                 {order, fun(E1, E2) -> E1#server_user_score.score > E2#server_user_score.score end})),
                        TopList = qlc:next_answers(C, 100),
                        qlc:delete_cursor(C),
                        TopList
