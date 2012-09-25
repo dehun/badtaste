@@ -428,3 +428,17 @@ class OnBoughtRandomChatterStatusSuccess(pgMessage):
 
 class OnBuyRandomChatterStatusFailed(pgMessage):
     pass
+
+# scoreboard
+## get scoreboard by tag
+class GetScoreboardByTag(pgMessage):
+    tag = pgString()
+    period = pgString() #day, week, month
+
+class UserScore(pgMessage):
+    userGuid = pgString()
+    score = pgInteger()
+
+class OnGotScoreboardByTag(pgMessage):
+    tag = pgString()
+    scorelist = pgList(pgMessage())
