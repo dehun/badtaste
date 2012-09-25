@@ -144,6 +144,8 @@ public class Profile extends BackGroundedPage
 		addChild(ratingsButton);
 		ratingsButton.addEventListener(MouseEvent.CLICK, onRatingsClick);
 
+
+
 		if(!zodiacSign)
 		{
 			zodiacSign = new ZodiacSign();
@@ -218,7 +220,40 @@ public class Profile extends BackGroundedPage
 		}
 		
 		bp = new BlockerPreloader(this, this.width, this.height, .4);
-		bp.preload(8);
+		bp.preload(9);
+
+		createBankIndicator();
+	}
+
+	private var bankIndicator:BankIndicatorAsset = new BankIndicatorAsset();
+	private function createBankIndicator():void
+	{
+		bankIndicator.x = 536;
+		bankIndicator.y = 31;
+		addChild(bankIndicator);
+
+		bankIndicator.moeyTF.text = Model.instance.owner.coins.toString();
+
+		Model.instance.addEventListener(Controller.ON_BANK_BALANCE_CHANGED, onBankBalanceChanged);
+		Model.instance.addEventListener(Controller.ON_BANK_BALANCE_CHECKED, onBankBalanceChecked);
+		bankIndicator.addMoneyButton.addEventListener(MouseEvent.CLICK, onAddMoneyClick);
+		Controller.instance.checkBankBalance();
+	}
+
+	private function onAddMoneyClick(e:MouseEvent):void
+	{
+
+	}
+
+	private function onBankBalanceChecked(e:ObjectEvent):void
+	{
+		bankIndicator.moeyTF.text = e.data.gold;
+		bp.partsLoaded++;
+	}
+
+	private function onBankBalanceChanged(e:ObjectEvent):void
+	{
+		bankIndicator.moeyTF.text = e.data.newGold;
 	}
 
 	private function configureListeners():void

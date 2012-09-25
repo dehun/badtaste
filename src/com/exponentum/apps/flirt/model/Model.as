@@ -143,12 +143,12 @@ public class Model extends EventDispatcher
 //----------------------------------------------------------------------------------------------------------------------
 	public function onBankBalanceChecked(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onBankBalanceChanged(e:ObjectEvent):void
 	{
-
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 //----------------------------------------------------------------------------------------------------------------------

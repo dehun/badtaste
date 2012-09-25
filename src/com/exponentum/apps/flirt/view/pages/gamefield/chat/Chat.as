@@ -120,7 +120,7 @@ public class Chat extends CasaSprite
 	override public function destroy():void
 	{
 		Model.instance.removeEventListener(Controller.GOT_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
-		this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+		//this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusOut);
 		removeChildren(true, true);

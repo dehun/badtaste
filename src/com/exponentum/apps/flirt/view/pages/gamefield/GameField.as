@@ -13,6 +13,7 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
@@ -79,6 +80,8 @@ public class GameField extends BackGroundedPage
 		setTable(3);
 
 		createView();
+		createBecameVip();
+		createBankIndicator();
 		createTabBar();
 		createAvatars();
 		createKisserPlaces();
@@ -327,11 +330,13 @@ public class GameField extends BackGroundedPage
 	private function onHome(e:Event):void
 	{
 		dispatchEvent(new Event(Config.PROFILE));
+		destroy();
 	}
 
 	private function onRatings(e:Event):void
 	{
 		dispatchEvent(new Event(Config.RATINGS));
+		destroy();
 	}
 
 	private function onHelp(e:Event):void
@@ -354,7 +359,66 @@ public class GameField extends BackGroundedPage
 		tableLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		tableLoad.start();
 	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	private var becameVIPButton:BecameVIPButton = new BecameVIPButton();
+	private function createBecameVip():void
+	{
+		if(Model.instance.owner.vipPoints == 0){
+			becameVIPButton.x = 135;
+			becameVIPButton.y = 33;
+			addChild(becameVIPButton);
+			becameVIPButton.addEventListener(MouseEvent.CLICK, onBecameVIP);
+		}
+	}
 
+	private var bp:BlockerPreloader;
+	private function onBecameVIP(e:MouseEvent):void
+	{
+		bp = new BlockerPreloader(this, this.width, this.height);
+		Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+		Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+		Controller.instance.buyVIPPoints();
+		bp.preload(1);
+	}
+
+	private function onBecameVIPSuccess(e:ObjectEvent):void
+	{
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+		bp.partsLoaded++;
+		becameVIPButton.visible = false;
+	}
+
+	private function onBecameVIPFail(e:ObjectEvent):void
+	{
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+		bp.partsLoaded++;
+	}
+
+	private var bankIndicator:BankIndicatorAsset = new BankIndicatorAsset();
+	private function createBankIndicator():void
+	{
+		bankIndicator.x = 520;
+		bankIndicator.y = 9;
+		addChild(bankIndicator);
+
+		bankIndicator.moeyTF.text = Model.instance.owner.coins.toString();
+
+		Model.instance.addEventListener(Controller.ON_BANK_BALANCE_CHANGED, onBankBalanceChanged);
+		bankIndicator.addMoneyButton.addEventListener(MouseEvent.CLICK, onAddMoneyClick);
+	}
+
+	private function onAddMoneyClick(e:MouseEvent):void
+	{
+
+	}
+
+	private function onBankBalanceChanged(e:ObjectEvent):void
+	{
+		bankIndicator.moeyTF.text = e.data.newGold;
+	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private function onBgLoaded(e:LoadEvent):void
 	{
 		tableContainer.removeChildren(true, true);
@@ -402,7 +466,27 @@ public class GameField extends BackGroundedPage
 		return -1;
 	}
 
+	override public function destroy():void
+	{
+		Model.instance.removeEventListener(Controller.ON_BANK_BALANCE_CHANGED, onBankBalanceChanged);
+		Model.instance.removeEventListener(Controller.ON_JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToRoomQueue);
+		Model.instance.removeEventListener(Controller.ON_JOINED_TO_TAGGED_ROOM_QUEUE, onJoinedToRoomQueue);
+		Model.instance.removeEventListener(Controller.ON_JOINED_TO_ROOM, onJoinedToRoom);
+		Model.instance.removeEventListener(Controller.ROOM_STATE_CHANGED, onRoomStateChanged);
+		Model.instance.removeEventListener(Controller.ROOM_DEATH, onRoomDeath);
+		Model.instance.removeEventListener(Controller.ROOM_USER_LIST_CHANGED, onUserListChanged);
+		Model.instance.removeEventListener(Controller.ROOM_IS_FULL, onRoomIsFool);
+		Model.instance.removeEventListener(Controller.ALREADY_IN_THIS_ROOM, onAlreadyInThisRoom);
 
+		Model.instance.removeEventListener(Controller.BOTTLE_SWINGED, onBottleSwinged);
+		Model.instance.removeEventListener(Controller.KISSED, onKissed);
+		Model.instance.removeEventListener(Controller.REFUSED_TO_KISS, onRefusedToKiss);
+		Model.instance.removeEventListener(Controller.NEW_BOTTLE_SWINGER, onNewBottleSwinger);
+		bankIndicator.addMoneyButton.removeEventListener(MouseEvent.CLICK, onAddMoneyClick);
+		removeChildren();
+		chat.destroy();
+		super.destroy();
+	}
 
 }
 }
