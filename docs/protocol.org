@@ -159,3 +159,10 @@
 ** get random chatter
    -> GetRandomChatter()
    <- OnGotRandomChatter(chatterGuid = "someguid")
+* scoreboard
+** get scoreboard by tag and period
+   // tag - kisses, gift_send, gift_recv, followers, sympathy
+   // period - day, month, week
+   -> GetScoreboardByTag(tag = "kisses", period="week")
+   <- OnGotScoreboardByTag(tag = "kisses", scorelist = [UserScore(userGuid = "someguid", score = 100500), ...])
+
