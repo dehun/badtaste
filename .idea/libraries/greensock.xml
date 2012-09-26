@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="greensock">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/greensock.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

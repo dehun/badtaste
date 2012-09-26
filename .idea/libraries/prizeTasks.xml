@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="prizeTasks">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/prizeTasks.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
