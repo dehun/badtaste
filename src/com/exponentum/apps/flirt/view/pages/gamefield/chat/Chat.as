@@ -31,6 +31,9 @@ public class Chat extends CasaSprite
 	private var messagesDistribution:Distribution = new Distribution(480);
 	private var _bottomPanelMask:BottomPanelMask = new BottomPanelMask();
 
+	private var _vipOnly:Boolean = false;
+	private var vipCB:VipCB = new VipCB;
+
 	public function Chat()
 	{
 		messagesDistribution.x = 75;
@@ -48,6 +51,23 @@ public class Chat extends CasaSprite
 
 		chatInput.tf.addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		chatInput.tf.addEventListener(FocusEvent.FOCUS_IN, onFocusOut);
+
+		addChild(vipCB);
+		vipCB.x = 75;
+		vipCB.y = -60;
+		vipCB.buttonMode = vipCB.useHandCursor = true;
+		vipCB.cb.gotoAndStop(int(_vipOnly) + 1);
+		vipCB.cb.addEventListener(MouseEvent.CLICK, onVipOnly);
+	}
+
+	private function onVipOnly(e:MouseEvent):void
+	{
+		if(Model.instance.owner.vipPoints <= 0) return;
+		
+		_vipOnly = !_vipOnly;
+		vipCB.cb.gotoAndStop(int(_vipOnly) + 1);
+		
+		if(_vipOnly) Model.instance.addEventListener(Controller.GOT_VIP_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
 	}
 
 	private function onFocusIn(e:FocusEvent):void
@@ -113,7 +133,10 @@ public class Chat extends CasaSprite
 
 	private function onSendMessage(e:MouseEvent):void
 	{
-		Controller.instance.sendMessageToRoom(chatInput.tf.text);
+		if(!_vipOnly)
+			Controller.instance.sendMessageToRoom(chatInput.tf.text);
+		else
+			Controller.instance.sendMessageToVIPRoom(chatInput.tf.text);
 		chatInput.tf.text = "";
 	}
 
@@ -128,6 +151,10 @@ public class Chat extends CasaSprite
 		removeChildren(true);
 		super.destroy();
 	}
-	
+
+	public function set vipOnly(value:Boolean):void
+	{
+		_vipOnly = value;
+	}
 }
 }

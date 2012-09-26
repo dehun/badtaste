@@ -163,15 +163,17 @@ public class Fans extends CasaSprite
 			_followersAvatars.push(followerAvatar);
 
 			var req:URLRequest = new URLRequest(user.photoLinkSmall);
-			var miniPicLoader:Loader = new Loader();
-			var bp:BlockerPreloader = new BlockerPreloader(followerAvatar.avatarHolder,
-					followerAvatar.avatarHolder.width, followerAvatar.avatarHolder.height, 0);
+			var miniLoader:Loader = new Loader();
+			var miniHolder:Sprite = followerAvatar.avatarHolder;
+			var bp:BlockerPreloader = new BlockerPreloader(miniHolder, miniHolder.width, miniHolder.height, 0);
 			bp.preload(1);
-			miniPicLoader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
-				followerAvatar.avatarHolder.addChild(miniPicLoader);
+			miniLoader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
+				Align.center(miniLoader, miniHolder);
+				miniHolder.addChild(miniLoader);
 				bp.partsLoaded++;
+				updatePastFollowersView();
 			});
-			miniPicLoader.load(req);
+			miniLoader.load(req);
 		}
 	}
 

@@ -293,10 +293,8 @@ public class GameField extends BackGroundedPage
 		addChild(celebrityAvatar);
 
 		Controller.instance.getRandomVIP();
-		Controller.instance.getRandomChatter();
 		Model.instance.addEventListener(Controller.ON_GOT_RANDOM_VIP, onRandomVip);
 		Model.instance.addEventListener(Controller.ON_GOT_RANDOM_CHATTER, onRandomChatter);
-		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
 	}
 
 	private var chatterGuid:String = "";
@@ -304,6 +302,7 @@ public class GameField extends BackGroundedPage
 	private function onRandomChatter(e:ObjectEvent):void
 	{
 		chatterGuid = e.data.chatterGuid;
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		Controller.instance.getUserInfo(chatterGuid);
 	}
 	private var randomVipGuid:String = "";
@@ -311,66 +310,35 @@ public class GameField extends BackGroundedPage
 	private function onRandomVip(e:ObjectEvent):void
 	{
 		randomVipGuid = e.data.vipGuid;
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		Controller.instance.getUserInfo(randomVipGuid);
 	}
+	private var isVipLoaded:Boolean = false;
 	private function onUserInfo(e:ObjectEvent):void
 	{
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		var user:User = e.data as User;
-		if(user.guid == randomVipGuid){
-//			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-//			loader.addEventListener(Event.INIT, function(e:Event):void {
-//				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-//				var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
-//				bmp.width = celebrityAvatar.celebrityAvatarHolder.width;
-//				bmp.scaleY = bmp.scaleX;
-//				bmp.smoothing = true;
-//				celebrityAvatar.celebrityAvatarHolder.addChild(bmp);
-//				bp.partsLoaded++;
-//			});
-//			var bp:BlockerPreloader = new BlockerPreloader(celebrityAvatar.celebrityAvatarHolder, celebrityAvatar.celebrityAvatarHolder.width, celebrityAvatar.celebrityAvatarHolder.height, 0);
-//			bp.preload(1);
-//			var req:URLRequest = new URLRequest(user.photoLinkMedium);
-//			loader.load(req);
-			var req:URLRequest = new URLRequest(user.photoLinkMedium);
-			var loader:Loader = new Loader();
-			var holder:Sprite = chatterAvatar.celebrityAvatarHolder;
-			var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
-			bp.preload(1);
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
-				Align.center(loader, holder);
-				holder.addChild(loader);
-				bp.partsLoaded++;
-			});
-			loader.load(req);
+		var req:URLRequest = new URLRequest(user.photoLinkMedium);
+		var loader:Loader = new Loader();
+		var holder:Sprite;
+
+		if(user.guid == randomVipGuid && !isVipLoaded){
+			holder = celebrityAvatar.celebrityAvatarHolder;
+			isVipLoaded = true;
+			Controller.instance.getRandomChatter();
 		}
 		if(user.guid == chatterGuid){
-//			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-//			loader.addEventListener(Event.INIT, function(e:Event):void {
-//				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-//				var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
-//				bmp.width = chatterAvatar.celebrityAvatarHolder.width;
-//				bmp.scaleY = bmp.scaleX;
-//				bmp.smoothing = true;
-//				chatterAvatar.celebrityAvatarHolder.addChild(bmp);
-//				bp.partsLoaded++;
-//			});
-//			var bp:BlockerPreloader = new BlockerPreloader(chatterAvatar.celebrityAvatarHolder, chatterAvatar.celebrityAvatarHolder.width, chatterAvatar.celebrityAvatarHolder.height, 0);
-//			bp.preload(1);
-//			var req:URLRequest = new URLRequest(user.photoLinkMedium);
-//			loader.load(req);
-
-			var req:URLRequest = new URLRequest(user.photoLinkMedium);
-			var loader:Loader = new Loader();
-			var holder:Sprite = chatterAvatar.celebrityAvatarHolder;
-			var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
-			bp.preload(1);
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
-				Align.center(loader, holder);
-				holder.addChild(loader);
-				bp.partsLoaded++;
-			});
-			loader.load(req);
+			holder = chatterAvatar.celebrityAvatarHolder;
 		}
+
+		var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
+		bp.preload(1);
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
+			Align.center(loader, holder);
+			holder.addChild(loader);
+			bp.partsLoaded++;
+		});
+		loader.load(req);
 	}
 
 	private var chatterPrel:BlockerPreloader;

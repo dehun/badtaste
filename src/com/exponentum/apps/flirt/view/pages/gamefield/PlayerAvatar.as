@@ -11,8 +11,10 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.controlls.Align;
 
 import flash.display.Bitmap;
+import flash.display.Loader;
 import flash.events.Event;
 import flash.net.URLRequest;
 
@@ -25,7 +27,7 @@ import ru.cleptoman.net.UnsecurityDisplayLoader;
 public class PlayerAvatar extends CasaSprite
 {
 	private var avatarHolder:AvatarHolder = new AvatarHolder();
-	private var _photo:Bitmap;
+	private var _photo:Loader;
 	private var _isVIP:Boolean;
 
 	private var _player:User = new User();
@@ -44,22 +46,25 @@ public class PlayerAvatar extends CasaSprite
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		_player = e.data as User;
 
-		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-		loader.addEventListener(Event.INIT, function(e:Event):void {
-			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-			photo = (new Bitmap((loader.content as Bitmap).bitmapData));
-		});
+//		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
+//		loader.addEventListener(Event.INIT, function(e:Event):void {
+//			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
+//			photo = (new Bitmap((loader.content as Bitmap).bitmapData));
+//		});
+//		var req:URLRequest = new URLRequest(_player.photoLinkMedium);
+//		loader.load(req);
 		var req:URLRequest = new URLRequest(_player.photoLinkMedium);
+		var loader:Loader = new Loader();
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
+			photo = loader;
+		});
 		loader.load(req);
 	}
 
-	private function set photo(value:Bitmap):void
+	private function set photo(value:Loader):void
 	{
 		_photo = value;
-		_photo.width = avatarHolder.avatarContainer.width;
-		_photo.scaleY = _photo.scaleX;
-		_photo.smoothing = true;
-		while(avatarHolder.avatarContainer.numChildren) avatarHolder.avatarContainer.removeChildAt(0);
+		Align.center(_photo, avatarHolder.avatarContainer);
 		avatarHolder.avatarContainer.addChild(_photo);
 	}
 
