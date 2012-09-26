@@ -132,5 +132,12 @@ code_change(_OldVsn, State, _Extra) ->
 handle_buy_random_chatter_status(CallerGuid, _Message) ->
     {ok, Price} = application:get_env(kissbang, wannachat_status_cost),
     {ok, Period} = application:get_env(kissbang, wannachat_period),
-    dtranse:dtranse([fun(TransSync) -> bank_srv:withdraw(CallerGuid, Price, TransSync) end,
-                     fun(TransSync) -> wannachat_srv:buy_wanna_chat_status(CallerGuid, Period, TransSync) end]).
+    case dtranse:dtranse([fun(TransSync) -> bank_srv:withdraw(CallerGuid, Price, TransSync) end,
+                     fun(TransSync) -> wannachat_srv:buy_wanna_chat_status(CallerGuid, Period, TransSync) end]) of
+        ok ->
+            Answer = #on_bought_random_chatter_status_success{};
+        _ ->
+            Answer = #on_buy_random_chatter_status_failed{}
+    end,
+    proxy_srv:async_route_messages(CallerGuid, [Answer]).
+                   
