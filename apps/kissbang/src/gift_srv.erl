@@ -213,6 +213,8 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                               job_srv:try_complete_job(SenderGuid, <<"2">>),
                                               job_srv:try_complete_job(SenderGuid, <<"3">>),
                                               %% send it
+                                              scoreboard_srv:add_score(ReceiverGuid, "received_gifts"),
+                                              scoreboard_srv:add_score(SenderGuid, "sended_gifts"),
                                               Existance = mnesia:read({user_gifts, ReceiverGuid}),
                                               case Existance of
                                                   [OldUserGifts] ->
