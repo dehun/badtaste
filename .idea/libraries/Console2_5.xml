@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Console2.5">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/swc/Console2.5.swc!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
