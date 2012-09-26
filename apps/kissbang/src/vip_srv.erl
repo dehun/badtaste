@@ -196,7 +196,9 @@ inner_get_vip_points(UserGuid) ->
                         [] ->
                             0;
                         [VipInfo] ->
-                            VipInfo#vipinfo.points
+                            Points = VipInfo#vipinfo.points,
+                            scoreboard_srv:set_score(UserGuid, "vippoints", Points),
+                            Points
                     end
             end,
     mnesia:activity(transaction, Trans).

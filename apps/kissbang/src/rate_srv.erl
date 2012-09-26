@@ -210,6 +210,7 @@ inner_rate(RaterGuid, TargetUserGuid, Rate) ->
                         [] ->
                             mnesia:write(#rateinfo{guid = TargetUserGuid,
                                                    rates = [NewRatePoint]}),
+                            on_user_rated(RaterGuid, TargetUserGuid, Rate),
                             ok;
                         [OldRateInfo] ->
                             AreAlreadyInList =  length([E || E <- OldRateInfo#rateinfo.rates, E#rate_point.rater_guid =:= RaterGuid]) > 0,
@@ -218,11 +219,17 @@ inner_rate(RaterGuid, TargetUserGuid, Rate) ->
                                      already_rate;
                                 true ->
                                      mnesia:write(OldRateInfo#rateinfo{rates = [NewRatePoint | OldRateInfo#rateinfo.rates]}),
+                                     on_user_rated(RaterGuid, TargetUserGuid, Rate),
                                      ok
                              end
                     end
             end,
     mnesia:activity(async_dirty, Trans).
+
+
+on_user_rated(RaterGuid, TargetUserGuid, Rate) ->
+    scoreboard_srv:add_score(RaterGuid, "rater"),
+    scoreboard_srv:add_score(TargetUserGuid, "rated", Rate).
 
 
 inner_are_user_rated(RaterGuid, RatedGuid) ->

@@ -164,11 +164,13 @@ inner_get_sympathies(UserGuid) ->
 inner_add_sympathy(LeftGuid, RightGuid) ->
     job_srv:try_complete_job(LeftGuid, <<"7">>),
     job_srv:try_complete_job(RightGuid, <<"7">>),
+    lists:foreach(fun (Guid) -> scoreboard_srv:add_score(Guid, "sympathy") end, [LeftGuid, RightGuid]),
+    
     Trans = fun() ->
                     increment_sympathies(LeftGuid, RightGuid),
                     increment_sympathies(RightGuid, LeftGuid)
             end,
-    mnesia:activity(async_dirty, Trans).
+    mnesia:activity(sync_dirty, Trans).
 
 increment_sympathies(LeftGuid, RightGuid) ->
     Existance = mnesia:read({sympathyinfo, LeftGuid}),

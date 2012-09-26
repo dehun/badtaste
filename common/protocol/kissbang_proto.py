@@ -436,8 +436,11 @@ class OnBuyRandomChatterStatusFailed(pgMessage):
 # scoreboard
 ## get scoreboard by tag
 class GetScoreboardByTag(pgMessage):
+    # tag in [sended_gifts, received_gifts, sympathy, rated, rater, vippoints]
     tag = pgString()
-    period = pgString() #scoday, week, month
+    # period in [day, week, month]
+    period = pgString()
+
 
 class UserScore(pgMessage):
     userGuid = pgString()
