@@ -72,7 +72,7 @@ public class Chat extends CasaSprite
 
 	private function onFocusIn(e:FocusEvent):void
 	{
-		chatInput.tf.text = "";
+		if(chatInput.tf.text == "Сказать")chatInput.tf.text = "";
 		this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 	}
 
@@ -83,13 +83,12 @@ public class Chat extends CasaSprite
 
 	private function onKeyDown(e:KeyboardEvent):void
 	{
-
 		if(chatInput.tf.text == "") return;
 		if(e.keyCode == Keyboard.ENTER){
 			Controller.instance.sendMessageToRoom(chatInput.tf.text);
 			chatInput.tf.text = "";
-			this.stage.focus = null;
-			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			//this.stage.focus = null;
+			//this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
 	}
 
@@ -133,6 +132,7 @@ public class Chat extends CasaSprite
 
 	private function onSendMessage(e:MouseEvent):void
 	{
+		if(chatInput.tf.text == "") return;
 		if(!_vipOnly)
 			Controller.instance.sendMessageToRoom(chatInput.tf.text);
 		else

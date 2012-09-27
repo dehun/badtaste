@@ -320,12 +320,11 @@ public class GameField extends BackGroundedPage
 		var user:User = e.data as User;
 		var req:URLRequest = new URLRequest(user.photoLinkMedium);
 		var loader:Loader = new Loader();
-		var holder:Sprite;
+		var holder:Sprite = new Sprite();
 
 		if(user.guid == randomVipGuid && !isVipLoaded){
 			holder = celebrityAvatar.celebrityAvatarHolder;
 			isVipLoaded = true;
-			Controller.instance.getRandomChatter();
 		}
 		if(user.guid == chatterGuid){
 			holder = chatterAvatar.celebrityAvatarHolder;

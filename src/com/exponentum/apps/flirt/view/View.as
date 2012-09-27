@@ -104,6 +104,8 @@ public class View extends Sprite
 		gameField.addEventListener(Config.PROFILE, showOwnerProfile);
 		gameField.addEventListener(Config.RATINGS, showRatings);
 
+		if(miniProfile) miniProfile.destroy();
+
 		pageContainer.addChild(gameField);
 	}
 

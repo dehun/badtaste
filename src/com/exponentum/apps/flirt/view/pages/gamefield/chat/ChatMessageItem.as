@@ -12,6 +12,8 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 
+import flash.text.TextFieldAutoSize;
+
 import org.casalib.display.CasaSprite;
 
 public class ChatMessageItem extends CasaSprite
@@ -30,6 +32,11 @@ public class ChatMessageItem extends CasaSprite
 		Controller.instance.getUserInfo(senderGuid);
 
 		addChild(asset);
+		asset.textTf.multiline = asset.textTf.wordWrap = true;
+		asset.textTf.text = message;
+		asset.textTf.autoSize = TextFieldAutoSize.LEFT;
+		asset.textTf.width = 250;
+		asset.textTf.height = asset.textTf.textHeight;
 	}
 
 	private function onSenderInfo(e:ObjectEvent):void
@@ -37,9 +44,7 @@ public class ChatMessageItem extends CasaSprite
 		var user:User = e.data as User;
 		if(user.guid != senderGuid) return;
 		senderName = user.name;
-
 		asset.nameTf.text = senderName;
-		asset.textTf.text = message;
 	}
 
 	override public function destroy():void
