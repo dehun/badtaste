@@ -178,14 +178,12 @@ class OnCurrentRoomLeaveFailed(pgMessage):
 class OnNewBottleSwinger(pgMessage):
     swingerGuid = pgString()
 
-
 class SwingBottle(pgMessage):
     pass
 
 class OnBottleSwinged(pgMessage):
     swingerGuid = pgString()
     victimGuid = pgString()
-
 
 class OnKiss(pgMessage):
     kisserGuid = pgString()
