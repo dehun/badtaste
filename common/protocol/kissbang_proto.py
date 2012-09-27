@@ -168,10 +168,10 @@ class OnRoomDeath(pgMessage):
 class LeaveCurrentRoom(pgMessage):
     pass
 
-class OnRoomLeavedSuccessfully(pgMessage):
+class OnCurrentRoomLeavedSuccessfully(pgMessage):
     pass
 
-class OnRoomLeaveFail(pgMessage):
+class OnCurrentRoomLeaveFailed(pgMessage):
     pass
 
 # bottle game

@@ -24,6 +24,13 @@
    <- OnRoomUserListChanged(users = [guid1, guid2, guid3])
 ** on room came to active state(game begin)
    <- OnRoomStateChaned(state = "active")
+** leave current room
+*** success
+    -> LeaveCurrentRoom()
+    <- OnLeaveCurrentRoomSuccessfully()
+*** fail
+    -> LeaveCurrentRoom()
+    <- OnLeaveCurrentRoomFailed()
 * chat
 ** send chat message to room where you are 
    -> SendChatMessageToRoom(message = "some message text body")
