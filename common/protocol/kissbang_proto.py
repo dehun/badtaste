@@ -165,6 +165,15 @@ class OnAlreadyInThisRoom(pgMessage):
 class OnRoomDeath(pgMessage):
     pass
 
+class LeaveCurrentRoom(pgMessage):
+    pass
+
+class OnRoomLeavedSuccessfully(pgMessage):
+    pass
+
+class OnRoomLeaveFail(pgMessage):
+    pass
+
 # bottle game
 class OnNewBottleSwinger(pgMessage):
     swingerGuid = pgString()

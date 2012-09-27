@@ -98,7 +98,8 @@ get_admin_handlers() ->
 
 get_room_handlers() ->
     ['join_main_roomqueue_handler_srv',
-     'join_tagged_roomqueue_handler_srv'].
+     'join_tagged_roomqueue_handler_srv',
+     'leave_current_room_handler_srv'].
 
 get_chat_handlers() ->
     ['send_chat_message_to_room_handler_srv',
