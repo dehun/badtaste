@@ -370,6 +370,8 @@ inner_join(Guid, State, StateName) ->
     if 
         AreAlreadyInSet -> %% are user already here?
             proxy_srv:async_route_messages(Guid, [#on_already_in_this_room{}]),
+            proxy_srv:async_route_messages(Guid, [#on_joined_to_room{users = sets:to_list(Users), state = StateName}]),
+
             {error, already_in_room};
         true -> %% if this is new user
             AreMaximumReached = sets:size(Users) == element(2, application:get_env(kissbang, room_maximum_users)),
