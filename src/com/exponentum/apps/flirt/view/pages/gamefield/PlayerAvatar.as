@@ -46,13 +46,6 @@ public class PlayerAvatar extends CasaSprite
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		_player = e.data as User;
 
-//		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-//		loader.addEventListener(Event.INIT, function(e:Event):void {
-//			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-//			photo = (new Bitmap((loader.content as Bitmap).bitmapData));
-//		});
-//		var req:URLRequest = new URLRequest(_player.photoLinkMedium);
-//		loader.load(req);
 		var req:URLRequest = new URLRequest(_player.photoLinkMedium);
 		var loader:Loader = new Loader();
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{

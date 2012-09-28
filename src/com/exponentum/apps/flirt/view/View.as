@@ -62,25 +62,6 @@ public class View extends Sprite
 		foreground.mouseChildren = foreground.mouseEnabled = false;
 	}
 
-	private function showPage(pageId:String):void
-	{
-		switch(pageId)
-		{
-			case Config.GAMEFIELD:
-					showGameField();
-				break;
-			case Config.PROFILE:
-					showOwnerProfile();
-				break;
-			case Config.TASKS:
-					showTasks();
-				break;
-			case Config.RATINGS:
-					showRatings();
-				break;
-		}
-	}
-
 //----------------------------------------------------------------------------------------------------------------------
 // USER PROFILE
 //----------------------------------------------------------------------------------------------------------------------
@@ -113,7 +94,10 @@ public class View extends Sprite
 	{
 		pageContainer.removeChildren(true, true);
 		ratings = new RatingsPage();
+		if(e.currentTarget is Profile) ratings.fromLocation = Config.PROFILE;
+		if(e.currentTarget is GameField) ratings.fromLocation = Config.GAMEFIELD;
 		ratings.addEventListener(Config.PROFILE, showOwnerProfile);
+		ratings.addEventListener(Config.GAMEFIELD, showGameField);
 		pageContainer.addChild(ratings);
 	}
 

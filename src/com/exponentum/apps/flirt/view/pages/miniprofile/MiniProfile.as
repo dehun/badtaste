@@ -144,12 +144,12 @@ public class MiniProfile extends BackGroundedPage
 		sendGiftButton.addEventListener(MouseEvent.CLICK, onSendGift);
 		addChild(sendGiftButton);
 
-		createBecameFanButton();
-
 		bp = new BlockerPreloader(this, profileMask.width, profileMask.height, .3);
 		bp.x = profileMask.x;
 		bp.y = profileMask.y;
 		bp.preload(7);
+
+		createBecameFanButton();
 	}
 
 	private function configureListeners():void
@@ -172,6 +172,11 @@ public class MiniProfile extends BackGroundedPage
 		//details
 		profileDetails.sexIndicator.gotoAndStop(_user.sex);
 		profileDetails.nameText.text = _user.name;
+		var i = 0;
+		while (profileDetails.nameText.textWidth > 120) {
+			profileDetails.nameText.text = _user.name.substr(0, profileDetails.nameText.text.length - i) + "...";
+			i++;
+		}
 		profileDetails.ageText.text = "Скрыто";
 		profileDetails.cityText.text = _user.city;
 
@@ -198,6 +203,8 @@ public class MiniProfile extends BackGroundedPage
 		Controller.instance.getUserCompletedJobs(_user.guid);
 
 		bp.partsLoaded++;
+
+		becomeFanButton.visible = _user.sex != Model.instance.owner.sex
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void
@@ -309,7 +316,6 @@ public class MiniProfile extends BackGroundedPage
 		becomeFanButton.y = profileMask.y;
 		becomeFanButton.addEventListener(MouseEvent.CLICK, onBecameFan);
 		addChild(becomeFanButton);
-		becomeFanButton.visible = false;
 	}
 
 	private function createCloseButton():void

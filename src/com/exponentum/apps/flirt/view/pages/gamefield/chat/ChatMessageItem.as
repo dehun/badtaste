@@ -45,6 +45,11 @@ public class ChatMessageItem extends CasaSprite
 		if(user.guid != senderGuid) return;
 		senderName = user.name;
 		asset.nameTf.text = senderName;
+		var i = 0;
+		while (asset.nameTf.textWidth > 140) {
+			asset.nameTf.text = user.name.substr(0, asset.nameTf.text.length - i) + "...";
+			i++;
+		}
 	}
 
 	override public function destroy():void

@@ -76,6 +76,11 @@ public class Profile extends BackGroundedPage
 
 		profileDetails.sexIndicator.gotoAndStop(user.sex);
 		profileDetails.nameText.text = user.name;
+		var i = 0;
+		while (profileDetails.nameText.textWidth > 120) {
+			profileDetails.nameText.text = user.name.substr(0, profileDetails.nameText.text.length - i) + "...";
+			i++;
+		}
 		profileDetails.ageText.text = user.birthDate;
 		profileDetails.cityText.text = user.city;
 		profileDetails.playInCityCheckBox.gotoAndStop(int(Model.instance.owner.playInCity) + 1);

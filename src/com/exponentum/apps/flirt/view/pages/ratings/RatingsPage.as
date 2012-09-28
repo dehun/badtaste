@@ -36,6 +36,7 @@ public class RatingsPage extends BackGroundedPage
 	private const TOP_VIP:String = "topVip";
 
 	private var playersDistribution:Distribution = new Distribution();
+	private var _fromLocation:String = "";
 
 	private static const sortCriterias:Array = [
 		{name:"Общий", type:"common", buttonWidth:71},
@@ -61,7 +62,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private function createBackButton():void
 	{
-		backButton.y = _ratingsBg.y + _ratingsBg.height + 10;
+		backButton.y = _ratingsBg.y + _ratingsBg.height - 5;
 		centerX(backButton, 760);
 		addChild(backButton);
 		backButton.addEventListener(MouseEvent.CLICK, onBack);
@@ -142,7 +143,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private function onBack(e:MouseEvent):void
 	{
-		dispatchEvent(new Event(Config.PROFILE));
+		dispatchEvent(new Event(fromLocation));
 	}
 
 	private function onTabChange(e:Event):void
@@ -150,5 +151,14 @@ public class RatingsPage extends BackGroundedPage
 
 	}
 
+	public function get fromLocation():String
+	{
+		return _fromLocation;
+	}
+
+	public function set fromLocation(value:String):void
+	{
+		_fromLocation = value;
+	}
 }
 }

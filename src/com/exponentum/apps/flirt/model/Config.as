@@ -11,7 +11,8 @@ import org.osmf.events.FacetValueChangeEvent;
 
 public class Config
 {
-	public static const DEV_MODE:Boolean = false;
+	public static const DEV_MODE:Boolean = true;
+
 	public static const TESTER:int = 0;
 
 

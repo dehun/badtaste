@@ -31,7 +31,7 @@ public class PrizeTasksWindow extends CasaSprite
 	private function createTasks():void
 	{
 		var tasks:Object = Config.jobsData;
-		tasksDistr.x = 5;
+		tasksDistr.x = 3;
 		tasksDistr.y = 3;
 		asset.taskContainer.addChild(tasksDistr);
 		for (var i:int = 0; i < (tasks.jobs as Array).length; i++)
@@ -77,6 +77,7 @@ public class PrizeTasksWindow extends CasaSprite
 		taskDetails.taskDetail.text = Config.jobsData.jobs[taskNum].description;
 		taskDetails.taskDetail.multiline = taskDetails.taskDetail.wordWrap = true;
 		taskDetails.reward.text = Config.jobsData.jobs[taskNum].guid;
+		if(int(e.currentTarget.label.text) == 11)taskDetails.x = e.currentTarget.x + 10;
 	}
 
 	private function onTaskButtonOut(e:MouseEvent):void
