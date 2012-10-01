@@ -165,7 +165,7 @@ inner_push_user(UserGuid, State) -> %% NewState
             State#state{rooms = [NewRoom], 
                         full_rooms = State#state.rooms};
         Error ->
-            Error
+            State
     end.
 
 inner_find_room_for(UserGuid, State) -> %% {ok, NewRooms} | no_free_room
@@ -192,6 +192,7 @@ inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
         AlreadyJoined ->
             {NewRooms, FullRooms};
         true ->
+            log_srv:info("spawning new room for ~p", [UserGuid]),
             {[inner_spawn_room_for(UserGuid) |  NewRooms], FullRooms}
     end.
 
