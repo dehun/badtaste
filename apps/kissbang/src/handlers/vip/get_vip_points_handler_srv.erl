@@ -130,6 +130,6 @@ code_change(_OldVsn, State, _Extra) ->
 handle_get_vip_points(CallerGuid, Message) ->
     log_srv:info("handling get vip points"),
     TargetUserGuid = Message#get_vip_points.target_user_guid,
-    proxy_srv:route_messages(CallerGuid, 
+    proxy_srv:async_route_messages(CallerGuid, 
                                   [#on_got_vip_points{owner_user_guid = TargetUserGuid,
                                                       points = vip_srv:get_vip_points(TargetUserGuid)}]).
