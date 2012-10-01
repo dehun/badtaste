@@ -84,7 +84,6 @@ public class Controller
 
 		//followers
 		socket.addEventListener(ON_GOT_USER_FOLLOWERS, model.onGotUserFollowers);
-		socket.addEventListener(ON_FOLLOWING_BOUGHT, model.onFollowingBought);
 
 		//service
 		socket.addEventListener(ON_GOT_CURRENT_TIME, model.onGotCurrentTime);
@@ -167,7 +166,7 @@ public class Controller
 
 
 
-	public function userLogin():void//TODO: not only owner support
+	public function userLogin():void
 	{
 		touchUserInfo('{"userInfo" : { "UserInfo" : ' +
 				'{"userId" : "' + model.owner.id + '",' +

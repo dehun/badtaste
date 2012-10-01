@@ -74,7 +74,7 @@ public class Profile extends BackGroundedPage
 		//details
 		updateProfileDetailsButtons();
 
-		profileDetails.sexIndicator.gotoAndStop(user.sex);
+		profileDetails.sexIndicator.gotoAndStop(user.sex + 1);
 		profileDetails.nameText.text = user.name;
 		var i = 0;
 		while (profileDetails.nameText.textWidth > 120) {
@@ -100,13 +100,13 @@ public class Profile extends BackGroundedPage
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onGotUserInfo);
 
 		Controller.instance.getDecorationFor(user.guid);
-		Controller.instance.getVipPoints(user.guid);
+		Controller.instance.getVipPoints(Model.instance.owner.guid);
+		trace("--------------------------------------------------------");
 		Controller.instance.getUserFollowers(user.guid);
 		Controller.instance.getMyGifts();
 		Controller.instance.getUserRate(user.guid);
 		Controller.instance.getUserCompletedJobs(user.guid);
 
-		//TODO: coins, link to social
 		bp.partsLoaded++;
 	}
 
@@ -358,7 +358,7 @@ public class Profile extends BackGroundedPage
 			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 
 		achievementsPanel.giftsText.text = user.presents.length.toString();
-//		achievementsPanel.ratingText.text = user.placeInRating.toString();//todo:
+//		achievementsPanel.ratingText.text = user.placeInRating.toString();
 		//bp.partsLoaded++;
 	}
 

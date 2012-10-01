@@ -33,9 +33,11 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.events.TimerEvent;
 import flash.geom.Point;
 import flash.net.URLRequest;
 import flash.utils.Dictionary;
+import flash.utils.Timer;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
@@ -114,40 +116,35 @@ public class GameField extends BackGroundedPage
 
 
 		if(Model.instance.owner.playInCity)
-		{
 			Controller.instance.joinToTaggedRoomQueue(Model.instance.owner.city);
-		}
 		else
-		{
 			Controller.instance.joinToMainRoomQueue();
-		}
-	}
-
-	private function onBottleSwinged(e:ObjectEvent):void
-	{
-		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
-		bottle.showOnPlayer(getPlaceByGuid(e.data.victimGuid), int(Math.random() * 25));
-	}
-
-	private function onKissed(e:ObjectEvent):void
-	{
-		showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
-	}
-
-	private function onRefusedToKiss(e:ObjectEvent):void
-	{
-
 	}
 
 	private function onNewBottleSwinger(e:ObjectEvent):void
 	{
-		Controller.instance.swingBottle();
+		var swingerAvatar:PlayerAvatar = getAvatarByGuid(e.data.swingerGuid);
+		TweenMax.to(swingerAvatar, 1, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y, onComplete:function():void{
+			Controller.instance.swingBottle();
+		}});
+	}
+
+	private var victimGuid:String = "";
+	private function onBottleSwinged(e:ObjectEvent):void
+	{
+		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
+		bottle.showOnPlayer(getPlaceByGuid(e.data.victimGuid), int(Math.random() * 15));
+		victimGuid = e.data.victimGuid;
 	}
 
 	private function onBottleStopped(e:Event):void
 	{
 		bottle.removeEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
-		showKissDialog();
+
+		var victimAvatar:PlayerAvatar = getAvatarByGuid(victimGuid);
+		TweenMax.to(victimAvatar, 1, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y, onComplete:function():void{
+			showKissDialog();
+		}});
 	}
 
 	private var _kissDialog:KissDialog;
@@ -174,6 +171,28 @@ public class GameField extends BackGroundedPage
 		destroyKissDialog();
 
 		putAllToTheirPlaces();
+	}
+
+	private function onKissed(e:ObjectEvent):void
+	{
+		showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
+	}
+
+	private function onRefusedToKiss(e:ObjectEvent):void
+	{
+
+	}
+
+	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
+	{
+//		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
+//		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
+
+		doubleArrow.visible = true;
+		doubleArrow.scaleX = doubleArrow.scaleY = .4;
+		TweenMax.to(doubleArrow, .7, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
+			putAllToTheirPlaces();
+		}});
 	}
 
 	private function putAllToTheirPlaces():void
@@ -253,6 +272,7 @@ public class GameField extends BackGroundedPage
 
 	private function createChat():void
 	{
+		if(chat) return;
 		chat = new Chat();
 		chat.x = 0;
 		chat.y = 620;
@@ -277,6 +297,11 @@ public class GameField extends BackGroundedPage
 	}
 
 ///////////////// chat avatars /////////////////////////////////////////////////////////////////////////////////////////
+
+	private var timer:Timer = new Timer(1000);
+	private const CHANGE_INTERVAL = 5;
+	private var timeToNextChange:int = 0;
+
 	private var celebrityAvatar:CelebrityAvatar = new CelebrityAvatar();
 	private var chatterAvatar:CelebrityAvatar = new CelebrityAvatar();
 	private function createCelebrityAvatars():void
@@ -292,9 +317,23 @@ public class GameField extends BackGroundedPage
 		celebrityAvatar.y = celebrityAvatarCoords[1].y;
 		addChild(celebrityAvatar);
 
-		Controller.instance.getRandomVIP();
 		Model.instance.addEventListener(Controller.ON_GOT_RANDOM_VIP, onRandomVip);
 		Model.instance.addEventListener(Controller.ON_GOT_RANDOM_CHATTER, onRandomChatter);
+
+		timeToNextChange = CHANGE_INTERVAL;
+		timer.addEventListener(TimerEvent.TIMER, onTimer);
+		timer.start();
+
+	}
+
+	private function onTimer(e:TimerEvent = null):void
+	{
+		if(timeToNextChange == CHANGE_INTERVAL) {
+			timeToNextChange = 0;
+			Controller.instance.getRandomVIP();
+			Controller.instance.getRandomChatter();
+		}
+		timeToNextChange ++;
 	}
 
 	private var chatterGuid:String = "";
@@ -302,37 +341,60 @@ public class GameField extends BackGroundedPage
 	private function onRandomChatter(e:ObjectEvent):void
 	{
 		chatterGuid = e.data.chatterGuid;
-		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onChatterInfo);
 		Controller.instance.getUserInfo(chatterGuid);
+	}
+
+	private function onChatterInfo(e:ObjectEvent):void
+	{
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onChatterInfo);
+		var user:User = e.data as User;
+		var req:URLRequest = new URLRequest(user.photoLinkMedium);
+		var loader:Loader = new Loader();
+		var holder:Sprite = new Sprite();
+
+		if(user.guid == chatterGuid){
+			holder = chatterAvatar.celebrityAvatarHolder;
+		}
+
+		var bp:BlockerPreloader = new BlockerPreloader(chatterAvatar,  100, 110, 0);
+		bp.preload(1);
+		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
+			while(holder.numChildren){
+				holder.removeChildAt(0);
+			}
+			Align.center(loader, holder);
+
+			holder.addChild(loader);
+			bp.partsLoaded++;
+		});
+		loader.load(req);
 	}
 	private var randomVipGuid:String = "";
 
 	private function onRandomVip(e:ObjectEvent):void
 	{
 		randomVipGuid = e.data.vipGuid;
-		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		Model.instance.addEventListener(Controller.GOT_USER_INFO, onVipInfo);
 		Controller.instance.getUserInfo(randomVipGuid);
 	}
-	private var isVipLoaded:Boolean = false;
-	private function onUserInfo(e:ObjectEvent):void
+	private function onVipInfo(e:ObjectEvent):void
 	{
-		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onVipInfo);
 		var user:User = e.data as User;
 		var req:URLRequest = new URLRequest(user.photoLinkMedium);
 		var loader:Loader = new Loader();
 		var holder:Sprite = new Sprite();
 
-		if(user.guid == randomVipGuid && !isVipLoaded){
+		if(user.guid == randomVipGuid){
 			holder = celebrityAvatar.celebrityAvatarHolder;
-			isVipLoaded = true;
 		}
-		if(user.guid == chatterGuid){
-			holder = chatterAvatar.celebrityAvatarHolder;
-		}
-
-		var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
+		var bp:BlockerPreloader = new BlockerPreloader(celebrityAvatar, 100, 110, 0);
 		bp.preload(1);
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
+			while(holder.numChildren){
+				holder.removeChildAt(0);
+			}
 			Align.center(loader, holder);
 			holder.addChild(loader);
 			bp.partsLoaded++;
@@ -525,18 +587,6 @@ public class GameField extends BackGroundedPage
 		avatarHolders.push(userAvatar);
 	}
 
-	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
-	{
-		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
-		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
-
-		doubleArrow.visible = true;
-		doubleArrow.scaleX = doubleArrow.scaleY = .4;
-		TweenMax.to(doubleArrow, .5, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
-			putAllToTheirPlaces();
-		}});
-	}
-
 	private function getAvatarByGuid(guid:String):PlayerAvatar
 	{
 		for (var i:int = 0; i < avatarHolders.length; i++)
@@ -553,6 +603,7 @@ public class GameField extends BackGroundedPage
 
 	override public function destroy():void
 	{
+		if(this.destroyed) return;
 		Model.instance.removeEventListener(Controller.ON_BANK_BALANCE_CHANGED, onBankBalanceChanged);
 		Model.instance.removeEventListener(Controller.ON_JOINED_TO_MAIN_ROOM_QUEUE, onJoinedToRoomQueue);
 		Model.instance.removeEventListener(Controller.ON_JOINED_TO_TAGGED_ROOM_QUEUE, onJoinedToRoomQueue);
@@ -571,9 +622,30 @@ public class GameField extends BackGroundedPage
 		Model.instance.removeEventListener(Controller.ON_BUY_CHATTER_STATUS_FAIL, buyChatterFail);
 		Model.instance.removeEventListener(Controller.ON_GOT_RANDOM_VIP, onRandomVip);
 		Model.instance.removeEventListener(Controller.ON_GOT_RANDOM_CHATTER, onRandomChatter);
-		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onUserInfo);
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onVipInfo);
+		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onChatterInfo);
 		bankIndicator.addMoneyButton.removeEventListener(MouseEvent.CLICK, onAddMoneyClick);
-		removeChildren(true, true);
+
+		tableLoad = null;
+		if(tableContainer)removeChild(tableContainer);
+		tableContainer = null;
+		if(doubleArrow)removeChild(doubleArrow);
+		doubleArrow = null;
+
+		removeChild(chat);
+		chat.destroy();
+		chat = null;//chat.destroy();
+		if(chatBG)removeChild(chatBG);
+		chatBG = null;
+
+
+		removeChild(tabBar);
+		tabBar = null;
+
+		removeChild(bottle);
+		bottle = null;
+		placesOccupied = null;
+
 		super.destroy();
 	}
 

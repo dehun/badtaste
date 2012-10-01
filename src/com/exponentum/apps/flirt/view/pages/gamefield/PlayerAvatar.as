@@ -11,11 +11,13 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.View;
 import com.exponentum.apps.flirt.view.controlls.Align;
 
 import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.events.Event;
+import flash.events.MouseEvent;
 import flash.net.URLRequest;
 
 import org.casalib.display.CasaSprite;
@@ -23,6 +25,8 @@ import org.casalib.events.LoadEvent;
 import org.casalib.load.ImageLoad;
 
 import ru.cleptoman.net.UnsecurityDisplayLoader;
+
+import spark.components.Button;
 
 public class PlayerAvatar extends CasaSprite
 {
@@ -52,6 +56,15 @@ public class PlayerAvatar extends CasaSprite
 			photo = loader;
 		});
 		loader.load(req);
+
+		buttonMode = useHandCursor = (e.data as User).guid != Model.instance.owner.guid;
+		if((e.data as User).guid == Model.instance.owner.guid) return;
+		addEventListener(MouseEvent.CLICK, onShowMiniProfile);
+	}
+
+	private function onShowMiniProfile(e:MouseEvent):void
+	{
+		Model.instance.view.showMiniProfile(_player);
 	}
 
 	private function set photo(value:Loader):void

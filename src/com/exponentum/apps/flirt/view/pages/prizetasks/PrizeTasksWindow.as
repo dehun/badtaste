@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 
 import flash.events.MouseEvent;
+import flash.filters.DropShadowFilter;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
@@ -26,6 +27,7 @@ public class PrizeTasksWindow extends CasaSprite
 	{
 		createView();
 		createTasks();
+		this.filters = [new DropShadowFilter(0, 45, 0x0, 1, 30, 30, 1, 3)];
 	}
 
 	private function createTasks():void

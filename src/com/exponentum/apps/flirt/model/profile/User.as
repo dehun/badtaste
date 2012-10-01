@@ -85,7 +85,7 @@ public class User
 		this.photoLinkBig = data.smallPictureUrl;
 		this.profileLink = data.profileUrl;
 		this.birthDate = data.birthDate;
-		this.sex = data.sex;
+		this.sex = data.isMan;
 		this.isOnline = data.isOnline;
 
 		this.isCityHidden = data.isCityHidden == "true";

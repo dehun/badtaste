@@ -164,23 +164,19 @@ public class Model extends EventDispatcher
 
 	public function onGotIsUserRated(e:ObjectEvent):void
 	{
-		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
+		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated == "true";
 		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
 		trace(e.data.targetUserGuid, e.data.areRated);
 	}
 
 	public function onRateUserSuccess(e:ObjectEvent):void
 	{
-//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
-//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
-//		trace(e.data.targetUserGuid, e.data.areRated);
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRateUserFailure(e:ObjectEvent):void
 	{
-//		(userCache[e.data.targetUserGuid] as User).isRated = e.data.areRated;
-//		dispatchEvent(new ObjectEvent(e.type, userCache[e.data.targetUserGuid]));
-//		trace(e.data.targetUserGuid, e.data.areRated);
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 	public function onRatePointDeleteSuccess(e:ObjectEvent):void

@@ -103,6 +103,7 @@ public class View extends Sprite
 
 	public function showTasks(e:Event = null):void
 	{
+		if(prizeTasks) return;
 		prizeTasks = new PrizeTasksWindow();
 		prizeTasks.x = 0;
 		prizeTasks.y = 300;
@@ -111,6 +112,7 @@ public class View extends Sprite
 
 	public function showShop(e:Event = null):void
 	{
+		if(shop) return;
 		shop = new ShopPage();
 		centerX(shop, 760);
 		centerY(shop, 760);
@@ -126,6 +128,7 @@ public class View extends Sprite
 
 	public function showGiftsWindow(targetUser:User):void
 	{
+		if(giftsWindow)return;
 		giftsWindow = new GiftsPage(targetUser);
 		addChild(giftsWindow);
 	}

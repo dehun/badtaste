@@ -8,12 +8,15 @@
 package com.exponentum.apps.flirt.view.pages.profile
 {
 import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.Align;
 
 import flash.display.Bitmap;
 import flash.display.Loader;
 import flash.display.SimpleButton;
+import flash.events.Event;
 import flash.events.MouseEvent;
 
 import mx.controls.PopUpButton;
@@ -60,7 +63,31 @@ public class ProfileAvatar extends CasaSprite
 	private function onMarkClick(e:MouseEvent):void
 	{
 		Controller.instance.rateUser(_user.guid, e.currentTarget.name.split("mark")[1].toString());
+		Model.instance.addEventListener(Controller.ON_RATE_USER_SUCCESS, onRateSuccess);
+		Model.instance.addEventListener(Controller.ON_RATE_USER_FAILED, onRateUserFail);
 		isRated = true;
+	}
+
+	private function onRateUserFail(e:Event):void
+	{
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_SUCCESS, onRateSuccess);
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_FAILED, onRateUserFail);
+		isRated = false;
+	}
+
+	private function onRateSuccess(e:Event):void
+	{
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_SUCCESS, onRateSuccess);
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_FAILED, onRateUserFail);
+		isRated = true;
+		Model.instance.addEventListener(Controller.GET_USER_RATE, onUserRate);
+		Controller.instance.getUserRate(_user.guid);
+	}
+
+	private function onUserRate(e:ObjectEvent):void
+	{
+		Model.instance.removeEventListener(Controller.GET_USER_RATE, onUserRate);
+		mark = (e.data as User).userRate;
 	}
 
 	public function set frame(value:int):void
@@ -71,7 +98,7 @@ public class ProfileAvatar extends CasaSprite
 
 	public function set sex(value:int):void
 	{
-		avatarHolder.sex.gotoAndStop(value);
+		avatarHolder.sex.gotoAndStop(value + 1);
 		_sex = value;
 	}
 
@@ -93,6 +120,15 @@ public class ProfileAvatar extends CasaSprite
 	public function set user(value:User):void
 	{
 		_user = value;
+	}
+
+	override public function destroy():void
+	{
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_SUCCESS, onRateSuccess);
+		Model.instance.removeEventListener(Controller.ON_RATE_USER_FAILED, onRateUserFail);
+		Model.instance.removeEventListener(Controller.GET_USER_RATE, onUserRate);
+
+		super.destroy();
 	}
 }
 }

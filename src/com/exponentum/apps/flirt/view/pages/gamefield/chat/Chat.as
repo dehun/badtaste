@@ -16,7 +16,11 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
+import flash.events.TimerEvent;
 import flash.ui.Keyboard;
+import flash.utils.Timer;
+
+import mx.utils.NameUtil;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
@@ -58,6 +62,7 @@ public class Chat extends CasaSprite
 		vipCB.buttonMode = vipCB.useHandCursor = true;
 		vipCB.cb.gotoAndStop(int(_vipOnly) + 1);
 		vipCB.cb.addEventListener(MouseEvent.CLICK, onVipOnly);
+
 	}
 
 	private function onVipOnly(e:MouseEvent):void
@@ -83,10 +88,12 @@ public class Chat extends CasaSprite
 
 	private function onKeyDown(e:KeyboardEvent):void
 	{
-		if(chatInput.tf.text == "") return;
+
 		if(e.keyCode == Keyboard.ENTER){
+			if(chatInput.tf.text == "") return;
 			Controller.instance.sendMessageToRoom(chatInput.tf.text);
 			chatInput.tf.text = "";
+
 			//this.stage.focus = null;
 			//this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		}
@@ -146,9 +153,22 @@ public class Chat extends CasaSprite
 		if(this.stage) this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 		chatInput.tf.removeEventListener(FocusEvent.FOCUS_IN, onFocusOut);
-		messagesDistribution.removeChildrenAndDestroy(true);
+		removeChild(chatInput);
+		if(sayButton)removeChild(sayButton);
+		sayButton = null;
+		chatInput = null;
+
+		chatMessages = null;
+		scr.removeEventListener(Event.CHANGE, onScroll);
+		removeChild(scr);
+		scr = null;
+		messagesDistribution.removeChildrenAndDestroy(true, true);
+		messagesDistribution = null;
+		removeChild(_bottomPanelMask);
 		_bottomPanelMask = null;
-		removeChildren(true);
+
+		removeChild(vipCB);
+		vipCB = null;
 		super.destroy();
 	}
 

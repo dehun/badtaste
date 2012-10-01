@@ -34,6 +34,8 @@ import org.casalib.load.ImageLoad;
 
 import ru.cleptoman.net.UnsecurityDisplayLoader;
 
+import flash.filters.DropShadowFilter;
+
 public class MiniProfile extends BackGroundedPage
 {
 	private var zodiacSign:ZodiacSign;
@@ -60,6 +62,7 @@ public class MiniProfile extends BackGroundedPage
 		Controller.instance.getUserInfo(_user.guid);
 
 		createView();
+		this.filters = [new DropShadowFilter(0, 45, 0x0, 1, 30, 30, 1, 3)];
 	}
 
 	private function createView():void
@@ -170,7 +173,7 @@ public class MiniProfile extends BackGroundedPage
 		zodiacSign.gotoAndStop(_user.zodiac);
 
 		//details
-		profileDetails.sexIndicator.gotoAndStop(_user.sex);
+		profileDetails.sexIndicator.gotoAndStop(_user.sex + 1);
 		profileDetails.nameText.text = _user.name;
 		var i = 0;
 		while (profileDetails.nameText.textWidth > 120) {
@@ -196,15 +199,13 @@ public class MiniProfile extends BackGroundedPage
 
 		Controller.instance.getDecorationFor(_user.guid);
 		Controller.instance.getVipPoints(_user.guid);
-		Controller.instance.getUserFollowers(_user.guid);
 		Controller.instance.getUserGifts(_user.guid);
 		Controller.instance.getUserRate(_user.guid);
 		Controller.instance.isUserRated(_user.guid);
 		Controller.instance.getUserCompletedJobs(_user.guid);
-
+		Controller.instance.getUserFollowers(_user.guid);
 		bp.partsLoaded++;
 
-		becomeFanButton.visible = _user.sex != Model.instance.owner.sex
 	}
 
 	private function onGotVipPoints(e:ObjectEvent):void
@@ -229,10 +230,11 @@ public class MiniProfile extends BackGroundedPage
 		bp.partsLoaded++;
 		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
-		if(_user.followers.length == 0) return;
+		//if(_user.followers.length == 0) return;
 		fans.update(_user.followers);
 		becomeFanButton.price.text = _user.rebuyPrice.toString();
-		becomeFanButton.visible = true;
+		becomeFanButton.visible = _user.sex != Model.instance.owner.sex;
+		trace(_user.sex, Model.instance.owner.sex);
 	}
 
 	private function onGotUserGifts(e:Event):void
@@ -255,7 +257,7 @@ public class MiniProfile extends BackGroundedPage
 			presentsContainer.getChildAt(i).y -= presentsContainer.getChildAt(i).height;
 
 		achievementsPanel.giftsText.text = _user.presents.length.toString();
-//		achievementsPanel.ratingText.text = _user.placeInRating.toString();//todo:
+//		achievementsPanel.ratingText.text = _user.placeInRating.toString();
 	}
 
 	private function onGotUserCompletedJobs(e:ObjectEvent):void
@@ -279,7 +281,7 @@ public class MiniProfile extends BackGroundedPage
 	{
 		var curUser:User = e.data as User;
 		if(curUser.guid != _user.guid) return;
-		profileAvatar.isRated = _user.isRated == "true";
+		profileAvatar.isRated = _user.isRated;
 		bp.partsLoaded++;
 	}
 
@@ -316,6 +318,7 @@ public class MiniProfile extends BackGroundedPage
 		becomeFanButton.y = profileMask.y;
 		becomeFanButton.addEventListener(MouseEvent.CLICK, onBecameFan);
 		addChild(becomeFanButton);
+		becomeFanButton.visible = false;
 	}
 
 	private function createCloseButton():void
@@ -347,7 +350,14 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onBecameFan(e:MouseEvent):void
 	{
-		trace("so fan!");
+		Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+		Controller.instance.buyFollowing(_user.guid);
+	}
+
+	private function onFollowingBought(e:ObjectEvent):void
+	{
+		Model.instance.removeEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+		becomeFanButton.visible = false;
 	}
 
 	private function onClose(e:MouseEvent):void
