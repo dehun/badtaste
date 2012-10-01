@@ -1,0 +1,92 @@
+{ "gifts" : [
+    {"guid" : "1",
+     "name" : "first gift",
+     "price" : "10",
+     "description" : "this is just a first gift",
+     "group" : "toys"
+    },
+    {"guid" : "2",
+     "name" : "second gift",
+     "price" : "20",
+     "description" : "yep. this is a second gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "3",
+     "name" : "third gift",
+     "price" : "20",
+     "description" : "yep. this is a third gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "4",
+     "name" : "four gift",
+     "price" : "20",
+     "description" : "yep. this is a 4 gift",
+     "group" : "toys"
+ },
+    {"guid" : "5",
+     "name" : "first gift",
+     "price" : "10",
+     "description" : "this is just a 5 gift",
+     "group" : "toys"
+    },
+    {"guid" : "6",
+     "name" : "6 gift",
+     "price" : "20",
+     "description" : "yep. this is a 6 gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "7",
+     "name" : "7 gift",
+     "price" : "20",
+     "description" : "yep. this is a 7 gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "8",
+     "name" : "8 gift",
+     "price" : "20",
+     "description" : "yep. this is a 8 gift",
+     "group" : "toys"
+     },
+    {"guid" : "9",
+     "name" : "first gift",
+     "price" : "10",
+     "description" : "this is just a first gift",
+     "group" : "toys"
+    },
+    {"guid" : "10",
+     "name" : "second gift",
+     "price" : "20",
+     "description" : "yep. this is a second gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "11",
+     "name" : "11 gift",
+     "price" : "20",
+     "description" : "yep. this is a third gift",
+     "group" : "hellmets"
+     },
+    {"guid" : "12",
+     "name" : "12 gift",
+     "price" : "20",
+     "description" : "yep. this is a 12 gift",
+     "group" : "other"
+ },
+    {"guid" : "13",
+     "name" : "13 gift",
+     "price" : "10",
+     "description" : "this is just a 13 gift",
+     "group" : "other"
+    },
+    {"guid" : "14",
+     "name" : "14 gift",
+     "price" : "20",
+     "description" : "yep. this is a 14 gift",
+     "group" : "other"
+     },
+    {"guid" : "15",
+     "name" : "16 gift",
+     "price" : "20",
+     "description" : "yep. this is a 15 gift",
+     "group" : "other"
+     }
+]}
