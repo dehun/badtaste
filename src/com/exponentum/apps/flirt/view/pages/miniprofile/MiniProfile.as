@@ -196,6 +196,8 @@ public class MiniProfile extends BackGroundedPage
 		profileDetails.ageText.text = "Скрыто";
 		profileDetails.cityText.text = _user.city;
 
+		profileDetails.nameText.mouseEnabled = false;
+
 		profileAvatar.sex = _user.sex;
 		profileAvatar.user = _user;
 

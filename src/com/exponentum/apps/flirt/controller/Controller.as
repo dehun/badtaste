@@ -118,6 +118,9 @@ public class Controller
 
 		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
 		socket.addEventListener(GOT_VIP_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromVIPRoom);
+
+		//scores
+		socket.addEventListener(ON_GOT_SCORES, model.onGotScores);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -562,5 +565,21 @@ public class Controller
 		socket.sendRequest(requestObject);
 	}
 
+//----------------------------------------------------------------------------------------------------------------------
+//	RATINGS
+//----------------------------------------------------------------------------------------------------------------------
+	// tag - kisses, gift_send, gift_recv, followers, sympathy
+	// period - day, month, week
+	public static const GET_SCORES:String = "GetScoreboardByTag";
+	public static const ON_GOT_SCORES:String = "OnGotScoreboardByTag";
+
+	public function getScores(aTag:String, aPeriod:String):void
+	{
+		var requestObject:Object = new Object();
+		requestObject[GET_SCORES] = {};
+		requestObject[GET_SCORES].tag = aTag;
+		requestObject[GET_SCORES].period = aPeriod;
+		socket.sendRequest(requestObject);
+	}
 }
 }

@@ -340,5 +340,11 @@ public class Model extends EventDispatcher
 	{
 		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
+
+	//scores
+	public function onGotScores(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
 }
 }

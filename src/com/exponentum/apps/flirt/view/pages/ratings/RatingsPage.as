@@ -7,7 +7,10 @@
  */
 package com.exponentum.apps.flirt.view.pages.ratings
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
@@ -40,11 +43,11 @@ public class RatingsPage extends BackGroundedPage
 
 	private static const sortCriterias:Array = [
 		{name:"Общий", type:"common", buttonWidth:71},
-		{name:"Поцелуи", type:"kiss", buttonWidth:82},
+		{name:"Поцелуи", type:"kisses", buttonWidth:82},
 		{name:"Симпатии", type:"sympathy", buttonWidth:92},
-		{name:"Подарки", type:"gift", buttonWidth:80},
-		{name:"Дарители", type:"gifter", buttonWidth:88},
-		{name:"Друзья", type:"friend", buttonWidth:73},
+		{name:"Подарки", type:"gift_recv", buttonWidth:80},
+		{name:"Дарители", type:"gift_send", buttonWidth:88},
+		{name:"Друзья", type:"followers", buttonWidth:73},
 		{name:"Оценки", type:"mark", buttonWidth:73},
 		{name:"Популярность", type:"popularity", buttonWidth:150}
 	];
@@ -58,6 +61,14 @@ public class RatingsPage extends BackGroundedPage
 		createWindow();
 		createCriteriaTabBar();
 		createBackButton();
+
+		Model.instance.addEventListener(Controller.ON_GOT_SCORES, onScores);
+		
+	}
+
+	private function onScores(e:ObjectEvent):void
+	{
+
 	}
 
 	private function createBackButton():void
