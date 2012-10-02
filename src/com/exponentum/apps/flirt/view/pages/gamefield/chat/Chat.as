@@ -162,7 +162,7 @@ public class Chat extends CasaSprite
 		scr.removeEventListener(Event.CHANGE, onScroll);
 		removeChild(scr);
 		scr = null;
-		messagesDistribution.removeChildrenAndDestroy(true, true);
+		messagesDistribution.removeChildrenAndDestroy();
 		messagesDistribution = null;
 		removeChild(_bottomPanelMask);
 		_bottomPanelMask = null;

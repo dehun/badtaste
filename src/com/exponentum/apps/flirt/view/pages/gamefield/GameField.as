@@ -42,6 +42,7 @@ import flash.utils.Timer;
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
+import org.casalib.transitions.Tween;
 import org.osmf.metadata.IFacet;
 
 import ru.cleptoman.net.UnsecurityDisplayLoader;
@@ -121,9 +122,11 @@ public class GameField extends BackGroundedPage
 			Controller.instance.joinToMainRoomQueue();
 	}
 
+	private var kisserGuid:String = "";
 	private function onNewBottleSwinger(e:ObjectEvent):void
 	{
 		var swingerAvatar:PlayerAvatar = getAvatarByGuid(e.data.swingerGuid);
+		kisserGuid = e.data.swingerGuid;
 		TweenMax.to(swingerAvatar, 1, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y, onComplete:function():void{
 			Controller.instance.swingBottle();
 		}});
@@ -150,6 +153,7 @@ public class GameField extends BackGroundedPage
 	private var _kissDialog:KissDialog;
 	private function showKissDialog():void
 	{
+		if(Model.instance.owner.guid != kisserGuid &&  Model.instance.owner.guid != victimGuid) return;
 		_kissDialog = new KissDialog();
 		centerX(_kissDialog,  760);
 		centerY(_kissDialog,  760);
@@ -161,6 +165,18 @@ public class GameField extends BackGroundedPage
 
 	private function onYes(e:MouseEvent):void
 	{
+		var lips:Lips = new Lips();
+		addChild(lips);
+		lips.x = getAvatarByGuid(Model.instance.owner.guid).x + 10;
+		lips.y = getAvatarByGuid(Model.instance.owner.guid).y + 10;
+		if(Model.instance.owner.guid == kisserGuid)
+			TweenMax.to(lips, 0.5, {x:getAvatarByGuid(victimGuid).x + 10, y:getAvatarByGuid(victimGuid).y + 10, alpha:0, onComplete:function():void{
+				removeChild(lips);
+			}});
+		else
+			TweenMax.to(lips, 0.5, {x:getAvatarByGuid(kisserGuid).x + 10, y:getAvatarByGuid(kisserGuid).y + 10, alpha:0, onComplete:function():void{
+				removeChild(lips);
+			}});
 		Controller.instance.kiss();
 		destroyKissDialog();
 	}
@@ -169,31 +185,38 @@ public class GameField extends BackGroundedPage
 	{
 		Controller.instance.refuseToKiss();
 		destroyKissDialog();
-
-		putAllToTheirPlaces();
 	}
 
 	private function onKissed(e:ObjectEvent):void
 	{
-		showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
+		//showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
+		var lips:Lips = new Lips();
+		addChild(lips);
+		lips.x = getAvatarByGuid(e.data.kisserGuid).x + 10;
+		lips.y = getAvatarByGuid(e.data.kisserGuid).y + 10;
+		TweenMax.to(lips, 0.5, {x:getAvatarByGuid(e.data.kissedGuid).x + 10, y:getAvatarByGuid(e.data.kissedGuid).y + 10, alpha:0, onComplete:function():void{
+			removeChild(lips);
+			putAllToTheirPlaces();
+		}});
+
 	}
 
 	private function onRefusedToKiss(e:ObjectEvent):void
 	{
-
+		putAllToTheirPlaces();
 	}
 
-	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
-	{
-//		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
-//		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
-
-		doubleArrow.visible = true;
-		doubleArrow.scaleX = doubleArrow.scaleY = .4;
-		TweenMax.to(doubleArrow, .7, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
-			putAllToTheirPlaces();
-		}});
-	}
+//	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
+//	{
+////		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
+////		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
+//
+//		doubleArrow.visible = true;
+//		doubleArrow.scaleX = doubleArrow.scaleY = .4;
+//		TweenMax.to(doubleArrow, 2, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
+//			putAllToTheirPlaces();
+//		}});
+//	}
 
 	private function putAllToTheirPlaces():void
 	{
@@ -299,7 +322,7 @@ public class GameField extends BackGroundedPage
 ///////////////// chat avatars /////////////////////////////////////////////////////////////////////////////////////////
 
 	private var timer:Timer = new Timer(1000);
-	private const CHANGE_INTERVAL = 5;
+	private const CHANGE_INTERVAL = 50;
 	private var timeToNextChange:int = 0;
 
 	private var celebrityAvatar:CelebrityAvatar = new CelebrityAvatar();

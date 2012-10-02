@@ -63,7 +63,6 @@ public class RatingsPage extends BackGroundedPage
 		createBackButton();
 
 		Model.instance.addEventListener(Controller.ON_GOT_SCORES, onScores);
-		
 	}
 
 	private function onScores(e:ObjectEvent):void
