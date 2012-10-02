@@ -158,21 +158,19 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_push_user(UserGuid, State) -> %% NewState
     case inner_find_room_for(UserGuid, State) of
-        {ok, NewRooms} ->
-            State#state{rooms = NewRooms};
-        no_free_room ->
+        {ok, NewRooms, FullRooms} ->
+            log_srv:info("user ~p joined to existing room", [UserGuid]),
+            State#state{rooms = NewRooms, 
+                        full_rooms = FullRooms};
+        {no_free_room, FullRooms} ->
             NewRoom = inner_spawn_room_for(UserGuid),
-            State#state{rooms = [NewRoom], 
-                        full_rooms = State#state.rooms};
-        Error ->
-            State
+            log_srv:info("spawning new room for user ~p", [UserGuid]),
+            State#state{rooms = [NewRoom | State#state.rooms],
+                        full_rooms = FullRooms}
     end.
 
-inner_find_room_for(UserGuid, State) -> %% {ok, NewRooms} | no_free_room
-    {NewRooms, FullRooms} = inner_find_room_for(UserGuid, State#state.rooms, [], [], false),
-    State#state{full_rooms = State#state.full_rooms ++ FullRooms,
-                rooms = NewRooms}.
-
+inner_find_room_for(UserGuid, State) -> %% {ok, NewRooms, FullRooms} | {no_free_room, FullRooms}
+    inner_find_room_for(UserGuid, State#state.rooms, [], State#state.full_rooms, false).
 
 inner_find_room_for(UserGuid, [RoomGuid | RestRooms], NewRooms, FullRooms, _AlreadyJoined) ->
     case roommgr_srv:join_room(RoomGuid, UserGuid) of
@@ -190,10 +188,9 @@ inner_find_room_for(UserGuid, [RoomGuid | RestRooms], NewRooms, FullRooms, _Alre
 inner_find_room_for(UserGuid, [], NewRooms, FullRooms, AlreadyJoined) ->
     if 
         AlreadyJoined ->
-            {NewRooms, FullRooms};
+            {ok, NewRooms, FullRooms};
         true ->
-            log_srv:info("spawning new room for ~p", [UserGuid]),
-            {[inner_spawn_room_for(UserGuid) |  NewRooms], FullRooms}
+            {no_free_room, FullRooms}
     end.
 
 inner_spawn_room_for(UserGuid) ->
