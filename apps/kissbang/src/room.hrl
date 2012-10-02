@@ -1,0 +1,1 @@
+-record(room, {room_guid, room_pid}).
