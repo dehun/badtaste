@@ -81,10 +81,10 @@ pending({on_room_death}, _From, State) ->
     {stop, normal, Reply, State};
 pending({on_user_join, UserGuid}, _From, State) ->
     {Reply, NewState} = inner_user_join(State, UserGuid),
-    {reply, Reply, active, NewState};
+    {reply, Reply, pending, NewState};
 pending({on_user_leave, UserGuid}, _From, State) ->
     {Reply, NewState} = inner_user_leave(State, UserGuid),
-    {reply, Reply, active, NewState}.
+    {reply, Reply, pending, NewState}.
 
 
 
