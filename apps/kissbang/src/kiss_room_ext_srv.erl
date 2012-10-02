@@ -94,7 +94,7 @@ swinger_select_mode(timeout, State) ->
                                #on_new_bottle_swinger{swinger_guid = element(2, NewSwinger)}),
     NewState = State#state{current_state = 
                                #swing_bottle_mode_state{current_swinger = NewSwinger}},
-    {next_state, swing_bottle_mode, NewState, 60000};
+    {next_state, swing_bottle_mode, NewState, 15000};
 swinger_select_mode(_Msg, State) ->
     {next_state, swinger_select_mode, State, 0}.
 
@@ -107,12 +107,12 @@ swing_bottle_mode({handle_extension_message, {swing_bottle, SwingPretenderGuid}}
     {Res, NewState} = inner_swing_bottle(State, SwingPretenderGuid),
     case Res of 
         ok ->
-            {next_state, kiss_mode, NewState, 60000};
+            {next_state, kiss_mode, NewState, 15000};
         fail ->
-            {next_state, swing_bottle_mode, NewState, 60000}
+            {next_state, swing_bottle_mode, NewState, 15000}
     end;
 swing_bottle_mode(_Msg, State) ->
-    {next_state, swing_bottle_mode, State, 60000}.
+    {next_state, swing_bottle_mode, State, 15000}.
 
 
 kiss_mode(timeout, State) ->
@@ -135,10 +135,10 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
             {next_state, swinger_select_mode, 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
         true ->
-            {next_state, kiss_mode, NewState, 60000}
+            {next_state, kiss_mode, NewState, 15000}
     end;
 kiss_mode(_, State) ->
-	     {next_state, kiss_mode, State, 60000}.
+	     {next_state, kiss_mode, State, 15000}.
 
 %% active({on_room_death}, _From, State) ->
 %%     Reply = ok,
