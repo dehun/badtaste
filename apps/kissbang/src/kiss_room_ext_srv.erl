@@ -193,7 +193,16 @@ handle_sync_event({on_user_join, UserGuid}, _From, StateName, State) ->
     {reply, Reply, StateName, NewState};
 handle_sync_event({on_user_leave, UserGuid}, _From, StateName, State) ->
     {Reply, NewState} = inner_user_leave(State, UserGuid),
+    NewMaleParity = calculate_male_parity(State#state.users),
+    AreParityOverflow = abs(NewMaleParity) > application:get_env(kissbang, room_sex_parity),
+    if 
+        AreParityOverflow ->
+            spawn_link(fun() ->room_srv:drop(State#state.room_pid) end);
+        true ->
+            []
+    end,
     {reply, Reply, StateName, NewState};
+
 handle_sync_event({on_room_death}, _From, _StateName, State) ->
     Reply = ok,
     {stop, normal ,Reply, State}.
