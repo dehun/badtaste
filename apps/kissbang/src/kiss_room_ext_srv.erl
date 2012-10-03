@@ -94,21 +94,26 @@ swinger_select_mode(timeout, State) ->
                                #on_new_bottle_swinger{swinger_guid = element(2, NewSwinger)}),
     NewState = State#state{current_state = 
                                #swing_bottle_mode_state{current_swinger = NewSwinger}},
+    log_srv:debug("selecting new swinger. new swinger is ~p", [NewSwinger]).
     {next_state, swing_bottle_mode, NewState, 15000};
 swinger_select_mode(_Msg, State) ->
     {next_state, swinger_select_mode, State, 0}.
 
 swing_bottle_mode(timeout, State) ->
+    log_srv:debug("swing bottle timed out. selecting new swinger"),
     CurrentState = State#state.current_state,
     CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
     NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = CurrentSwinger}},
     {next_state, swinger_select_mode, NewState, 0};
 swing_bottle_mode({handle_extension_message, {swing_bottle, SwingPretenderGuid}}, State) ->
+    log_srv:debug("on trying to swing bottle"),
     {Res, NewState} = inner_swing_bottle(State, SwingPretenderGuid),
     case Res of 
         ok ->
+            log_srv:debug("bottle swinged successfully by ~p", [SwingPretenderGuid]),
             {next_state, kiss_mode, NewState, 15000};
         fail ->
+            log_srv:debug("bottle swing fail by ~p ", [SwingPretenderGuid]),
             {next_state, swing_bottle_mode, NewState, 15000}
     end;
 swing_bottle_mode(_Msg, State) ->
@@ -116,29 +121,33 @@ swing_bottle_mode(_Msg, State) ->
 
 
 kiss_mode(timeout, State) ->
+    log_srv:info("kiss mode timeout"),
     CurrentState = State#state.current_state,
     LastSwinger = CurrentState#kiss_mode_state.last_swinger,
     NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}},
     {next_state, swinger_select_mode, NewState, 0};
 kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) ->
+    log_srv:debug("kiss action is performed by ~p", [KissedGuid]),
     NewState = inner_kiss_action(State, Action, KisserGuid),
     NewCurrentState = NewState#state.current_state,
-    log_srv:debug("checking are all kissed"),
+    log_srv:error("checking are all kissed"),
     AreAllKissed = lists:all(fun(Kisser) -> element(1, Kisser) end, 
                              [NewCurrentState#kiss_mode_state.kisser, NewCurrentState#kiss_mode_state.victim]),
     if
         AreAllKissed ->
-            log_srv:debug("[room ~p] all are kissed. moving to next roung ", [self()]),
+            log_srv:error("[room ~p] all are kissed. moving to next roung ", [self()]),
             sympathy_srv:add_sympathy(element(2, NewCurrentState#kiss_mode_state.kisser),
                                       element(2, NewCurrentState#kiss_mode_state.victim)),
             LastSwinger = NewCurrentState#kiss_mode_state.last_swinger,
             {next_state, swinger_select_mode, 
              NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
         true ->
+            log_srv:error("not all are kissed. keep kissing"),
             {next_state, kiss_mode, NewState, 15000}
     end;
 kiss_mode(_, State) ->
-	     {next_state, kiss_mode, State, 15000}.
+    log_srv:debug("invalid message in kiss mode"),
+    {next_state, kiss_mode, State, 15000}.
 
 %% active({on_room_death}, _From, State) ->
 %%     Reply = ok,
