@@ -164,7 +164,7 @@ inner_get_sympathies(UserGuid) ->
 inner_add_sympathy(LeftGuid, RightGuid) ->
     job_srv:try_complete_job(LeftGuid, <<"7">>),
     job_srv:try_complete_job(RightGuid, <<"7">>),
-    lists:foreach(fun (Guid) -> scoreboard_srv:add_score(Guid, "sympathy") end, [LeftGuid, RightGuid]),
+    %lists:foreach(fun (Guid) -> scoreboard_srv:add_score(Guid, "sympathy") end, [LeftGuid, RightGuid]),
     
     Trans = fun() ->
                     increment_sympathies(LeftGuid, RightGuid),
