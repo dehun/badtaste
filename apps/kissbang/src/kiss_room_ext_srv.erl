@@ -94,7 +94,7 @@ swinger_select_mode(timeout, State) ->
                                #on_new_bottle_swinger{swinger_guid = element(2, NewSwinger)}),
     NewState = State#state{current_state = 
                                #swing_bottle_mode_state{current_swinger = NewSwinger}},
-    log_srv:debug("selecting new swinger. new swinger is ~p", [NewSwinger]).
+    log_srv:debug("selecting new swinger. new swinger is ~p", [NewSwinger]),
     {next_state, swing_bottle_mode, NewState, 15000};
 swinger_select_mode(_Msg, State) ->
     {next_state, swinger_select_mode, State, 0}.
@@ -127,7 +127,7 @@ kiss_mode(timeout, State) ->
     NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}},
     {next_state, swinger_select_mode, NewState, 0};
 kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) ->
-    log_srv:debug("kiss action is performed by ~p", [KissedGuid]),
+    log_srv:debug("kiss action is performed by ~p", [KisserGuid]),
     NewState = inner_kiss_action(State, Action, KisserGuid),
     NewCurrentState = NewState#state.current_state,
     log_srv:error("checking are all kissed"),
