@@ -176,7 +176,7 @@ kiss_mode(_, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_event(_Event, StateName, State) ->
-    {next_state, StateName, State}.
+    {next_state, StateName, State, 15000}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -196,10 +196,10 @@ handle_event(_Event, StateName, State) ->
 %%--------------------------------------------------------------------
 handle_sync_event({link_room, RoomPid}, _From, StateName, State) ->
     {Reply, NewState} = inner_link_room(State, RoomPid),
-    {reply, Reply, StateName, NewState};
+    {reply, Reply, StateName, NewState, 7000};
 handle_sync_event({on_user_join, UserGuid}, _From, StateName, State) ->
     {Reply, NewState} = inner_user_join(State, UserGuid),
-    {reply, Reply, StateName, NewState};
+    {reply, Reply, StateName, NewState, 7000};
 handle_sync_event({on_user_leave, UserGuid}, _From, StateName, State) ->
     {Reply, NewState} = inner_user_leave(State, UserGuid),
     NewMaleParity = calculate_male_parity(State#state.users),
@@ -210,7 +210,7 @@ handle_sync_event({on_user_leave, UserGuid}, _From, StateName, State) ->
         true ->
             []
     end,
-    {reply, Reply, StateName, NewState};
+    {reply, Reply, StateName, NewState, 7000};
 
 handle_sync_event({on_room_death}, _From, _StateName, State) ->
     Reply = ok,
