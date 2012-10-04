@@ -119,6 +119,9 @@ public class Controller
 		socket.addEventListener(GOT_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromRoom);
 		socket.addEventListener(GOT_VIP_CHAT_MESSAGE_FROM_ROOM, model.onGotChatMessageFromVIPRoom);
 
+		socket.addEventListener(LEAVE_CURRENT_ROOM_SUCCESS, model.leaveCurrentRoomSuccess);
+		socket.addEventListener(LEAVE_CURRENT_ROOM_FAIL, model.leaveCurrentRoomFail);
+
 		//scores
 		socket.addEventListener(ON_GOT_SCORES, model.onGotScores);
 	}
@@ -451,6 +454,9 @@ public class Controller
 	public static const ON_BUY_CHATTER_STATUS_SUCCESS:String = "OnBoughtRandomChatterStatusSuccess";
 	public static const ON_BUY_CHATTER_STATUS_FAIL:String = "OnBuyRandomChatterStatusFailed";
 
+	public static const LEAVE_CURRENT_ROOM:String = "LeaveCurrentRoom";
+	public static const LEAVE_CURRENT_ROOM_SUCCESS:String = "OnLeaveCurrentRoomSuccessfully";
+	public static const LEAVE_CURRENT_ROOM_FAIL:String = "OnLeaveCurrentRoomFailed";
 
 	public function joinToMainRoomQueue():void
 	{
@@ -524,6 +530,13 @@ public class Controller
 	{
 		var requestObject:Object = new Object();
 		requestObject[BUY_CHATTER_STATUS] = {};
+		socket.sendRequest(requestObject);
+	}
+
+	public function leaveCurrentRoom():void
+	{
+		var requestObject:Object = new Object();
+		requestObject[LEAVE_CURRENT_ROOM] = {};
 		socket.sendRequest(requestObject);
 	}
 

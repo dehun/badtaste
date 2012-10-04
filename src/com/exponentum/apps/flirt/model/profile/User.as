@@ -64,7 +64,7 @@ public class User
 	public function updateSocialInfo(data:SocialProfileVO):void
 	{
 		id = data.Uid;
-		name = data.FirstName + " " + data.LastName;
+		name = data.FirstName;// + " " + data.LastName;
 		city = data.City;
 		photoLinkMedium = data.PicBig;
 		photoLinkBig = data.PicBig;

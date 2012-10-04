@@ -42,6 +42,8 @@ public class PlayerAvatar extends CasaSprite
 		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		Controller.instance.getUserInfo(guid);
 		_player.guid = guid;
+
+		isVIP = false;
 	}
 
 	private function onUserInfo(e:ObjectEvent):void
@@ -57,9 +59,20 @@ public class PlayerAvatar extends CasaSprite
 		});
 		loader.load(req);
 
+		Model.instance.addEventListener(Controller.ON_GOT_VIP_POINTS, onGotUserVip);
+		Controller.instance.getVipPoints(_player.guid);
+
 		buttonMode = useHandCursor = (e.data as User).guid != Model.instance.owner.guid;
 		if((e.data as User).guid == Model.instance.owner.guid) return;
 		addEventListener(MouseEvent.CLICK, onShowMiniProfile);
+	}
+
+	private function onGotUserVip(e:ObjectEvent):void
+	{
+		var user:User = e.data as User;
+		if((e.data as User).guid != _player.guid) return;
+		Model.instance.removeEventListener(Controller.ON_GOT_VIP_POINTS, onGotUserVip);
+		this.isVIP = user.vipPoints > 0;
 	}
 
 	private function onShowMiniProfile(e:MouseEvent):void

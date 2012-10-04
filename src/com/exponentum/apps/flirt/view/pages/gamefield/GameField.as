@@ -38,11 +38,13 @@ import flash.geom.Point;
 import flash.net.URLRequest;
 import flash.utils.Dictionary;
 import flash.utils.Timer;
+import flash.utils.setTimeout;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
 import org.casalib.transitions.Tween;
+import org.osmf.events.FacetValueChangeEvent;
 import org.osmf.metadata.IFacet;
 
 import ru.cleptoman.net.UnsecurityDisplayLoader;
@@ -64,8 +66,10 @@ public class GameField extends BackGroundedPage
 	private static const HELP:String = "help";
 
 	private var placesOccupied:Dictionary = new Dictionary();
-	//private var tablePlayers:Dictionary = new Dictionary();
-	
+
+	private var kissData:Dictionary;
+
+
 	private const avatarCoordinates:Array = [
 		{x:125, y:89},
 		{x:260, y:80},
@@ -125,19 +129,32 @@ public class GameField extends BackGroundedPage
 	private var kisserGuid:String = "";
 	private function onNewBottleSwinger(e:ObjectEvent):void
 	{
-		var swingerAvatar:PlayerAvatar = getAvatarByGuid(e.data.swingerGuid);
-		kisserGuid = e.data.swingerGuid;
-		TweenMax.to(swingerAvatar, 1, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y, onComplete:function():void{
-			Controller.instance.swingBottle();
-		}});
+		destroyKissDialog();
+		putAllToTheirPlaces();
+
+		setTimeout(function():void{
+			kisserGuid = e.data.swingerGuid;
+			var swingerAvatar:PlayerAvatar = getAvatarByGuid(kisserGuid);
+			TweenMax.to(swingerAvatar, 1, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y, onComplete:function():void{
+				if(kisserGuid == Model.instance.owner.guid)
+				{
+					Controller.instance.swingBottle();
+				}
+			}});
+
+			kissData = new Dictionary();
+			kissData[kisserGuid] = -1;
+		}, 1000);
+
 	}
 
 	private var victimGuid:String = "";
 	private function onBottleSwinged(e:ObjectEvent):void
 	{
-		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
-		bottle.showOnPlayer(getPlaceByGuid(e.data.victimGuid), int(Math.random() * 15));
 		victimGuid = e.data.victimGuid;
+		bottle.addEventListener(Bottle.BOTTLE_STOPPED, onBottleStopped);
+		bottle.showOnPlayer(getPlaceByGuid(victimGuid), 5);
+		kissData[victimGuid] = -1;
 	}
 
 	private function onBottleStopped(e:Event):void
@@ -165,18 +182,6 @@ public class GameField extends BackGroundedPage
 
 	private function onYes(e:MouseEvent):void
 	{
-		var lips:Lips = new Lips();
-		addChild(lips);
-		lips.x = getAvatarByGuid(Model.instance.owner.guid).x + 10;
-		lips.y = getAvatarByGuid(Model.instance.owner.guid).y + 10;
-		if(Model.instance.owner.guid == kisserGuid)
-			TweenMax.to(lips, 0.5, {x:getAvatarByGuid(victimGuid).x + 10, y:getAvatarByGuid(victimGuid).y + 10, alpha:0, onComplete:function():void{
-				removeChild(lips);
-			}});
-		else
-			TweenMax.to(lips, 0.5, {x:getAvatarByGuid(kisserGuid).x + 10, y:getAvatarByGuid(kisserGuid).y + 10, alpha:0, onComplete:function():void{
-				removeChild(lips);
-			}});
 		Controller.instance.kiss();
 		destroyKissDialog();
 	}
@@ -189,47 +194,67 @@ public class GameField extends BackGroundedPage
 
 	private function onKissed(e:ObjectEvent):void
 	{
-		//showKiss(getAvatarByGuid(e.data.kisserGuid), getAvatarByGuid(e.data.kissedGuid));
-		var lips:Lips = new Lips();
-		addChild(lips);
-		lips.x = getAvatarByGuid(e.data.kisserGuid).x + 10;
-		lips.y = getAvatarByGuid(e.data.kisserGuid).y + 10;
-		TweenMax.to(lips, 0.5, {x:getAvatarByGuid(e.data.kissedGuid).x + 10, y:getAvatarByGuid(e.data.kissedGuid).y + 10, alpha:0, onComplete:function():void{
-			removeChild(lips);
-			putAllToTheirPlaces();
-		}});
-
+		if(!kissData) return;
+		kissData[e.data.kisserGuid] = 1;
+		showKissAnimation();
 	}
 
 	private function onRefusedToKiss(e:ObjectEvent):void
 	{
-		putAllToTheirPlaces();
+		if(!kissData) return;
+		kissData[e.data.refuserGuid] = 0;
+		showKissAnimation();
 	}
 
-//	private function showKiss(player1Avatar:PlayerAvatar, player2Avatar:PlayerAvatar):void
-//	{
-////		TweenMax.to(player1Avatar, .5, {x:kissersPlacesCoords[0].x, y:kissersPlacesCoords[0].y});
-////		TweenMax.to(player2Avatar, .5, {x:kissersPlacesCoords[1].x, y:kissersPlacesCoords[1].y});
-//
-//		doubleArrow.visible = true;
-//		doubleArrow.scaleX = doubleArrow.scaleY = .4;
-//		TweenMax.to(doubleArrow, 2, {scaleX:1, scaleY:1, ease:Bounce.easeInOut, onComplete:function():void{
-//			putAllToTheirPlaces();
-//		}});
-//	}
-
-	private function putAllToTheirPlaces():void
+	private function showKissAnimation():void
 	{
+		if(kissData[kisserGuid] >= 0 && kissData[victimGuid] >= 0)
+		{
+			if(kissData[kisserGuid] == 1)
+			{
+				var lips1:Lips = new Lips();
+				addChild(lips1);
+				lips1.x = getAvatarByGuid(kisserGuid).x + 10;
+				lips1.y = getAvatarByGuid(kisserGuid).y + 10;
+				TweenMax.to(lips1, 1, {x:getAvatarByGuid(victimGuid).x + 10, y:getAvatarByGuid(victimGuid).y + 10, alpha:0, onComplete:function():void{
+					removeChild(lips1);
+					putAllToTheirPlaces();
+				}});
+			}
+			
+			if(kissData[victimGuid] == 1)
+			{
+				var lips2:Lips = new Lips();
+				addChild(lips2);
+				lips2.x = getAvatarByGuid(victimGuid).x + 10;
+				lips2.y = getAvatarByGuid(victimGuid).y + 10;
+				TweenMax.to(lips2, 1, {x:getAvatarByGuid(kisserGuid).x + 10, y:getAvatarByGuid(kisserGuid).y + 10, alpha:0, onComplete:function():void{
+					removeChild(lips2);
+					putAllToTheirPlaces();
+				}});
+			}
+			
+			if(kissData[kisserGuid] == kissData[victimGuid] && kissData[victimGuid] == 0)
+			{
+				putAllToTheirPlaces();
+			}
+		}
+	}
+
+	private function putAllToTheirPlaces(forced:Boolean = false):void
+	{
+		kissData = null;
 		doubleArrow.visible = false;
 		for (var i:int = 0; i < avatarHolders.length; i++)
 		{
 			var playerAvatar:PlayerAvatar = avatarHolders[i];
-			TweenMax.to(playerAvatar, .5, {x:avatarCoordinates[i].x, y:avatarCoordinates[i].y});
+			TweenMax.to(playerAvatar, 1, {x:avatarCoordinates[i].x, y:avatarCoordinates[i].y});
 		}
 	}
 
 	private function destroyKissDialog():void
 	{
+		if(_kissDialog == null) return;
 		removeChild(_kissDialog);
 		_kissDialog.yesButton.removeEventListener(MouseEvent.CLICK, onYes);
 		_kissDialog.noButton.removeEventListener(MouseEvent.CLICK, onNo);
@@ -494,11 +519,31 @@ public class GameField extends BackGroundedPage
 	//tab buttons hanlers
 	private function onChangeTable(e:Event):void
 	{
+		Model.instance.addEventListener(Controller.LEAVE_CURRENT_ROOM_FAIL, onLeaveRoomFail);
+		Model.instance.addEventListener(Controller.LEAVE_CURRENT_ROOM_SUCCESS, onLeaveRoomSuccess);
+		Controller.instance.leaveCurrentRoom();
+	}
 
+	private function onLeaveRoomFail(e:Event):void
+	{
+		Model.instance.removeEventListener(Controller.LEAVE_CURRENT_ROOM_FAIL, onLeaveRoomFail);
+		Model.instance.removeEventListener(Controller.LEAVE_CURRENT_ROOM_SUCCESS, onLeaveRoomSuccess);
+
+	}
+
+	private function onLeaveRoomSuccess(e:Event):void
+	{
+		Model.instance.removeEventListener(Controller.LEAVE_CURRENT_ROOM_FAIL, onLeaveRoomFail);
+		Model.instance.removeEventListener(Controller.LEAVE_CURRENT_ROOM_SUCCESS, onLeaveRoomSuccess);
+		if(Model.instance.owner.playInCity)
+			Controller.instance.joinToTaggedRoomQueue(Model.instance.owner.city);
+		else
+			Controller.instance.joinToMainRoomQueue();
 	}
 
 	private function onHome(e:Event):void
 	{
+		Controller.instance.leaveCurrentRoom();
 		dispatchEvent(new Event(Config.PROFILE));
 		destroy();
 	}
@@ -608,6 +653,8 @@ public class GameField extends BackGroundedPage
 		userAvatar.y = avatarCoordinates[place].y;
 		addChild(userAvatar);
 		avatarHolders.push(userAvatar);
+
+		setChildIndex(bottle, getChildIndex(userAvatar));
 	}
 
 	private function getAvatarByGuid(guid:String):PlayerAvatar

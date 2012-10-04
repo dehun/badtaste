@@ -300,6 +300,17 @@ public class Model extends EventDispatcher
 		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
+	//room leave
+	public function leaveCurrentRoomSuccess(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
+	public function leaveCurrentRoomFail(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
 	//chat
 	public function onGotChatMessageFromRoom(e:ObjectEvent):void
 	{
