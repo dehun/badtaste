@@ -13,6 +13,8 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.common.DialogWindow;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.controlls.Align;
 import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
@@ -454,14 +456,18 @@ public class GameField extends BackGroundedPage
 	private function onBuyChatterStatus(e:MouseEvent):void
 	{
 		chatterPrel = new BlockerPreloader(this, this.width, this.height);
-		Model.instance.addEventListener(Controller.ON_BUY_CHATTER_STATUS_SUCCESS, buyChatterSuccess);
-		Model.instance.addEventListener(Controller.ON_BUY_CHATTER_STATUS_FAIL, buyChatterFail);
-		Controller.instance.buyChatterStatus();
-		chatterPrel.preload(1);
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить это место за монеты?", "Внимание!", "Да", "Нет", function():void{
+			Model.instance.addEventListener(Controller.ON_BUY_CHATTER_STATUS_SUCCESS, buyChatterSuccess);
+			Model.instance.addEventListener(Controller.ON_BUY_CHATTER_STATUS_FAIL, buyChatterFail);
+			Controller.instance.buyChatterStatus();
+			chatterPrel.preload(1);
+		}));
 	}
+
 
 	private function buyChatterFail(e:ObjectEvent):void
 	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Покупка не удалась! Попробуйте позже", "Ошибка!"));
 		Model.instance.removeEventListener(Controller.ON_BUY_CHATTER_STATUS_SUCCESS, buyChatterSuccess);
 		Model.instance.removeEventListener(Controller.ON_BUY_CHATTER_STATUS_FAIL, buyChatterFail);
 		chatterPrel.partsLoaded++;
@@ -469,6 +475,7 @@ public class GameField extends BackGroundedPage
 
 	private function buyChatterSuccess(e:ObjectEvent):void
 	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели это место. Ваш профиль будет виден остальным игрокам", "Успех!"));
 		Model.instance.removeEventListener(Controller.ON_BUY_CHATTER_STATUS_SUCCESS, buyChatterSuccess);
 		Model.instance.removeEventListener(Controller.ON_BUY_CHATTER_STATUS_FAIL, buyChatterFail);
 		chatterPrel.partsLoaded++;
@@ -590,14 +597,18 @@ public class GameField extends BackGroundedPage
 	private function onBecameVIP(e:MouseEvent):void
 	{
 		bp = new BlockerPreloader(this, this.width, this.height);
-		Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
-		Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
-		Controller.instance.buyVIPPoints();
-		bp.preload(1);
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить статус VIP? С вашего счета будут списаны монеты", "Внимание!", "Да", "Нет", function():void{
+			Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+			Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+			Controller.instance.buyVIPPoints();
+			bp.preload(1);
+		}));
+
 	}
 
 	private function onBecameVIPSuccess(e:ObjectEvent):void
 	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели статус VIP", "Успех!"));
 		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
 		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
 		bp.partsLoaded++;
@@ -606,6 +617,7 @@ public class GameField extends BackGroundedPage
 
 	private function onBecameVIPFail(e:ObjectEvent):void
 	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Произошла ошибка. Попробуйте позже", "Ошибка!"));
 		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
 		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
 		bp.partsLoaded++;

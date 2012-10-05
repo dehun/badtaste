@@ -87,8 +87,21 @@
       <file leaf-file-name="GameField.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="223" column="12" selection-start="7100" selection-end="7100" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="619" column="93" selection-start="19308" selection-end="19308" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#213#268#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MiniProfile.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="378" column="97" selection-start="11717" selection-end="11717" vertical-scroll-proportion="0.9859155">
+              <folding>
+                <element signature="e#216#271#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -115,60 +128,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PrizeTasksWindow.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/prizetasks/PrizeTasksWindow.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="75" selection-start="774" selection-end="841" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="View.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="151" column="45" selection-start="4919" selection-end="4919" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#41#96#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlayerAvatar.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/PlayerAvatar.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="5" selection-start="2131" selection-end="2131" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Profile.as" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="400" column="48" selection-start="11961" selection-end="11961" vertical-scroll-proportion="0.8760807">
-              <folding>
-                <element signature="e#212#267#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Config.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="47" selection-start="308" selection-end="312" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Chat.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="94" column="35" selection-start="2710" selection-end="2710" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="76" column="160" selection-start="2217" selection-end="2365" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#218#273#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -195,19 +161,19 @@
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/ChatMessageItem.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/messages/MessageWindow.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/ratings/RatingsPage.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Model.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/profile/User.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/PlayerAvatar.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/common/InfoWindow.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/common/DialogWindow.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as" />
       </list>
     </option>
   </component>
@@ -645,7 +611,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.4935065" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24918832" sideWeight="0.6448864" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39935064" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17207792" sideWeight="0.55965906" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17207792" sideWeight="0.55965906" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -727,19 +693,9 @@
         <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="0.33239436" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="181" column="5" selection-start="5345" selection-end="5345" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/Controller.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="121" column="83" selection-start="4924" selection-end="4924" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/PlayerAvatar.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="5" selection-start="2131" selection-end="2131" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
@@ -747,37 +703,9 @@
         <state line="13" column="47" selection-start="308" selection-end="312" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="35" selection-start="2710" selection-end="2710" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/profile/User.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="61" column="5" selection-start="1525" selection-end="1525" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="223" column="12" selection-start="7100" selection-end="7100" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="45" selection-start="4919" selection-end="4919" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#41#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/prizetasks/PrizeTasksWindow.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="75" selection-start="774" selection-end="841" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -791,6 +719,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="400" column="54" selection-start="11967" selection-end="11967" vertical-scroll-proportion="0.31412104">
+          <folding>
+            <element signature="e#212#267#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/PlayerAvatar.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="5" selection-start="2131" selection-end="2131" vertical-scroll-proportion="0.043227665">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="45" selection-start="4919" selection-end="4919" vertical-scroll-proportion="0.7798913">
+          <folding>
+            <element signature="e#41#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/prizetasks/PrizeTasksWindow.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="62" selection-start="570" selection-end="570" vertical-scroll-proportion="0.2853261">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/common/DialogWindow.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="54" column="48" selection-start="1849" selection-end="1849" vertical-scroll-proportion="0.0">
@@ -800,11 +760,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/chat/Chat.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="400" column="48" selection-start="11961" selection-end="11961" vertical-scroll-proportion="0.8760807">
+        <state line="76" column="160" selection-start="2217" selection-end="2365" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#212#267#0" expanded="true" />
+            <element signature="e#218#273#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/gamefield/GameField.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="619" column="93" selection-start="19308" selection-end="19308" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#213#268#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/miniprofile/MiniProfile.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="378" column="97" selection-start="11717" selection-end="11717" vertical-scroll-proportion="0.9859155">
+          <folding>
+            <element signature="e#216#271#0" expanded="true" />
           </folding>
         </state>
       </provider>

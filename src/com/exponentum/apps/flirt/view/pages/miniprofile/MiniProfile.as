@@ -11,6 +11,8 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.common.DialogWindow;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.pages.*;
 import com.exponentum.apps.flirt.model.profile.User;
@@ -365,12 +367,16 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onBecameFan(e:MouseEvent):void
 	{
-		Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
-		Controller.instance.buyFollowing(_user.guid);
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить стать поклонником " + _user.name + " за монеты?", "Внимание!", "Да", "Нет", function():void{
+			Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+			Controller.instance.buyFollowing(_user.guid);
+		}));
+
 	}
 
 	private function onFollowingBought(e:ObjectEvent):void
 	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели статус поклонника", "Успех!"));
 		Model.instance.removeEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
 		becomeFanButton.visible = false;
 	}

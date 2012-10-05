@@ -10,6 +10,7 @@ package com.exponentum.apps.flirt.view.pages.gamefield.chat
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 
 import flash.events.Event;
@@ -71,8 +72,11 @@ public class Chat extends CasaSprite
 		
 		_vipOnly = !_vipOnly;
 		vipCB.cb.gotoAndStop(int(_vipOnly) + 1);
-		
-		if(_vipOnly) Model.instance.addEventListener(Controller.GOT_VIP_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
+
+		if(_vipOnly) {
+			Model.instance.view.showInfoWindow(new InfoWindow("Если поставлена галочка, сообщения увидят только пользователи со статусом VIP!", "Информация!"));
+			Model.instance.addEventListener(Controller.GOT_VIP_CHAT_MESSAGE_FROM_ROOM, onNewMessageFromRoom);
+		}
 	}
 
 	private function onFocusIn(e:FocusEvent):void
