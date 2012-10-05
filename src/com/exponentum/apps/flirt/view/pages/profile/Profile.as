@@ -11,6 +11,8 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.common.DialogWindow;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.controlls.Align;
 import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 import com.exponentum.apps.flirt.view.pages.*;

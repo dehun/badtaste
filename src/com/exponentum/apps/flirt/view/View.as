@@ -6,6 +6,8 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
+import com.exponentum.apps.flirt.view.common.DialogWindow;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.pages.gifts.GiftsPage;
 import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
@@ -138,7 +140,16 @@ public class View extends Sprite
 		var messageWindow:MessageWindow = new MessageWindow(message, sender);
 		messageWindow.x = messageWindow.y = 760 / 2;
 		pageContainer.addChild(messageWindow);
+	}
 
+	public function showInfoWindow(window:InfoWindow):void
+	{
+		addChildAt(window, this.numChildren);
+	}
+
+	public function showDialogWindow(window:DialogWindow):void
+	{
+		addChildAt(window, this.numChildren);
 	}
 }
 }
