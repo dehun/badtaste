@@ -36,11 +36,12 @@ public class MessageWindow extends CasaSprite
 	private var _sender:User;
 	private var _receiver:User;
 
-	public function MessageWindow(message:Object, sender:User, receiver:User = null)
+	public function MessageWindow(message:Object, sender:User, receiver:User)
 	{
 
 		_message = message;
 		_sender = sender;
+		_receiver = receiver;
 		
 		addChild(asset);
 		asset.message.text = "...";
@@ -52,19 +53,9 @@ public class MessageWindow extends CasaSprite
 		}
 		asset.closeButton.addEventListener(MouseEvent.CLICK, onClose);
 		asset.replyButton.addEventListener(MouseEvent.CLICK, onReply);
-		asset.senderName.text = sender.name;
+		asset.senderName.text = _receiver.name;
 		asset.messageInput.text = "";
 
-//		var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-//		loader.addEventListener(Event.INIT, function(e:Event):void {
-//			var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-//			var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
-//			bmp.width = asset.senderAvatarContainer.width;
-//			bmp.scaleY = bmp.scaleX;
-//			bmp.smoothing = true;
-//			asset.senderAvatarContainer.holder.addChild(bmp);
-//		});
-//		var req:URLRequest = new URLRequest(_sender.photoLinkMedium);
 		var loader:Loader = new Loader();
 		var holder:Sprite = asset.senderAvatarContainer.holder;
 		var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
@@ -75,7 +66,7 @@ public class MessageWindow extends CasaSprite
 			bp.partsLoaded++;
 		});
 
-		var req:URLRequest = new URLRequest(_sender.photoLinkMedium);
+		var req:URLRequest = new URLRequest(_receiver.photoLinkMedium);
 		loader.load(req);
 
 		this.filters = [new DropShadowFilter(0, 45, 0x0, 1, 30, 30, 1, 3)];
@@ -85,7 +76,7 @@ public class MessageWindow extends CasaSprite
 	{
 		if(asset.messageInput.text != "")
 		{
-			Controller.instance.sendMail(_sender.guid, (_message.subject != "...")?"RE:" + _message.subject:"...", asset.messageInput.text);
+			Controller.instance.sendMail(_receiver.guid, asset.messageInput.text.substr(0, 100) + "...", asset.messageInput.text);
 			this.destroy();
 		}
 	}

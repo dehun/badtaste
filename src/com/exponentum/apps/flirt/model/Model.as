@@ -111,7 +111,7 @@ public class Model extends EventDispatcher
 
 	public function onGotMailbox(e:ObjectEvent):void
 	{
-		mailbox = e.data.mails as Array;
+		mailbox = (e.data.mails as Array).reverse();
 		dispatchEvent(new Event(e.type));
 	}
 

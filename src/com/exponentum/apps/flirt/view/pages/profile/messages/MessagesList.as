@@ -59,6 +59,7 @@ public class MessagesList extends CasaSprite
 			}
 		}
 		messagesDistribution.position();
+		scr.setTargetAndSource(messagesDistribution, _bottomPanelMask);
 	}
 
 	public function updateMessages():void
@@ -78,11 +79,12 @@ public class MessagesList extends CasaSprite
 		createScroll();
 	}
 
+	private var scr:Scroll = new Scroll(75);
 	private function createScroll():void
 	{
-		var scr:Scroll = new Scroll(75);
-		scr.x = messagesBG.width + 40;
-		scr.y = messagesBG.y + 27;
+		scr = new Scroll(75);
+		scr.x = 680;//messagesBG.width + 40;
+		scr.y = 90;//messagesBG.y + 27;
 		scr.setTargetAndSource(messagesDistribution, _bottomPanelMask);
 		scr.step = 10;
 		scr.addEventListener(Event.CHANGE, onScroll);

@@ -26,7 +26,7 @@ public class Scroll extends CasaSprite
 	private var _target:DisplayObject;
 	private var _source:DisplayObject;
 	private var _step:int = 10;
-	public var position:Number = 0;
+	private var _position:Number = 0;
 
 
 	public function Scroll(aHeight:int)
@@ -101,11 +101,11 @@ public class Scroll extends CasaSprite
 
 	private function onScrub(e:Event = null):void
 	{
-		if(position ==Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height)) return;
- 		position = Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height);
-		position = Math.min(position, 1);
-		position = Math.max(position, 0);
-		trace(position);
+		if(_position ==Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height)) return;
+ 		_position = Math.ceil(scrubber.y - (scrollBackground.y + scrubber.height / 2)) / (scrollBackground.height - scrubber.height);
+		_position = Math.min(_position, 1);
+		_position = Math.max(_position, 0);
+		trace(_position);
 		dispatchEvent(new Event(Event.CHANGE));
 	}
 
@@ -131,6 +131,17 @@ public class Scroll extends CasaSprite
 	public function set step(value:int):void
 	{
 		_step = value;
+	}
+
+	public function get position():Number
+	{
+		return _position;
+	}
+
+	public function set position(value:Number):void
+	{
+		_position = value;
+		scrubber.y = (scrollBackground.height - scrubber.height / 2) * _position;
 	}
 }
 }

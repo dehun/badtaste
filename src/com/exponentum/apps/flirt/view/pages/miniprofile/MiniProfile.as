@@ -166,7 +166,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onShowSendMailWindow(e:MouseEvent):void
 	{
-		Model.instance.view.showMessageWindow(null, _user);
+		Model.instance.view.showMessageWindow(null, Model.instance.owner, _user);
 		this.destroy();
 	}
 

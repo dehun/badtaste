@@ -63,7 +63,7 @@ public class FriendListItem extends CasaSprite
 		var user:User = e.data as User;
 		if(user.id != _profile.Uid) return;
 
-		asset.starsText.text = user.userRate.toString();
+		asset.starsText.text = user.userRate.toFixed(1);
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_RATE, onRate);
 	}
 
@@ -87,7 +87,7 @@ public class FriendListItem extends CasaSprite
 			Model.instance.view.showMiniProfile(user);
 		});
 
-		asset.heartsText.text = user.kisses.toString();
+		asset.heartsText.text = user.kisses.toFixed(1);
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_INFO_BY_SOCIAL_ID, onInfo);
 		
 		Controller.instance.getVipPoints(user.guid);

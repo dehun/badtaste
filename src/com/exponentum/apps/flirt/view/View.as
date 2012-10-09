@@ -52,7 +52,15 @@ public class View extends Sprite
 		model.view = this;
 		controller = aController;
 
+		Model.instance.addEventListener(Controller.ON_GOT_MAILBOX, onMailBox);
+		Model.instance.addEventListener(Controller.ON_GOT_NEW_MAIL, onGotNewMail);
+
 		createForeground();
+	}
+
+	private function onGotNewMail(e:ObjectEvent):void
+	{
+		controller.checkMailbox();
 	}
 
 	private function createForeground():void
@@ -75,6 +83,12 @@ public class View extends Sprite
 		profile.addEventListener(Config.TASKS, showTasks);
 		profile.addEventListener(Config.RATINGS, showRatings);
 		pageContainer.addChild(profile);
+		_mailNotifier = new mailNotifier();
+		pageContainer.addChild(_mailNotifier);
+		_mailNotifier.x = 400;
+		_mailNotifier.y = 540;
+		_mailNotifier.visible = false;
+		controller.checkMailbox();
 	}
 //----------------------------------------------------------------------------------------------------------------------
 // USER PROFILE
@@ -135,9 +149,9 @@ public class View extends Sprite
 		addChild(giftsWindow);
 	}
 
-	public function showMessageWindow(message:Object, sender:User):void
+	public function showMessageWindow(message:Object, sender:User, receiver:User):void
 	{
-		var messageWindow:MessageWindow = new MessageWindow(message, sender);
+		var messageWindow:MessageWindow = new MessageWindow(message, sender, receiver);
 		messageWindow.x = messageWindow.y = 760 / 2;
 		pageContainer.addChild(messageWindow);
 	}
@@ -150,6 +164,28 @@ public class View extends Sprite
 	public function showDialogWindow(window:DialogWindow):void
 	{
 		addChildAt(window, this.numChildren);
+	}
+
+//----------------------------------------------------------------------------------------------------------------------
+// MAIL NOTIFICATIONS
+//----------------------------------------------------------------------------------------------------------------------
+	private function onMailBox(e:Event):void
+	{
+		var numUnread:int = 0;
+		for each (var object:Object in model.mailbox)
+		{
+			if(object.Mail.isRead == "false") numUnread++;
+		}
+		alertMailNotification(numUnread);
+	}
+	
+	private var _mailNotifier:mailNotifier;
+	public function alertMailNotification(numUnreadMessages:int):void
+	{
+		if(!_mailNotifier) return;
+		_mailNotifier.visible = numUnreadMessages > 0;
+		_mailNotifier.tf.text = numUnreadMessages.toString();
+		_mailNotifier.mouseChildren = _mailNotifier.mouseEnabled = false;
 	}
 }
 }

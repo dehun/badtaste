@@ -10,6 +10,7 @@ package com.exponentum.apps.flirt.view.pages.profile.messages
 import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 
 import flash.events.MouseEvent;
@@ -48,14 +49,18 @@ public class MessageItem extends CasaSprite
 
 	private function onSenderProfile(e:ObjectEvent):void
 	{
+		var user:User = e.data as User;
+		if(user.guid != _message.senderGuid) return;
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onSenderProfile);
-		_sender = e.data as User;
-		this.senderName = _sender.name;
+		this.senderName = user.name;
+		_sender = user;
 	}
 
 	private function onReply(e:MouseEvent):void
 	{
-		Model.instance.view.showMessageWindow(_message, _sender);
+		Model.instance.view.showMessageWindow(_message, Model.instance.owner, _sender);
+		Controller.instance.markMailAsRead(_message.mailGuid);
+		//Controller.instance.checkMailbox();
 	}
 
 	public function get messageGuid():String
