@@ -130,7 +130,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 handle_mark_mail_as_read(CallerGuid, Message) ->
-    MailGuid = #mark_mail_as_read.target_mail_guid,
+    MailGuid = Message#mark_mail_as_read.target_mail_guid,
     ok = mail_srv:mark_mail_as_read(MailGuid),
     proxy_srv:async_route_messages(CallerGuid, [#on_mail_marked_as_read{marked_mail_guid = MailGuid}]).
     
