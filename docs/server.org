@@ -1,0 +1,24 @@
+* server problems fixing
+  ssh root@46.165.193.39 // you can find password in email
+  cd /home/dehun/
+** application server(erlang)
+*** checking is application server alive
+   ./kissbang/rel/dbgnode/bin/dbgnode ping // it should answer pong if it's alive
+*** start server if it's down
+   ./kissbang/rel/dbgnode/bin/dbgnode start
+*** rebuild server and recreate database
+    cd kissbang
+    make generate
+    ./rel/dbgnode/bin/dbgnode console
+    kissbang_app:test_setup_db(). // yep. here is the _dot_ at the end of command
+    C-c C-C // control - C twice
+*** regenerate protocol - you should do it before server rebuild if protocol have been changed
+    cd kissbang
+    make protocol
+** policy server
+*** start policy server
+   screen -S policyserver bash
+   cd ./Standalone/
+   python flashpolicyd.py --port==843 --file=./crossdomain.xml
+*** check are alive
+    telnet localhost 843 // telnet should show that you are connected

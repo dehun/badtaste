@@ -1,0 +1,13 @@
+# pack-refs with: peeled 
+762fd0af688ddfb114f336e629c4e87aeaa59d9e refs/tags/protobuffs-0.6.0
+69902c7134dc30536d3528c5a8108cd1903d7fc7 refs/tags/protobuffs-0.5.1
+55ff2683dd3c4502b4d9433a1d0ce5910b76fb7e refs/tags/protobuffs-0.5.0
+d7bf745b7bb3ed8149a7195f9712e1b02c1bb731 refs/tags/RELEASE_4
+70bd65f66beac07d1dd171ae3fd2d809e0a33ad0 refs/remotes/origin/sdc-skip-unknown-fields-rb
+87e5a53c0eaa1e80e89f233198f5259238472447 refs/remotes/origin/sdc-skip-unknown-fields
+7cf8fcd5a88be211058c8e872ec95bc644d5ecdf refs/remotes/origin/sdc-protect-imports-rb
+b43bf487704fcb1da3ced216beb1fb647020a7e1 refs/remotes/origin/sdc-protect-imports
+21eed0ef35c35124a800cf6d8ef339e8dae9ef24 refs/remotes/origin/sdc-merge-upstream
+c783cdb5c47d2a84d1de45b93ec1d15e29f4c1be refs/remotes/origin/master
+1cc2145db164908dfe1bc7d5ef3f6088fc787690 refs/remotes/origin/dip-misc-cleanup
+762fd0af688ddfb114f336e629c4e87aeaa59d9e refs/remotes/origin/az2-merge-protobuffs-with-upstream
