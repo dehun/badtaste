@@ -200,7 +200,7 @@ inner_mark_mail_as_read(MailGuid) ->
                         [] ->
                             no_such_mail;
                         [OldMail] ->
-                            mnesia:delete(OldMail),
+                            mnesia:delete_object(OldMail),
                             mnesia:write(OldMail#mail{is_read = "true"}),
                             ok
                         end
