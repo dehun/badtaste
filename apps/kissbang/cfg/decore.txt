@@ -23,8 +23,9 @@
      "img" : "http://radikal.ru/background2.jpg",
      "price" : "35"
      }
-]},
-{"groups" : [{"name" : "background",
-              "label" : "задники"},
-             {"name" : "frame",
-              "label" : "рамци"}]}
+],
+  "groups" : [{"name" : "background",
+               "label" : "задники"},
+              {"name" : "frame",
+               "label" : "рамци"}]
+}
