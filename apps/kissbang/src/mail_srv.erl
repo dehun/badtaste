@@ -193,10 +193,11 @@ inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
 
 inner_mark_mail_as_read(MailGuid) ->
     Trans = fun() ->
-                    case mnesia:read({mail, MailGuid}) of
+                    case qlc:e(qlc:q([Mail || Mail <- mnesia:table(mail), Mail#mail.mail_guid =:= MailGuid])) of
                         [] ->
                             no_such_mail;
                         [OldMail] ->
+                            mnesia:delete(OldMail),
                             mnesia:write(OldMail#mail{is_read = "true"}),
                             ok
                         end
