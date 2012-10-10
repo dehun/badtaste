@@ -11,6 +11,7 @@ import com.exponentum.apps.flirt.controller.Controller;
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.apps.flirt.view.pages.BackGroundedPage;
@@ -26,21 +27,6 @@ import org.casalib.layout.Distribution;
 public class RatingsPage extends BackGroundedPage
 {
 
-	private var ratingsHeader:RatingsHeader = new RatingsHeader();
-	private var timeTabBar:TabBar = new TabBar();
-	private var criteriaTabBarContainer:RatingsSortTabBar = new RatingsSortTabBar();
-	private var criteriaTabBar:TabBar = new TabBar();
-	private var _ratingsBg:RatingsBg = new RatingsBg();
-	private var backButton:BackButton = new BackButton();
-
-	private const DAY:String = "day";
-	private const WEEK:String = "week";
-	private const ALL_TIME:String = "allTime";
-	private const TOP_VIP:String = "topVip";
-
-	private var playersDistribution:Distribution = new Distribution();
-	private var _fromLocation:String = "";
-
 	private static const sortCriterias:Array = [
 		{name:"Общий", type:"common", buttonWidth:71},
 		{name:"Поцелуи", type:"kisses", buttonWidth:82},
@@ -51,7 +37,25 @@ public class RatingsPage extends BackGroundedPage
 		{name:"Оценки", type:"mark", buttonWidth:73},
 		{name:"Популярность", type:"popularity", buttonWidth:150}
 	];
-	
+
+	private const DAY:String = "day";
+	private const WEEK:String = "week";
+	private const ALL_TIME:String = "allTime";
+	private const TOP_VIP:String = "topVip";
+
+	//..................................................................................................................
+
+	private var ratingsHeader:RatingsHeader = new RatingsHeader();
+	private var timeTabBar:TabBar = new TabBar();
+	private var criteriaTabBarContainer:RatingsSortTabBar = new RatingsSortTabBar();
+	private var criteriaTabBar:TabBar = new TabBar();
+	private var _ratingsBg:RatingsBg = new RatingsBg();
+	private var backButton:BackButton = new BackButton();
+
+	private var _fromLocation:String = "";
+
+	private var playersDistribution:Distribution = new Distribution(500, true);
+	private var scroll:Scroll;
 
 	public function RatingsPage()
 	{
@@ -61,13 +65,27 @@ public class RatingsPage extends BackGroundedPage
 		createWindow();
 		createCriteriaTabBar();
 		createBackButton();
+		createPlayersDistribution();
+		createScroll();
 
 		Model.instance.addEventListener(Controller.ON_GOT_SCORES, onScores);
+		Controller.instance.getScores("kisses", "month");
 	}
 
 	private function onScores(e:ObjectEvent):void
 	{
+		playersDistribution.removeChildren(true);
+		for (var i:int = 0; i < 14; i++)
+		{
+			var ratingItem:ratingItemAsset = new ratingItemAsset();
+			ratingItem.playerName.text = "Some player name";
+			ratingItem.kisses.text = "100";
+			ratingItem.place.text = (i + 1).toString();
+			playersDistribution.addChildWithDimensions(ratingItem, ratingItem.width + 3, ratingItem.height + 2);
+			//todo: add avatar and name from user info
+		}
 
+		playersDistribution.position();
 	}
 
 	private function createBackButton():void
@@ -127,6 +145,21 @@ public class RatingsPage extends BackGroundedPage
 		centerX(_ratingsBg, 760);
 		_ratingsBg.y = 155;
 		addChild(_ratingsBg);
+	}
+
+	private function createPlayersDistribution():void
+	{
+		playersDistribution.x = 40;
+		playersDistribution.y = 230;
+		addChild(playersDistribution);
+	}
+
+	private function createScroll():void
+	{
+		scroll = new Scroll(300);
+		scroll.x = 705;
+		scroll.y = 280;
+		addChild(scroll);
 	}
 
 	//----------------------------------------------------------
