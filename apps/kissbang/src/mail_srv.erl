@@ -187,6 +187,9 @@ inner_send_mail(SenderGuid, ReceiverGuid, Subject, Body, Type) ->
                                     body = Body,
                                     is_read = "false"},
                     mnesia:write(NewMail),
+                    proxy_srv:route_messages(ReceiverGuid, [#on_got_new_mail{sender_guid = SenderGuid, 
+                                                                             subject = Subject,
+                                                                             body = Body}]),
                     ok
             end,
     mnesia:activity(sync_dirty, Trans, [], mnesia_frag).
