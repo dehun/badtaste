@@ -14,7 +14,7 @@
 
 %% API
 -export([start_link/0]).
--export([handle_leave_room/2]).
+-export([handle_leave_current_room/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -54,6 +54,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(leave_current_room, fun handle_leave_current_room/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -128,7 +129,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_leave_room(CallerGuid, Message) ->
+handle_leave_current_room(CallerGuid, Message) ->
     case roommgr_srv:leave_room(CallerGuid) of
         ok ->
             proxy_srv:async_route_messages(CallerGuid, [#on_current_room_leaved_successfully{}]);
