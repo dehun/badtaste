@@ -212,7 +212,7 @@ inner_add_user_decore_trans(BuyerGuid, Decore) ->
 
 load_decore({struct, DecoreJson}) ->
     #decore{guid = binary_to_list(proplists:get_value(<<"guid">>, DecoreJson)),
-            type = binary_to_list(proplists:get_value(<<"type">>, DecoreJson)),
+            type = binary_to_list(proplists:get_value(<<"group">>, DecoreJson)),
             price = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, DecoreJson)))};
 load_decore(Error) ->
     throw({wrong_decore, Error}).

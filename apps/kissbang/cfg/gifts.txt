@@ -89,4 +89,10 @@
      "description" : "yep. this is a 15 gift",
      "group" : "other"
      }
-]}
+]},
+{"groups" : [{"name" : "other",
+             "label" : "чёто"},
+             {"name" : "hellmets",
+              "label" : "касге"},
+             {"name" : "toys",
+              "забавге!"}]}
