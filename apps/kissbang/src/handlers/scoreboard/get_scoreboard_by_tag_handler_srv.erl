@@ -53,6 +53,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(get_scoreboard_by_tag, fun handle_get_scoreboard_by_tag/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
