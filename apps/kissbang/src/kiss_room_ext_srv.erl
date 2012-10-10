@@ -135,7 +135,7 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
                              [NewCurrentState#kiss_mode_state.kisser, NewCurrentState#kiss_mode_state.victim]),
     if
         AreAllKissed ->
-            log_srv:error("[room ~p] all are kissed. moving to next roung ", [self()]),
+            log_srv:error("[room ~p] all are kissed. moving to next round ", [self()]),
             sympathy_srv:add_sympathy(element(2, element(2, NewCurrentState#kiss_mode_state.kisser)),
                                       element(2, element(2, NewCurrentState#kiss_mode_state.victim))),
             LastSwinger = NewCurrentState#kiss_mode_state.last_swinger,
@@ -148,19 +148,6 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
 kiss_mode(_, State) ->
     log_srv:debug("invalid message in kiss mode"),
     {next_state, kiss_mode, State, 15000}.
-
-%% active({on_room_death}, _From, State) ->
-%%     Reply = ok,
-%%     {stop, normal, Reply, State};
-%% active({on_user_join, UserGuid}, _From, State) ->
-%%     {Reply, NewState} = inner_user_join(State, UserGuid),
-%%     {reply, Reply, active, NewState};
-%% active({on_user_leave, UserGuid}, _From, State) ->
-%%     {Reply, NewState} = inner_user_leave(State, UserGuid),
-%%     {reply, Reply, active, NewState}.
-
-
-
 
 %%--------------------------------------------------------------------
 %% @private
