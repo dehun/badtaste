@@ -129,11 +129,11 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-handle_leave_current_room(CallerGuid, Message) ->
+handle_leave_current_room(CallerGuid, _Message) ->
     case roommgr_srv:leave_room(CallerGuid) of
         ok ->
             proxy_srv:async_route_messages(CallerGuid, [#on_current_room_leaved_successfully{}]);
-        Error ->
+        _Error ->
             proxy_srv:async_route_messages(CallerGuid, [#on_current_room_leave_failed{}])
     end.
     
