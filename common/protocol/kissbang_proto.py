@@ -142,7 +142,6 @@ class OnJoinedToTaggedRoomQueue(pgMessage):
 
 
 # rooms
-
 class OnJoinedToRoom(pgMessage):
     users = pgList(pgString()) # user guids
     state = pgString()
