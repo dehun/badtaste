@@ -51,6 +51,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    handler_utils:register_handler(buy_user_following, fun handle_buy_user_following/2),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
