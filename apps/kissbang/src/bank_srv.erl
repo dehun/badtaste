@@ -207,7 +207,7 @@ inner_withdraw(UserGuid, Gold, TransSync) ->
     %% notify user
     case Result of 
         {ok, NewGold} ->
-%%            proxy_srv:route_messages(UserGuid, [#on_bank_balance_changed{new_gold = NewGold}]),
+            proxy_srv:route_messages(UserGuid, [#on_bank_balance_changed{new_gold = NewGold}]),
             Result;
         Error ->
             Error

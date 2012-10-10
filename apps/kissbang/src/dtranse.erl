@@ -45,8 +45,8 @@ dtranse(Functions) ->
 	FunctionIds = lists:map(fun(Function) ->
 									{FunctionId, Callback} = generate_callback(TransId),
 									spawn_link(fun() ->
-													   Function(Callback)
-											   end),
+                                                  catch Function(Callback)
+                                          end),
 									FunctionId
                             end, Functions),
 	% gather votes
@@ -68,6 +68,7 @@ dtranse(Functions) ->
 
 transefun(Fun, TransSync) ->
     fun() ->
+            
             Result = Fun(),
             TransSync(element(1, Result)),
             element(2, Result)
