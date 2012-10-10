@@ -24,7 +24,7 @@ send_message(Origin, Message) ->
 origin_work_loop(State) ->
     receive
         {send_message, Message} ->
-%            log_srv:debug("sending ~p message to origin ~p", [Message, self()]),
+            log_srv:debug("sending ~p message to origin ~p", [Message, self()]),
             gen_tcp:send(State#state.socket, list_to_binary(kissbang_json_messaging:serialize_message(Message))),
             origin_work_loop(State);
         {got_packet, Packet} ->
