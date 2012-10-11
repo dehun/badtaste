@@ -1,0 +1,128 @@
+<html>
+<head><title>.eunit/meck_mod.COVER.html</title></head><body bgcolor=white text=black>
+<pre>
+File generated from /mnt/work/dev/home/kissbang/extern/meck/.eunit/meck_mod.erl by COVER 2012-07-26 at 18:11:24
+
+****************************************************************************
+
+        |  %%==============================================================================
+        |  %% Copyright 2011 Adam Lindberg & Erlang Solutions Ltd.
+        |  %%
+        |  %% Licensed under the Apache License, Version 2.0 (the "License");
+        |  %% you may not use this file except in compliance with the License.
+        |  %% You may obtain a copy of the License at
+        |  %%
+        |  %% http://www.apache.org/licenses/LICENSE-2.0
+        |  %%
+        |  %% Unless required by applicable law or agreed to in writing, software
+        |  %% distributed under the License is distributed on an "AS IS" BASIS,
+        |  %% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        |  %% See the License for the specific language governing permissions and
+        |  %% limitations under the License.
+        |  %%==============================================================================
+        |  
+        |  %% @hidden
+        |  %% @author Adam Lindberg &lt;eproxus@gmail.com&gt;
+        |  %% @copyright 2011, Adam Lindberg & Erlang Solutions Ltd
+        |  %% @doc Module wrangling helper functions.
+        |  
+        |  -module(meck_mod).
+        |  
+        |  %% Interface exports
+        |  -export([abstract_code/1]).
+        |  -export([add_exports/2]).
+        |  -export([beam_file/1]).
+        |  -export([compile_and_load_forms/1]).
+        |  -export([compile_and_load_forms/2]).
+        |  -export([compile_options/1]).
+        |  -export([rename_module/2]).
+        |  
+        |  %% Types
+        |  -type erlang_form() :: term().
+        |  -type compile_options() :: [term()].
+        |  -type export() :: {atom(), byte()}.
+        |  
+        |  %%==============================================================================
+        |  %% Interface exports
+        |  %%==============================================================================
+        |  
+        |  -spec abstract_code(binary()) -&gt; erlang_form().
+        |  abstract_code(BeamFile) -&gt;
+    20..|      case beam_lib:chunks(BeamFile, [abstract_code]) of
+        |          {ok, {_, [{abstract_code, {raw_abstract_v1, Forms}}]}} -&gt;
+    18..|              Forms;
+        |          {ok, {_, [{abstract_code, no_abstract_code}]}} -&gt;
+     2..|              throw(no_abstract_code)
+        |      end.
+        |  
+        |  -spec add_exports([export()], erlang_form()) -&gt; erlang_form().
+        |  add_exports(Exports, AbsCode) -&gt;
+     1..|      {attribute, Line, export, OrigExports} = lists:keyfind(export, 3, AbsCode),
+     1..|      Attr = {attribute, Line, export, OrigExports ++ Exports},
+     1..|      lists:keyreplace(export, 3, AbsCode, Attr).
+        |  
+        |  -spec beam_file(module()) -&gt; binary().
+        |  beam_file(Module) -&gt;
+        |      % code:which/1 cannot be used for cover_compiled modules
+   128..|      case code:get_object_code(Module) of
+    46..|          {_, Binary, _Filename} -&gt; Binary;
+    82..|          error                  -&gt; throw({object_code_not_found, Module})
+        |      end.
+        |  
+        |  -spec compile_and_load_forms(erlang_form()) -&gt; binary().
+   202..|  compile_and_load_forms(AbsCode) -&gt; compile_and_load_forms(AbsCode, []).
+        |  
+        |  -spec compile_and_load_forms(erlang_form(), compile_options()) -&gt; binary().
+        |  compile_and_load_forms(AbsCode, Opts) -&gt;
+   219..|      case compile:forms(AbsCode, [return_errors|Opts]) of
+        |          {ok, ModName, Binary} -&gt;
+   219..|              load_binary(ModName, Binary),
+   218..|              Binary;
+        |          {ok, ModName, Binary, _Warnings} -&gt;
+<font color=red>     0..|              load_binary(ModName, Binary),</font>
+<font color=red>     0..|              Binary;</font>
+        |          Error -&gt;
+<font color=red>     0..|              exit({compile_forms, Error})</font>
+        |      end.
+        |  
+        |  -spec compile_options(binary() | module()) -&gt; compile_options().
+        |  compile_options(BeamFile) when is_binary(BeamFile) -&gt;
+    26..|      case beam_lib:chunks(BeamFile, [compile_info]) of
+        |          {ok, {_, [{compile_info, Info}]}} -&gt;
+    26..|            filter_options(proplists:get_value(options, Info));
+        |          _ -&gt;
+<font color=red>     0..|              []</font>
+        |      end;
+        |  compile_options(Module) -&gt;
+     2..|    filter_options(proplists:get_value(options, Module:module_info(compile))).
+        |  
+        |  -spec rename_module(erlang_form(), module()) -&gt; erlang_form().
+        |  rename_module([{attribute, Line, module, OldAttribute}|T], NewName) -&gt;
+    17..|      case OldAttribute of
+        |          {_OldName, Variables} -&gt;
+     2..|              [{attribute, Line, module, {NewName, Variables}}|T];
+        |          _OldName -&gt;
+    15..|              [{attribute, Line, module, NewName}|T]
+        |      end;
+        |  rename_module([H|T], NewName) -&gt;
+    17..|      [H|rename_module(T, NewName)].
+        |  
+        |  %%==============================================================================
+        |  %% Internal functions
+        |  %%==============================================================================
+        |  
+        |  load_binary(Name, Binary) -&gt;
+   219..|      case code:load_binary(Name, "", Binary) of
+   218..|          {module, Name}  -&gt; ok;
+     1..|          {error, Reason} -&gt; exit({error_loading_module, Name, Reason})
+        |      end.
+        |  
+        |  % parse transforms have already been applied to the abstract code in the
+        |  % module, and often are not always available when compiling the forms, so
+        |  % filter them out of the options
+        |  filter_options (Options) -&gt;
+    28..|      lists:filter(fun({parse_transform,_}) -&gt; false; (_) -&gt; true end, Options).
+        |  
+</pre>
+</body>
+</html>
