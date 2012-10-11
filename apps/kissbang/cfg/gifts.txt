@@ -1,4 +1,4 @@
-﻿{ "gifts" : [
+{ "gifts" : [
     {"guid" : "1",
      "name" : "Губы",
      "price" : "10",
