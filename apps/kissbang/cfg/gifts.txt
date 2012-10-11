@@ -10,7 +10,7 @@
      "name" : "Губы",
      "price" : "10",
      "description" : "Описание губ",
-     "group" : "hellmets"
+     "group" : "hellmets",
      "image":"http://static.evast.ru/gifts/gift1.swf"
     },
     {"guid" : "3",
