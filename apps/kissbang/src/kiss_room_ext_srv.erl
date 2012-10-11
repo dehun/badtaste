@@ -343,10 +343,12 @@ kiss_action(Kisser, Victim, Action, State) ->
             VictimGuid = element(2, element(2, Victim)),
             case Action of
                 kiss ->
+                    log_srv:debug("sending on kiss to all"),
                     room_srv:broadcast_message(State#state.room_pid,
                                                #on_kiss{kisser_guid = KisserGuid, 
                                                         kissed_guid = VictimGuid});
                 refuse ->
+                    log_srv:debug("sending on refuse to kiss to all"),
                     room_srv:broadcast_message(State#state.room_pid,
                                                #on_refuse_to_kiss{refuser_guid = KisserGuid, 
                                                                   refused_guid = VictimGuid})
