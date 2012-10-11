@@ -1,99 +1,149 @@
-{ "gifts" : [
+﻿{ "gifts" : [
     {"guid" : "1",
-     "name" : "first gift",
+     "name" : "Губы",
      "price" : "10",
-     "description" : "this is just a first gift",
+     "description" : "Описание губ",
      "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift1.swf"
     },
     {"guid" : "2",
-     "name" : "second gift",
-     "price" : "20",
-     "description" : "yep. this is a second gift",
+     "name" : "Губы",
+     "price" : "10",
+     "description" : "Описание губ",
      "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift1.swf"
     },
     {"guid" : "3",
-     "name" : "third gift",
+     "name" : "Желтая машина",
      "price" : "20",
-     "description" : "yep. this is a third gift",
-     "group" : "hellmets"
+     "description" : "Описание желтой машины",
+     "group" : "other"
+     "image":"http://static.evast.ru/gifts/gift2.swf"
     },
     {"guid" : "4",
-     "name" : "four gift",
+     "name" : "Коктейль",
      "price" : "20",
-     "description" : "yep. this is a 4 gift",
+     "description" : "Описание коктейля",
      "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift3.swf"
     },
     {"guid" : "5",
-     "name" : "first gift",
-     "price" : "10",
-     "description" : "this is just a 5 gift",
-     "group" : "toys"
+     "name" : "Коктейль",
+     "price" : "20",
+     "description" : "Описание коктейля",
+     "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift3.swf"
     },
     {"guid" : "6",
-     "name" : "6 gift",
+     "name" : "Пиво",
      "price" : "20",
-     "description" : "yep. this is a 6 gift",
-     "group" : "hellmets"
+     "description" : "Описание пива",
+     "group" : "other"
+     "image":"http://static.evast.ru/gifts/gift4.swf"
     },
     {"guid" : "7",
-     "name" : "7 gift",
-     "price" : "20",
-     "description" : "yep. this is a 7 gift",
-     "group" : "hellmets"
+     "name" : "Сердце со стрелой",
+     "price" : "10",
+     "description" : "Описание сердца со стрелой",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift5.swf"
     },
     {"guid" : "8",
-     "name" : "8 gift",
-     "price" : "20",
-     "description" : "yep. this is a 8 gift",
-     "group" : "toys"
+     "name" : "Сердце со стрелой",
+     "price" : "10",
+     "description" : "Описание сердца со стрелой",
+     "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift5.swf"
     },
     {"guid" : "9",
-     "name" : "first gift",
-     "price" : "10",
-     "description" : "this is just a first gift",
+     "name" : "Ключик",
+     "price" : "20",
+     "description" : "Описание ключика",
      "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift6.swf"
     },
     {"guid" : "10",
-     "name" : "second gift",
+     "name" : "Эскимо",
      "price" : "20",
-     "description" : "yep. this is a second gift",
-     "group" : "hellmets"
+     "description" : "Описание эскимо",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift7.swf"
     },
     {"guid" : "11",
-     "name" : "11 gift",
+     "name" : "Диадема",
      "price" : "20",
-     "description" : "yep. this is a third gift",
+     "description" : "Описание диадемы",
      "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift8.swf"
     },
     {"guid" : "12",
-     "name" : "12 gift",
-     "price" : "20",
-     "description" : "yep. this is a 12 gift",
+     "name" : "Бумажник",
+     "price" : "10",
+     "description" : "Описание бумажника",
      "group" : "other"
+     "image":"http://static.evast.ru/gifts/gift9.swf"
     },
     {"guid" : "13",
-     "name" : "13 gift",
-     "price" : "10",
-     "description" : "this is just a 13 gift",
-     "group" : "other"
+     "name" : "Сердце",
+     "price" : "20",
+     "description" : "Описание сердца",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift10.swf"
     },
     {"guid" : "14",
-     "name" : "14 gift",
+     "name" : "Шампанское",
      "price" : "20",
-     "description" : "yep. this is a 14 gift",
-     "group" : "other"
+     "description" : "Описание шампанского",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift11.swf"
     },
     {"guid" : "15",
-     "name" : "16 gift",
+     "name" : "Бокалы",
      "price" : "20",
-     "description" : "yep. this is a 15 gift",
+     "description" : "Описание бокалов",
      "group" : "other"
+     "image":"http://static.evast.ru/gifts/gift12.swf"
+    },
+    {"guid" : "16",
+     "name" : "Бокалы",
+     "price" : "20",
+     "description" : "Описание бокалов",
+     "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift12.swf"
+    },
+    {"guid" : "17",
+     "name" : "Бокалы",
+     "price" : "20",
+     "description" : "Описание бокалов",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift12.swf"
+    },
+    {"guid" : "18",
+     "name" : "Спорткар",
+     "price" : "10",
+     "description" : "Описание спорткара",
+     "group" : "other"
+     "image":"http://static.evast.ru/gifts/gift13.swf"
+    },
+    {"guid" : "19",
+     "name" : "Роза",
+     "price" : "20",
+     "description" : "Описание розы",
+     "group" : "hellmets"
+     "image":"http://static.evast.ru/gifts/gift14.swf"
+    },
+    {"guid" : "20",
+     "name" : "Мороженое",
+     "price" : "20",
+     "description" : "Описание мороженого",
+     "group" : "toys"
+     "image":"http://static.evast.ru/gifts/gift14.swf"
     }
 ],
   "groups" : [{"name" : "other",
-               "label" : "чёто"},
+               "label" : "Мужские"},
               {"name" : "hellmets",
-               "label" : "касге"},
+               "label" : "Жунские"},
               {"name" : "toys",
-               "label" : "забавге!"}]
+               "label" : "Общие"}]
 }
