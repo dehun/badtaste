@@ -173,3 +173,18 @@
    -> GetScoreboardByTag(tag = "kisses", period="week")
    <- OnGotScoreboardByTag(tag = "kisses", scorelist = [UserScore(userGuid = "someguid", score = 100500), ...])
 
+* game
+** on somebody kissed somebody
+   <- OnKiss(kisserGuid = "kisserguid", kissedGuid = "kissedGuid")
+** on somebody refused to kiss somebody
+   <- OnRefuseToKiss(refuserGuid = "guid1", refusedGuid = "guid2")
+** kiss somebody
+   -> Kiss()
+** refuse to kiss
+   -> RefuseToKiss()
+** swing bottle
+   -> SwingBottle()
+** on somebody  swinged bottle
+   <- OnBottleSwinged(swingerGuid = "guid1", victimGuid = "guid2")
+** on new bottle swinger selected
+   <- OnNewBottleSwinger(swingerGuid = "guid1")
