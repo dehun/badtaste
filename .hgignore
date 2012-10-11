@@ -1,5 +1,23 @@
-beam
-rel/.+
-.+\.pyc$
+
 .+\~$
 .+\#
+
+# builded python
+.+\.pyc$
+
+# builded erlang
+beam
+rel/.+
+ebin/.+
+
+#rope
+\.ropeproject/
+# auto generated messaging files
+admin_messaging.hrl
+kissbang_messaging.hrl
+admin_json_messaging.py
+kissbang_messaging.py
+admin_messaging.py
+kissbang_json_messaging.py
+admin_json_messaging.erl
+kissbang_json_messaging.erl
