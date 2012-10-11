@@ -31,17 +31,19 @@ public class RatingsPage extends BackGroundedPage
 		{name:"Общий", type:"common", buttonWidth:71},
 		{name:"Поцелуи", type:"kisses", buttonWidth:82},
 		{name:"Симпатии", type:"sympathy", buttonWidth:92},
-		{name:"Подарки", type:"gift_recv", buttonWidth:80},
-		{name:"Дарители", type:"gift_send", buttonWidth:88},
+		{name:"Подарки", type:"received_gifts", buttonWidth:80},
+		{name:"Дарители", type:"sended_gifts", buttonWidth:88},
 		{name:"Друзья", type:"followers", buttonWidth:73},
-		{name:"Оценки", type:"mark", buttonWidth:73},
+		{name:"Оценки", type:"rated", buttonWidth:73},
 		{name:"Популярность", type:"popularity", buttonWidth:150}
-	];
+	];//sended_gifts, received_gifts, sympathy, rated, rater, vippoints
 
 	private const DAY:String = "day";
 	private const WEEK:String = "week";
-	private const ALL_TIME:String = "allTime";
+	private const MONTH:String = "month";
 	private const TOP_VIP:String = "topVip";
+
+	private const MAX_ITEMS_PER_SCREEN:int = 14;
 
 	//..................................................................................................................
 
@@ -55,7 +57,11 @@ public class RatingsPage extends BackGroundedPage
 	private var _fromLocation:String = "";
 
 	private var playersDistribution:Distribution = new Distribution(500, true);
+	private var ratingItems:Vector.<RatingsItem> = new Vector.<RatingsItem>();
 	private var scroll:Scroll;
+
+	private var currentTimeInterval:String = MONTH;
+	private var currentTag:String = "sympathy";
 
 	public function RatingsPage()
 	{
@@ -69,23 +75,23 @@ public class RatingsPage extends BackGroundedPage
 		createScroll();
 
 		Model.instance.addEventListener(Controller.ON_GOT_SCORES, onScores);
+
 		Controller.instance.getScores("kisses", "month");
 	}
 
 	private function onScores(e:ObjectEvent):void
 	{
-		playersDistribution.removeChildren(true);
-		for (var i:int = 0; i < 14; i++)
+		var list:Array = (e.data.scorelist as Array);
+		for each (var ri:RatingsItem in ratingItems)
 		{
-			var ratingItem:ratingItemAsset = new ratingItemAsset();
-			ratingItem.playerName.text = "Some player name";
-			ratingItem.kisses.text = "100";
-			ratingItem.place.text = (i + 1).toString();
-			playersDistribution.addChildWithDimensions(ratingItem, ratingItem.width + 3, ratingItem.height + 2);
-			//todo: add avatar and name from user info
+			ri.visible = false;
+		}
+		for (var i:int = 0; i < Math.min(MAX_ITEMS_PER_SCREEN, list.length); i++)
+		{
+			ratingItems[i].visible = true;
+			ratingItems[i].reload(list[i].UserScore.userGuid, i + 1);
 		}
 
-		playersDistribution.position();
 	}
 
 	private function createBackButton():void
@@ -129,15 +135,15 @@ public class RatingsPage extends BackGroundedPage
 		addChild(timeTabBar);
 		timeTabBar.addTab(new TabButton(new RatingsTimeTab()), "День", DAY, 130);
 		timeTabBar.addTab(new TabButton(new RatingsTimeTab()), "Неделя", WEEK, 130);
-		timeTabBar.addTab(new TabButton(new RatingsTimeTab()), "Месяц", ALL_TIME, 180);
+		timeTabBar.addTab(new TabButton(new RatingsTimeTab()), "Месяц", MONTH, 180);
 		timeTabBar.addTab(new TabButton(new RatingsTimeTab()), "Top VIP", TOP_VIP, 130);
 
 		centerX(timeTabBar, 760);
 
-		timeTabBar.addEventListener(DAY, onRateByDay);
-		timeTabBar.addEventListener(WEEK, onRateByWeek);
-		timeTabBar.addEventListener(ALL_TIME, onRateAllTime);
-		timeTabBar.addEventListener(TOP_VIP, onTopVIP);
+		timeTabBar.addEventListener(DAY, onPeriodChanged);
+		timeTabBar.addEventListener(WEEK, onPeriodChanged);
+		timeTabBar.addEventListener(MONTH, onPeriodChanged);
+		timeTabBar.addEventListener(TOP_VIP, onPeriodChanged);
 	}
 
 	private function createWindow():void
@@ -152,6 +158,15 @@ public class RatingsPage extends BackGroundedPage
 		playersDistribution.x = 40;
 		playersDistribution.y = 230;
 		addChild(playersDistribution);
+
+		for (var i:int = 0; i < Math.min(MAX_ITEMS_PER_SCREEN); i++)
+		{
+			var ratingItem:RatingsItem = new RatingsItem();
+			ratingItems.push(ratingItem);
+			playersDistribution.addChildWithDimensions(ratingItem, ratingItem.width + 3, ratingItem.height + 2);
+		}
+
+		playersDistribution.position();
 	}
 
 	private function createScroll():void
@@ -164,26 +179,6 @@ public class RatingsPage extends BackGroundedPage
 
 	//----------------------------------------------------------
 
-	private function onRateByDay(e:Event):void
-	{
-
-	}
-
-	private function onRateByWeek(e:Event):void
-	{
-
-	}
-
-	private function onRateAllTime(e:Event):void
-	{
-
-	}
-
-	private function onTopVIP(e:Event):void
-	{
-
-	}
-
 	private function onBack(e:MouseEvent):void
 	{
 		dispatchEvent(new Event(fromLocation));
@@ -191,7 +186,14 @@ public class RatingsPage extends BackGroundedPage
 
 	private function onTabChange(e:Event):void
 	{
+		currentTag = e.type;
+		Controller.instance.getScores(currentTag, currentTimeInterval);
+	}
 
+	private function onPeriodChanged(e:Event):void
+	{
+		currentTimeInterval = e.type;
+		Controller.instance.getScores(currentTag, currentTimeInterval);
 	}
 
 	public function get fromLocation():String

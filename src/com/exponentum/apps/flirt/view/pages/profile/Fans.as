@@ -113,21 +113,6 @@ public class Fans extends CasaSprite
 				Model.instance.view.showMiniProfile(user);
 			});
 
-//			var loader:UnsecurityDisplayLoader = new UnsecurityDisplayLoader();
-//			loader.addEventListener(Event.INIT, function(e:Event):void {
-//				var loader:UnsecurityDisplayLoader = e.target as UnsecurityDisplayLoader;
-//				var bmp:Bitmap = (new Bitmap((loader.content as Bitmap).bitmapData));
-//				bmp.width = fansBlock.fansAvatarBig.width;
-//				bmp.scaleY = bmp.scaleX;
-//				bmp.smoothing = true;
-//				fansBlock.fansAvatarBig.fansAvatarHolder.addChild(bmp);
-//				updatePastFollowersView();
-//				bpMainFollower.partsLoaded++;
-//			});
-//			var req:URLRequest		= new URLRequest(user.photoLinkMedium);
-//			loader.load(req);
-//			var bpMainFollower:BlockerPreloader = new BlockerPreloader(fansBlock.fansAvatarBig, fansBlock.fansAvatarBig.width, fansBlock.fansAvatarBig.height, 0);
-//			bpMainFollower.preload(1);
 			var req:URLRequest = new URLRequest(user.photoLinkMedium);
 			var loader:Loader = new Loader();
 			var holder:Sprite = fansBlock.fansAvatarBig.fansAvatarHolder;
