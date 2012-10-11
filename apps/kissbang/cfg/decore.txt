@@ -1,4 +1,4 @@
-﻿{ "decores" : [
+{ "decores" : [
     {"guid" : "1",
      "name" : "Фон-1",
      "group" : "background",
