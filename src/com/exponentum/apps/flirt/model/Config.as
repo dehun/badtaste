@@ -21,8 +21,11 @@ public class Config
 	public static const JOBS_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/jobs.txt";
 	public static var jobsData:Object = {};
 
-	public static const SHOP_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/gifts.txt";
-	public static var shopData:Object = {};
+	public static const GIFT_SHOP_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/gifts.txt";
+	public static var giftShopData:Object = {};
+
+	public static const DECOR_SHOP_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/decore.txt";
+	public static var decorShopData:Object = {};
 	//----------------------------------------------
 	// View states constants
 	//----------------------------------------------

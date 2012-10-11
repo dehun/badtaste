@@ -89,6 +89,32 @@ public class Kiss extends Sprite
 	private function onJobsLoaded(e:Event):void
 	{
 		Config.jobsData = JSON.decode(e.target.data);
+		loadShopConfig();
+	}
+
+	private function loadShopConfig():void
+	{
+		var req:URLLoader = new URLLoader();
+		req.addEventListener(Event.COMPLETE, onShopConfigLoaded);
+		req.load(new URLRequest(Config.GIFT_SHOP_CONFIG_URL));
+	}
+
+	private function onShopConfigLoaded(e:Event):void
+	{
+		Config.giftShopData = JSON.decode(e.target.data);
+		loadDecorConfig();
+	}
+
+	private function loadDecorConfig():void
+	{
+		var req:URLLoader = new URLLoader();
+		req.addEventListener(Event.COMPLETE, onDecorConfigLoaded);
+		req.load(new URLRequest(Config.DECOR_SHOP_CONFIG_URL));
+	}
+
+	private function onDecorConfigLoaded(e:Event):void
+	{
+		Config.decorShopData = JSON.decode(e.target.data);
 		configsLoaded();
 	}
 

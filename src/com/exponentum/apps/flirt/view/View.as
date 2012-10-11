@@ -130,8 +130,10 @@ public class View extends Sprite
 	{
 		if(shop) return;
 		shop = new ShopPage();
-		centerX(shop, 760);
-		centerY(shop, 760);
+		shop.x = 50;
+		shop.y = 140;
+//		centerX(shop, 760);
+//		centerY(shop, 760);
 		pageContainer.addChild(shop);
 	}
 
