@@ -185,6 +185,7 @@ inner_buy_following(BuyerGuid, TargetGuid) ->
                                 {ok, _} ->
                                     job_srv:try_complete_job(BuyerGuid, <<"5">>),
                                     job_srv:try_complete_job(TargetGuid, <<"6">>),
+                                    scoreboard_srv:add_score(TargetGuid, "followers"),
                                     mnesia:write(NewFollowersInfo),
                                     ok;
                                 Error ->
