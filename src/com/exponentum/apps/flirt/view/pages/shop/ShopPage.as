@@ -7,6 +7,7 @@
  */
 package com.exponentum.apps.flirt.view.pages.shop
 {
+import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
 import com.exponentum.utils.centerX;
@@ -30,6 +31,7 @@ public class ShopPage extends CasaSprite
 		{name:"Стили", type:"styles"},
 		{name:"Бутылки", type:"bottles"}
 	];
+	private var scroll:Scroll;
 
 	public function ShopPage()
 	{
@@ -59,6 +61,20 @@ public class ShopPage extends CasaSprite
 		}
 
 		centerX(tabBar, this.width);
+	}
+
+	private function createScroll():void
+	{
+		scroll = new Scroll(300);
+		scroll.x = 705;
+		scroll.y = 280;
+		addChild(scroll);
+		scroll.addEventListener(Event.CHANGE, onScroll);
+	}
+
+	private function onScroll(e:Event):void
+	{
+
 	}
 
 	private function reloadItems():void

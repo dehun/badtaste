@@ -190,8 +190,6 @@ public class RatingsPage extends BackGroundedPage
 		{
 			ratingItems[i].reload(currentList[i + startIndex].UserScore.userGuid, i + startIndex + 1);
 		}
-
-
 	}
 
 	//----------------------------------------------------------

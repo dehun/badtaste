@@ -110,8 +110,8 @@ public class View extends Sprite
 	{
 		pageContainer.removeChildren(true, true);
 		ratings = new RatingsPage();
-		if(e.currentTarget is Profile) ratings.fromLocation = Config.PROFILE;
-		if(e.currentTarget is GameField) ratings.fromLocation = Config.GAMEFIELD;
+		if(!e || e.currentTarget is Profile) ratings.fromLocation = Config.PROFILE;
+		if(e && e.currentTarget is GameField) ratings.fromLocation = Config.GAMEFIELD;
 		ratings.addEventListener(Config.PROFILE, showOwnerProfile);
 		ratings.addEventListener(Config.GAMEFIELD, showGameField);
 		pageContainer.addChild(ratings);

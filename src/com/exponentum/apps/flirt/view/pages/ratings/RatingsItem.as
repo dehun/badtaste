@@ -48,6 +48,7 @@ public class RatingsItem extends CasaSprite
 		Controller.instance.getUserInfo(_guid);
 	}
 
+
 	private function onUserInfo(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
@@ -79,3 +80,5 @@ public class RatingsItem extends CasaSprite
 
 }
 }
+
+
