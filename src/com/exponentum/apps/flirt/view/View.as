@@ -126,10 +126,10 @@ public class View extends Sprite
 		pageContainer.addChild(prizeTasks);
 	}
 
-	public function showShop(e:Event = null):void
+	public function showShop(userGuid:String):void
 	{
 		if(shop) return;
-		shop = new ShopPage();
+		shop = new ShopPage(userGuid);
 		shop.x = 50;
 		shop.y = 140;
 //		centerX(shop, 760);

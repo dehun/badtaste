@@ -7,7 +7,11 @@
  */
 package com.exponentum.apps.flirt.view.pages.shop
 {
+import com.exponentum.apps.flirt.controller.Controller;
+import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
+import com.exponentum.apps.flirt.model.Model;
+import com.exponentum.apps.flirt.view.common.DialogWindow;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
@@ -32,9 +36,12 @@ public class ShopPage extends CasaSprite
 	private var scroll:Scroll;
 
 	private var isGiftShop:Boolean = true;
+	private var _targetGuid:String = "";
 
-	public function ShopPage()
+	public function ShopPage(targetGuid:String)
 	{
+		_targetGuid = targetGuid;
+
 		addChild(shopPageAsset);
 		
 		createTabBar();
@@ -97,10 +104,20 @@ public class ShopPage extends CasaSprite
 		{
 			if(o.group == itemsGroup){
 				var shopItem:ShopItem = new ShopItem(o);
+				shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected)
 				distribution.addChildWithDimensions(shopItem, shopItem.width + 3, shopItem.height + 3);
 			}
 		}
 		distribution.position();
+	}
+
+	private function onProductSelected(e:ObjectEvent):void
+	{
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить этот подарок за " + e.data.price + "монет?", "Внимание!", "Да", "Нет", function():void{
+			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+			Controller.instance.presentGift(_targetGuid, e.data.guid);
+		}));
 	}
 
 	private function onTabChange(e:Event):void
