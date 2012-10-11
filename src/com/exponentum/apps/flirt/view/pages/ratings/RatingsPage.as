@@ -58,6 +58,7 @@ public class RatingsPage extends BackGroundedPage
 
 	private var playersDistribution:Distribution = new Distribution(500, true);
 	private var ratingItems:Vector.<RatingsItem> = new Vector.<RatingsItem>();
+	private var currentList:Array = [];
 	private var scroll:Scroll;
 
 	private var currentTimeInterval:String = MONTH;
@@ -81,17 +82,17 @@ public class RatingsPage extends BackGroundedPage
 
 	private function onScores(e:ObjectEvent):void
 	{
-		var list:Array = (e.data.scorelist as Array);
+		currentList = (e.data.scorelist as Array);
 		for each (var ri:RatingsItem in ratingItems)
-		{
 			ri.visible = false;
-		}
-		for (var i:int = 0; i < Math.min(MAX_ITEMS_PER_SCREEN, list.length); i++)
+
+		for (var i:int = 0; i < Math.min(MAX_ITEMS_PER_SCREEN, currentList.length); i++)
 		{
 			ratingItems[i].visible = true;
-			ratingItems[i].reload(list[i].UserScore.userGuid, i + 1);
+			ratingItems[i].reload(currentList[i].UserScore.userGuid, i + 1);
 		}
 
+		scroll.visible = currentList.length > MAX_ITEMS_PER_SCREEN;
 	}
 
 	private function createBackButton():void
@@ -175,6 +176,22 @@ public class RatingsPage extends BackGroundedPage
 		scroll.x = 705;
 		scroll.y = 280;
 		addChild(scroll);
+		scroll.addEventListener(Event.CHANGE, onScroll);
+	}
+
+	private var currStartIndex:int = 0;
+	private function onScroll(e:Event):void
+	{
+		var difference:int = currentList.length - MAX_ITEMS_PER_SCREEN;
+		var startIndex:int = int(difference * scroll.position);
+		if(startIndex == currStartIndex) return;
+		currStartIndex = startIndex;
+		for (var i:int = 0; i < MAX_ITEMS_PER_SCREEN; i++)
+		{
+			ratingItems[i].reload(currentList[i + startIndex].UserScore.userGuid, i + startIndex + 1);
+		}
+
+
 	}
 
 	//----------------------------------------------------------

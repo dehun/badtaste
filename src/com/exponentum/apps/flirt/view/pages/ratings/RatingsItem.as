@@ -40,7 +40,10 @@ public class RatingsItem extends CasaSprite
 	{
 		_guid = guid;
 		_place = place;
-
+		while((asset.avatar.avatarHolder as Sprite).numChildren)
+		{
+			(asset.avatar.avatarHolder as Sprite).removeChildAt(0);
+		}
 		Model.instance.addEventListener(Controller.GOT_USER_INFO, onUserInfo);
 		Controller.instance.getUserInfo(_guid);
 	}
@@ -63,10 +66,10 @@ public class RatingsItem extends CasaSprite
 		var req:URLRequest = new URLRequest(user.photoLinkSmall);
 		var loader:Loader = new Loader();
 		var holder:Sprite = asset.avatar.avatarHolder;
-		var bp:BlockerPreloader = new BlockerPreloader(holder, holder.width, holder.height, 0);
+		var bp:BlockerPreloader = new BlockerPreloader(holder, 50, 50, 0);
 		bp.preload(1);
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
-			Align.center(loader, holder);
+			//Align.center(loader, holder);
 			holder.addChild(loader);
 			bp.partsLoaded++;
 		});
