@@ -112,7 +112,11 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({log, Level, Format, Args}, State) ->
-    io:format(Format ++ "~n", Args),
+    FormatedTime = "[" ++ iso_8601_fmt(erlang:localtime()) ++"]",
+    Separator = "::",
+    Space = "> ",
+    FormatedLevel = "[" ++ atom_to_list(Level) ++ "]",
+    io:format(FormatedTime ++ Separator ++ FormatedLevel ++ Space ++ Format ++ "~n", Args),
     {noreply, State};
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -158,3 +162,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+iso_8601_fmt(DateTime) ->
+    {{Year,Month,Day},{Hour,Min,Sec}} = DateTime,
+    io_lib:format("~4.10.0B-~2.10.0B-~2.10.0B ~2.10.0B:~2.10.0B:~2.10.0B",
+                  [Year, Month, Day, Hour, Min, Sec]).
