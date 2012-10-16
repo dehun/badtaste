@@ -32,6 +32,7 @@ public class DialogWindow extends CasaSprite
 		asset.message.text = messageText;
 		asset.header.text = headerText;
 		asset.yesButton.label.text = yesButtonText;
+		asset.noButton.label.text = noButtonText;
 
 		asset.yesButton.gotoAndStop(1);
 		asset.yesButton.addEventListener(MouseEvent.MOUSE_OVER, onYesOver);

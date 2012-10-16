@@ -190,7 +190,7 @@ public class MiniProfile extends BackGroundedPage
 		//details
 		profileDetails.sexIndicator.gotoAndStop(_user.sex + 1);
 		profileDetails.nameText.text = _user.name;
-		var i = 0;
+		var i:int = 0;
 		while (profileDetails.nameText.textWidth > 120) {
 			profileDetails.nameText.text = _user.name.substr(0, profileDetails.nameText.text.length - i) + "...";
 			i++;
@@ -367,7 +367,7 @@ public class MiniProfile extends BackGroundedPage
 
 	private function onBecameFan(e:MouseEvent):void
 	{
-		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить стать поклонником " + _user.name + " за монеты?", "Внимание!", "Да", "Нет", function():void{
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите стать поклонником " + _user.name + " за монеты?", "Внимание!", "Да", "Нет", function():void{
 			Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
 			Controller.instance.buyFollowing(_user.guid);
 		}));

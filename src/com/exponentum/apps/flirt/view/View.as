@@ -85,7 +85,7 @@ public class View extends Sprite
 		pageContainer.addChild(profile);
 		_mailNotifier = new mailNotifier();
 		pageContainer.addChild(_mailNotifier);
-		_mailNotifier.x = 400;
+		_mailNotifier.x = 420;
 		_mailNotifier.y = 540;
 		_mailNotifier.visible = false;
 		controller.checkMailbox();

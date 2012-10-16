@@ -78,7 +78,7 @@ public class Profile extends BackGroundedPage
 
 		profileDetails.sexIndicator.gotoAndStop(user.sex + 1);
 		profileDetails.nameText.text = user.name;
-		var i = 0;
+		var i:int = 0;
 		while (profileDetails.nameText.textWidth > 120) {
 			profileDetails.nameText.text = user.name.substr(0, profileDetails.nameText.text.length - i) + "...";
 			i++;

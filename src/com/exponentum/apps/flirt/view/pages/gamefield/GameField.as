@@ -349,7 +349,7 @@ public class GameField extends BackGroundedPage
 ///////////////// chat avatars /////////////////////////////////////////////////////////////////////////////////////////
 
 	private var timer:Timer = new Timer(1000);
-	private const CHANGE_INTERVAL = 50;
+	private const CHANGE_INTERVAL:int = 50;
 	private var timeToNextChange:int = 0;
 
 	private var celebrityAvatar:CelebrityAvatar = new CelebrityAvatar();
