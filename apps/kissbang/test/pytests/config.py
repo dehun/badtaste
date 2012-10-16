@@ -1,5 +1,9 @@
+import logger
+
 class Config:
     def __init__(self):
-        self.serverUri = "127.0.0.1:8080"
+        self.serverUrl = "127.0.0.1:8080"
+        self.verbosity = logger.levels["debug"]
 
-config = Config()
+def get_global_config():
+    return Config()
