@@ -212,20 +212,23 @@ inner_send_gift(ReceiverGuid, SenderGuid, GiftGuid, TransSync, State) ->
                                               %% complete job
                                               job_srv:try_complete_job(SenderGuid, <<"2">>),
                                               job_srv:try_complete_job(SenderGuid, <<"3">>),
-                                              %% send it
+                                              %% scoreboards update
                                               scoreboard_srv:add_score(ReceiverGuid, "received_gifts"),
                                               scoreboard_srv:add_score(SenderGuid, "sended_gifts"),
+                                              %% form gift
+                                              NewGift = #received_gift{gift_guid = GiftGuid,
+                                                                       sender_guid = SenderGuid,
+                                                                       is_new = true},
+                                              %% put gift to receiver's gifts
                                               Existance = mnesia:read({user_gifts, ReceiverGuid}),
                                               case Existance of
                                                   [OldUserGifts] ->
-                                                      NewUserGifts = OldUserGifts#user_gifts{gifts = [#received_gift{gift_guid = GiftGuid,
-                                                                                                                     sender_guid = SenderGuid} | OldUserGifts#user_gifts.gifts]},
+                                                      NewUserGifts = OldUserGifts#user_gifts{gifts = [NewGift | OldUserGifts#user_gifts.gifts]},
                                                       mnesia:write(NewUserGifts),
                                                       {commit, ok};
                                                   [] ->
                                                       NewUserGifts = #user_gifts{user_guid = ReceiverGuid,
-                                                                                 gifts = [#received_gift{gift_guid = GiftGuid,
-                                                                                                         sender_guid = SenderGuid}]},
+                                                                                 gifts = [NewGift]},
                                                       mnesia:write(NewUserGifts),
                                                       {commit, ok}
                                               end
