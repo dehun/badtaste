@@ -199,6 +199,7 @@ inner_add_score(UserGuid, Tag, Amount) ->
                         [] ->
                             mnesia:write(#server_user_score{user_guid = UserGuid, tag = Tag, score = Amount});
                         [OldScore] ->
+                            mnesia:delete_object(OldScore),
                             mnesia:write(OldScore#server_user_score{score = Amount + OldScore#server_user_score.score})
                     end
             end,
