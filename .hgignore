@@ -21,3 +21,4 @@ admin_messaging.py
 kissbang_json_messaging.py
 admin_json_messaging.erl
 kissbang_json_messaging.erl
+\.eunit/

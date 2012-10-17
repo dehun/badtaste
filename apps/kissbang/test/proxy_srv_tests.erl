@@ -9,7 +9,7 @@
 %% Testing setup
 %%==================================================
 proxy_srv_test_() ->
-    {setup, fun setup/0,
+    {setup, fun setup/0, fun teardown/1,
      {foreach, fun foreach/0, 
       [
                 {"should_register_origin", fun should_register_origin/0},
@@ -31,6 +31,7 @@ setup() ->
     proxy_srv:setup_db(),
     proxy_srv:start_link().
 
+
 foreach() ->
     proxy_srv:drop_all().
 
@@ -39,7 +40,17 @@ mock_patch() ->
     %% patching for gateway server
     meck:new(gateway_srv),
     meck:expect(gateway_srv, disconnect_origin, fun(_Origin) -> ok end),
-    meck:expect(gateway_srv, route_message, fun(Origin, Message) -> ok end).
+    meck:expect(gateway_srv, route_message, fun(Origin, Message) -> ok end),
+    meck:new(job_srv),
+    meck:expect(job_srv, try_complete_job, fun(_UserGuid, _JobGuid) -> ok end).
+
+teardown(_) ->
+    mock_unpatch().
+
+mock_unpatch() ->
+    meck:unload(gateway_srv),
+    meck:unload(job_srv).
+
 
 %%==================================================
 %% Testing functions

@@ -312,7 +312,7 @@ inner_get_room_for(UserGuid) ->
 
 inner_drop_all() ->
         Trans = fun() ->
-                    lists:foreach(fun(RoomGuid) -> ok = inner_drop_room(RoomGuid) end,
+                    lists:foreach(fun(RoomGuid) -> inner_drop_room(RoomGuid) end,
                                   mnesia:all_keys(room)),
                     ok
             end,
