@@ -280,7 +280,8 @@ inner_rebuild_top_list(Tag, Period) ->
 inner_rebuild_common() ->
     log_srv:info("rebuilding common scores"),
     ok = mnesia:activity(sync_dirty, fun() ->
-                                        qlc:fold(per_user_try_common_rebuild/2, sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)])),
+                                        qlc:fold(fun(UserScore, Acc) -> per_user_try_common_rebuild(UserScore, Acc) end,
+                                                 sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)])),
                                         ok
                                 end, [], mnesia_frag).
 
