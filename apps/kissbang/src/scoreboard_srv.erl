@@ -268,6 +268,48 @@ inner_rebuild_top_list(Tag, Period) ->
                                           build_time = utils:unix_time()})
             end,
     mnesia:activity(sync_dirty, Trans).
-    
 
-    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% common rating rebuild
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+inner_rebuild_common() ->
+    mnesia:activity(fun() ->
+                            qlc:foldl(per_user_try_common_rebuild/2, sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)]))
+                    end, [], mnesia_frag).
+
+per_user_try_common_rebuild(UserScore, ProcessedUsersSet) ->
+    UserGuid = UserScore#server_user_score.user_guid,
+    case sets:is_element(UserGuid, ProcessedUsersSet) of
+        true ->
+            ProcessedUsersSet;
+        false ->
+            spawn_link(fun() -> per_user_common_rebuild(UserGuid) end),
+            sets:add_element(UserGuid, ProcessedUsersSet)
+    end.
+
+per_user_common_rebuild(UserGuid) ->
+    mnesia:activity(fun() ->
+                            AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
+                            CommonScore = calculate_common_score(AllUserScores),
+                            inner_set_score(UserGuid, common, CommonScore)
+                    end, [], mnesia_frag).
+
+calculate_common_score(AllScores) ->
+    lists:foldl(fun(UserScore, Accum) ->
+                        Score = UserScore#server_user_score.score,
+                        case UserScore#server_user_score.tag of
+                            sympathy ->
+                                Accum + Score * 12;
+                            received_gifts ->
+                                Accum + Score * 20;
+                            sended_gifts ->
+                                Accum + Score * 17;
+                            rated ->
+                                Accum + Score * 8;
+                            vippoints ->
+                                Accum + Score * 18;
+                            _Other ->
+                                Accum
+                        end
+                end, 0, AllScores).
