@@ -101,6 +101,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    timer:send_interval(1000*60*60*24, self(), {rebuild_common}),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -148,6 +149,9 @@ handle_cast({set_score, UserGuid, Tag, Amount}, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_info({rebuild_common, State}) ->
+    spawn_link(fun() -> inner_rebuild_common() end),
+    {noreply, State}.
 handle_info(_Info, State) ->
     {noreply, State}.
 
