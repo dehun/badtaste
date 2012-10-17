@@ -32,6 +32,7 @@ public class Present extends CasaSprite
 		_presentOwner = presentOwner;
 		Model.instance.addEventListener(Controller.GOT_USER_INFO, onSenderInfo);
 		Controller.instance.getUserInfo(present.SendedGift.senderGuid);
+		trace(present.SendedGift.giftGuid);
 		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present.SendedGift.giftGuid + ".swf");
 		presentLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
 		presentLoad.start();

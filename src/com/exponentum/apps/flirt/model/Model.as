@@ -206,6 +206,7 @@ public class Model extends EventDispatcher
 
 	public function onFollowingBought(e:ObjectEvent):void
 	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
 //----------------------------------------------------------------------------------------------------------------------

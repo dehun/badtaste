@@ -128,7 +128,7 @@ public class View extends Sprite
 
 	public function showShop(userGuid:String):void
 	{
-		if(shop) return;
+		//if(shop) return;
 		shop = new ShopPage(userGuid);
 		shop.x = 50;
 		shop.y = 140;

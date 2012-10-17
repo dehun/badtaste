@@ -104,7 +104,7 @@ public class ShopPage extends CasaSprite
 		{
 			if(o.group == itemsGroup){
 				var shopItem:ShopItem = new ShopItem(o);
-				shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected)
+				shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected);
 				distribution.addChildWithDimensions(shopItem, shopItem.width + 3, shopItem.height + 3);
 			}
 		}
@@ -128,6 +128,13 @@ public class ShopPage extends CasaSprite
 	override public function destroy():void
 	{
 		removeChildren(true, true);
+		shopData = null;
+
+		shopPageAsset = null;
+		tabBar = null;
+
+		distribution = null;
+		scroll = null;
 		super.destroy();	
 	}
 }

@@ -250,7 +250,7 @@ public class MiniProfile extends BackGroundedPage
 		//if(_user.followers.length == 0) return;
 		fans.update(_user.followers);
 		becomeFanButton.price.text = _user.rebuyPrice.toString();
-		becomeFanButton.visible = _user.sex != Model.instance.owner.sex;
+		becomeFanButton.visible = _user.sex != Model.instance.owner.sex && (_user.followers[0] != Model.instance.owner.guid);
 		trace(_user.sex, Model.instance.owner.sex);
 	}
 
@@ -378,6 +378,7 @@ public class MiniProfile extends BackGroundedPage
 	{
 		Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели статус поклонника", "Успех!"));
 		Model.instance.removeEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+		Controller.instance.getUserFollowers(_user.guid);
 		becomeFanButton.visible = false;
 	}
 

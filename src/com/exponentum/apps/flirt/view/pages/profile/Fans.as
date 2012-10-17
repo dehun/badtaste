@@ -124,9 +124,8 @@ public class Fans extends CasaSprite
 				bp.partsLoaded++;
 			});
 			loader.load(req);
-			updatedUsers ++;
-		}else
-		{
+			//updatedUsers ++;
+		}
 			updatedUsers ++;
 
 			if(updatedUsers == _followers.length)
@@ -159,7 +158,7 @@ public class Fans extends CasaSprite
 				updatePastFollowersView();
 			});
 			miniLoader.load(req);
-		}
+
 	}
 
 	private static const SPACE:int = 2;

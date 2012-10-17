@@ -174,8 +174,8 @@ public class GameField extends BackGroundedPage
 	{
 		if(Model.instance.owner.guid != kisserGuid &&  Model.instance.owner.guid != victimGuid) return;
 		_kissDialog = new KissDialog();
-		centerX(_kissDialog,  760);
-		centerY(_kissDialog,  760);
+		_kissDialog.x = 375;
+		_kissDialog.y = 400;
 		addChild(_kissDialog);
 		_kissDialog.yesButton.addEventListener(MouseEvent.CLICK, onYes);
 		_kissDialog.noButton.addEventListener(MouseEvent.CLICK, onNo);
