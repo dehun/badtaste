@@ -149,9 +149,9 @@ handle_cast({set_score, UserGuid, Tag, Amount}, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_info({rebuild_common, State}) ->
+handle_info({rebuild_common}, State) ->
     spawn_link(fun() -> inner_rebuild_common() end),
-    {noreply, State}.
+    {noreply, State};
 handle_info(_Info, State) ->
     {noreply, State}.
 
@@ -278,12 +278,15 @@ inner_rebuild_top_list(Tag, Period) ->
 %% common rating rebuild
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 inner_rebuild_common() ->
-    mnesia:activity(fun() ->
-                            qlc:foldl(per_user_try_common_rebuild/2, sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)]))
-                    end, [], mnesia_frag).
+    log_srv:info("rebuilding common scores"),
+    ok = mnesia:activity(sync_dirty, fun() ->
+                                        qlc:fold(per_user_try_common_rebuild/2, sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)])),
+                                        ok
+                                end, [], mnesia_frag).
 
 per_user_try_common_rebuild(UserScore, ProcessedUsersSet) ->
     UserGuid = UserScore#server_user_score.user_guid,
+    log_srv:debug("trying to rebuild common for ~p", [UserGuid]),
     case sets:is_element(UserGuid, ProcessedUsersSet) of
         true ->
             ProcessedUsersSet;
@@ -293,7 +296,8 @@ per_user_try_common_rebuild(UserScore, ProcessedUsersSet) ->
     end.
 
 per_user_common_rebuild(UserGuid) ->
-    mnesia:activity(fun() ->
+    log_srv:debug("rebuilding common score for ~p", [UserGuid]),
+    mnesia:activity(sync_dirty, fun() ->
                             AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
                             CommonScore = calculate_common_score(AllUserScores),
                             inner_set_score(UserGuid, common, CommonScore)
