@@ -53,7 +53,7 @@ public class MessagesList extends CasaSprite
 		messagesDistribution.removeChildren(true, true);
 		for (var i:int = 0; i < messages.length; i++)
 		{
-			if(messages[i].Mail.type == "usermail"){
+			if(messages[i].Mail.type == "usermail" && messages[i].Mail.senderGuid != Model.instance.owner.guid){
 				var mi:MessageItem = new MessageItem(messages[i]);
 				messagesDistribution.addChild(mi);
 			}

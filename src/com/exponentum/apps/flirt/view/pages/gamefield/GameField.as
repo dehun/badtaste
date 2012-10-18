@@ -67,7 +67,7 @@ public class GameField extends BackGroundedPage
 	private static const CHANGE_TABLE:String = "changeTable";
 	private static const HELP:String = "help";
 
-	private var placesOccupied:Dictionary = new Dictionary();
+	//private var placesOccupied:Dictionary;
 
 	private var kissData:Dictionary;
 
@@ -83,7 +83,7 @@ public class GameField extends BackGroundedPage
 		{x:260, y:404},
 		{x:130, y:394},
 		{x:73, y:240}];
-	private var avatarHolders:Vector.<PlayerAvatar> = new Vector.<PlayerAvatar>();
+	private var avatarHolders:Vector.<PlayerAvatar>;
 
 	private const kissersPlacesCoords:Array = [new Point(210, 240), new Point(440, 240)];
 	private const celebrityAvatarCoords:Array = [new Point(490, 584), new Point(596, 584)];
@@ -284,15 +284,14 @@ public class GameField extends BackGroundedPage
 
 	private function onUserListChanged(e:ObjectEvent):void
 	{
-		placesOccupied = new Dictionary();
-		for (var i:int = 0; i < avatarHolders.length; i++){
-			if(contains(avatarHolders[i])) removeChild(avatarHolders[i]);
-			avatarHolders[i] = null;
-		}
-		avatarHolders = new Vector.<PlayerAvatar>();
+//		for (var i:int = 0; i < avatarHolders.length; i++){
+//			if(contains(avatarHolders[i])) removeChild(avatarHolders[i]);
+//			avatarHolders[i] = null;
+//		}
+		if(!avatarHolders) avatarHolders = new Vector.<PlayerAvatar>();
 
 		for (var j:int = 0; j < e.data.users.length; j++)
-			addPlayerToTable(e.data.users[j], j);
+			addPlayerToTable(e.data.users[j]);
 	}
 
 	private function onRoomDeath(e:ObjectEvent):void
@@ -303,15 +302,6 @@ public class GameField extends BackGroundedPage
 	private function onRoomIsFool(e:ObjectEvent):void
 	{
 		dispatchEvent(new Event(Config.PROFILE));
-	}
-
-	private function nextFreePlace():int
-	{
-		for (var i:int = 0; i < avatarCoordinates.length; i++)
-		{
-			if(placesOccupied[i] == null) return i;
-		}
-		return 0;
 	}
 
 	private function onRoomStateChanged(e:Event):void
@@ -657,12 +647,17 @@ public class GameField extends BackGroundedPage
 	//------------------------------------------------------------------------------------------------------------------
 	// Game functionality
 	//------------------------------------------------------------------------------------------------------------------
-	public function addPlayerToTable(playerGuid:String, place:int = 0):void
+	public function addPlayerToTable(playerGuid:String):void
 	{
-		placesOccupied[place] = place;
+		//placesOccupied[place] = place;
+		for each (var pa:PlayerAvatar in avatarHolders)
+		{
+			if(pa.player.guid == playerGuid) return;
+		}
+		
 		var userAvatar:PlayerAvatar = new PlayerAvatar(playerGuid);
-		userAvatar.x = avatarCoordinates[place].x;
-		userAvatar.y = avatarCoordinates[place].y;
+		userAvatar.x = avatarCoordinates[avatarHolders.length].x;
+		userAvatar.y = avatarCoordinates[avatarHolders.length].y;
 		addChild(userAvatar);
 		avatarHolders.push(userAvatar);
 
@@ -726,7 +721,6 @@ public class GameField extends BackGroundedPage
 
 		removeChild(bottle);
 		bottle = null;
-		placesOccupied = null;
 
 		super.destroy();
 	}

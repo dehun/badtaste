@@ -107,7 +107,7 @@ public class Controller
 
 		//vip points
 		socket.addEventListener(ON_VIP_POINTS_BUY_SUCCESS, model.onVIPPointsBuySuccess);
-		socket.addEventListener(ON_JOB_COMPLETED, model.onVIPPointsBuyFail);
+		socket.addEventListener(ON_VIP_POINTS_BUY_FAIL, model.onVIPPointsBuyFail);
 
 		//chat and chat avatar methods
 		socket.addEventListener(ON_GOT_RANDOM_VIP, model.onGotRandomVIP);

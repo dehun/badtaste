@@ -30,6 +30,7 @@ public class DialogWindow extends CasaSprite
 	{
 		addChild(asset);
 		asset.message.text = messageText;
+		asset.message.wordWrap = true;
 		asset.header.text = headerText;
 		asset.yesButton.label.text = yesButtonText;
 		asset.noButton.label.text = noButtonText;

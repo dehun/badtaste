@@ -176,7 +176,7 @@ public class View extends Sprite
 		var numUnread:int = 0;
 		for each (var object:Object in model.mailbox)
 		{
-			if(object.Mail.isRead == "false") numUnread++;
+			if(object.Mail.isRead == "false" && object.Mail.senderGuid != Model.instance.owner.guid) numUnread++;
 		}
 		alertMailNotification(numUnread);
 	}
