@@ -12,7 +12,7 @@
 
 %% API
 -export([start_link/0]).
--export([handle_callback_data/1]).
+-export([handle_callback_data/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -25,8 +25,9 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-handle_callback_data(Data) ->
-    gen_server:cast(?SERVER, {handle_callback_data, Data}).
+handle_callback_data(Self, Data) ->
+    gen_server:cast(Self, {handle_callback_data, Data}).
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -55,6 +56,7 @@ start_link() ->
 init([]) ->
     State = #state{social_handler = chose_social_handler(),
                    port = chose_social_port()},
+    start_web_server(State#state.port),
     {ok, State}.
 
 chose_social_port() ->
@@ -64,6 +66,13 @@ chose_social_port() ->
 chose_social_handler() ->
     {ok, SocialApiName} = application:get_env(kissbang, social_api_name),
     social_handler_sup:start_handler(SocialApiName).
+
+start_web_server(Port) ->
+    Self = self(), 
+    Loop = fun (Req) -> ?MODULE:handle_callback_data(Self, Req) end,
+    {ok, _Http} = mochiweb_http:start_link([{port, Port},
+                                            {loop, Loop}]),
+    ok.
 
 
 %%--------------------------------------------------------------------
@@ -94,8 +103,10 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({handle_callback_data, Req}, State) ->
+    social_handler:handle_social_data(Req),
     {noreply, State}.
+
 
 %%--------------------------------------------------------------------
 %% @private
