@@ -157,7 +157,7 @@ get_user_info(Guid, TargetUserGuid) ->
                                      city = UserInfo#user_info.city,
                                      birth_date = UserInfo#user_info.birth_date,
                                      coins = Money,
-                                     kisses = 0,
+                                     kisses = scoreboard_srv:get_score(Guid, sympathy),
                                      is_city_hidden = UserInfo#user_info.hide_city,
                                      is_birth_date_hidden = UserInfo#user_info.hide_birth_date,
                                      is_social_info_hidden = UserInfo#user_info.hide_social_info},

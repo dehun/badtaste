@@ -19,6 +19,7 @@
 -export([add_score/3,
          add_score/2,
          set_score/3,
+         get_score/2,
          get_top_list/2]).
 
 %% gen_server callbacks
@@ -42,6 +43,9 @@ add_score(UserGuid, Tag, Amount) ->
 
 set_score(UserGuid, Tag, Amount) ->
     gen_server:cast(?SERVER, {set_score, UserGuid, Tag, Amount}).
+
+get_score(UserGuid, Tag) ->
+    gen_server:call(?SERVER, {get_score, UserGuid, Tag}).
 
 get_top_list(Tag, Period) ->
     gen_server:call(?SERVER, {get_top_list, Tag, Period}).
@@ -117,6 +121,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({get_score, UserGuid, Tag}, From, State) ->
+    utils:acall(fun() -> inner_get_score(UserGuid, Tag) end, From),
+    {noreply, State};
 handle_call({get_top_list, Tag, Period}, From, State) ->
     utils:acall(fun() -> inner_get_top_list(Tag, Period) end, From),
     {noreply, State}.
@@ -269,5 +276,16 @@ inner_rebuild_top_list(Tag, Period) ->
             end,
     mnesia:activity(sync_dirty, Trans).
     
-
+inner_get_score(UserGuid, Tag) ->
+    mnesia:activity(sync_dirty, 
+                    fun() -> 
+                            case qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), 
+                                                   E#server_user_score.user_guid == UserGuid,
+                                                   E#server_user_score.tag == Tag])) of
+                                [] ->
+                                    0;
+                                [UserScore] ->
+                                    UserScore#server_user_score.score
+                                end
+                    end, [], mnesia_frag).
     
