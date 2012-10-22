@@ -30,7 +30,7 @@
                 room_pid,
                 current_state}).
 
--record(swinger_select_mode_state, {last_swinger}).
+-record(swinger_select_mode_state, {last_victim}).
 -record(swing_bottle_mode_state, {current_swinger}).
 -record(kiss_mode_state, {kisser, victim, last_swinger}).
 
@@ -74,7 +74,7 @@ pending(_Event, State) ->
     {next_state, pending, State}.
 pending({on_room_became_active}, _From, State) ->
     Reply = ok,
-    NewCurrentState = #swinger_select_mode_state{last_swinger = inner_select_random_user(male, State#state.users)},
+    NewCurrentState = #swinger_select_mode_state{last_victim = inner_select_random_user(male, State#state.users)},
     {reply, Reply, swinger_select_mode, State#state{current_state = NewCurrentState}, 0};
 pending({on_room_death}, _From, State) ->
     Reply = ok,
@@ -103,7 +103,7 @@ swing_bottle_mode(timeout, State) ->
     log_srv:debug("swing bottle timed out. selecting new swinger"),
     CurrentState = State#state.current_state,
     CurrentSwinger = CurrentState#swing_bottle_mode_state.current_swinger,
-    NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = CurrentSwinger}},
+    NewState = State#state{current_state = #swinger_select_mode_state{last_victim = inner_select_random_user(element(1, CurrentSwinger), State#state.users)}},
     {next_state, swinger_select_mode, NewState, 0};
 swing_bottle_mode({handle_extension_message, {swing_bottle, SwingPretenderGuid}}, State) ->
     log_srv:debug("on trying to swing bottle"),
@@ -124,7 +124,7 @@ kiss_mode(timeout, State) ->
     log_srv:info("kiss mode timeout"),
     CurrentState = State#state.current_state,
     LastSwinger = CurrentState#kiss_mode_state.last_swinger,
-    NewState = State#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}},
+    NewState = State#state{current_state = #swinger_select_mode_state{last_victim = element(2, CurrentState#kiss_mode_state.victim)}},
     {next_state, swinger_select_mode, NewState, 0};
 kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) ->
     log_srv:debug("kiss action is performed by ~p", [KisserGuid]),
@@ -140,7 +140,7 @@ kiss_mode({handle_extension_message, {kiss_action, KisserGuid, Action}}, State) 
                                       element(2, element(2, NewCurrentState#kiss_mode_state.victim))),
             LastSwinger = NewCurrentState#kiss_mode_state.last_swinger,
             {next_state, swinger_select_mode, 
-             NewState#state{current_state = #swinger_select_mode_state{last_swinger = LastSwinger}}, 0};
+             NewState#state{current_state = #swinger_select_mode_state{last_victim = element(2, NewCurrentState#kiss_mode_state.victim)}}, 0};
         true ->
             log_srv:error("not all are kissed. keep kissing"),
             {next_state, kiss_mode, NewState, 15000}
@@ -283,9 +283,8 @@ inner_user_leave(State, UserGuid) ->
 
 inner_select_swinger(State) ->
     CurrentState = State#state.current_state,
-    LastSwinger = CurrentState#swinger_select_mode_state.last_swinger,
-    OppositeSex = get_sex_opposite(element(1, LastSwinger)),
-    inner_select_random_user(OppositeSex, State#state.users).
+    LastVictim = CurrentState#swinger_select_mode_state.last_victim,
+    LastVictim.
 
 inner_swing_bottle(State, SwingPretenderGuid) ->
     CurrentState = State#state.current_state,
