@@ -105,6 +105,7 @@ setup_db() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    timer:send_interval(1000*60*60*24, self(), {rebuild_common}),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -155,6 +156,9 @@ handle_cast({set_score, UserGuid, Tag, Amount}, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_info({rebuild_common}, State) ->
+    spawn_link(fun() -> inner_rebuild_common() end),
+    {noreply, State};
 handle_info(_Info, State) ->
     {noreply, State}.
 
@@ -289,3 +293,52 @@ inner_get_score(UserGuid, Tag) ->
                                 end
                     end, [], mnesia_frag).
     
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% common rating rebuild
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+inner_rebuild_common() ->
+    log_srv:info("rebuilding common scores"),
+    ok = mnesia:activity(sync_dirty, fun() ->
+                                        qlc:fold(fun(UserScore, Acc) -> per_user_try_common_rebuild(UserScore, Acc) end,
+                                                 sets:new(), qlc:q([E || E <- mnesia:table(server_user_score)])),
+                                        ok
+                                end, [], mnesia_frag).
+
+per_user_try_common_rebuild(UserScore, ProcessedUsersSet) ->
+    UserGuid = UserScore#server_user_score.user_guid,
+    log_srv:debug("trying to rebuild common for ~p", [UserGuid]),
+    case sets:is_element(UserGuid, ProcessedUsersSet) of
+        true ->
+            ProcessedUsersSet;
+        false ->
+            spawn_link(fun() -> per_user_common_rebuild(UserGuid) end),
+            sets:add_element(UserGuid, ProcessedUsersSet)
+    end.
+
+per_user_common_rebuild(UserGuid) ->
+    log_srv:debug("rebuilding common score for ~p", [UserGuid]),
+    mnesia:activity(sync_dirty, fun() ->
+                            AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
+                            CommonScore = calculate_common_score(AllUserScores),
+                            inner_set_score(UserGuid, common, CommonScore)
+                    end, [], mnesia_frag).
+
+calculate_common_score(AllScores) ->
+    lists:foldl(fun(UserScore, Accum) ->
+                        Score = UserScore#server_user_score.score,
+                        case UserScore#server_user_score.tag of
+                            sympathy ->
+                                Accum + Score * 12;
+                            received_gifts ->
+                                Accum + Score * 20;
+                            sended_gifts ->
+                                Accum + Score * 17;
+                            rated ->
+                                Accum + Score * 8;
+                            vippoints ->
+                                Accum + Score * 18;
+                            _Other ->
+                                Accum
+                        end
+                end, 0, AllScores).
