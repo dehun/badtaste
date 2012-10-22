@@ -1,0 +1,27 @@
+# pack-refs with: peeled 
+37715e67bb8dca32efa1f2a6078649fd7edd3710 refs/tags/0.7.2
+^2447206f201bab1054c49cd32621eee23fa0ee3b
+a75708140824f45d8f7020bed7d5f272929eba99 refs/tags/0.7.1
+^916844d6d1df6b71341f4a90e563d827edc6a02a
+b03963a52bfc6d52c280d064d7fb74a60eab564d refs/tags/0.7
+^eacde0b2b853724cc345b15bff24e5627a1d6177
+5e1757e5fdd4b01352677b5fd4ee5c3ddfed516c refs/tags/0.6.3
+^a383a0ea932d942b5ee727fb8e699c99f2074c24
+d8ebd02d90212527eb25364d00658b47b3553078 refs/tags/0.6.2
+^9f9ea4a6cafad5ebd3b1e0128e5a3ff0de5340bd
+80226ea7b1668b1b64020069cf59c709cf058986 refs/tags/0.6.1
+^85a58b3203165eb28d078e84616a578c75fd6c2b
+7bf75e23235335e058377791e3eae34e871b48ea refs/tags/0.6
+^8d86012c851b7ee6eb26831f1822129ee82c8f2e
+59f1b2cdb956e4838606098e6d55bed70554b98a refs/tags/0.5.1
+^d07a2d36d38c60ca697629d59d67298d396fab6a
+85935dbd4dd5edb718853cc01d55264ce2e1f19a refs/tags/0.5
+^3bdbb81831543476c5840d754555b8a22dd5b5af
+99c6c5e29dafad44489dd1ca37511600c8df11c8 refs/remotes/origin/support/klaar/file-bif-passthrough
+d6230ae6acabfebaebf18fb08281659d1794ce2c refs/remotes/origin/master
+147d0421faebd60d55089e13ede0e031d80c29c0 refs/remotes/origin/gh-pages
+7fbebf54124bdbc32e1af29a680f395a267645eb refs/remotes/origin/feature/save-abstract-code
+b4594b2dd69b75831fb693f0db1a5647311c5079 refs/remotes/origin/feature/rebar-test-detection
+a8baff32bdefe3fc3ffc15324f52db5949a9b345 refs/remotes/origin/feature/put-get
+9d5681e5e9257ba4bf52e0a37d5fc7ee4861850d refs/remotes/origin/feature/bif_blacklist
+e71a0f6ef737556470b8bfaa84c7697e68bdd5b6 refs/remotes/origin/develop

@@ -1,0 +1,190 @@
+* common info
+** socket port
+   8080
+** admin web port
+   5223
+* connect
+** authentication successfull
+   -> Authenticate(login="dehun", password="123")
+   <- Authenticated(guid = "123871523816kajsbhdqw")
+** authentication failed
+   -> Authenticate(login="wrong_name", password="wrongpass")
+* rooms
+** join to tagged room queue (game in your city)
+   -> JoinTaggedRoomQueue(tag = "kiev")
+   <- OnJoinedToTaggedRoomQueue(tag = "kiev")
+   <- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
+** join to a random room
+   -> JoinMainRoomQueue()
+   <- OnJoinedToMainRoomQueue()
+   <- OnJoinedToRoom(users = [guid1, guid2, guid3], state = ("pending" | "active"))
+** on room dead(all users leaved room)
+   <- OnRoomDeath()
+** on somebody joined to room when you are in this room
+   <- OnRoomUserListChanged(users = [guid1, guid2, guid3])
+** on room came to active state(game begin)
+   <- OnRoomStateChaned(state = "active")
+** leave current room
+*** success
+    -> LeaveCurrentRoom()
+    <- OnLeaveCurrentRoomSuccessfully()
+*** fail
+    -> LeaveCurrentRoom()
+    <- OnLeaveCurrentRoomFailed()
+* chat
+** send chat message to room where you are 
+   -> SendChatMessageToRoom(message = "some message text body")
+** getting chat message from room where you are
+   <- OnGotChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+** send vip chat message to room where you are 
+   -> SendVipChatMessageToRoom(message = "some message text body")
+** getting vipchat message from room where you are
+   <- OnGotVipChatMessageFromRoom(senderGuid = "someguid", message = "some message text body")
+* web admin interface
+** registration/updating info
+   -> TouchUserInfo(userInfo = (UserInfo(userId = "dehun", name = "dehun", profileUrl = "http://vk.com/kcpc", isMan = "true", 
+   birthDate="1989.05.31", city="kiev",  avatarUrl = "http://radikal.ru/img/someimage.jpg", hideSocialInfo="false", hideName="false", hideCity="false")))
+   <- TouchUserInfoResult(result = "ok")
+* user info
+** get user info
+   -> GetUserInfo(targetUserGuid = "someGuid")
+   <- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
+   smallAvatarUrl = "another_url", mediumAvatarUrl = "yep_another_url", bigAvatarUrl = "urrrl", isNameHidden="false", isSocialInfoHidden = "false", isCityHidden="false")
+** get friend info
+   -> GetFriendInfo(targetUserGuid = "someGuid")
+   <- OnGotUserInfo(infoOwnerGuid = "someGuid", userId = "someid", firstName = "lol", lastName = "what", profileUrl = "url", isMan = "false",
+   smallAvatarUrl = "another_url", mediumAvatarUrl = "yep_another_url", bigAvatarUrl = "urrrl")
+** upload avatar (by http) 
+   -> UploadNewUserAvatar(userGuid = "someguid", imageFormatName = "png", imageDataBase64 = "image_data_encoded_into_base64_string")
+   <- UploadNewUserAvatarResult(result = "ok")
+** update user info from game
+   -> TouchUserInfoByUser(name = "dehunter", hideName = "false", hideCity = "false", hideSocialInfo = "true")
+   <- TouchUserInfoByUserResult(result = "ok")
+* time
+** get current time
+   -> GetCurrentTime()
+   <- OnGotCurrentTime(time = 1234567) // time is a unixtime (number of seconds since...)
+
+* bank
+** check bank balance
+   -> CheckBankBalance()
+   <- OnBankBalanceChecked(gold = 123)
+** when some action change bank balance(for example user have bought something, or got some money)
+   <- OnBankBalanceChanged(newGold = 123)
+* rates
+** rate user success
+   -> RateUser(targetUserGuid = "someguid", rate = 5)
+   <- OnUserRatedSuccessfully(ratedUserGuid = "someguid")
+** rate user fail
+   -> RateUser(targetUserGuid = "someguid", rate = 5)
+   <- OnUserRateFailed(ratedUserGuid = "someguid", reason = "already_rated") 
+** get user rate
+   -> GetUserRate(targetUserGuid = "someguid")
+   <- OnGotUserRate(userGuid = "someguid", averageRate = 4, lastRaters = [Rater(guid = "some", rate = 2), Rater(guid = "other", rate = 10)])
+** remove user rate succcess
+   -> DeleteRatePoint(raterGuid = "someguid")
+   <- OnRatePointDeleted(raterGuid = "someguid")
+** remove user rate failure
+   -> DeleteRatePoint(raterGuid = "someguid")
+   <- OnRatePointDeleteFailed(raterGuid = "someguid")
+** are user rated
+   -> AreUserRated(targetUserGuid = "someguid")
+   <- OnGotAreUserRated(targetUserGuid = "someguid", areRated = "true")
+* gifts
+** present gift
+   -> PresentGift(targetUserGuid, GiftGuid)
+   <- OnGotGift(giftSenderGuid, GiftGuid)
+** when gift presented to somebody in room
+   -> PresentGift(targetUserGuid, giftGuid)
+   <- OnGotGift(giftSenderGuid, giftGuid)
+   <- OnGiftReceivedInGame(giftSenderGuid, giftReceiverGuid, giftGuid)
+** get gift list
+   -> GetMyGifts()
+   <- OnGotMyGifts(gifts = [Gift(senderGuid = "123", giftGuid = "234")])
+** get gift list of me or friend
+   -> GetUserGifts(targetUserGuid = "someGuid")
+   <- OnGotUserGifts(ownerGuid = "someGuid", gifts = [Gift(senderGuid = "123", giftGuid = "234")])
+* vip
+** buy vip points
+*** success
+    -> BuyVipPoints()
+    <- OnVipPointsBoughtSuccessfully()
+*** fail
+    -> BuyVipPoints()
+    <- OnVipPointsBuyFail()
+** get vip points
+   -> GetVipPoints(targetUserGuid = "someguid")
+   <- OnGotVipPoints(ownerUserGuid = "someguid", points = 100500)
+** get random vip
+   -> GetRandomVip()
+   <- OnGotRandomVip(vipGuid = "someguid")
+* sympathy
+** get user symphaties
+   -> GetUserSympathies(targetUserGuid = "someguid")
+   <- OnGotUserSympathies(ownerUserGuid = "someguid", sympathies = [Sympathy(kisserGuid = "one", kisses = 10), Sympathy(kisserGuid = "two", kisses = 20)])
+* decore
+** buy new decore
+   -> BuyDecore(decoreGuid = "someguid")
+   <- OnDecoreBoughtSuccessfully(buyedDecoreGuid = "someguid")
+   [ <- OnDecoreBuyFail(failedDecoreGuid = "someguid", reason = "asd")]
+** get decore
+   -> GetDecorationFor(targetUserGuid = "someguid")
+   <- OnGotDecorations(ownerUserGuid = "someguid", decorations = ["oneguid", "twoguid"])
+* mail
+** send mail
+   -> SendMail(receiverGuid = "someguid", subject = "", body = "")
+**  on got message in game
+    <- OnGotNewMail(senderGuid = "anotherguid", subject="lolwhat", body="wazzap")
+** check mailbox
+   -> CheckMailbox()
+   <- OnGotMailbox(mails = [IncomingMail(mailGuid = "somemailguid", senderGuid = "", subject = "zxap", body = "wa", isRead = "false")])
+** mark message as read
+   -> MarkMailAsRead(targetMailGuid = "somemailguid")
+   <- OnMessageMarkedAsRead(markedMailGuid = "somemailguid")
+* followers
+** buy following
+   -> BuyFollowing(targetUserGuid = "someguid")
+   <- OnFollowingBought(boughtUserGuid = "someguid")
+** get user followers
+   -> GetUserFollowers(targetUserGuid = "someguid")
+   <- OnGotUserFollowers(ownerUserGuid = "someguid", followers = ["someguid1", "someguid2", "someguid3"], rebuyPrice=100500)
+* jobs
+** get user completed jobs
+   -> GetUserCompletedJobs(targetUserGuid = "123")
+   <- OnGotUserCompletedJobs(ownerGuid = "123", completedJobs = [UserJob(jobGuid = "1", count="2", areCompleted="false")])
+** on job completed
+   <- OnJobCompleted(jobGuid = "2")
+* wannachat
+** buy wanna chat status
+*** success
+    -> BuyRandomChatterStatus()
+    <- OnBoughtRandomChatterStatusSuccess()
+*** fail
+    -> BuyRandomChatterStatus()
+    <- OnBuyRandomChatterStatusFailed()
+
+** get random chatter
+   -> GetRandomChatter()
+   <- OnGotRandomChatter(chatterGuid = "someguid")
+* scoreboard
+** get scoreboard by tag and period
+   // tag - kisses, gift_send, gift_recv, followers, sympathy
+   // period - day, month, week
+   -> GetScoreboardByTag(tag = "kisses", period="week")
+   <- OnGotScoreboardByTag(tag = "kisses", scorelist = [UserScore(userGuid = "someguid", score = 100500), ...])
+
+* game
+** on somebody kissed somebody
+   <- OnKiss(kisserGuid = "kisserguid", kissedGuid = "kissedGuid")
+** on somebody refused to kiss somebody
+   <- OnRefuseToKiss(refuserGuid = "guid1", refusedGuid = "guid2")
+** kiss somebody
+   -> Kiss()
+** refuse to kiss
+   -> RefuseToKiss()
+** swing bottle
+   -> SwingBottle()
+** on somebody  swinged bottle
+   <- OnBottleSwinged(swingerGuid = "guid1", victimGuid = "guid2")
+** on new bottle swinger selected
+   <- OnNewBottleSwinger(swingerGuid = "guid1")
