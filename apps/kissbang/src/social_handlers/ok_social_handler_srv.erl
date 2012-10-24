@@ -9,6 +9,7 @@
 -module(ok_social_handler_srv).
 
 -behaviour(gen_server).
+-include("item.hrl").
 
 %% API
 -export([start_link/0]).
@@ -19,7 +20,8 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+-record(config, {items})
+-record(state, {config}).
 
 %%%===================================================================
 %%% API
@@ -51,8 +53,11 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
 
+load_config() ->
+    {ok, Url} = application:get_env(kissbang, ok_items_cfg_url),
+    #config{items = items_loader:load_items(Url)}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -81,8 +86,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_social_callback, Data}, State) ->
-    inner_handle_social_callback(Data),
+handle_cast({handle_social_callback, Req}, State) ->
+    inner_handle_social_callback(Req, State#state.config),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -126,5 +131,21 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Data) ->
+inner_handle_social_callback(Req, Config) ->
+    %% parse post
+    PostData = Req:parse_post(),
+    %% check sig
+    ok = check_signature(PostData),
+    %% buy item
+    UserId = proplists:get_value("uid", PostData),
+    ItemId = list_to_integer(proplists:get_value("product_code", PostData)),
+    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    ok = social_handler:on_item_bought(UserId, Item),
+    %% respond success
+    XmlResponse = "<callbacks_payment_response xmlns=\"http://api.forticom.com/1.0/\">true</callbacks_payment_response>",
+    Req:respond({200, ["Content-Type", "application/xml"], XmlResponse}),
+    ok.
+
+
+check_signature(PostData) ->
     ok.
