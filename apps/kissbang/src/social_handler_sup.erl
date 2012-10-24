@@ -22,12 +22,12 @@
 %%%===================================================================
 %%% API functions
 %%%===================================================================
-start_handler("vk") ->
-    start_concrete_child("vk_social_handler_srv");
-start_handler("ok") ->
-    start_concrete_child("ok_social_handler_srv");
-start_handler("mm") ->
-    start_concrete_child("mm_social_handler_srv").
+start_handler(vk) ->
+    start_concrete_child(vk_social_handler_srv);
+start_handler(ok) ->
+    start_concrete_child(ok_social_handler_srv);
+start_handler(mm) ->
+    start_concrete_child(mm_social_handler_srv).
 
 start_concrete_child(ChildServerName) ->
     Restart = permanent,
@@ -36,7 +36,8 @@ start_concrete_child(ChildServerName) ->
 
     ChildSpec = {ChildServerName, {ChildServerName, start_link, []},
                  Restart, Shutdown, Type, [ChildServerName]},
-    superviror:start_child(?SERVER, ChildSpec).
+    
+    supervisor:start_child(?SERVER, ChildSpec).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -66,7 +67,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    RestartStrategy = simple_one_for_one,
+    RestartStrategy = one_for_one,
     MaxRestarts = 1000,
     MaxSecondsBetweenRestarts = 3600,
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
