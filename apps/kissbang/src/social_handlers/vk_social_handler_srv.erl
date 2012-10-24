@@ -174,15 +174,7 @@ inner_handle_order_status_change(PostData, Req, Config) ->
             ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
             UserId = proplists:get_value("user_id", PostData),
             {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
-            {true, Guid} = auth_srv:is_registered(UserId),
-            case Item#item.type of
-                "gold" ->
-                    log_srv:info("user ~p bought item ~p", [UserId, ItemId]),
-                    bank_srv:deposit(Guid, Item#item.count);
-                _Other ->
-                    log_srv:error("unknown type ~p on user buy ~p", [ItemId, Guid])
-                        
-            end,
+            social_handler:on_item_bought(UserId, Item),
             JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
             Req:respond({200, ["Content-Type", "application/json"], JsonResponse});
         _Other ->

@@ -9,7 +9,7 @@
 -module(mm_social_handler_srv).
 
 -behaviour(gen_server).
-
+-include("item.hrl").
 %% API
 -export([start_link/0]).
 
@@ -19,7 +19,9 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+-record(config, {items})
+-record(state, {config}).
+
 
 %%%===================================================================
 %%% API
@@ -51,7 +53,11 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
+
+load_config() ->
+    {ok, Url} = application:get_env(kissbang, ok_items_cfg_url),
+    #config{items = items_loader:load_items(Url)}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -126,5 +132,9 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Data) ->
+inner_handle_social_callback(Req) ->
+    %% get post data
+    PostData = Req:parse_post(),
+    
+    %% 
     ok.
