@@ -160,7 +160,7 @@ check_signature(_PostData) ->
     ok.
                 
 inner_handle_get_item(PostData, Req, Config) ->
-    ItemId = proplists:get_value("item", PostData),
+    ItemId = list_to_integer(proplists:get_value("item", PostData)),
     false = ItemId == undefined,
     {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
     JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
