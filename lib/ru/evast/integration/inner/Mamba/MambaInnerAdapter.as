@@ -244,8 +244,9 @@ package ru.evast.integration.inner.Mamba
 	}
 
 }
-import by.blooddy.crypto.serialization.JSON;
 import com.adobe.crypto.MD5;
+import com.adobe.serialization.json.JSON;
+
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;

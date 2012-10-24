@@ -1,8 +1,10 @@
 package ru.evast.integration.inner.VK 
 {
 	import adobe.utils.CustomActions;
-	import by.blooddy.crypto.serialization.JSON;
-	import flash.events.Event;
+
+import com.adobe.serialization.json.JSON;
+
+import flash.events.Event;
 	import flash.external.ExternalInterface;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;

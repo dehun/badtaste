@@ -114,7 +114,9 @@ package ru.evast.integration.outer.GPlus
 	}
 }
 	
-import by.blooddy.crypto.serialization.JSON;
+
+import com.adobe.serialization.json.JSON;
+
 import flash.events.Event;
 import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;

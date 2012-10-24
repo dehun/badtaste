@@ -151,9 +151,10 @@ package ru.evast.integration.outer.MM
 }
 
 
-	import by.blooddy.crypto.serialization.JSON;
 	import com.adobe.crypto.MD5;
-	import flash.events.Event;
+import com.adobe.serialization.json.JSON;
+
+import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.net.URLLoader;

@@ -1,7 +1,9 @@
 package ru.evast.integration.inner.VK.rest.api {
   
-  import by.blooddy.crypto.serialization.JSON;
-  import flash.net.*;
+
+import com.adobe.serialization.json.JSON;
+
+import flash.net.*;
   import flash.errors.*;
   import flash.events.*;
   
