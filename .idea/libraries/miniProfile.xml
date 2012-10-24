@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="miniProfile">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/miniProfile.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

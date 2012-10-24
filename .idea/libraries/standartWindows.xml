@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="standartWindows">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/standartWindows.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
