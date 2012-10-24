@@ -19,7 +19,11 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+
+
+-record(state, {config}).
+-record(config, items = []).
+-record(item, {name, description, image_url, price, type, count}).
 
 %%%===================================================================
 %%% API
@@ -51,7 +55,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -82,7 +86,7 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({handle_social_callback, Req}, State) ->
-    inner_handle_social_callback(Data),
+    inner_handle_social_callback(Req),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -126,5 +130,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Data) ->
+inner_handle_social_callback(Req, Config) ->
+    
     ok.
