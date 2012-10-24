@@ -1,0 +1,1 @@
+-record(item, {name, description, image_url, price, type, count}).
