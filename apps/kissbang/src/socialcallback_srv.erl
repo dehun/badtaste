@@ -4,15 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 22 Oct 2012 by  <>
 %%%-------------------------------------------------------------------
--module(webgate_srv).
+-module(socialcallback_srv).
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([http_loop/1]).
+-export([handle_callback_data/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -20,11 +20,13 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+-record(state, {social_handler, port}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
+handle_callback_data(Self, Data) ->
+    gen_server:cast(Self, {handle_callback_data, Data}).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -52,11 +54,28 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    Loop = fun (Req) -> ?MODULE:http_loop(Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{name, webgate},
-                                            {port, element(2, application:get_env(kissbang, admin_web_port))},
+    State = #state{social_handler = chose_social_handler(),
+                   port = chose_social_port()},
+    start_web_server(State#state.port),
+    {ok, State}.
+
+chose_social_port() ->
+    {ok, SocialPort} = application:get_env(kissbang, social_api_port),
+    SocialPort.
+
+chose_social_handler() ->
+    {ok, SocialApiName} = application:get_env(kissbang, social_api_name),
+    social_handler_sup:start_link(),
+    social_handler_sup:start_handler(SocialApiName).
+
+start_web_server(Port) ->
+    Self = self(), 
+    Loop = fun (Req) -> ?MODULE:handle_callback_data(Self, Req) end,
+    {ok, _Http} = mochiweb_http:start_link([{name, socialcallback},
+                                            {port, Port},
                                             {loop, Loop}]),
-    {ok, #state{}}.
+    ok.
+
 
 %%--------------------------------------------------------------------
 %% @private
@@ -86,8 +105,10 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({handle_callback_data, Req}, State) ->
+    social_handler:handle_social_data(Req),
     {noreply, State}.
+
 
 %%--------------------------------------------------------------------
 %% @private
@@ -114,7 +135,6 @@ handle_info(_Info, State) ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, _State) ->
-    mochiweb_http:stop(),
     ok.
 
 %%--------------------------------------------------------------------
@@ -131,35 +151,3 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-http_loop(Req) ->
-    case Req:get(method) of
-        'POST' ->
-            Body = Req:recv_body(),
-            {ok, JsonResponse} = handle_json(Body),
-            Req:respond({200, 
-                        [{"Content-Type", "text/plain"}],
-                        JsonResponse});
-        _Other ->
-            CrossdomainXml = "<cross-domain-policy>
-    <allow-access-from domain=\"*\" />
-</cross-domain-policy>",
-            Req:respond({200, [{"Content-Type", "text/plain"}], CrossdomainXml})
-    end.
-
-
-handle_json(JsonData) ->
-    %% deserialize message
-    log_srv:debug("handling ~p json data", [JsonData]),
-    Msg = admin_json_messaging:deserialize_message(JsonData),
-    %% form callback
-    Self = self(),
-    Callback = fun(JsonResponse)  ->
-                        Self ! {request_processed, JsonResponse}
-               end,
-    handlermgr_srv:handle_message_and_callback(admin, Msg, Callback),
-    receive
-        {request_processed, JsonMessage} ->
-            {ok, admin_json_messaging:serialize_message(JsonMessage)}
-    after 60000 ->
-            {ok, '{"error" : "timed out"}'}
-    end.
