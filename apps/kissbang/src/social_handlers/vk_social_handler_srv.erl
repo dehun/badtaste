@@ -81,7 +81,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_social_callback, Data}, State) ->
+handle_cast({handle_social_callback, Req}, State) ->
     inner_handle_social_callback(Data),
     {noreply, State}.
 
