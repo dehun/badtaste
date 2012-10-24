@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="messageWindow (2)">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/swc/messageWindow.swc!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

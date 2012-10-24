@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ratings">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/swc/ratings.swc!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
