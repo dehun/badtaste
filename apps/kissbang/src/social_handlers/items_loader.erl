@@ -8,7 +8,7 @@ load_items(Url) ->
     {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} =
         httpc:request(get, {Url, []}, [], []),
     {struct, ItemsJson} = mochijson2:decode(Body),
-    [load_item(ItemJson) || ItemJson <- proplists:get_value(<<"item">>, ItemsJson)].
+    [load_item(ItemJson) || ItemJson <- proplists:get_value(<<"items">>, ItemsJson)].
 
 load_item({struct, ItemJson}) ->
     #item{item_id = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, ItemJson))),
@@ -16,6 +16,6 @@ load_item({struct, ItemJson}) ->
           description = proplists:get_value(<<"description">>, ItemJson),
           image_url = proplists:get_value(<<"image_url">>, ItemJson),
           price = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, ItemJson))),
-          type = binary_to_list(proplists:get_value(<<"type">>)),
+          type = binary_to_list(proplists:get_value(<<"type">>, ItemJson)),
           count = list_to_integer(binary_to_list(proplists:get_value(<<"count">>, ItemJson)))}.
 

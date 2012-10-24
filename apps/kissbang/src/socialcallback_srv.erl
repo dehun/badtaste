@@ -65,12 +65,14 @@ chose_social_port() ->
 
 chose_social_handler() ->
     {ok, SocialApiName} = application:get_env(kissbang, social_api_name),
+    social_handler_sup:start_link(),
     social_handler_sup:start_handler(SocialApiName).
 
 start_web_server(Port) ->
     Self = self(), 
     Loop = fun (Req) -> ?MODULE:handle_callback_data(Self, Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{port, Port},
+    {ok, _Http} = mochiweb_http:start_link([{name, socialcallback},
+                                            {port, Port},
                                             {loop, Loop}]),
     ok.
 
