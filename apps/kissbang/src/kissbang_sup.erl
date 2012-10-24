@@ -38,6 +38,7 @@ init([]) ->
                                  ?CHILD(wannachat_sup, supervisor),
                                  ?CHILD(sympathy_sup, supervisor),
                                  ?CHILD(avatar_sup, supervisor),
+                                 ?CHILD(socialcallback_sup, supervisor),
                                  ?CHILD(rate_sup, supervisor),
                                  ?CHILD(decore_sup, supervisor),
                                  ?CHILD(mail_sup, supervisor),

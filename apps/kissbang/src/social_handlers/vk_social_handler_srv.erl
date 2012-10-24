@@ -4,23 +4,26 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 22 Oct 2012 by  <>
 %%%-------------------------------------------------------------------
--module(webgate_srv).
+-module(vk_social_handler_srv).
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([http_loop/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
 -define(SERVER, ?MODULE). 
+-include("item.hrl").
 
--record(state, {}).
+
+-record(state, {config}).
+-record(config, {items = []}).
+
 
 %%%===================================================================
 %%% API
@@ -52,12 +55,11 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    Loop = fun (Req) -> ?MODULE:http_loop(Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{name, webgate},
-                                            {port, element(2, application:get_env(kissbang, admin_web_port))},
-                                            {loop, Loop}]),
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
 
+load_config() ->
+    {ok, ItemsUrl} = application:get_env(kissbang, vk_items_cfg_url),
+    #config{items = items_loader:load_items(ItemsUrl)}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -86,7 +88,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast(_Msg, State) ->
+handle_cast({handle_social_callback, Req}, State) ->
+    inner_handle_social_callback(Req, State#state.config),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -114,7 +117,6 @@ handle_info(_Info, State) ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, _State) ->
-    mochiweb_http:stop(),
     ok.
 
 %%--------------------------------------------------------------------
@@ -131,35 +133,60 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-http_loop(Req) ->
-    case Req:get(method) of
-        'POST' ->
-            Body = Req:recv_body(),
-            {ok, JsonResponse} = handle_json(Body),
-            Req:respond({200, 
-                        [{"Content-Type", "text/plain"}],
-                        JsonResponse});
+inner_handle_social_callback(Req, Config) ->
+    %% get post data
+    PostData = Req:parse_post(),
+    %% check signature
+    case check_signature(PostData) of
+        ok ->
+            case proplists:get_value("notification_type", PostData) of
+                "get_item" ->
+                    inner_handle_get_item(PostData, Req, Config);
+                "get_item_test" ->
+                    inner_handle_get_item(PostData, Req, Config);
+                "order_status_change" ->
+                    inner_handle_order_status_change(PostData, Req, Config);
+                "order_status_change_test" ->
+                    inner_handle_order_status_change(PostData, Req, Config);
+                _Other ->
+                    Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid notification type"'})
+        end;
+        fail ->
+            Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid signature"'})
+    end.
+
+check_signature(_PostData) ->
+    %% TODO : implement me
+    ok.
+                
+inner_handle_get_item(PostData, Req, Config) ->
+    ItemId = proplists:get_value("item", PostData),
+    false = ItemId == undefined,
+    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
+                               [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
+    Req:repond({200, ["Content-Type", "application/json"], JsonResponse}).
+
+inner_handle_order_status_change(PostData, Req, Config) ->
+    case proplists:get_value("status") of
+        "chargeable" ->
+            OrderId = proplists:get_value("order_id", PostData),
+            ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
+            UserId = proplists:get_value("user_id", PostData),
+            {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+            {true, Guid} = auth_srv:is_registered(UserId),
+            case Item#item.type of
+                "gold" ->
+                    log_srv:info("user ~p bought item ~p", [UserId, ItemId]),
+                    bank_srv:deposit(Guid, Item#item.count);
+                _Other ->
+                    log_srv:error("unknown type ~p on user buy ~p", [ItemId, Guid])
+                        
+            end,
+            JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
+            Req:respond({200, ["Content-Type", "application/json"], JsonResponse});
         _Other ->
-            CrossdomainXml = "<cross-domain-policy>
-    <allow-access-from domain=\"*\" />
-</cross-domain-policy>",
-            Req:respond({200, [{"Content-Type", "text/plain"}], CrossdomainXml})
+            JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
+            Req:respond({200, ["Content-Type", "application/json"], JsonResponse})
     end.
-
-
-handle_json(JsonData) ->
-    %% deserialize message
-    log_srv:debug("handling ~p json data", [JsonData]),
-    Msg = admin_json_messaging:deserialize_message(JsonData),
-    %% form callback
-    Self = self(),
-    Callback = fun(JsonResponse)  ->
-                        Self ! {request_processed, JsonResponse}
-               end,
-    handlermgr_srv:handle_message_and_callback(admin, Msg, Callback),
-    receive
-        {request_processed, JsonMessage} ->
-            {ok, admin_json_messaging:serialize_message(JsonMessage)}
-    after 60000 ->
-            {ok, '{"error" : "timed out"}'}
-    end.
+                
