@@ -18,12 +18,12 @@
          terminate/2, code_change/3]).
 
 -define(SERVER, ?MODULE). 
-
+-include("item.hrl").
 
 
 -record(state, {config}).
--record(config, items = []).
--record(item, {name, description, image_url, price, type, count}).
+-record(config, {items = []}).
+
 
 %%%===================================================================
 %%% API
@@ -57,6 +57,9 @@ start_link() ->
 init([]) ->
     {ok, #state{config = load_config()}}.
 
+load_config() ->
+    {ok, ItemsUrl} = application:get_env(kissbang, vk_items_cfg_url),
+    items_loader:load_items(ItemsUrl).
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -86,7 +89,7 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({handle_social_callback, Req}, State) ->
-    inner_handle_social_callback(Req),
+    inner_handle_social_callback(Req, State#state.config),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -131,5 +134,4 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 inner_handle_social_callback(Req, Config) ->
-    
     ok.
