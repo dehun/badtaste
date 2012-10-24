@@ -139,7 +139,7 @@ inner_handle_social_callback(Req, Config) ->
     %% check signature
     case check_signature(PostData) of
         ok ->
-            case proplists:get_value("notification_type", PostData, "unknown") of
+            case proplists:get_value("notification_type", PostData) of
                 "get_item" ->
                     inner_handle_get_item(PostData, Req, Config);
                 "get_item_test" ->
@@ -159,10 +159,34 @@ check_signature(_PostData) ->
     %% TODO : implement me
     ok.
                 
-inner_handle_get_item(_PostData, _Req, _Config) ->
-    %% TODO : implement me
-    ok.
+inner_handle_get_item(PostData, Req, Config) ->
+    ItemId = proplists:get_value("item", PostData),
+    false = ItemId == undefined,
+    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
+                               [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
+    Req:repond({200, ["Content-Type", "application/json"], JsonResponse}).
 
-inner_handle_order_status_change(_PostData, _Req, _Config) ->
-    %% TODO : implement me
-    ok.
+inner_handle_order_status_change(PostData, Req, Config) ->
+    case proplists:get_value("status") of
+        "chargeable" ->
+            OrderId = proplists:get_value("order_id", PostData),
+            ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
+            UserId = proplists:get_value("user_id", PostData),
+            {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+            {true, Guid} = auth_srv:is_registered(UserId),
+            case Item#item.type of
+                "gold" ->
+                    log_srv:info("user ~p bought item ~p", [UserId, ItemId]),
+                    bank_srv:deposit(Guid, Item#item.count);
+                _Other ->
+                    log_srv:error("unknown type ~p on user buy ~p", [ItemId, Guid])
+                        
+            end,
+            JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
+            Req:respond({200, ["Content-Type", "application/json"], JsonResponse});
+        _Other ->
+            JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
+            Req:respond({200, ["Content-Type", "application/json"], JsonResponse})
+    end.
+                
