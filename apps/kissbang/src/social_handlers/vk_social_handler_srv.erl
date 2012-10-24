@@ -59,7 +59,7 @@ init([]) ->
 
 load_config() ->
     {ok, ItemsUrl} = application:get_env(kissbang, vk_items_cfg_url),
-    items_loader:load_items(ItemsUrl).
+    #config{items = items_loader:load_items(ItemsUrl)}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -134,4 +134,35 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 inner_handle_social_callback(Req, Config) ->
+    %% get post data
+    PostData = Req:parse_post(),
+    %% check signature
+    case check_signature(PostData) of
+        ok ->
+            case proplists:get_value("notification_type", PostData, "unknown") of
+                "get_item" ->
+                    inner_handle_get_item(PostData, Req, Config);
+                "get_item_test" ->
+                    inner_handle_get_item(PostData, Req, Config);
+                "order_status_change" ->
+                    inner_handle_order_status_change(PostData, Req, Config);
+                "order_status_change_test" ->
+                    inner_handle_order_status_change(PostData, Req, Config);
+                _Other ->
+                    Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid notification type"'})
+        end;
+        fail ->
+            Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid signature"'})
+    end.
+
+check_signature(_PostData) ->
+    %% TODO : implement me
+    ok.
+                
+inner_handle_get_item(_PostData, _Req, _Config) ->
+    %% TODO : implement me
+    ok.
+
+inner_handle_order_status_change(_PostData, _Req, _Config) ->
+    %% TODO : implement me
     ok.
