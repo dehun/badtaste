@@ -87,7 +87,7 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({handle_social_callback, Data}, State) ->
-    inner_handle_social_callback(Data),
+    inner_handle_social_callback(Data, State#state.config),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -131,9 +131,22 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Req) ->
-    %% get post data
-    PostData = Req:parse_post(),
-    
-    %% 
+inner_handle_social_callback(Req, Config) ->
+    %% parse post
+    PostData = Req:parse_qs(),
+    %% check sig
+    ok = check_signature(PostData),
+    %% buy item
+    UserId = proplists:get_value("uid", PostData),
+    ItemId = list_to_integer(proplists:get_value("service_id", PostData)),
+    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    ok = social_handler:on_item_bought(UserId, Item),
+    %% respond success
+    JsonResponse = atom_to_list('{"status" : "1"}'),
+    Req:respond({200, ["Content-Type", "application/json"], JsonResponse}),
     ok.
+
+check_signature(PostData) ->
+    ok.
+
+

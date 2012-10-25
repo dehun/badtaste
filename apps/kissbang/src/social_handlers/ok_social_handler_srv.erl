@@ -133,7 +133,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 inner_handle_social_callback(Req, Config) ->
     %% parse post
-    PostData = Req:parse_post(),
+    PostData = Req:parse_qs(),
     %% check sig
     ok = check_signature(PostData),
     %% buy item
