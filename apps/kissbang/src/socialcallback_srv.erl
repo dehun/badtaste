@@ -106,7 +106,7 @@ handle_call(_Request, _From, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_cast({handle_callback_data, Req}, State) ->
-    social_handler:handle_social_data(Req),
+    social_handler:handle_social_data(State#state.social_handler, Req),
     {noreply, State}.
 
 
