@@ -139,7 +139,9 @@ inner_handle_social_callback(Req, Config) ->
     %% check signature
     case check_signature(PostData) of
         ok ->
-            case proplists:get_value("notification_type", PostData) of
+            log_srv:debug("signature is ok"),
+            NotificationType = proplists:get_value("notification_type", PostData),
+            case NotificationType of
                 "get_item" ->
                     inner_handle_get_item(PostData, Req, Config);
                 "get_item_test" ->
@@ -149,10 +151,11 @@ inner_handle_social_callback(Req, Config) ->
                 "order_status_change_test" ->
                     inner_handle_order_status_change(PostData, Req, Config);
                 _Other ->
-                    Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid notification type"'})
+                    Response = io_lib:format('{ "error" : "invalid notification type ~p"}', [NotificationType]),
+                    Req:respond({200, ["Content-Type", "application/json"], Response})
         end;
         fail ->
-            Req:respond({200, ["Content-Type", "application/json"], '{"error" : "invalid signature"'})
+            Req:respond({200, ["Content-Type", "application/json"], atom_to_list('{"error" : "invalid signature"')})
     end.
 
 check_signature(_PostData) ->
