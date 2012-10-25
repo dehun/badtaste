@@ -115,6 +115,32 @@ public class Kiss extends Sprite
 	private function onDecorConfigLoaded(e:Event):void
 	{
 		Config.decorShopData = JSON.decode(e.target.data);
+		loadBuyConfig();
+	}
+
+	private function loadBuyConfig():void
+	{
+		var req:URLLoader = new URLLoader();
+		req.addEventListener(Event.COMPLETE, onBuyConfigLoaded);
+		var prefix:String = "";
+		switch(IntegrationProxy.socialNetworkType)
+		{
+			case SocialNetworkTypes.VKONTAKTE:
+				prefix = "vk";
+				break;
+			case SocialNetworkTypes.MY_WORLD:
+				prefix = "mm";
+				break;
+			case SocialNetworkTypes.ODNOKLASSNIKI:
+				prefix = "ok";
+				break;
+		}
+		req.load(new URLRequest(Config.DECOR_SHOP_CONFIG_URL.replace("%%", prefix)));
+	}
+
+	private function onBuyConfigLoaded(e:Event):void
+	{
+		Config.buyData = JSON.decode(e.target.data);
 		configsLoaded();
 	}
 

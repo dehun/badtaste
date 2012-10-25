@@ -25,6 +25,9 @@ public class Config
 
 	public static const DECOR_SHOP_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/decore.txt";
 	public static var decorShopData:Object = {};
+
+	public static const BUY_CONFIG_URL:String = "http://46.165.193.39/kissbang/cfg2/%%_items.txt";
+	public static var buyData:Object = {};
 	//----------------------------------------------
 	// View states constants
 	//----------------------------------------------
