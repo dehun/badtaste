@@ -20,7 +20,7 @@
 
 -define(SERVER, ?MODULE). 
 
--record(config, {items})
+-record(config, {items}).
 -record(state, {config}).
 
 %%%===================================================================
