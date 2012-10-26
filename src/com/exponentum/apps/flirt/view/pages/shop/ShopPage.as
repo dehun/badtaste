@@ -25,6 +25,8 @@ import flash.filters.DropShadowFilter;
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
 
+import ru.evast.integration.IntegrationProxy;
+
 public class ShopPage extends CasaSprite
 {
 	private var shopData:Object;
@@ -116,7 +118,13 @@ public class ShopPage extends CasaSprite
 		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить этот подарок за " + e.data.price + "монет?", "Внимание!", "Да", "Нет", function():void{
 			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
 			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
-			Controller.instance.presentGift(_targetGuid, e.data.guid);
+
+			//Controller.instance.presentGift(_targetGuid, e.data.guid);
+			IntegrationProxy.balanceUpdateFunction = function():void
+			{
+				Controller.instance.presentGift(_targetGuid, e.data.guid);
+			}
+			IntegrationProxy.adapter.ShowPayment(1, e.data.name, e.data.guid, e.data.description);
 		}));
 	}
 

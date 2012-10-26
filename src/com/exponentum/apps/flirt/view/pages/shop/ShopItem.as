@@ -19,6 +19,8 @@ import org.casalib.display.CasaSprite;
 import org.casalib.events.LoadEvent;
 import org.casalib.load.SwfLoad;
 
+import ru.evast.integration.IntegrationProxy;
+
 public class ShopItem extends CasaSprite
 {
 	private var asset:ShopItemAsset = new ShopItemAsset();
