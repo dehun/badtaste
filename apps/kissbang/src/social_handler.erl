@@ -1,10 +1,10 @@
 -module(social_handler).
 
 -include("social_handlers/item.hrl").
--export([handle_social_data/2]).
+-export([handle_social_data/4]).
 
-handle_social_data(HandlerPid, Req) ->
-    gen_server:cast(HandlerPid, {handle_social_callback, Req}).
+handle_social_data(HandlerPid, Body, Get, Post) ->
+    gen_server:call(HandlerPid, {handle_social_callback, Body, Get, Post}).
 
 on_item_bought(UserId, Item) ->
     ItemId = Item#item.item_id,
