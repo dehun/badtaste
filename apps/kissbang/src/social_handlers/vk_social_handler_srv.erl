@@ -138,6 +138,7 @@ inner_handle_social_callback(_Body, _Get, PostData, Config) ->
         ok ->
             log_srv:debug("signature is ok"),
             NotificationType = proplists:get_value("notification_type", PostData),
+            log_srv:debug("vk call with notification type ~p ", [NotificationType]),
             case NotificationType of
                 "get_item" ->
                     inner_handle_get_item(PostData, Config);
@@ -148,6 +149,7 @@ inner_handle_social_callback(_Body, _Get, PostData, Config) ->
                 "order_status_change_test" ->
                     inner_handle_order_status_change(PostData, Config);
                 _Other ->
+                    log_srv:debug("vk called with unknown nitification type ~p", [NotificationType]),
                     Response = io_lib:format('{ "error" : "invalid notification type ~p"}', [NotificationType]),
                     {200, ["Content-Type", "application/json"], Response}
         end;
@@ -161,23 +163,26 @@ check_signature(_PostData) ->
                 
 inner_handle_get_item(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item", PostData)),
-    false = ItemId == undefined,
+    log_srv:debug("vk social is getting item  ~p info", [ItemId]),
+    false = (ItemId == undefined),
     {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
     JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
                                [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
     {200, ["Content-Type", "application/json"], JsonResponse}.
 
 inner_handle_order_status_change(PostData, Config) ->
+    ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
+    UserId = proplists:get_value("user_id", PostData),
     case proplists:get_value("status") of
         "chargeable" ->
             OrderId = proplists:get_value("order_id", PostData),
-            ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
-            UserId = proplists:get_value("user_id", PostData),
+            log_srv:info("vk social have changed order status info to chargable. giving user ~p item ~p", [UserId, ItemId]),
             {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
             social_handler:on_item_bought(UserId, Item),
             JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
             {200, ["Content-Type", "application/json"], JsonResponse};
         _Other ->
+            log_srv:debug("vk social have changed order status to not chargable for user ~p and item ~p", [UserId, ItemId]),
             JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
             {200, ["Content-Type", "application/json"], JsonResponse}
     end.
