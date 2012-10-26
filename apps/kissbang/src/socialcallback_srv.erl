@@ -100,7 +100,7 @@ start_web_server(Port) ->
 %%--------------------------------------------------------------------
 handle_call({handle_callback_data, Body, Get, Post}, _From, State) ->
     Response = social_handler:handle_social_data(State#state.social_handler, Body, Get, Post),
-    {noreply, Response, State}.
+    {reply, Response, State}.
 
 %%--------------------------------------------------------------------
 %% @private
