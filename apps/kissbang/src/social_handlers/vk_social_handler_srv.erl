@@ -164,8 +164,7 @@ check_signature(_PostData) ->
 inner_handle_get_item(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item", PostData)),
     log_srv:debug("vk social is getting item  ~p info", [ItemId]),
-    false = (ItemId == undefined),
-    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
     JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
                                [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
     {200, ["Content-Type", "application/json"], JsonResponse}.
@@ -177,7 +176,7 @@ inner_handle_order_status_change(PostData, Config) ->
         "chargeable" ->
             OrderId = proplists:get_value("order_id", PostData),
             log_srv:info("vk social have changed order status info to chargable. giving user ~p item ~p", [UserId, ItemId]),
-            {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+            [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
             social_handler:on_item_bought(UserId, Item),
             JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
             {200, ["Content-Type", "application/json"], JsonResponse};
