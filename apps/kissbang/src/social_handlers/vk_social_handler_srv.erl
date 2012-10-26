@@ -172,7 +172,7 @@ inner_handle_get_item(PostData, Config) ->
 inner_handle_order_status_change(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
     UserId = proplists:get_value("user_id", PostData),
-    case proplists:get_value("status") of
+    case proplists:get_value("status", PostData) of
         "chargeable" ->
             OrderId = proplists:get_value("order_id", PostData),
             log_srv:info("vk social have changed order status info to chargable. giving user ~p item ~p", [UserId, ItemId]),
