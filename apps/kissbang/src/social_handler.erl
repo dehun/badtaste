@@ -1,7 +1,7 @@
 -module(social_handler).
 
 -include("social_handlers/item.hrl").
--export([handle_social_data/4]).
+-export([handle_social_data/4, on_item_bought/2]).
 
 handle_social_data(HandlerPid, Body, Get, Post) ->
     gen_server:call(HandlerPid, {handle_social_callback, Body, Get, Post}).
