@@ -11,7 +11,7 @@ load_items(Url) ->
     [load_item(ItemJson) || ItemJson <- proplists:get_value(<<"items">>, ItemsJson)].
 
 load_item({struct, ItemJson}) ->
-    #item{item_id = list_to_integer(binary_to_list(proplists:get_value(<<"price">>, ItemJson))),
+    #item{item_id = list_to_integer(binary_to_list(proplists:get_value(<<"item_id">>, ItemJson))),
           name = proplists:get_value(<<"name">>, ItemJson),
           description = proplists:get_value(<<"description">>, ItemJson),
           image_url = proplists:get_value(<<"image_url">>, ItemJson),
