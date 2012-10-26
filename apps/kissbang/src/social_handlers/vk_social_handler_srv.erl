@@ -151,10 +151,10 @@ inner_handle_social_callback(_Body, _Get, PostData, Config) ->
                 _Other ->
                     log_srv:debug("vk called with unknown nitification type ~p", [NotificationType]),
                     Response = io_lib:format('{ "error" : "invalid notification type ~p"}', [NotificationType]),
-                    {200, ["Content-Type", "application/json"], Response}
+                    {200, [{"Content-Type", "application/json"}], Response}
         end;
         fail ->
-            {200, ["Content-Type", "application/json"], atom_to_list('{"error" : "invalid signature"')}
+            {200, [{"Content-Type", "application/json"}], atom_to_list('{"error" : "invalid signature"')}
     end.
 
 check_signature(_PostData) ->
@@ -165,9 +165,9 @@ inner_handle_get_item(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item", PostData)),
     log_srv:debug("vk social is getting item  ~p info", [ItemId]),
     [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
-    JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
+    JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~s", "photo_url" : "~s", "price" : "~p"}}',
                                [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
-    {200, ["Content-Type", "application/json"], JsonResponse}.
+    {200, [{"Content-Type", "application/json"}], JsonResponse}.
 
 inner_handle_order_status_change(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
@@ -179,10 +179,10 @@ inner_handle_order_status_change(PostData, Config) ->
             [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
             social_handler:on_item_bought(UserId, Item),
             JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
-            {200, ["Content-Type", "application/json"], JsonResponse};
+            {200, [{"Content-Type", "application/json"}], JsonResponse};
         _Other ->
             log_srv:debug("vk social have changed order status to not chargable for user ~p and item ~p", [UserId, ItemId]),
             JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
-            {200, ["Content-Type", "application/json"], JsonResponse}
+            {200, [{"Content-Type", "application/json"}], JsonResponse}
     end.
                 

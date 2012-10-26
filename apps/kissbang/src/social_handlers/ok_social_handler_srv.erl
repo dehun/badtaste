@@ -140,7 +140,7 @@ inner_handle_social_callback(Body, Get, Post, Config) ->
     ok = social_handler:on_item_bought(UserId, Item),
     %% respond success
     XmlResponse = "<callbacks_payment_response xmlns=\"http://api.forticom.com/1.0/\">true</callbacks_payment_response>",
-    {200, ["Content-Type", "application/xml"], XmlResponse}.
+    {200, [{"Content-Type", "application/xml"}], XmlResponse}.
 
 check_signature(PostData) ->
     ok.
