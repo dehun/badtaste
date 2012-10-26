@@ -34,6 +34,8 @@ handle_callback_data(Self, Req) ->
     log_srv:debug("replying to social network with ~p", [Response]),
     Req:respond(Response).
 
+
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server

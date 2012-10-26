@@ -140,7 +140,7 @@ inner_handle_social_callback(Body, Get, Post, Config) ->
     ok = social_handler:on_item_bought(UserId, Item),
     %% respond success
     JsonResponse = atom_to_list('{"status" : "1"}'),
-    {200, ["Content-Type", "application/json"], JsonResponse}.
+    {200, [{"Content-Type", "application/json"}], JsonResponse}.
 
 check_signature(Get) ->
     ok.
