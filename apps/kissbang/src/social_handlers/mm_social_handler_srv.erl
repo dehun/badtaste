@@ -72,8 +72,8 @@ load_config() ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({handle_social_callback, Body, Get, Post}, _From, State) ->
+    Reply = inner_handle_social_callback(Body, Get, Post, State#state.config),
     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
@@ -86,8 +86,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_social_callback, Data}, State) ->
-    inner_handle_social_callback(Data, State#state.config),
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -131,22 +130,19 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Req, Config) ->
-    %% parse post
-    PostData = Req:parse_qs(),
+inner_handle_social_callback(Body, Get, Post, Config) ->
     %% check sig
-    ok = check_signature(PostData),
+    ok = check_signature(Get),
     %% buy item
-    UserId = proplists:get_value("uid", PostData),
-    ItemId = list_to_integer(proplists:get_value("service_id", PostData)),
+    UserId = proplists:get_value("uid", Get),
+    ItemId = list_to_integer(proplists:get_value("service_id", Get)),
     {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
     ok = social_handler:on_item_bought(UserId, Item),
     %% respond success
     JsonResponse = atom_to_list('{"status" : "1"}'),
-    Req:respond({200, ["Content-Type", "application/json"], JsonResponse}),
-    ok.
+    {200, ["Content-Type", "application/json"], JsonResponse}.
 
-check_signature(PostData) ->
+check_signature(Get) ->
     ok.
 
 

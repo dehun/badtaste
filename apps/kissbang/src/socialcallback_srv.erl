@@ -25,8 +25,12 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-handle_callback_data(Self, Data) ->
-    gen_server:cast(Self, {handle_callback_data, Data}).
+handle_callback_data(Self, Req) ->
+    Body = Req:recv_body(),
+    Get = Req:parse_qs(),
+    Post = Req:parse_post(),
+    Response = gen_server:call(Self, {handle_callback_data, Body, Get, Post}),
+    Req:respond(Response).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -94,9 +98,9 @@ start_web_server(Port) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State}.
+handle_call({handle_callback_data, Body, Get, Post}, _From, State) ->
+    Response = social_handler:handle_social_data(State#state.social_handler, Body, Get, Post),
+    {noreply, Response, State}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -108,8 +112,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_callback_data, Req}, State) ->
-    social_handler:handle_social_data(State#state.social_handler, Req),
+
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 

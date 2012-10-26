@@ -74,8 +74,8 @@ load_config() ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({handle_social_callback, Body, Get, Post}, _From, State) ->
+    Reply = inner_handle_social_callback(Body, Get, Post, State#state.config),
     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
@@ -88,8 +88,7 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({handle_social_callback, Req}, State) ->
-    inner_handle_social_callback(Req, State#state.config),
+handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -133,9 +132,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-inner_handle_social_callback(Req, Config) ->
-    %% get post data
-    PostData = Req:parse_post(),
+inner_handle_social_callback(_Body, _Get, PostData, Config) ->
     %% check signature
     case check_signature(PostData) of
         ok ->
@@ -143,34 +140,34 @@ inner_handle_social_callback(Req, Config) ->
             NotificationType = proplists:get_value("notification_type", PostData),
             case NotificationType of
                 "get_item" ->
-                    inner_handle_get_item(PostData, Req, Config);
+                    inner_handle_get_item(PostData, Config);
                 "get_item_test" ->
-                    inner_handle_get_item(PostData, Req, Config);
+                    inner_handle_get_item(PostData, Config);
                 "order_status_change" ->
-                    inner_handle_order_status_change(PostData, Req, Config);
+                    inner_handle_order_status_change(PostData, Config);
                 "order_status_change_test" ->
-                    inner_handle_order_status_change(PostData, Req, Config);
+                    inner_handle_order_status_change(PostData, Config);
                 _Other ->
                     Response = io_lib:format('{ "error" : "invalid notification type ~p"}', [NotificationType]),
-                    Req:respond({200, ["Content-Type", "application/json"], Response})
+                    {200, ["Content-Type", "application/json"], Response}
         end;
         fail ->
-            Req:respond({200, ["Content-Type", "application/json"], atom_to_list('{"error" : "invalid signature"')})
+            {200, ["Content-Type", "application/json"], atom_to_list('{"error" : "invalid signature"')}
     end.
 
 check_signature(_PostData) ->
     %% TODO : implement me
     ok.
                 
-inner_handle_get_item(PostData, Req, Config) ->
+inner_handle_get_item(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item", PostData)),
     false = ItemId == undefined,
     {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
     JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~p", "photo_url" : "~p", "price" : "~p"}}',
                                [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
-    Req:repond({200, ["Content-Type", "application/json"], JsonResponse}).
+    {200, ["Content-Type", "application/json"], JsonResponse}.
 
-inner_handle_order_status_change(PostData, Req, Config) ->
+inner_handle_order_status_change(PostData, Config) ->
     case proplists:get_value("status") of
         "chargeable" ->
             OrderId = proplists:get_value("order_id", PostData),
@@ -179,9 +176,9 @@ inner_handle_order_status_change(PostData, Req, Config) ->
             {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
             social_handler:on_item_bought(UserId, Item),
             JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
-            Req:respond({200, ["Content-Type", "application/json"], JsonResponse});
+            {200, ["Content-Type", "application/json"], JsonResponse};
         _Other ->
             JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
-            Req:respond({200, ["Content-Type", "application/json"], JsonResponse})
+            {200, ["Content-Type", "application/json"], JsonResponse}
     end.
                 
