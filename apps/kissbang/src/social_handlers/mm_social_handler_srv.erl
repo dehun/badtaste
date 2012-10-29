@@ -135,6 +135,7 @@ inner_handle_social_callback(Body, Get, Post, Config) ->
     ok = check_signature(Get),
     %% buy item
     UserId = proplists:get_value("uid", Get),
+    log_srv:debug("Get ~p", [Get]),
     ItemId = list_to_integer(proplists:get_value("service_id", Get)),
     [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
     ok = social_handler:on_item_bought(UserId, Item),
