@@ -157,8 +157,14 @@ inner_handle_social_callback(_Body, _Get, PostData, Config) ->
             {200, [{"Content-Type", "application/json"}], atom_to_list('{"error" : "invalid signature"')}
     end.
 
-check_signature(_PostData) ->
-    %% TODO : implement me
+check_signature(PostData) ->
+    %% %% sort keys and remove sig
+    %% SortedKeys = lists:sort(fun(Left, Right) -> element(1, Left) >= element(2, Right) end, PostData),
+    %% SortedKeysWithSigRemoved = lists:keydelete(sig, 1, SortedKeys),
+    %% %% get string to hash
+    %% {ok, SecretKey} = application:get_env(kissbang, vk_secret_key),
+    %% StringToHash = lists:flatten([element(1, I) ++ "=" ++ element(2, I) || I <- SortedKeysWithSigRemoved]) ++ SecretKey,
+    
     ok.
                 
 inner_handle_get_item(PostData, Config) ->

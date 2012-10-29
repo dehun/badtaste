@@ -136,7 +136,7 @@ inner_handle_social_callback(Body, Get, Post, Config) ->
     %% buy item
     UserId = proplists:get_value("uid", Get),
     ItemId = list_to_integer(proplists:get_value("service_id", Get)),
-    {value, Item} = lists:keysearch(ItemId, 2, Config#config.items),
+    [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
     ok = social_handler:on_item_bought(UserId, Item),
     %% respond success
     JsonResponse = atom_to_list('{"status" : "1"}'),
