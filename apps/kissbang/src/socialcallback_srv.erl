@@ -29,7 +29,7 @@ handle_callback_data(Self, Req) ->
     Body = Req:recv_body(),
     Get = Req:parse_qs(),
     Post = Req:parse_post(),
-    log_srv:debug("handling socialcallback with social handler"),
+    log_srv:debug("handling social callback with params get : ~p, post : ~p, body : ~p", [Get, Post, Body]),
     Response = gen_server:call(Self, {handle_callback_data, Body, Get, Post}),
     log_srv:debug("replying to social network with ~p", [Response]),
     Req:respond(Response).
