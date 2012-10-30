@@ -135,7 +135,7 @@ public class Kiss extends Sprite
 				prefix = "ok";
 				break;
 		}
-		req.load(new URLRequest(Config.DECOR_SHOP_CONFIG_URL.replace("%%", prefix)));
+		req.load(new URLRequest(Config.BUY_CONFIG_URL.replace("%%", prefix)));
 	}
 
 	private function onBuyConfigLoaded(e:Event):void

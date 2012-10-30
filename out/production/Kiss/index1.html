@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="js/swfobject.js"></script>
+
+    <script type="text/javascript" src="http://connect.mail.ru/js/loader.js"></script>
+    <script type="text/javascript">
+        mailru.loader.require('api', function () {
+            mailru.app.init('5fea923827a85300775f86b7957a4d81');
+        }); 
+    </script>
+</head>
+<body>
+    <div id="eAdBlock" style=""></div>
+    <br />
+    <br />
+    <center>    
+	<div id="MainContent" width="100%" ></div>  
+    </center>
+    <br />
+    <div id="cmBannerBlock" style=""></div>
+    <script type="text/javascript">
+        var expressInstalUrl = "expressInstall.swf";
+        var attributes = {};
+        var params = {};
+
+        if (window.location.href.indexOf('?') > 0) flashVars = window.location.href.substring(window.location.href.indexOf('?') + 1);
+        var params = {
+            allowNetworking: "all",
+            allowFullScreen: "true",
+            allowScriptAccess: "always",
+            flashvars: flashVars
+        };
+        swfobject.embedSWF("n1vik_2.swf?v=12", "MainContent", "730", "730", "11.0.0", expressInstalUrl, {}, params, attributes);	  
+	</script> 
+    <script type="text/javascript">
+	var expressInstalUrl = "";
+	var attributes = {};
+	var flashVars = {};		
+	var params = {};
+	flashVars.app_id = "305";
+	flashVars.social_id = "2";
+	var tmp = Math.floor(Math.random() * 100000);
+	swfobject.embedSWF("http://common.static.evast.ru/full_banner.swf?noCashe=" + tmp,	
+	"eAdBlock", "760", "90", "10.0.0",expressInstalUrl,flashVars,params,attributes);
+    </script>
+</body>
+</html>

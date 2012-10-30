@@ -12,6 +12,7 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Config;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.view.common.DialogWindow;
+import com.exponentum.apps.flirt.view.common.InfoWindow;
 import com.exponentum.apps.flirt.view.controlls.scroll.Scroll;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabBar;
 import com.exponentum.apps.flirt.view.controlls.tabbar.TabButton;
@@ -21,6 +22,8 @@ import flash.display.SimpleButton;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.filters.DropShadowFilter;
+
+import mx.messaging.management.ObjectName;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
@@ -80,6 +83,11 @@ public class ShopPage extends CasaSprite
 			tabBar.addTab(new TabButton(new RatingsTimeTab()), o.label, o.name, 130);
 			tabBar.addEventListener(o.name, onTabChange);
 		}
+
+		//adding bank tab
+		tabBar.addTab(new TabButton(new RatingsTimeTab()), "Банк", "bank", 130);
+		tabBar.addEventListener("bank", onTabChange);
+
 		reloadItems(shopData.groups[0].name)
 		centerX(tabBar, this.width);
 	}
@@ -102,27 +110,53 @@ public class ShopPage extends CasaSprite
 	private function reloadItems(itemsGroup:String):void
 	{
 		distribution.removeChildren(true, true);
-		for each (var o:Object in shopData.gifts)
+		if(itemsGroup != "bank")
 		{
-			if(o.group == itemsGroup){
-				var shopItem:ShopItem = new ShopItem(o);
-				shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected);
-				distribution.addChildWithDimensions(shopItem, shopItem.width + 3, shopItem.height + 3);
+			for each (var o:Object in shopData.gifts)
+			{
+				if(o.group == itemsGroup){
+					var shopItem:ShopItem = new ShopItem(o);
+					shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected);
+					distribution.addChildWithDimensions(shopItem, shopItem.width + 3, shopItem.height + 3);
+				}
+			}
+		}else{
+			var bankItems:Array = (Config.buyData.items as Array);
+			for (var i:int = 0; i < bankItems.length; i++)
+			{
+				var bankShopItem:ShopItem = new ShopItem(bankItems[i], true);
+				bankShopItem.addEventListener(ShopItem.BANK_ITEM_CLICK, onCoinsPackSelected);
+				distribution.addChildWithDimensions(bankShopItem, bankShopItem.width + 3, bankShopItem.height + 3);
 			}
 		}
+
 		distribution.position();
 	}
 
 	private function onProductSelected(e:ObjectEvent):void
 	{
 		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить этот подарок за " + e.data.price + "монет?", "Внимание!", "Да", "Нет", function():void{
-			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
-			//Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+			if(Model.instance.owner.coins < e.data.price)
+			{
+				Model.instance.view.showInfoWindow(new InfoWindow("Недостаточно средств!", "Ошибка!"));
+				return;
+			}
+			Controller.instance.presentGift(_targetGuid, e.data.guid);
+//			IntegrationProxy.balanceUpdateFunction = function():void
+//			{
+//				Controller.instance.presentGift(_targetGuid, e.data.guid);
+//			}
+			//IntegrationProxy.adapter.ShowPayment(1, e.data.name, e.data.guid, e.data.description);
+		}));
+	}
 
+	private function onCoinsPackSelected(e:ObjectEvent):void
+	{
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы покупаете монеты за " + e.data.price + "голосов?", "Внимание!", "Да", "Нет", function():void{
 			//Controller.instance.presentGift(_targetGuid, e.data.guid);
 			IntegrationProxy.balanceUpdateFunction = function():void
 			{
-				Controller.instance.presentGift(_targetGuid, e.data.guid);
+				Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели монеты!", "Ура!"));
 			}
 			IntegrationProxy.adapter.ShowPayment(1, e.data.name, e.data.guid, e.data.description);
 		}));

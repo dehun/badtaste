@@ -10,6 +10,7 @@ package com.exponentum.apps.flirt.view.pages.shop
 import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.view.controlls.Align;
 import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
+import com.exponentum.utils.ToolTip;
 
 import flash.display.MovieClip;
 import flash.events.Event;
@@ -28,15 +29,24 @@ public class ShopItem extends CasaSprite
 	private var bp:BlockerPreloader;
 	private var _data:Object = {};
 
-	public static const SHOP_ITEM_CLICK:String = "shopItemClick";
+	private var _isBankItem:Boolean = false;
 
-	public function ShopItem(data:Object)
+	public static const SHOP_ITEM_CLICK:String = "shopItemClick";
+	public static const BANK_ITEM_CLICK:String = "bankItemClick";
+
+	public function ShopItem(data:Object, isBankItem:Boolean = false)
 	{
 		_data = data;
+		_isBankItem = isBankItem;
+
 		addChild(asset);
 		asset.priceTf.text = data.price;
 
-		var urlString:String = String(data.image).replace("http://static.evast.ru/", "");
+		var urlString:String;
+		if(_isBankItem)
+			urlString = _data.image_url;
+		else
+			urlString = String(data.image).replace("http://static.evast.ru/", "");
 
 		load = new SwfLoad(urlString);
 		load.addEventListener(LoadEvent.COMPLETE, onLoaded);
@@ -46,12 +56,17 @@ public class ShopItem extends CasaSprite
 		
 		buttonMode = useHandCursor = true;
 
+		ToolTip.bind(this, _data.description);
+
 		addEventListener(MouseEvent.CLICK, onClick);
 	}
 
 	private function onClick(e:MouseEvent):void
 	{
-		dispatchEvent(new ObjectEvent(SHOP_ITEM_CLICK, _data));
+		if(_isBankItem)
+			dispatchEvent(new ObjectEvent(BANK_ITEM_CLICK, _data));
+		else
+			dispatchEvent(new ObjectEvent(SHOP_ITEM_CLICK, _data));
 	}
 
 	private function onLoaded(e:LoadEvent):void

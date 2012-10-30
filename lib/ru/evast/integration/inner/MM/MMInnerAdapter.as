@@ -18,8 +18,8 @@ package ru.evast.integration.inner.MM
 		private var flashVars:Object;
 		
 		private const apiURL:String = "http:\/\/www.appsmail.ru\/platform\/api";
-		private const PRIVATE_KEY:String = "12f5b276b1858948f13b4a862eddfdd9";
-		private const APP_TITLE:String = "Монополия";
+		private const PRIVATE_KEY:String = "de48a3cea9f97b8ef9a5b53c997a71c4";
+		private const APP_TITLE:String = "Flirt";
 		
 		//Переменные для загрузки фото
 		private var blob:ByteArray;

@@ -27,8 +27,8 @@ package ru.evast.integration.inner.OK
 		public function OKInnerAdapter() 
 		{			
 			localFlashVars["authorized"] = "1";				
-			localFlashVars["application_key"] = "CBANJLABABABABABA";		
-			localFlashVars["auth_sig"] = "d33e8ceaec83a8bc51867532b5de656f";					
+			localFlashVars["application_key"] = "CBALAHJGABABABABA";
+			localFlashVars["auth_sig"] = "d33e8ceaec83a8bc51867532b5de656f";
 			localFlashVars["api_server"] = "http://api.odnoklassniki.ru//";				
 			localFlashVars["apiconnection"] = "695296_1326967140888";		
 			localFlashVars["session_key"] = "895be76dr18e9h3fQ1c1dZcetdaa9XahJ4640BcFv0926cbEP7796hUfwb";			
