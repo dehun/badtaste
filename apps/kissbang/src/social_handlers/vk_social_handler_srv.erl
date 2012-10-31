@@ -4,23 +4,26 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 22 Oct 2012 by  <>
 %%%-------------------------------------------------------------------
--module(webgate_srv).
+-module(vk_social_handler_srv).
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
--export([http_loop/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
 -define(SERVER, ?MODULE). 
+-include("item.hrl").
 
--record(state, {}).
+
+-record(state, {config}).
+-record(config, {items = []}).
+
 
 %%%===================================================================
 %%% API
@@ -52,12 +55,11 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    Loop = fun (Req) -> ?MODULE:http_loop(Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{name, webgate},
-                                            {port, element(2, application:get_env(kissbang, admin_web_port))},
-                                            {loop, Loop}]),
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
 
+load_config() ->
+    {ok, ItemsUrl} = application:get_env(kissbang, vk_items_cfg_url),
+    #config{items = items_loader:load_items(ItemsUrl)}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -72,8 +74,8 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({handle_social_callback, Body, Get, Post}, _From, State) ->
+    Reply = inner_handle_social_callback(Body, Get, Post, State#state.config),
     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
@@ -114,7 +116,6 @@ handle_info(_Info, State) ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, _State) ->
-    mochiweb_http:stop(),
     ok.
 
 %%--------------------------------------------------------------------
@@ -131,35 +132,63 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-http_loop(Req) ->
-    case Req:get(method) of
-        'POST' ->
-            Body = Req:recv_body(),
-            {ok, JsonResponse} = handle_json(Body),
-            Req:respond({200, 
-                        [{"Content-Type", "text/plain"}],
-                        JsonResponse});
+inner_handle_social_callback(_Body, _Get, PostData, Config) ->
+    %% check signature
+    case check_signature(PostData) of
+        ok ->
+            log_srv:debug("signature is ok"),
+            NotificationType = proplists:get_value("notification_type", PostData),
+            log_srv:debug("vk call with notification type ~p ", [NotificationType]),
+            case NotificationType of
+                "get_item" ->
+                    inner_handle_get_item(PostData, Config);
+                "get_item_test" ->
+                    inner_handle_get_item(PostData, Config);
+                "order_status_change" ->
+                    inner_handle_order_status_change(PostData, Config);
+                "order_status_change_test" ->
+                    inner_handle_order_status_change(PostData, Config);
+                _Other ->
+                    log_srv:debug("vk called with unknown nitification type ~p", [NotificationType]),
+                    Response = io_lib:format('{ "error" : "invalid notification type ~p"}', [NotificationType]),
+                    {200, [{"Content-Type", "application/json"}], Response}
+        end;
+        fail ->
+            {200, [{"Content-Type", "application/json"}], atom_to_list('{"error" : "invalid signature"')}
+    end.
+
+check_signature(PostData) ->
+    %% %% sort keys and remove sig
+    %% SortedKeys = lists:sort(fun(Left, Right) -> element(1, Left) >= element(2, Right) end, PostData),
+    %% SortedKeysWithSigRemoved = lists:keydelete(sig, 1, SortedKeys),
+    %% %% get string to hash
+    %% {ok, SecretKey} = application:get_env(kissbang, vk_secret_key),
+    %% StringToHash = lists:flatten([element(1, I) ++ "=" ++ element(2, I) || I <- SortedKeysWithSigRemoved]) ++ SecretKey,
+    
+    ok.
+                
+inner_handle_get_item(PostData, Config) ->
+    ItemId = list_to_integer(proplists:get_value("item", PostData)),
+    log_srv:debug("vk social is getting item  ~p info", [ItemId]),
+    [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
+    JsonResponse = io_lib:format('{"response" : {"item_id" : "~p", "title" : "~s", "photo_url" : "~s", "price" : "~p"}}',
+                               [Item#item.item_id, Item#item.name, Item#item.image_url, Item#item.price]),
+    {200, [{"Content-Type", "application/json"}], JsonResponse}.
+
+inner_handle_order_status_change(PostData, Config) ->
+    ItemId = list_to_integer(proplists:get_value("item_id", PostData)),
+    UserId = proplists:get_value("user_id", PostData),
+    case proplists:get_value("status", PostData) of
+        "chargeable" ->
+            OrderId = list_to_integer(proplists:get_value("order_id", PostData)),
+            log_srv:info("vk social have changed order status info to chargable. giving user ~p item ~p", [UserId, ItemId]),
+            [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
+            social_handler:on_item_bought(UserId, Item),
+            JsonResponse = io_lib:format('{"response" : {"order_id" : "~p", "app_order_id" : "1"}}', [OrderId]),
+            {200, [{"Content-Type", "application/json"}], JsonResponse};
         _Other ->
-            CrossdomainXml = "<cross-domain-policy>
-    <allow-access-from domain=\"*\" />
-</cross-domain-policy>",
-            Req:respond({200, [{"Content-Type", "text/plain"}], CrossdomainXml})
+            log_srv:debug("vk social have changed order status to not chargable for user ~p and item ~p", [UserId, ItemId]),
+            JsonResponse = '{"error" : {"error_code" : "100", "error_msg" : "non chargable", "critical" : "true"}}',
+            {200, [{"Content-Type", "application/json"}], JsonResponse}
     end.
-
-
-handle_json(JsonData) ->
-    %% deserialize message
-    log_srv:debug("handling ~p json data", [JsonData]),
-    Msg = admin_json_messaging:deserialize_message(JsonData),
-    %% form callback
-    Self = self(),
-    Callback = fun(JsonResponse)  ->
-                        Self ! {request_processed, JsonResponse}
-               end,
-    handlermgr_srv:handle_message_and_callback(admin, Msg, Callback),
-    receive
-        {request_processed, JsonMessage} ->
-            {ok, admin_json_messaging:serialize_message(JsonMessage)}
-    after 60000 ->
-            {ok, '{"error" : "timed out"}'}
-    end.
+                
