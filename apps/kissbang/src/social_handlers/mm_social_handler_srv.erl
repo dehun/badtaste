@@ -144,6 +144,6 @@ inner_handle_social_callback(Body, Get, Post, Config) ->
     {200, [{"Content-Type", "application/json"}], JsonResponse}.
 
 check_signature(Get) ->
-    ok.
+    signature_checker:check_signature(Get, mm).
 
 
