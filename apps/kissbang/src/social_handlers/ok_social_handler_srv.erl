@@ -4,15 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13 Jul 2012 by  <>
+%%% Created : 22 Oct 2012 by  <>
 %%%-------------------------------------------------------------------
--module(webgate_srv).
+-module(ok_social_handler_srv).
 
 -behaviour(gen_server).
+-include("item.hrl").
 
 %% API
 -export([start_link/0]).
--export([http_loop/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -20,7 +20,8 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {}).
+-record(config, {items}).
+-record(state, {config}).
 
 %%%===================================================================
 %%% API
@@ -52,12 +53,11 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    Loop = fun (Req) -> ?MODULE:http_loop(Req) end,
-    {ok, _Http} = mochiweb_http:start_link([{name, webgate},
-                                            {port, element(2, application:get_env(kissbang, admin_web_port))},
-                                            {loop, Loop}]),
-    {ok, #state{}}.
+    {ok, #state{config = load_config()}}.
 
+load_config() ->
+    {ok, Url} = application:get_env(kissbang, ok_items_cfg_url),
+    #config{items = items_loader:load_items(Url)}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -72,8 +72,8 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({handle_social_callback, Body, Get, Post}, _From, State) ->
+    Reply = inner_handle_social_callback(Body, Get, Post, State#state.config),
     {reply, Reply, State}.
 
 %%--------------------------------------------------------------------
@@ -114,7 +114,6 @@ handle_info(_Info, State) ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, _State) ->
-    mochiweb_http:stop(),
     ok.
 
 %%--------------------------------------------------------------------
@@ -131,35 +130,17 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-http_loop(Req) ->
-    case Req:get(method) of
-        'POST' ->
-            Body = Req:recv_body(),
-            {ok, JsonResponse} = handle_json(Body),
-            Req:respond({200, 
-                        [{"Content-Type", "text/plain"}],
-                        JsonResponse});
-        _Other ->
-            CrossdomainXml = "<cross-domain-policy>
-    <allow-access-from domain=\"*\" />
-</cross-domain-policy>",
-            Req:respond({200, [{"Content-Type", "text/plain"}], CrossdomainXml})
-    end.
+inner_handle_social_callback(Body, Get, Post, Config) ->
+    %% check sig
+    ok = check_signature(Get),
+    %% buy item
+    UserId = proplists:get_value("uid", Get),
+    ItemId = list_to_integer(proplists:get_value("product_code", Get)),
+    [Item] = [I || I <- Config#config.items, I#item.item_id == ItemId],
+    ok = social_handler:on_item_bought(UserId, Item),
+    %% respond success
+    XmlResponse = "<callbacks_payment_response xmlns=\"http://api.forticom.com/1.0/\">true</callbacks_payment_response>",
+    {200, [{"Content-Type", "application/xml"}], XmlResponse}.
 
-
-handle_json(JsonData) ->
-    %% deserialize message
-    log_srv:debug("handling ~p json data", [JsonData]),
-    Msg = admin_json_messaging:deserialize_message(JsonData),
-    %% form callback
-    Self = self(),
-    Callback = fun(JsonResponse)  ->
-                        Self ! {request_processed, JsonResponse}
-               end,
-    handlermgr_srv:handle_message_and_callback(admin, Msg, Callback),
-    receive
-        {request_processed, JsonMessage} ->
-            {ok, admin_json_messaging:serialize_message(JsonMessage)}
-    after 60000 ->
-            {ok, '{"error" : "timed out"}'}
-    end.
+check_signature(PostData) ->
+    ok.
