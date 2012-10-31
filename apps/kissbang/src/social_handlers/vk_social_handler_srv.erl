@@ -12,6 +12,7 @@
 
 %% API
 -export([start_link/0]).
+-export([check_signature/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -55,6 +56,7 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
+    crypto_server:start_link(),
     {ok, #state{config = load_config()}}.
 
 load_config() ->
@@ -158,14 +160,7 @@ inner_handle_social_callback(_Body, _Get, PostData, Config) ->
     end.
 
 check_signature(PostData) ->
-    %% %% sort keys and remove sig
-    %% SortedKeys = lists:sort(fun(Left, Right) -> element(1, Left) >= element(2, Right) end, PostData),
-    %% SortedKeysWithSigRemoved = lists:keydelete(sig, 1, SortedKeys),
-    %% %% get string to hash
-    %% {ok, SecretKey} = application:get_env(kissbang, vk_secret_key),
-    %% StringToHash = lists:flatten([element(1, I) ++ "=" ++ element(2, I) || I <- SortedKeysWithSigRemoved]) ++ SecretKey,
-    
-    ok.
+    signature_checker:check_signature(PostData, vk).
                 
 inner_handle_get_item(PostData, Config) ->
     ItemId = list_to_integer(proplists:get_value("item", PostData)),
