@@ -321,7 +321,7 @@ per_user_common_rebuild(UserGuid) ->
     mnesia:activity(sync_dirty, fun() ->
                             AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
                             CommonScore = calculate_common_score(AllUserScores),
-                            inner_set_score(UserGuid, common, CommonScore)
+                            inner_set_score(UserGuid, "common", CommonScore)
                     end, [], mnesia_frag).
 
 calculate_common_score(AllScores) ->
