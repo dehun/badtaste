@@ -328,15 +328,15 @@ calculate_common_score(AllScores) ->
     lists:foldl(fun(UserScore, Accum) ->
                         Score = UserScore#server_user_score.score,
                         case UserScore#server_user_score.tag of
-                            sympathy ->
+                            "sympathy" ->
                                 Accum + Score * 12;
-                            received_gifts ->
+                            "received_gifts" ->
                                 Accum + Score * 20;
-                            sended_gifts ->
+                            "sended_gifts" ->
                                 Accum + Score * 17;
-                            rated ->
+                            "rated" ->
                                 Accum + Score * 8;
-                            vippoints ->
+                            "vippoints" ->
                                 Accum + Score * 18;
                             _Other ->
                                 Accum
