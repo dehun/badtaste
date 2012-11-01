@@ -74,8 +74,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -84,10 +84,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Config.as" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Config.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="0" selection-start="685" selection-end="685" vertical-scroll-proportion="0.0">
+            <state line="13" column="47" selection-start="312" selection-end="312" vertical-scroll-proportion="0.4183267">
               <folding />
             </state>
           </provider>
@@ -97,9 +97,7 @@
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopItem.as">
           <provider selected="true" editor-type-id="text-editor">
             <state line="48" column="21" selection-start="1306" selection-end="1306" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#209#261#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -107,10 +105,17 @@
       <file leaf-file-name="ShopPage.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="127" column="12" selection-start="3652" selection-end="3652" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#208#263#0" expanded="true" />
-              </folding>
+            <state line="58" column="41" selection-start="1801" selection-end="1801" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IntegrationProxy.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -124,10 +129,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OKInnerAdapter.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="OKInnerAdapter.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/OK/OKInnerAdapter.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="66" selection-start="1039" selection-end="1039" vertical-scroll-proportion="0.6042654">
+            <state line="40" column="8" selection-start="1656" selection-end="1656" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Profile.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="253" column="31" selection-start="7460" selection-end="7460" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="View.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="131" column="23" selection-start="4523" selection-end="4523" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -143,8 +166,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Fans.as" />
-        <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/FB/FBDataAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/outer/GPlus/GPlusOuterAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/outer/VK/VKOuterAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/outer/OK/OKOuterAdapter.as" />
@@ -155,10 +176,12 @@
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/VKInnerAdapter.as" />
         <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopItem.as" />
         <option value="$PROJECT_DIR$/src/Kiss.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as" />
-        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/MM/MMInnerAdapter.as" />
         <option value="$PROJECT_DIR$/lib/ru/evast/integration/inner/OK/OKInnerAdapter.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as" />
+        <option value="$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as" />
       </list>
     </option>
   </component>
@@ -711,11 +734,11 @@
     <property name="flex.debug.filter.swf.load.unload" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CreateActionScriptClassDialog.DESTINATION_PACKAGE_RECENT_KEY">
@@ -751,12 +774,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="FlexRunConfigurationType" factoryName="Flex" browser_family="FIREFOX" debugger_sdk="Module SDK" html_or_swf_file_path="" launcher_type="OSDefault" main_class_name="" module_name="" player_path="/Applications/Flash Player Debugger.app" run_mode="HtmlOrSwfFile" run_trusted="true" url_to_launch="http://">
-      <method>
-        <option name="BuildArtifacts" enabled="false" />
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -773,6 +790,12 @@
         <option name="BuildArtifacts" enabled="false" />
         <option name="Make" enabled="true" />
         <option name="Maven.BeforeRunTask" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="FlexRunConfigurationType" factoryName="Flex" browser_family="FIREFOX" debugger_sdk="Module SDK" html_or_swf_file_path="" launcher_type="OSDefault" main_class_name="" module_name="" player_path="/Applications/Flash Player Debugger.app" run_mode="HtmlOrSwfFile" run_trusted="true" url_to_launch="http://">
+      <method>
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -882,15 +905,15 @@
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.57670456" sideWeight="0.0" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57670456" sideWeight="0.0" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35511363" sideWeight="0.5625" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34517047" sideWeight="0.40665585" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34517047" sideWeight="0.40665585" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.4935065" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24918832" sideWeight="0.6448864" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39935064" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22808442" sideWeight="0.65482956" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23214285" sideWeight="0.42329547" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -952,112 +975,94 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/outer/MM/MMOuterAdapter.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="153" column="32" selection-start="4100" selection-end="4100" vertical-scroll-proportion="0.30941704" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/Mamba/MambaInnerAdapter.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="246" column="0" selection-start="6990" selection-end="6990" vertical-scroll-proportion="0.30715936" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/outer/OK/OKOuterAdapter.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="145" column="28" selection-start="3763" selection-end="3763" vertical-scroll-proportion="0.30715936" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="38" selection-start="1013" selection-end="1013" vertical-scroll-proportion="-1.2014563" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/core/IDataAdapter.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="17" selection-start="301" selection-end="301" vertical-scroll-proportion="0.26548672">
-          <folding />
-        </state>
+        <state line="12" column="17" selection-start="301" selection-end="301" vertical-scroll-proportion="0.26548672" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/VKInnerAdapter.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="24" selection-start="3098" selection-end="3098" vertical-scroll-proportion="0.02255639">
-          <folding />
-        </state>
+        <state line="90" column="24" selection-start="3098" selection-end="3098" vertical-scroll-proportion="0.02255639" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/VK/rest/APIConnection.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="20" selection-start="2622" selection-end="2622" vertical-scroll-proportion="0.022123894">
-          <folding />
-        </state>
+        <state line="78" column="20" selection-start="2622" selection-end="2622" vertical-scroll-proportion="0.022123894" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/core/SocialNetworkTypes.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="28" selection-start="235" selection-end="235" vertical-scroll-proportion="0.24336283">
-          <folding />
-        </state>
+        <state line="11" column="28" selection-start="235" selection-end="235" vertical-scroll-proportion="0.24336283" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConnector.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="111" selection-start="1068" selection-end="1068" vertical-scroll-proportion="0.20353982">
-          <folding />
-        </state>
+        <state line="33" column="111" selection-start="1068" selection-end="1068" vertical-scroll-proportion="0.20353982" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/controller/net/ServerConfig.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="5" selection-start="0" selection-end="290" vertical-scroll-proportion="0.20547946">
+        <state line="9" column="5" selection-start="0" selection-end="290" vertical-scroll-proportion="0.20547946" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/MM/MMInnerAdapter.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="47" selection-start="755" selection-end="755" vertical-scroll-proportion="0.49763033" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopItem.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="21" selection-start="1306" selection-end="1306" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kiss.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="89" selection-start="1871" selection-end="1948" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/OK/OKInnerAdapter.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="8" selection-start="1656" selection-end="1656" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/profile/Profile.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="253" column="31" selection-start="7460" selection-end="7460" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/View.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="23" selection-start="4523" selection-end="4523" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopPage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="127" column="12" selection-start="3652" selection-end="3652" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#208#263#0" expanded="true" />
-          </folding>
+        <state line="58" column="41" selection-start="1801" selection-end="1801" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/IntegrationProxy.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="3958" selection-end="3958" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/model/Config.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="0" selection-start="685" selection-end="685" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/exponentum/apps/flirt/view/pages/shop/ShopItem.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="21" selection-start="1306" selection-end="1306" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#209#261#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/MM/MMInnerAdapter.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="47" selection-start="755" selection-end="755" vertical-scroll-proportion="0.49763033">
-          <folding>
-            <element signature="e#7611#7639#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Kiss.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="89" selection-start="1871" selection-end="1948" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/ru/evast/integration/inner/OK/OKInnerAdapter.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="66" selection-start="1039" selection-end="1039" vertical-scroll-proportion="0.6042654">
+        <state line="13" column="47" selection-start="312" selection-end="312" vertical-scroll-proportion="0.4183267">
           <folding />
         </state>
       </provider>

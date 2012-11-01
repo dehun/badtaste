@@ -251,7 +251,7 @@ public class Profile extends BackGroundedPage
 
 	private function onAddMoneyClick(e:MouseEvent):void
 	{
-
+		Model.instance.view.showShop(Model.instance.owner.guid, true);
 	}
 
 	private function onBankBalanceChecked(e:ObjectEvent):void

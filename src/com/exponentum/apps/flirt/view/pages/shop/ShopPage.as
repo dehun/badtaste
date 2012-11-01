@@ -43,7 +43,7 @@ public class ShopPage extends CasaSprite
 	private var isGiftShop:Boolean = true;
 	private var _targetGuid:String = "";
 
-	public function ShopPage(targetGuid:String)
+	public function ShopPage(targetGuid:String, bankMode:Boolean = false)
 	{
 		_targetGuid = targetGuid;
 
@@ -55,6 +55,8 @@ public class ShopPage extends CasaSprite
 
 		shopPageAsset.closeButton.addEventListener(MouseEvent.CLICK, onClose);
 		this.filters = [new DropShadowFilter(0, 45, 0x0, 1, 30, 30, 1, 3)];
+		
+		if(bankMode) reloadItems("bank");
 	}
 
 	private function createDistribution():void
