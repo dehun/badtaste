@@ -319,9 +319,15 @@ per_user_try_common_rebuild(UserScore, ProcessedUsersSet) ->
 per_user_common_rebuild(UserGuid) ->
     log_srv:debug("rebuilding common score for ~p", [UserGuid]),
     mnesia:activity(sync_dirty, fun() ->
-                            AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
-                            CommonScore = calculate_common_score(AllUserScores),
-                            inner_set_score(UserGuid, "common", CommonScore)
+                                        AllUserScores = qlc:e(qlc:q([E || E <- mnesia:table(server_user_score), E#server_user_score.user_guid =:= UserGuid])),
+                                        CommonScore = calculate_common_score(AllUserScores),
+                                        inner_set_score(UserGuid, "common", CommonScore),
+                                        case vip_srv:get_vip_points(UserGuid) of
+                                            0 ->
+                                                ok;
+                                            _Other -> %% assume he is vip if have more than zero vip point
+                                                inner_set_score(UserGuid, "common_vip", CommonScore)
+                                        end
                     end, [], mnesia_frag).
 
 calculate_common_score(AllScores) ->
