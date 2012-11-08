@@ -498,7 +498,7 @@ public class GameField extends BackGroundedPage
 
 	private function createTabBar():void
 	{
-		tabBar.y = 41;
+		tabBar.y = 36;
 		addChild(tabBar);
 		tabBar.addTab(new TabButton(new ChangeTableButton()), "", CHANGE_TABLE, 50);
 		tabBar.addTab(new TabButton(new HomeButton()), "", Config.PROFILE, 50);
@@ -577,7 +577,7 @@ public class GameField extends BackGroundedPage
 	{
 		if(Model.instance.owner.vipPoints == 0){
 			becameVIPButton.x = 135;
-			becameVIPButton.y = 33;
+			becameVIPButton.y = 30;
 			addChild(becameVIPButton);
 			becameVIPButton.addEventListener(MouseEvent.CLICK, onBecameVIP);
 		}

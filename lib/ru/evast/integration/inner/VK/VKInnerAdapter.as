@@ -40,15 +40,15 @@ import flash.events.Event;
 		
 		public function VKInnerAdapter() 
 		{
-			_localFlashVars["api_id"] = "3130993";				
+			_localFlashVars["api_id"] = "3047691";
 			_localFlashVars["api_url"] = "http:\/\/api.vkontakte.ru\/api.php";		
-			_localFlashVars["auth_key"] = "8e56cb47750c7fe1dea4bd962cbc0ae2";								
+			_localFlashVars["auth_key"] = "9497b71d9c83ba1807a99c18511791c8";
 			_localFlashVars["is_app_user"] = "1";		
 			_localFlashVars["referrer"] = "profile";			
-			_localFlashVars["secret"] = "442fca0167";		
-			_localFlashVars["sid"] = "8f83511dfb1eaeb9ca6c3706cf765d4397fa3cb2b8870f06971aac7502b428"; 						
-			_localFlashVars["user_id"] = "9150273";		
-			_localFlashVars["viewer_id"] = "9150273"; 		
+			_localFlashVars["secret"] = "047e2a7ac5";
+			_localFlashVars["sid"] = "d6a21ed81be3cd00fd1dcf844bed4d0b7882e4cf2934399d6fc1c9e54f484c";
+			_localFlashVars["user_id"] = "171082395";
+			_localFlashVars["viewer_id"] = "171082395";
 			_localFlashVars["api_result"] = "";
 			
 		}

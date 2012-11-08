@@ -8,6 +8,7 @@ import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.common.DialogWindow;
 import com.exponentum.apps.flirt.view.common.InfoWindow;
+import com.exponentum.apps.flirt.view.controlls.Align;
 import com.exponentum.apps.flirt.view.pages.gifts.GiftsPage;
 import com.exponentum.apps.flirt.view.pages.miniprofile.MiniProfile;
 import com.exponentum.apps.flirt.view.pages.gamefield.GameField;
@@ -119,9 +120,9 @@ public class View extends Sprite
 
 	public function showTasks(e:Event = null):void
 	{
-		if(prizeTasks) return;
+		if(prizeTasks && pageContainer.contains(prizeTasks)) return;
 		prizeTasks = new PrizeTasksWindow();
-		prizeTasks.x = 0;
+		prizeTasks.x = 4;
 		prizeTasks.y = 300;
 		pageContainer.addChild(prizeTasks);
 	}

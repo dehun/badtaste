@@ -139,7 +139,7 @@ public class Profile extends BackGroundedPage
 	private function createView():void
 	{
 		playButton.x = 231;
-		playButton.y = -1;
+		playButton.y = -4;
 		addChild(playButton);
 		playButton.addEventListener(MouseEvent.CLICK, onPlayClick);
 
@@ -203,8 +203,9 @@ public class Profile extends BackGroundedPage
 		if(!_bottomPanel)
 		{
 			_bottomPanel = new BottomPanel();
-			_bottomPanel.x = 0;
+			_bottomPanel.x = -5;
 			_bottomPanel.y = 548;
+			_bottomPanel.width+=5;
 			addChild(_bottomPanel);
 		}
 
@@ -215,6 +216,8 @@ public class Profile extends BackGroundedPage
 			fans.y = 113;
 			addChild(fans);
 		}
+
+		createBecameVip();
 
 		if(!presentsContainer)
 		{
@@ -232,6 +235,46 @@ public class Profile extends BackGroundedPage
 		bp.preload(8);
 
 		createBankIndicator();
+	}
+
+	private var becameVIPButton:BecameVIPButton = new BecameVIPButton();
+	private function createBecameVip():void
+	{
+		if(Model.instance.owner.vipPoints == 0){
+			becameVIPButton.x = 85;
+			becameVIPButton.y = 44;
+			addChild(becameVIPButton);
+			becameVIPButton.addEventListener(MouseEvent.CLICK, onBecameVIP);
+		}
+	}
+
+	private function onBecameVIP(e:MouseEvent):void
+	{
+		bp = new BlockerPreloader(this, this.width, this.height);
+		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите купить статус VIP? С вашего счета будут списаны монеты", "Внимание!", "Да", "Нет", function():void{
+			Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+			Model.instance.addEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+			Controller.instance.buyVIPPoints();
+			bp.preload(1);
+		}));
+
+	}
+
+	private function onBecameVIPSuccess(e:ObjectEvent):void
+	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Вы успешно приобрели статус VIP", "Успех!"));
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+		bp.partsLoaded++;
+		becameVIPButton.visible = false;
+	}
+
+	private function onBecameVIPFail(e:ObjectEvent):void
+	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Произошла ошибка. Попробуйте позже", "Ошибка!"));
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_SUCCESS, onBecameVIPSuccess);
+		Model.instance.removeEventListener(Controller.ON_VIP_POINTS_BUY_FAIL, onBecameVIPFail);
+		bp.partsLoaded++;
 	}
 
 	private var bankIndicator:BankIndicatorAsset = new BankIndicatorAsset();

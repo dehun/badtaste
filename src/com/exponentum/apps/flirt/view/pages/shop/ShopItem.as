@@ -73,15 +73,16 @@ public class ShopItem extends CasaSprite
 	{
 		var mc:MovieClip = load.contentAsMovieClip;
 
-		if(mc.width > mc.height){
-			mc.width = asset.width - 10;
+		if(mc.width >= mc.height){
+			mc.width = asset.width - 40;
 			mc.scaleY = mc.scaleX;
 		}else{
-			mc.height = asset.height - 50;
+			mc.height = asset.height - 70;
 			mc.scaleX = mc.scaleY;
 		}
 		asset.avatarContainer.addChild(mc);
 		Align.center(mc, asset);
+		mc.y -= 10;
 
 		bp.partsLoaded++;
 	}

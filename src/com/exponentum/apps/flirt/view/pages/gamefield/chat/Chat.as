@@ -59,7 +59,7 @@ public class Chat extends CasaSprite
 
 		addChild(vipCB);
 		vipCB.x = 75;
-		vipCB.y = -60;
+		vipCB.y = -67;
 		vipCB.buttonMode = vipCB.useHandCursor = true;
 		vipCB.cb.gotoAndStop(int(_vipOnly) + 1);
 		vipCB.cb.addEventListener(MouseEvent.CLICK, onVipOnly);
@@ -125,8 +125,8 @@ public class Chat extends CasaSprite
 		scr.addEventListener(Event.CHANGE, onScroll);
 		addChild(scr);
 
-		sayButton.x = 575;
-		sayButton.y = 112;
+		sayButton.x = 510;
+		sayButton.y = 109;
 		addChild(sayButton);
 		sayButton.addEventListener(MouseEvent.CLICK, onSendMessage);
 

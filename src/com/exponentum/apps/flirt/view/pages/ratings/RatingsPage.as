@@ -41,7 +41,7 @@ public class RatingsPage extends BackGroundedPage
 	private const DAY:String = "day";
 	private const WEEK:String = "week";
 	private const MONTH:String = "month";
-	private const TOP_VIP:String = "topVip";
+	private const TOP_VIP:String = "common_vip";
 
 	private const MAX_ITEMS_PER_SCREEN:int = 14;
 

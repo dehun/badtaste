@@ -104,6 +104,9 @@ public class PrizeTasksWindow extends CasaSprite
 	override public function destroy():void
 	{
 		removeChildren(true, true);
+		asset = null;
+		taskDetails = null;
+		tasksDistr = null;
 		super.destroy();
 	}
 
