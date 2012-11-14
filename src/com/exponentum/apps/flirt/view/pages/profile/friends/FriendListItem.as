@@ -15,10 +15,12 @@ import com.exponentum.apps.flirt.view.controlls.Align;
 import com.exponentum.apps.flirt.view.controlls.preloader.BlockerPreloader;
 
 import flash.display.Bitmap;
+import flash.display.DisplayObject;
 import flash.display.Loader;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
+import flash.geom.Rectangle;
 import flash.net.SharedObject;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -67,6 +69,33 @@ public class FriendListItem extends CasaSprite
 		Model.instance.removeEventListener(Controller.ON_GOT_USER_RATE, onRate);
 	}
 
+	public static function Fill(target:DisplayObject, rect:Rectangle):void {
+		var iWidth:Number = target.width;
+		var iHeight:Number = target.height;
+
+		target.scaleX = 1;
+		target.scaleY = 1;
+
+		var koeff:Number = 1;
+
+		if (iWidth == iHeight) {
+			if (iWidth != rect.width) koeff = rect.width / iWidth;
+			target.scaleX = target.scaleY = koeff;
+			target.x = 0 - (target.width - target.height) / 2;
+		}
+		else if (iWidth < iHeight) {
+			if (iWidth != rect.width) koeff = rect.width / iWidth;
+			target.scaleX = target.scaleY = koeff;
+			target.y = 0 - (target.height - target.width) / 2;
+		}
+		else if (iWidth > iHeight) {
+			if (iHeight != rect.height) koeff = rect.height / iHeight;
+			target.scaleX = target.scaleY = koeff;
+			target.x = 0 - (target.width - target.height) / 2;
+		}
+
+	}
+
 	private function onInfo(e:ObjectEvent):void
 	{
 		var user:User = e.data as User;
@@ -79,6 +108,7 @@ public class FriendListItem extends CasaSprite
 			var holder:Sprite = asset.friendAvatarContainer.holder;
 			Align.center(loader, holder);
 			holder.addChild(loader);
+			//FriendListItem.Fill(loader.content, holder.getBounds(holder));
 			bp.partsLoaded++;
 		});
 		loader.load(req);

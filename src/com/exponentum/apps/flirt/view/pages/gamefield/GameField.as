@@ -86,7 +86,7 @@ public class GameField extends BackGroundedPage
 	private var avatarHolders:Vector.<PlayerAvatar>;
 
 	private const kissersPlacesCoords:Array = [new Point(210, 240), new Point(440, 240)];
-	private const celebrityAvatarCoords:Array = [new Point(490, 584), new Point(596, 584)];
+	private const celebrityAvatarCoords:Array = [new Point(490, 595), new Point(596, 595)];
 
 	private var celebrityAvatars:Vector.<CelebrityAvatar> = new Vector.<CelebrityAvatar>();
 
@@ -559,8 +559,9 @@ public class GameField extends BackGroundedPage
 	private function createView():void
 	{
 		chatBG = new BackGround();
-		chatBG.x = 0;
+		chatBG.x = -5;
 		chatBG.y = -130;
+		chatBG.width += 5;
 		addChild(chatBG);
 	}
 
@@ -628,7 +629,7 @@ public class GameField extends BackGroundedPage
 
 	private function onAddMoneyClick(e:MouseEvent):void
 	{
-
+		Model.instance.view.showShop(Model.instance.owner.guid, true);
 	}
 
 	private function onBankBalanceChanged(e:ObjectEvent):void

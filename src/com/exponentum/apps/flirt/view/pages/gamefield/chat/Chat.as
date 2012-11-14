@@ -126,7 +126,7 @@ public class Chat extends CasaSprite
 		addChild(scr);
 
 		sayButton.x = 510;
-		sayButton.y = 109;
+		sayButton.y = 111;
 		addChild(sayButton);
 		sayButton.addEventListener(MouseEvent.CLICK, onSendMessage);
 

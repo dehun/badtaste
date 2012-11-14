@@ -96,6 +96,7 @@ public class Controller
 		socket.addEventListener(ON_DECORE_BOUGHT_SUCCESS, model.onDecoreBuySuccess);
 		socket.addEventListener(ON_DECORE_BUY_FAIL, model.onDecoreBuyFail);
 		socket.addEventListener(ON_FOLLOWING_BUY_SUCCESS, model.onFollowingBought);
+		socket.addEventListener(ON_FOLLOWING_BUY_FAIL, model.onFollowingBuyFail);
 
 		//gift methods
 		socket.addEventListener(ON_GOT_GIFT, model.onGotGift);
@@ -381,6 +382,7 @@ public class Controller
 
 	public static const BUY_FOLLOWING:String = "BuyFollowing";
 	public static const ON_FOLLOWING_BUY_SUCCESS:String = "OnFollowingBought";
+	public static const ON_FOLLOWING_BUY_FAIL:String = "OnFollowingBuyingFail";
 
 	public function buyFollowing(userGuid:String):void
 	{

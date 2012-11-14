@@ -209,6 +209,11 @@ public class Model extends EventDispatcher
 		dispatchEvent(new ObjectEvent(e.type, e.data));
 	}
 
+	public function onFollowingBuyFail(e:ObjectEvent):void
+	{
+		dispatchEvent(new ObjectEvent(e.type, e.data));
+	}
+
 //----------------------------------------------------------------------------------------------------------------------
 //	GIFT METHODS
 //----------------------------------------------------------------------------------------------------------------------

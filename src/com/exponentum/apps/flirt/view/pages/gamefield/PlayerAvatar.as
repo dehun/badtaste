@@ -13,6 +13,7 @@ import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.View;
 import com.exponentum.apps.flirt.view.controlls.Align;
+import com.exponentum.apps.flirt.view.pages.profile.friends.FriendListItem;
 
 import flash.display.Bitmap;
 import flash.display.Loader;
@@ -83,6 +84,7 @@ public class PlayerAvatar extends CasaSprite
 	private function set photo(value:Loader):void
 	{
 		_photo = value;
+		FriendListItem.Fill(value, avatarHolder.getBounds(avatarHolder));
 		Align.center(_photo, avatarHolder.avatarContainer);
 		avatarHolder.avatarContainer.addChild(_photo);
 	}

@@ -83,8 +83,10 @@ public class Preloader extends MovieClip
 
 	private function progress(e:ProgressEvent):void
 	{
-		preloaderText.preloaderText.text = "Loading: " + int(e.bytesLoaded / e.bytesTotal) * 100 + "%";
 		pbMask.width = e.bytesLoaded / e.bytesTotal * pbBar.width;
+		var progress:Number = e.bytesLoaded / e.bytesTotal * 100;
+		//trace(Math.ceil(progress));
+		preloaderText.preloaderText.text = "Loading: " + Math.ceil(progress) + "%";
 	}
 
 	private function checkFrame(e:Event):void

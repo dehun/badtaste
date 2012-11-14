@@ -12,6 +12,7 @@ import com.exponentum.apps.flirt.events.ObjectEvent;
 import com.exponentum.apps.flirt.model.Model;
 import com.exponentum.apps.flirt.model.profile.User;
 import com.exponentum.apps.flirt.view.controlls.Align;
+import com.exponentum.apps.flirt.view.pages.profile.friends.FriendListItem;
 
 import flash.display.Bitmap;
 import flash.display.Loader;
@@ -108,6 +109,7 @@ public class ProfileAvatar extends CasaSprite
 		while(avatarHolder.avatarContainer.numChildren) avatarHolder.avatarContainer.removeChildAt(0);
 		//Align.center(_photo, avatarHolder.avatarContainer)
 		avatarHolder.avatarContainer.addChild(_photo);
+		FriendListItem.Fill(_photo, avatarHolder.getBounds(avatarHolder));
 		avatarHolder.sex.visible = false;
 	}
 

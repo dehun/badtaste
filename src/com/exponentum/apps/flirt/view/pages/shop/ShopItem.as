@@ -82,7 +82,7 @@ public class ShopItem extends CasaSprite
 		}
 		asset.avatarContainer.addChild(mc);
 		Align.center(mc, asset);
-		mc.y -= 10;
+		mc.y -= 20;
 
 		bp.partsLoaded++;
 	}

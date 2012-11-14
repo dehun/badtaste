@@ -217,8 +217,6 @@ public class Profile extends BackGroundedPage
 			addChild(fans);
 		}
 
-		createBecameVip();
-
 		if(!presentsContainer)
 		{
 			shelf.x = 60;
@@ -242,7 +240,7 @@ public class Profile extends BackGroundedPage
 	{
 		if(Model.instance.owner.vipPoints == 0){
 			becameVIPButton.x = 85;
-			becameVIPButton.y = 44;
+			becameVIPButton.y = 53;
 			addChild(becameVIPButton);
 			becameVIPButton.addEventListener(MouseEvent.CLICK, onBecameVIP);
 		}
@@ -360,6 +358,7 @@ public class Profile extends BackGroundedPage
 		if((e.data as User).guid != Model.instance.owner.guid) return;
 
 		profileAvatar.isVIP = user.vipPoints > 0;
+		if(user.vipPoints == 0) createBecameVip();
 		bp.partsLoaded++;
 	}
 

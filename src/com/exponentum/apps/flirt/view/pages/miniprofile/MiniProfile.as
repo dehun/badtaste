@@ -369,9 +369,18 @@ public class MiniProfile extends BackGroundedPage
 	{
 		Model.instance.view.showDialogWindow(new DialogWindow("Вы уверенны что хотите стать поклонником " + _user.name + " за монеты?", "Внимание!", "Да", "Нет", function():void{
 			Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+			Model.instance.addEventListener(Controller.ON_FOLLOWING_BUY_FAIL, onFollowingBuyFail);
 			Controller.instance.buyFollowing(_user.guid);
 		}));
 
+	}
+
+	private function onFollowingBuyFail(e:ObjectEvent):void
+	{
+		Model.instance.view.showInfoWindow(new InfoWindow("Недостаточно денег. Пополните ваш счет!", "Ошибка!"));
+		Model.instance.removeEventListener(Controller.ON_FOLLOWING_BUY_SUCCESS, onFollowingBought);
+		Model.instance.removeEventListener(Controller.ON_FOLLOWING_BUY_FAIL, onFollowingBuyFail);
+		Controller.instance.getUserFollowers(_user.guid);
 	}
 
 	private function onFollowingBought(e:ObjectEvent):void

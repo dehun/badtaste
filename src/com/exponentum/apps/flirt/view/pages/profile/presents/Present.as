@@ -26,12 +26,14 @@ public class Present extends CasaSprite
 	public static const PRESENT_LOADED:String = "presentLoaded";
 	private var presentLoad:SwfLoad;
 	private var _presentOwner:User;
+	private var _senderGuid:String = "";
 	
 	public function Present(present:Object, presentOwner:User)
 	{
 		_presentOwner = presentOwner;
 		Model.instance.addEventListener(Controller.GOT_USER_INFO, onSenderInfo);
-		Controller.instance.getUserInfo(present.SendedGift.senderGuid);
+		_senderGuid = present.SendedGift.senderGuid;
+		Controller.instance.getUserInfo(_senderGuid);
 		trace(present.SendedGift.giftGuid);
 		presentLoad = new SwfLoad(Config.RESOURCES_SERVER + "gifts/gift" + present.SendedGift.giftGuid + ".swf");
 		presentLoad.addEventListener(LoadEvent.COMPLETE, onBgLoaded);
@@ -40,6 +42,7 @@ public class Present extends CasaSprite
 
 	private function onSenderInfo(e:ObjectEvent):void
 	{
+		if(_senderGuid != (e.data as User).guid) return;
 		Model.instance.removeEventListener(Controller.GOT_USER_INFO, onSenderInfo);
 		ToolTip.bind(this, "Подарок от: " + (e.data as User).name, true);
 	}

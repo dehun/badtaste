@@ -48,14 +48,15 @@ public class ShopPage extends CasaSprite
 		_targetGuid = targetGuid;
 
 		addChild(shopPageAsset);
-		
-		createTabBar();
-		createScroll();
-		createDistribution();
 
+		createScroll();
+
+		createTabBar();
+
+		createDistribution();
 		shopPageAsset.closeButton.addEventListener(MouseEvent.CLICK, onClose);
+
 		this.filters = [new DropShadowFilter(0, 45, 0x0, 1, 30, 30, 1, 3)];
-		
 		if(bankMode) reloadItems("bank");
 	}
 
@@ -114,16 +115,20 @@ public class ShopPage extends CasaSprite
 		distribution.removeChildren(true, true);
 		if(itemsGroup != "bank")
 		{
+			var count:int = 0;
 			for each (var o:Object in shopData.gifts)
 			{
 				if(o.group == itemsGroup){
+					count++;
 					var shopItem:ShopItem = new ShopItem(o);
 					shopItem.addEventListener(ShopItem.SHOP_ITEM_CLICK, onProductSelected);
 					distribution.addChildWithDimensions(shopItem, shopItem.width + 3, shopItem.height + 3);
 				}
 			}
+			scroll.visible = count > 8;
 		}else{
 			var bankItems:Array = (Config.buyData.items as Array);
+			scroll.visible = bankItems.length > 8;
 			for (var i:int = 0; i < bankItems.length; i++)
 			{
 				var bankShopItem:ShopItem = new ShopItem(bankItems[i], true);

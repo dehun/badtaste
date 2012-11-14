@@ -129,12 +129,10 @@ public class View extends Sprite
 
 	public function showShop(userGuid:String, bankMode:Boolean = false):void
 	{
-		//if(shop) return;
+		if(shop && pageContainer.contains(shop)) return;
 		shop = new ShopPage(userGuid, bankMode);
 		shop.x = 50;
 		shop.y = 140;
-//		centerX(shop, 760);
-//		centerY(shop, 760);
 		pageContainer.addChild(shop);
 	}
 

@@ -75,6 +75,7 @@ public class PrizeTasksWindow extends CasaSprite
 		taskDetails.x = e.currentTarget.x + 30;
 		taskDetails.y = 165;
 		taskDetails.visible = true;
+		taskDetails.mouseEnabled = taskDetails.mouseChildren = false;
 		taskDetails.taskSummary.text = Config.jobsData.jobs[taskNum].title;
 		taskDetails.taskDetail.text = Config.jobsData.jobs[taskNum].description;
 		taskDetails.taskDetail.multiline = taskDetails.taskDetail.wordWrap = true;

@@ -207,6 +207,10 @@ public class RatingsPage extends BackGroundedPage
 
 	private function onPeriodChanged(e:Event):void
 	{
+		if(currentTimeInterval == TOP_VIP){
+			Controller.instance.getScores(TOP_VIP, currentTimeInterval);
+			return;
+		}
 		currentTimeInterval = e.type;
 		Controller.instance.getScores(currentTag, currentTimeInterval);
 	}
