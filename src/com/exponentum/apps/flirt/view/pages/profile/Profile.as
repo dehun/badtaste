@@ -84,7 +84,7 @@ public class Profile extends BackGroundedPage
 			i++;
 		}
 		profileDetails.ageText.text = user.birthDate;
-		profileDetails.cityText.text = user.city;
+		profileDetails.cityText.text = (user.city == "hidden")?"Скрыто":user.city;
 		profileDetails.playInCityCheckBox.gotoAndStop(int(Model.instance.owner.playInCity) + 1);
 
 		profileDetails.nameText.addEventListener(FocusEvent.FOCUS_IN, onNameTFFocusIn);
@@ -152,8 +152,6 @@ public class Profile extends BackGroundedPage
 		ratingsButton.y = 312;
 		addChild(ratingsButton);
 		ratingsButton.addEventListener(MouseEvent.CLICK, onRatingsClick);
-
-
 
 		if(!zodiacSign)
 		{

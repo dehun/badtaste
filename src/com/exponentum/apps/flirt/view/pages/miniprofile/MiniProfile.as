@@ -196,7 +196,7 @@ public class MiniProfile extends BackGroundedPage
 			i++;
 		}
 		profileDetails.ageText.text = "Скрыто";
-		profileDetails.cityText.text = _user.city;
+		profileDetails.cityText.text = (_user.city == "hidden")?"Скрыто":_user.city;
 
 		profileDetails.nameText.mouseEnabled = false;
 

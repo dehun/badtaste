@@ -67,7 +67,7 @@ public class Preloader extends MovieClip
 		preloaderText.x = pbBar.x;
 		preloaderText.y = pbBar.y;
 		addChild(preloaderText);
-		preloaderText.preloaderText.text = "Loading: 0%";
+		preloaderText.preloaderText.text = "0%";
 
 		notationText.x = 228;
 		notationText.y = 690;
@@ -86,7 +86,7 @@ public class Preloader extends MovieClip
 		pbMask.width = e.bytesLoaded / e.bytesTotal * pbBar.width;
 		var progress:Number = e.bytesLoaded / e.bytesTotal * 100;
 		//trace(Math.ceil(progress));
-		preloaderText.preloaderText.text = "Loading: " + Math.ceil(progress) + "%";
+		preloaderText.preloaderText.text = "" + Math.ceil(progress) + "%";
 	}
 
 	private function checkFrame(e:Event):void

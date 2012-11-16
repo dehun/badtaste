@@ -106,9 +106,17 @@ public class FriendListItem extends CasaSprite
 		bp.preload(1);
 		loader.contentLoaderInfo.addEventListener(Event.COMPLETE,function(e:Event):void{
 			var holder:Sprite = asset.friendAvatarContainer.holder;
-			Align.center(loader, holder);
 			holder.addChild(loader);
-			//FriendListItem.Fill(loader.content, holder.getBounds(holder));
+
+			if(loader.width > loader.height){
+				loader.height = 65;
+				loader.scaleX = loader.scaleY;
+			}else{
+				loader.width = 65;
+				loader.scaleY = loader.scaleX;
+			}
+			Align.center(loader, holder);
+			
 			bp.partsLoaded++;
 		});
 		loader.load(req);

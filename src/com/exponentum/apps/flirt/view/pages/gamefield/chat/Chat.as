@@ -17,11 +17,7 @@ import flash.events.Event;
 import flash.events.FocusEvent;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
-import flash.events.TimerEvent;
 import flash.ui.Keyboard;
-import flash.utils.Timer;
-
-import mx.utils.NameUtil;
 
 import org.casalib.display.CasaSprite;
 import org.casalib.layout.Distribution;
@@ -125,14 +121,14 @@ public class Chat extends CasaSprite
 		scr.addEventListener(Event.CHANGE, onScroll);
 		addChild(scr);
 
+		chatInput.y = 116;
+		chatInput.x = 155;
+		addChild(chatInput);
+
 		sayButton.x = 510;
 		sayButton.y = 111;
 		addChild(sayButton);
 		sayButton.addEventListener(MouseEvent.CLICK, onSendMessage);
-
-		chatInput.y = 116;
-		chatInput.x = 155;
-		addChild(chatInput);
 	}
 
 	private function onScroll(e:Event):void

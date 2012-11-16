@@ -112,7 +112,15 @@ public class Fans extends CasaSprite
 			bp.preload(1);
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function (e:Event):void
 			{
+				if(loader.width > loader.height){
+					loader.height = 65;
+					loader.scaleX = loader.scaleY;
+				}else{
+					loader.width = 65;
+					loader.scaleY = loader.scaleX;
+				}
 				Align.center(loader, holder);
+				//Align.center(loader, holder);
 				holder.addChild(loader);
 				bp.partsLoaded++;
 			});
