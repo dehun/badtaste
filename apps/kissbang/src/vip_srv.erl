@@ -217,22 +217,21 @@ trans_touch_vip_points(UserGuid) ->
 
 decrease_points_with_time(OldVipInfo) ->
     {ok, UpdateTime} = application:get_env(kissbang, vip_update_time),
-    AreDecreaseTimeCame = OldVipInfo#vipinfo.last_update_time - utils:unix_time() > UpdateTime,
-    if 
-        AreDecreaseTimeCame ->
-            {ok, DecreaseRate} = application:get_env(kissbang, vip_points_decrease_rate),
-            decrease_points_with_time(OldVipInfo#vipinfo{points = OldVipInfo#vipinfo.points - DecreaseRate,
-                                                         last_update_time = OldVipInfo#vipinfo.last_update_time + UpdateTime});
+    AreBelowZero = OldVipInfo#vipinfo.points < 0,
+    if
+        AreBelowZero ->
+            OldVipInfo#vipinfo{points = 0};
         true ->
-            AreBelowZero = OldVipInfo#vipinfo.points < 0,
+            AreDecreaseTimeCame = OldVipInfo#vipinfo.last_update_time - utils:unix_time() > UpdateTime,
             if 
-                AreBelowZero ->
-                    OldVipInfo#vipinfo{points = 0};
+                AreDecreaseTimeCame ->
+                    {ok, DecreaseRate} = application:get_env(kissbang, vip_points_decrease_rate),
+                    decrease_points_with_time(OldVipInfo#vipinfo{points = OldVipInfo#vipinfo.points - DecreaseRate,
+                                                                 last_update_time = OldVipInfo#vipinfo.last_update_time + UpdateTime});
                 true ->
                     OldVipInfo
             end
     end.
-    
 
 inner_get_random_vip() ->
     Keys = mnesia:dirty_all_keys(vipinfo),
