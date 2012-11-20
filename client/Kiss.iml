@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="Flex.Build.Configuration">
+    <option name="DO_BUILD" value="true" />
+    <option name="MAIN_CLASS" value="Kiss" />
+    <option name="OUTPUT_FILE_NAME" value="Kiss.swf" />
+    <option name="TARGET_PLAYER_VERSION" value="10.0.0" />
+    <option name="VERSION" value="3" />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="flex_sdk_4.1.0.16076A (player 10.0)" jdkType="Flex SDK Type" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="as3corelib" level="project" />
+    <orderEntry type="library" name="Console2.5" level="project" />
+    <orderEntry type="library" name="gamefield" level="project" />
+    <orderEntry type="library" name="preloader" level="project" />
+    <orderEntry type="library" name="profile" level="project" />
+    <orderEntry type="library" name="greensock" level="project" />
+    <orderEntry type="library" name="Common" level="project" />
+    <orderEntry type="library" name="messageWindow" level="project" />
+    <orderEntry type="library" name="dailyBonus" level="project" />
+    <orderEntry type="library" name="messageWindow (2)" level="project" />
+    <orderEntry type="library" name="miniProfile" level="project" />
+    <orderEntry type="library" name="prizeTasks" level="project" />
+    <orderEntry type="library" name="ratings" level="project" />
+    <orderEntry type="library" name="shop" level="project" />
+    <orderEntry type="library" name="giftsWindow" level="project" />
+    <orderEntry type="library" name="standartWindows" level="project" />
+    <orderEntry type="library" name="prizeTasks (2)" level="project" />
+  </component>
+</module>
+

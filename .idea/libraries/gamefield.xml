@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gamefield">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swc/gamefield.swc!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
