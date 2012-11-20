@@ -1,1 +1,0 @@
--record(server_user_score, {user_guid, tag, score}).
